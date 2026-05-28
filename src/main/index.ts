@@ -4,7 +4,6 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { spawn, ChildProcess } from 'child_process'
 import { config } from 'dotenv'
 import detectPort from 'detect-port'
-import Store from 'electron-store'
 
 config({ path: join(app.getAppPath(), '.env') })
 
@@ -21,7 +20,6 @@ const SESSION_DURATION_MS =
   SECONDS_PER_MINUTE *
   MILLISECONDS_PER_SECOND
 
-const GETH_STARTUP_DELAY_MS = 3 * MILLISECONDS_PER_SECOND
 const MAX_PORT_SCAN_ATTEMPTS = 50
 
 const WINDOW_DEFAULT_WIDTH = 1280
@@ -222,6 +220,8 @@ app.whenReady().then(async () => {
     networkId: GETH_NETWORK_ID
   }))
 
+  const { default: Store } = await import('electron-store')
+  
   const store = new Store({
     defaults: {
       general: {
@@ -256,6 +256,17 @@ app.whenReady().then(async () => {
         pauseOnBattery: true,
         mode: 'Solo',
         rewardAddress: ''
+      },
+      security: {
+        autoLockWallet: true,
+        requireTouchId: true
+      },
+      advanced: {
+        enableJsonRpc: true,
+        enableWsRpc: false,
+        corsOrigins: 'https://*.cointmu.net',
+        logLevel: 'Info',
+        sendAnalytics: false
       }
     }
   })

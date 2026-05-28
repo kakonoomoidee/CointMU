@@ -3,6 +3,9 @@ import { GeneralSettings } from '@/components/settings/GeneralSettings'
 import { AppearanceSettings } from '@/components/settings/AppearanceSettings'
 import { NetworkSettings } from '@/components/settings/NetworkSettings'
 import { MiningSettings } from '@/components/settings/MiningSettings'
+import { SecuritySettings } from '@/components/settings/SecuritySettings'
+import { AdvancedSettings } from '@/components/settings/AdvancedSettings'
+import { AboutSettings } from '@/components/settings/AboutSettings'
 
 export type SettingsCategory = 'general' | 'appearance' | 'network' | 'mining' | 'security' | 'advanced' | 'about'
 
@@ -120,6 +123,17 @@ export interface SettingsStore {
     mode: string
     rewardAddress: string
   }
+  security: {
+    autoLockWallet: boolean
+    requireTouchId: boolean
+  }
+  advanced: {
+    enableJsonRpc: boolean
+    enableWsRpc: boolean
+    corsOrigins: string
+    logLevel: string
+    sendAnalytics: boolean
+  }
 }
 
 /**
@@ -227,12 +241,14 @@ function Settings(): JSX.Element {
             {activeCategory === 'mining' && (
               <MiningSettings config={settings.mining} onUpdate={(k, v) => updateSetting('mining', k, v)} />
             )}
-            
-            {/* Placeholders for unused categories */}
-            {['security', 'advanced', 'about'].includes(activeCategory) && (
-              <div className="flex items-center justify-center h-64 text-slate-400">
-                This section is under construction.
-              </div>
+            {activeCategory === 'security' && (
+              <SecuritySettings config={settings.security} onUpdate={(k, v) => updateSetting('security', k, v)} />
+            )}
+            {activeCategory === 'advanced' && (
+              <AdvancedSettings config={settings.advanced} onUpdate={(k, v) => updateSetting('advanced', k, v)} />
+            )}
+            {activeCategory === 'about' && (
+              <AboutSettings />
             )}
           </div>
         </div>
