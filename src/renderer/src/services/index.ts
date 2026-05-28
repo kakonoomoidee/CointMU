@@ -10,3 +10,20 @@ export {
   getMiningStatus,
   getHashrate
 } from './web3Provider'
+
+export {
+  call,
+  fetchBlockNumber,
+  fetchPeerCount,
+  fetchGasPrice,
+  fetchMiningStatus,
+  fetchHashrate,
+  fetchDifficulty
+} from './rpcClient'
+
+export {
+  generateMnemonic,
+  deriveAccount,
+  generateIdenticonGradient
+} from './walletService'
+export type { DerivedAccount } from './walletService'

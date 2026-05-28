@@ -4,5 +4,6 @@ export {
   formatPeerCount,
   formatChainId,
   formatTimestamp,
-  formatHashrate
+  formatHashrate,
+  formatDifficulty
 } from './formatters'

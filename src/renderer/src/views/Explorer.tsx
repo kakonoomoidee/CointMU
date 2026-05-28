@@ -1,4 +1,5 @@
 import { useState, type JSX } from 'react'
+import { useNetworkStats, useRpcPort } from '@/hooks'
 
 type TabState = 'blocks' | 'transactions' | 'accounts'
 
@@ -80,8 +81,25 @@ const BLOCK_DETAIL = {
  * @returns The explorer interface with dynamic routing between Home and Detail views.
  */
 function Explorer(): JSX.Element {
+  const { port } = useRpcPort()
+  const networkStats = useNetworkStats(port)
+  const isConnected = networkStats.isConnected
+
   const [selectedBlock, setSelectedBlock] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<TabState>('blocks')
+
+  const networkHeight = isConnected ? NETWORK_STATS.height : '--'
+  const networkBlockTime = isConnected ? NETWORK_STATS.blockTime : '--'
+  const networkTxs = isConnected ? NETWORK_STATS.txs : '0'
+  const networkTxsChange = isConnected ? NETWORK_STATS.txsChange : '--'
+  const networkActiveAddrs = isConnected ? NETWORK_STATS.activeAddrs : '0'
+  const networkDifficulty = isConnected ? NETWORK_STATS.difficulty : '--'
+
+  const timelineBlocks = isConnected ? TIMELINE_BLOCKS : []
+  const latestBlocks = isConnected ? LATEST_BLOCKS : []
+  const transactions = isConnected ? TRANSACTIONS : []
+  const topAccounts = isConnected ? TOP_ACCOUNTS : []
+  const minerDistribution = isConnected ? MINER_DISTRIBUTION : []
 
   return (
     <div className="flex flex-col h-full bg-slate-50/80">
@@ -151,7 +169,7 @@ function Explorer(): JSX.Element {
                   </div>
                   <span className="text-xs font-semibold text-slate-600">Chain height</span>
                 </div>
-                <p className="text-xl font-bold text-slate-800">{NETWORK_STATS.height}</p>
+                <p className="text-xl font-bold text-slate-800">{networkHeight}</p>
                 <p className="text-[10px] text-slate-400 mt-0.5">Latest</p>
               </div>
 
@@ -165,7 +183,7 @@ function Explorer(): JSX.Element {
                   </div>
                   <span className="text-xs font-semibold text-slate-600">Block time</span>
                 </div>
-                <p className="text-xl font-bold text-slate-800">{NETWORK_STATS.blockTime}</p>
+                <p className="text-xl font-bold text-slate-800">{networkBlockTime}</p>
                 <p className="text-[10px] text-slate-400 mt-0.5">Past 100 blocks</p>
               </div>
 
@@ -179,8 +197,8 @@ function Explorer(): JSX.Element {
                   </div>
                   <span className="text-xs font-semibold text-slate-600">Transactions</span>
                 </div>
-                <p className="text-xl font-bold text-slate-800">{NETWORK_STATS.txs}</p>
-                <p className="text-[10px] text-slate-400 mt-0.5">{NETWORK_STATS.txsChange}</p>
+                <p className="text-xl font-bold text-slate-800">{networkTxs}</p>
+                <p className="text-[10px] text-slate-400 mt-0.5">{networkTxsChange}</p>
               </div>
 
               <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
@@ -195,7 +213,7 @@ function Explorer(): JSX.Element {
                   </div>
                   <span className="text-xs font-semibold text-slate-600">Active addrs</span>
                 </div>
-                <p className="text-xl font-bold text-slate-800">{NETWORK_STATS.activeAddrs}</p>
+                <p className="text-xl font-bold text-slate-800">{networkActiveAddrs}</p>
                 <p className="text-[10px] text-slate-400 mt-0.5">past 24 hours</p>
               </div>
 
@@ -208,7 +226,7 @@ function Explorer(): JSX.Element {
                   </div>
                   <span className="text-xs font-semibold text-slate-600">Difficulty</span>
                 </div>
-                <p className="text-xl font-bold text-slate-800">{NETWORK_STATS.difficulty}</p>
+                <p className="text-xl font-bold text-slate-800">{networkDifficulty}</p>
                 <p className="text-[10px] text-slate-400 mt-0.5">↑ 0.3% retarget</p>
               </div>
             </div>
@@ -226,7 +244,7 @@ function Explorer(): JSX.Element {
               </div>
 
               <div className="flex items-end justify-between gap-2 overflow-x-auto pb-2">
-                {TIMELINE_BLOCKS.map((block, i) => (
+                {timelineBlocks.length > 0 ? timelineBlocks.map((block, i) => (
                   <div key={i} className="flex flex-col items-center gap-2 flex-shrink-0 cursor-pointer hover:-translate-y-1 transition-transform" onClick={() => setSelectedBlock(block.num)}>
                     <div className={`w-14 h-16 rounded-xl flex flex-col items-center justify-center relative ${
                       block.status === 'success' ? 'bg-emerald-500 text-white shadow-md shadow-emerald-200' :
@@ -246,7 +264,11 @@ function Explorer(): JSX.Element {
                     </div>
                     <span className="text-[9px] font-medium text-slate-400 whitespace-nowrap">{block.time}</span>
                   </div>
-                ))}
+                )) : (
+                  <div className="w-full py-8 text-center text-sm font-medium text-slate-400">
+                    Waiting for network sync...
+                  </div>
+                )}
               </div>
             </div>
 
@@ -280,7 +302,7 @@ function Explorer(): JSX.Element {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
-                        {LATEST_BLOCKS.map((block, i) => (
+                        {latestBlocks.length > 0 ? latestBlocks.map((block, i) => (
                           <tr key={i} className="hover:bg-slate-50/50 transition-colors cursor-pointer" onClick={() => setSelectedBlock(block.num)}>
                             <td className="px-5 py-4">
                               <span className="text-sm font-bold text-blue-500 font-mono">{block.num}</span>
@@ -308,7 +330,13 @@ function Explorer(): JSX.Element {
                               <span className="text-xs text-slate-500">{block.time}</span>
                             </td>
                           </tr>
-                        ))}
+                        )) : (
+                          <tr>
+                            <td colSpan={5} className="px-5 py-8 text-center text-sm font-medium text-slate-400">
+                              No data available
+                            </td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   )}
@@ -325,7 +353,7 @@ function Explorer(): JSX.Element {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
-                        {TRANSACTIONS.map((tx, i) => (
+                        {transactions.length > 0 ? transactions.map((tx, i) => (
                           <tr key={i} className="hover:bg-slate-50/50 transition-colors cursor-pointer">
                             <td className="px-5 py-4">
                               <div className="flex items-center gap-2">
@@ -369,7 +397,13 @@ function Explorer(): JSX.Element {
                               <span className="text-xs text-slate-500">{tx.time}</span>
                             </td>
                           </tr>
-                        ))}
+                        )) : (
+                          <tr>
+                            <td colSpan={5} className="px-5 py-8 text-center text-sm font-medium text-slate-400">
+                              No data available
+                            </td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   )}
@@ -386,7 +420,7 @@ function Explorer(): JSX.Element {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
-                        {TOP_ACCOUNTS.map((acc, i) => (
+                        {topAccounts.length > 0 ? topAccounts.map((acc, i) => (
                           <tr key={i} className="hover:bg-slate-50/50 transition-colors cursor-pointer">
                             <td className="px-5 py-4">
                               <span className="text-[11px] font-medium text-slate-400 font-mono">{acc.rank}</span>
@@ -411,7 +445,13 @@ function Explorer(): JSX.Element {
                               <span className="text-xs font-medium text-slate-500">{acc.supply}</span>
                             </td>
                           </tr>
-                        ))}
+                        )) : (
+                          <tr>
+                            <td colSpan={5} className="px-5 py-8 text-center text-sm font-medium text-slate-400">
+                              No data available
+                            </td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   )}
@@ -423,7 +463,7 @@ function Explorer(): JSX.Element {
                 <p className="text-[10px] text-slate-400 mt-0.5 mb-5">Share of blocks mined - past 24 hours</p>
 
                 <div className="space-y-4">
-                  {MINER_DISTRIBUTION.map((miner, i) => (
+                  {minerDistribution.length > 0 ? minerDistribution.map((miner, i) => (
                     <div key={i} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className={`w-3 h-3 rounded-full ${miner.color}`} />
@@ -431,13 +471,19 @@ function Explorer(): JSX.Element {
                       </div>
                       <span className="text-[11px] font-medium text-slate-500">{miner.percent}</span>
                     </div>
-                  ))}
+                  )) : (
+                    <div className="py-4 text-center text-sm font-medium text-slate-400">
+                      No data available
+                    </div>
+                  )}
                 </div>
 
                 <div className="mt-5 h-2 flex rounded-full overflow-hidden gap-0.5">
-                  {MINER_DISTRIBUTION.map((miner, i) => (
+                  {minerDistribution.length > 0 ? minerDistribution.map((miner, i) => (
                     <div key={i} className={`h-full ${miner.color}`} style={{ width: miner.percent }} />
-                  ))}
+                  )) : (
+                    <div className="h-full w-full bg-slate-100" />
+                  )}
                 </div>
               </div>
             </div>

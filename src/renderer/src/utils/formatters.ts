@@ -94,4 +94,34 @@ function formatHashrate(hashrate: number | null): string {
   return `${formatted} ${HASHRATE_UNITS[unitIndex]}`
 }
 
-export { formatBlockNumber, formatPortDisplay, formatPeerCount, formatChainId, formatTimestamp, formatHashrate }
+const DIFFICULTY_UNITS = ['', 'K', 'M', 'G', 'T', 'P']
+const DIFFICULTY_THRESHOLD = 1000
+const DIFFICULTY_DECIMAL_PLACES = 1
+
+/**
+ * Formats a raw difficulty value into a human-readable string with automatic
+ * unit scaling from raw through P (peta).
+ * @param difficulty - The raw difficulty integer, or null if unavailable.
+ * @returns A formatted difficulty string with the appropriate unit suffix.
+ */
+function formatDifficulty(difficulty: number | null): string {
+  if (difficulty === null || difficulty === 0) {
+    return '--'
+  }
+
+  let scaled = difficulty
+  let unitIndex = 0
+
+  while (scaled >= DIFFICULTY_THRESHOLD && unitIndex < DIFFICULTY_UNITS.length - 1) {
+    scaled = scaled / DIFFICULTY_THRESHOLD
+    unitIndex++
+  }
+
+  const formatted = unitIndex === 0
+    ? scaled.toString()
+    : scaled.toFixed(DIFFICULTY_DECIMAL_PLACES)
+
+  return `${formatted}${DIFFICULTY_UNITS[unitIndex]}`
+}
+
+export { formatBlockNumber, formatPortDisplay, formatPeerCount, formatChainId, formatTimestamp, formatHashrate, formatDifficulty }

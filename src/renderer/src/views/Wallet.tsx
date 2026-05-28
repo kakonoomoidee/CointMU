@@ -1,4 +1,5 @@
 import { useState, type JSX } from 'react'
+import { deriveAccount, generateIdenticonGradient, type DerivedAccount } from '@/services'
 
 type WalletTab = 'activity' | 'tokens' | 'nfts'
 
@@ -8,21 +9,14 @@ const WALLET_TABS = [
   { id: 'nfts' as const, label: 'NFTs' }
 ]
 
-interface AccountEntry {
-  name: string
-  address: string
-  balance: string
-  unit: string
-  gradient: string
-  selected?: boolean
+interface WalletProps {
+  accounts: DerivedAccount[]
+  setAccounts: (accounts: DerivedAccount[]) => void
+  activeWalletAddress: string | null
+  setActiveWalletAddress: (address: string) => void
 }
 
-const ACCOUNTS: AccountEntry[] = [
-  { name: 'Main wallet', address: '0xC0a7...90a1', balance: '1,314.67', unit: 'CMU', gradient: 'from-emerald-400 to-emerald-600', selected: true },
-  { name: 'Mining payout', address: '0x4F9d...7B88', balance: '412.3', unit: 'CMU', gradient: 'from-violet-400 to-fuchsia-500' },
-  { name: 'dApp testing', address: '0x88aa...cc33', balance: '18.04', unit: 'CMU', gradient: 'from-lime-400 to-emerald-500' },
-  { name: 'CMU-DAI Pool', address: '0xd31E...EE66', balance: '0', unit: 'CMU', gradient: 'from-amber-300 to-pink-400' }
-]
+
 
 const WATCH_LIST = [
   { name: 'CointMU Foundation', address: '0xfe1100...4b27' },
@@ -54,7 +48,7 @@ const NFT_COLLECTION = [
   { id: 6, title: 'Miner Trophy', collection: 'Achievements', standard: 'ERC-1155', gradient: 'from-slate-300 via-zinc-200 to-stone-300' }
 ]
 
-const HERO_ADDRESS_FULL = '0xC0a7d4...7e99a1'
+// Mock balances for UI showcase
 const HERO_BALANCE = '1,314.67'
 const HERO_USD = '$562.16'
 
@@ -66,11 +60,39 @@ const HERO_USD = '$562.16'
  * card grid). All layout uses Tailwind CSS utility classes exclusively.
  * @returns The complete wallet view with account list, hero card, and tabbed content.
  */
-function Wallet(): JSX.Element {
+function Wallet({
+  accounts,
+  setAccounts,
+  activeWalletAddress,
+  setActiveWalletAddress
+}: WalletProps): JSX.Element {
   const [activeTab, setActiveTab] = useState<WalletTab>('activity')
-  const [selectedAccount, setSelectedAccount] = useState<number>(0)
 
-  const account = ACCOUNTS[selectedAccount]
+  const activeAccount = accounts.find(a => a.address === activeWalletAddress) || accounts[0]
+  const activeGradient = activeAccount ? generateIdenticonGradient(activeAccount.address) : 'from-slate-400 to-slate-500'
+
+  const handleAccountSwitch = async (address: string): Promise<void> => {
+    await window.api.settings.set('activeWalletAddress', address)
+    setActiveWalletAddress(address)
+  }
+
+  const handleAddAccount = async (): Promise<void> => {
+    try {
+      const mnemonic = await window.api.settings.get('mnemonic')
+      if (!mnemonic) return
+
+      const newIndex = accounts.length
+      const newAccount = deriveAccount(mnemonic, newIndex, `Account ${newIndex + 1}`)
+      
+      const updatedAccounts = [...accounts, newAccount]
+      await window.api.settings.set('accounts', updatedAccounts)
+      setAccounts(updatedAccounts)
+      
+      await handleAccountSwitch(newAccount.address)
+    } catch (e) {
+      console.error('Failed to derive new account:', e)
+    }
+  }
 
   return (
     <div className="flex flex-col h-full bg-slate-50/80">
@@ -93,7 +115,10 @@ function Wallet(): JSX.Element {
             Backup
           </button>
 
-          <button className="flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200">
+          <button 
+            onClick={handleAddAccount}
+            className="flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200"
+          >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
@@ -118,29 +143,35 @@ function Wallet(): JSX.Element {
               </div>
 
               <div className="space-y-1">
-                {ACCOUNTS.map((acc, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setSelectedAccount(i)}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150 ${
-                      selectedAccount === i
-                        ? 'bg-white border border-slate-200 shadow-sm'
-                        : 'hover:bg-white/60 border border-transparent'
-                    }`}
-                  >
-                    <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${acc.gradient} flex-shrink-0`} />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs font-semibold text-slate-700 truncate">{acc.name}</p>
-                        <p className="text-xs font-bold text-slate-800 ml-2">{acc.balance}</p>
+                {accounts.map((acc, i) => {
+                  const gradient = generateIdenticonGradient(acc.address)
+                  const abbrAddress = `${acc.address.substring(0, 6)}...${acc.address.substring(acc.address.length - 4)}`
+                  const isSelected = acc.address === activeWalletAddress
+
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => handleAccountSwitch(acc.address)}
+                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150 ${
+                        isSelected
+                          ? 'bg-white border border-slate-200 shadow-sm'
+                          : 'hover:bg-white/60 border border-transparent'
+                      }`}
+                    >
+                      <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${gradient} flex-shrink-0`} />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs font-semibold text-slate-700 truncate">{acc.label}</p>
+                          <p className="text-xs font-bold text-slate-800 ml-2">{isSelected ? HERO_BALANCE : '0.00'}</p>
+                        </div>
+                        <div className="flex items-center justify-between mt-0.5">
+                          <p className="text-[10px] text-slate-400 font-mono" title={acc.address}>{abbrAddress}</p>
+                          <p className="text-[10px] text-slate-400">CMU</p>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-between mt-0.5">
-                        <p className="text-[10px] text-slate-400 font-mono">{acc.address}</p>
-                        <p className="text-[10px] text-slate-400">{acc.unit}</p>
-                      </div>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  )
+                })}
               </div>
             </div>
 
@@ -171,13 +202,13 @@ function Wallet(): JSX.Element {
               <div className="relative z-10">
                 <div className="flex items-start justify-between mb-5">
                   <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${account.gradient}`} />
+                    <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${activeGradient}`} />
                     <div>
                       <div className="flex items-center gap-2">
-                        <p className="text-sm font-semibold text-white">{account.name}</p>
+                        <p className="text-sm font-semibold text-white">{activeAccount?.label}</p>
                         <span className="text-[9px] font-semibold tracking-wider uppercase text-white/50 bg-white/10 px-1.5 py-0.5 rounded">EOA</span>
                       </div>
-                      <p className="text-xs text-white/50 font-mono mt-0.5">{HERO_ADDRESS_FULL}</p>
+                      <p className="text-xs text-white/50 font-mono mt-0.5">{activeAccount?.address}</p>
                     </div>
                   </div>
 

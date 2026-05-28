@@ -1,5 +1,6 @@
-import { useState, type JSX } from 'react'
-import { Dashboard, Miner, Wallet, Explorer, Settings } from '@/views'
+import { useState, useEffect, type JSX } from 'react'
+import { Dashboard, Miner, Wallet, Explorer, Settings, Onboarding } from '@/views'
+import { type DerivedAccount } from '@/services'
 import { useRpcPort, useNetworkStatus } from '@/hooks'
 
 const NAV_ITEM_DASHBOARD = 'dashboard'
@@ -11,7 +12,6 @@ type ActiveView = typeof NAV_ITEM_DASHBOARD | typeof NAV_ITEM_MINER | typeof NAV
 
 const APP_VERSION = 'v0.4.2'
 const APP_NETWORK = 'testnet'
-const WALLET_ADDRESS_ABBR = '0xC0a7...90a1'
 const WALLET_BALANCE = '1,284.67'
 
 /**
@@ -22,9 +22,45 @@ const WALLET_BALANCE = '1,284.67'
  * @returns The top-level application shell with sidebar and content area.
  */
 function App(): JSX.Element {
+  const [activeWalletAddress, setActiveWalletAddress] = useState<string | null>(null)
+  const [accounts, setAccounts] = useState<DerivedAccount[]>([])
+  const [isLoadingWallet, setIsLoadingWallet] = useState<boolean>(true)
   const [activeView, setActiveView] = useState<ActiveView>(NAV_ITEM_DASHBOARD)
   const { port } = useRpcPort()
   const networkStatus = useNetworkStatus(port)
+
+  useEffect(() => {
+    async function checkWallet(): Promise<void> {
+      try {
+        const address = await window.api.settings.get('activeWalletAddress')
+        const storedAccounts = await window.api.settings.get('accounts') || []
+        
+        setActiveWalletAddress(address || null)
+        setAccounts(storedAccounts)
+      } catch {
+        setActiveWalletAddress(null)
+        setAccounts([])
+      } finally {
+        setIsLoadingWallet(false)
+      }
+    }
+    checkWallet()
+  }, [])
+
+  if (isLoadingWallet) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-slate-50">
+        <div className="w-8 h-8 rounded-full border-2 border-slate-200 border-t-blue-500 animate-spin" />
+      </div>
+    )
+  }
+
+  if (!activeWalletAddress) {
+    return <Onboarding onComplete={(address) => setActiveWalletAddress(address)} />
+  }
+
+  // Format address for sidebar
+  const abbrAddress = `${activeWalletAddress.substring(0, 6)}...${activeWalletAddress.substring(activeWalletAddress.length - 4)}`
 
   return (
     <div className="flex h-full bg-slate-50">
@@ -252,7 +288,9 @@ function App(): JSX.Element {
                 <p className="text-xs font-bold text-slate-800">{WALLET_BALANCE}</p>
               </div>
               <div className="flex items-center justify-between mt-0.5">
-                <p className="text-[10px] text-slate-400 font-mono">{WALLET_ADDRESS_ABBR}</p>
+                <p className="text-[10px] text-slate-400 font-mono" title={activeWalletAddress}>
+                  {abbrAddress}
+                </p>
                 <p className="text-[10px] text-slate-400">CMU</p>
               </div>
             </div>
@@ -261,9 +299,20 @@ function App(): JSX.Element {
       </aside>
 
       <main className="flex-1 overflow-hidden">
-        {activeView === NAV_ITEM_DASHBOARD && <Dashboard />}
-        {activeView === NAV_ITEM_MINER && <Miner port={port} />}
-        {activeView === NAV_ITEM_WALLET && <Wallet />}
+        {activeView === NAV_ITEM_DASHBOARD && (
+          <Dashboard activeWalletAddress={activeWalletAddress} />
+        )}
+        {activeView === NAV_ITEM_MINER && (
+          <Miner port={port} activeWalletAddress={activeWalletAddress} />
+        )}
+        {activeView === NAV_ITEM_WALLET && (
+          <Wallet 
+            accounts={accounts}
+            setAccounts={setAccounts}
+            activeWalletAddress={activeWalletAddress}
+            setActiveWalletAddress={setActiveWalletAddress}
+          />
+        )}
         {activeView === NAV_ITEM_EXPLORER && <Explorer />}
         {activeView === NAV_ITEM_SETTINGS && <Settings />}
       </main>

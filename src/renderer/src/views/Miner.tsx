@@ -1,14 +1,14 @@
 import { useState, type JSX } from 'react'
-import { useMiner } from '@/hooks'
+import { useMiner, useNetworkStats } from '@/hooks'
 import { formatHashrate } from '@/utils'
 
 interface MinerProps {
   port: number | null
+  activeWalletAddress: string | null
 }
 
 const BLOCK_REWARD_CMU = '10.00'
 const TARGET_DIFFICULTY = '0000_ffff...'
-const REWARD_ADDRESS = '0xC0a7d...e90a1'
 const TOTAL_CORES = 8
 const ACTIVE_CORES = 4
 
@@ -45,14 +45,21 @@ const CANDIDATE_BLOCK = '#28503'
  * @returns The complete mining view with header, hero, stats, worker settings,
  *          and activity log.
  */
-function Miner({ port }: MinerProps): JSX.Element {
+function Miner({ port, activeWalletAddress }: MinerProps): JSX.Element {
   const { state, handleStart, handleStop } = useMiner(port)
+  const networkStats = useNetworkStats(port)
+  const isConnected = networkStats.isConnected
+
   const [intensity, setIntensity] = useState<IntensityLevel>('Balanced')
   const [activeTab, setActiveTab] = useState<string>(ACTIVITY_TAB_FOUND)
 
-  const isMining = state.mining
+  const isMining = state.mining && isConnected
   const hashrateDisplay = formatHashrate(state.hashrate)
   const avgHashrate = isMining ? 'Avg 5.8 MH/s' : 'Avg 0.0 MH/s'
+
+  const abbrAddress = activeWalletAddress 
+    ? `${activeWalletAddress.substring(0, 6)}...${activeWalletAddress.substring(activeWalletAddress.length - 4)}` 
+    : '--'
 
   return (
     <div className="flex flex-col h-full bg-slate-50/80">
@@ -211,14 +218,16 @@ function Miner({ port }: MinerProps): JSX.Element {
 
           <div className="rounded-2xl bg-white border border-slate-200 p-5">
             <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-3">Blocks Found</p>
-            <p className="text-2xl font-bold text-slate-800 tracking-tight">{BLOCKS_FOUND_COUNT}</p>
+            <p className="text-2xl font-bold text-slate-800 tracking-tight">
+              {isConnected ? BLOCKS_FOUND_COUNT : '0'}
+            </p>
             <p className="text-xs text-slate-400 mt-1">past 24 hours</p>
           </div>
 
           <div className="rounded-2xl bg-white border border-slate-200 p-5">
             <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-3">Total Earned</p>
             <p className="text-2xl font-bold text-emerald-600 tracking-tight">
-              {TOTAL_EARNED_CMU}
+              {isConnected ? TOTAL_EARNED_CMU : '0.00'}
               <span className="text-sm font-medium text-slate-400 ml-1.5">CMU</span>
             </p>
             <p className="text-xs text-slate-400 mt-1">across this wallet</p>
@@ -312,7 +321,9 @@ function Miner({ port }: MinerProps): JSX.Element {
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600" />
-                  <span className="text-xs font-mono text-slate-600">{REWARD_ADDRESS}</span>
+                  <span className="text-xs font-mono text-slate-600" title={activeWalletAddress || undefined}>
+                    {abbrAddress}
+                  </span>
                   <button className="text-slate-400 hover:text-slate-600 transition-colors">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
@@ -348,7 +359,7 @@ function Miner({ port }: MinerProps): JSX.Element {
             </div>
 
             <div className="mt-4 divide-y divide-slate-100">
-              {MINED_BLOCKS.map((block) => (
+              {(isConnected ? MINED_BLOCKS : []).map((block) => (
                 <div key={block.number} className="flex items-center justify-between py-3.5">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">

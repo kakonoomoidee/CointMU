@@ -1,12 +1,9 @@
-import { useRpcPort, useNetworkStatus } from '@/hooks'
-import { formatBlockNumber } from '@/utils'
+import { useRpcPort, useNetworkStatus, useNetworkStats } from '@/hooks'
+import { formatBlockNumber, formatHashrate, formatDifficulty } from '@/utils'
 import { type JSX } from 'react'
 
-const WALLET_ADDRESS_DISPLAY = '0xC0a7d...e90a1'
 const WALLET_BALANCE_CMU = '1,284.67'
 const WALLET_BALANCE_USD = '$539.66'
-const MINING_HASHRATE = '5.5 MH/s'
-const MINING_UPTIME = 'Running 1h 23m'
 const MINED_BLOCKS_24H = '7'
 const MINED_BLOCKS_REWARD = '+70 CMU rewards'
 const NETWORK_HASHRATE = '48.3 GH/s'
@@ -14,10 +11,6 @@ const NETWORK_HASHRATE_TREND = '2.1% past hour'
 const SMART_CONTRACTS_COUNT = '124'
 const SMART_CONTRACTS_DEPLOYED = '3 deployed by you'
 const CONSENSUS_LABEL = 'PoW - Block 30s'
-const GAS_AVG_GWEI = '25'
-const GAS_TREND = '-4% past hour'
-const DIFFICULTY_VALUE = '14.2M'
-const DIFFICULTY_NOTE = 'Adjusting in 02s'
 const BLOCKS_PAST_HOUR = '119'
 
 const LATEST_BLOCKS = [
@@ -62,6 +55,10 @@ const ACTIVITY_LOG = [
   }
 ]
 
+interface DashboardProps {
+  activeWalletAddress: string | null
+}
+
 /**
  * Primary dashboard view presenting the wallet overview, network health,
  * KPI metrics, latest blocks, and transaction activity in a light-mode
@@ -69,11 +66,45 @@ const ACTIVITY_LOG = [
  * @returns The complete dashboard layout with header, wallet card, network panel,
  *          KPI grid, latest blocks list, and activity feed.
  */
-function Dashboard(): JSX.Element {
+function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
   const { port } = useRpcPort()
   const networkStatus = useNetworkStatus(port)
+  const networkStats = useNetworkStats(port)
 
-  const syncLabel = networkStatus.syncing === false ? 'Synced' : networkStatus.syncing ? 'Syncing' : 'Offline'
+  const isConnected = networkStats.isConnected
+
+  const syncLabel = isConnected
+    ? (networkStatus.syncing === false ? 'Synced' : 'Syncing')
+    : 'Offline'
+
+  const syncDotColor = isConnected ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
+  const syncBorderColor = isConnected ? 'border-emerald-200 bg-emerald-50' : 'border-slate-200 bg-slate-50'
+  const syncTextColor = isConnected ? 'text-emerald-600' : 'text-slate-500'
+
+  const miningLabel = isConnected && networkStats.isMining
+    ? formatHashrate(networkStats.hashrate)
+    : '0 H/s'
+  const miningUptimeLabel = isConnected && networkStats.isMining
+    ? 'Actively mining'
+    : 'Miner idle'
+
+  const difficultyDisplay = isConnected ? formatDifficulty(networkStats.difficulty) : '--'
+  const gasDisplay = isConnected && networkStats.gasPriceGwei !== null ? networkStats.gasPriceGwei : '--'
+  const blockDisplay = isConnected ? formatBlockNumber(networkStats.blockHeight) : '--'
+  const peerDisplay = isConnected && networkStats.peerCount !== null ? String(networkStats.peerCount) : '--'
+
+  const abbrAddress = activeWalletAddress 
+    ? `${activeWalletAddress.substring(0, 6)}...${activeWalletAddress.substring(activeWalletAddress.length - 4)}` 
+    : '--'
+
+  if (networkStats.loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full bg-slate-50/80 gap-3">
+        <div className="w-8 h-8 rounded-full border-2 border-slate-200 border-t-blue-500 animate-spin" />
+        <p className="text-sm font-medium text-slate-500">Connecting to local node...</p>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col h-full bg-slate-50/80">
@@ -89,9 +120,9 @@ function Dashboard(): JSX.Element {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-200 bg-emerald-50">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-xs font-semibold text-emerald-600">
+          <div className={`flex items-center gap-2 px-4 py-2 rounded-full border ${syncBorderColor}`}>
+            <span className={`w-2 h-2 rounded-full ${syncDotColor}`} />
+            <span className={`text-xs font-semibold ${syncTextColor}`}>
               {syncLabel}
             </span>
           </div>
@@ -131,7 +162,9 @@ function Dashboard(): JSX.Element {
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-white/90">Main wallet</p>
-                    <p className="text-xs text-white/60 font-mono">{WALLET_ADDRESS_DISPLAY}</p>
+                    <p className="text-xs text-white/60 font-mono" title={activeWalletAddress || undefined}>
+                      {abbrAddress}
+                    </p>
                   </div>
                 </div>
 
@@ -146,11 +179,13 @@ function Dashboard(): JSX.Element {
 
               <div className="mb-6">
                 <div className="flex items-baseline gap-2.5">
-                  <span className="text-4xl font-bold tracking-tight">{WALLET_BALANCE_CMU}</span>
+                  <span className="text-4xl font-bold tracking-tight">
+                    {isConnected ? WALLET_BALANCE_CMU : '0.00'}
+                  </span>
                   <span className="text-lg font-semibold text-white/70">CMU</span>
                 </div>
                 <p className="text-sm text-white/50 mt-1">
-                  ~ {WALLET_BALANCE_USD} - estimated
+                  ~ {isConnected ? WALLET_BALANCE_USD : '$0.00'} - estimated
                 </p>
               </div>
 
@@ -189,8 +224,10 @@ function Dashboard(): JSX.Element {
           <div className="rounded-2xl bg-white border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span className="text-sm font-semibold text-slate-800">Network is healthy</span>
+                <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-emerald-500' : 'bg-red-400'}`} />
+                <span className="text-sm font-semibold text-slate-800">
+                  {isConnected ? 'Network is healthy' : 'Network is disconnected'}
+                </span>
               </div>
               <span className="text-[10px] font-semibold tracking-wide text-slate-500 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200">
                 {CONSENSUS_LABEL}
@@ -201,28 +238,28 @@ function Dashboard(): JSX.Element {
               <div>
                 <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">Chain Height</p>
                 <p className="text-xl font-bold text-slate-800 font-mono">
-                  {formatBlockNumber(networkStatus.blockNumber)}
+                  {blockDisplay}
                 </p>
                 <p className="text-[10px] text-slate-400">Latest block</p>
               </div>
               <div>
                 <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">Peers</p>
                 <p className="text-xl font-bold text-slate-800 font-mono">
-                  {networkStatus.peerCount !== null ? networkStatus.peerCount : '--'}
+                  {peerDisplay}
                 </p>
                 <p className="text-[10px] text-slate-400">Gossip connected</p>
               </div>
               <div>
                 <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">Difficulty</p>
-                <p className="text-xl font-bold text-slate-800 font-mono">{DIFFICULTY_VALUE}</p>
-                <p className="text-[10px] text-slate-400">{DIFFICULTY_NOTE}</p>
+                <p className="text-xl font-bold text-slate-800 font-mono">{difficultyDisplay}</p>
+                <p className="text-[10px] text-slate-400">Current network</p>
               </div>
               <div>
                 <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">Gas (Avg)</p>
                 <p className="text-xl font-bold text-slate-800 font-mono">
-                  {GAS_AVG_GWEI} <span className="text-sm font-medium text-slate-400">gwei</span>
+                  {gasDisplay} <span className="text-sm font-medium text-slate-400">gwei</span>
                 </p>
-                <p className="text-[10px] text-slate-400">{GAS_TREND}</p>
+                <p className="text-[10px] text-slate-400">Suggested price</p>
               </div>
             </div>
 
@@ -232,7 +269,7 @@ function Dashboard(): JSX.Element {
                 <p className="text-2xl font-bold text-slate-800 font-mono">{BLOCKS_PAST_HOUR}</p>
               </div>
               <div className="flex items-end gap-0.5 h-10">
-                {[28, 35, 22, 40, 32, 45, 38, 30, 42, 36, 48, 34, 26, 44, 50, 38, 33, 46, 42, 28].map((h, i) => (
+                {(isConnected ? [28, 35, 22, 40, 32, 45, 38, 30, 42, 36, 48, 34, 26, 44, 50, 38, 33, 46, 42, 28] : []).map((h, i) => (
                   <div
                     key={i}
                     className="w-1 rounded-full bg-slate-300"
@@ -262,8 +299,8 @@ function Dashboard(): JSX.Element {
                 </svg>
               </button>
             </div>
-            <p className="text-2xl font-bold text-slate-800 tracking-tight">{MINING_HASHRATE}</p>
-            <p className="text-xs text-slate-400 mt-1">{MINING_UPTIME}</p>
+            <p className="text-2xl font-bold text-slate-800 tracking-tight">{miningLabel}</p>
+            <p className="text-xs text-slate-400 mt-1">{miningUptimeLabel}</p>
           </div>
 
           <div className="rounded-2xl bg-white border border-slate-200 p-5">
@@ -278,8 +315,12 @@ function Dashboard(): JSX.Element {
               </div>
               <span className="text-xs font-medium text-slate-500">Mined blocks (24h)</span>
             </div>
-            <p className="text-2xl font-bold text-slate-800 tracking-tight">{MINED_BLOCKS_24H}</p>
-            <p className="text-xs text-slate-400 mt-1">{MINED_BLOCKS_REWARD}</p>
+            <p className="text-2xl font-bold text-slate-800 tracking-tight">
+              {isConnected ? MINED_BLOCKS_24H : '0'}
+            </p>
+            <p className="text-xs text-slate-400 mt-1">
+              {isConnected ? MINED_BLOCKS_REWARD : '--'}
+            </p>
           </div>
 
           <div className="rounded-2xl bg-white border border-slate-200 p-5">
@@ -293,8 +334,12 @@ function Dashboard(): JSX.Element {
               </div>
               <span className="text-xs font-medium text-slate-500">Network hashrate</span>
             </div>
-            <p className="text-2xl font-bold text-slate-800 tracking-tight">{NETWORK_HASHRATE}</p>
-            <p className="text-xs text-slate-400 mt-1">{NETWORK_HASHRATE_TREND}</p>
+            <p className="text-2xl font-bold text-slate-800 tracking-tight">
+              {isConnected ? NETWORK_HASHRATE : '--'}
+            </p>
+            <p className="text-xs text-slate-400 mt-1">
+              {isConnected ? NETWORK_HASHRATE_TREND : '--'}
+            </p>
           </div>
 
           <div className="rounded-2xl bg-white border border-slate-200 p-5">
@@ -306,8 +351,12 @@ function Dashboard(): JSX.Element {
               </div>
               <span className="text-xs font-medium text-slate-500">Smart contracts</span>
             </div>
-            <p className="text-2xl font-bold text-slate-800 tracking-tight">{SMART_CONTRACTS_COUNT}</p>
-            <p className="text-xs text-slate-400 mt-1">{SMART_CONTRACTS_DEPLOYED}</p>
+            <p className="text-2xl font-bold text-slate-800 tracking-tight">
+              {isConnected ? SMART_CONTRACTS_COUNT : '0'}
+            </p>
+            <p className="text-xs text-slate-400 mt-1">
+              {isConnected ? SMART_CONTRACTS_DEPLOYED : '--'}
+            </p>
           </div>
         </div>
 
@@ -325,7 +374,7 @@ function Dashboard(): JSX.Element {
             <p className="text-[10px] text-slate-400 mb-4">Mined across the network</p>
 
             <div className="space-y-0">
-              {LATEST_BLOCKS.map((block, i) => (
+              {(isConnected ? LATEST_BLOCKS : []).map((block, i) => (
                 <div key={i} className="flex items-center justify-between py-3.5 border-t border-slate-100 first:border-t-0">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
@@ -369,7 +418,7 @@ function Dashboard(): JSX.Element {
             <p className="text-[10px] text-slate-400 mb-4 font-mono">Transactions for 0xC0a7...90a1</p>
 
             <div className="space-y-0">
-              {ACTIVITY_LOG.map((tx, i) => (
+              {(isConnected ? ACTIVITY_LOG : []).map((tx, i) => (
                 <div key={i} className="flex items-center justify-between py-3.5 border-t border-slate-100 first:border-t-0">
                   <div className="flex items-center gap-3">
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${tx.positive ? 'bg-blue-50' : 'bg-amber-50'}`}>

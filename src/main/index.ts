@@ -224,6 +224,9 @@ app.whenReady().then(async () => {
   
   const store = new Store({
     defaults: {
+      mnemonic: null,
+      activeWalletAddress: null,
+      accounts: [],
       general: {
         launchAtLogin: true,
         openInBackground: false,
