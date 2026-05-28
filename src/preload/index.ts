@@ -8,7 +8,12 @@ const api = {
     port: number
     sessionValid: boolean
     networkId: string
-  }> => ipcRenderer.invoke('get-node-status')
+  }> => ipcRenderer.invoke('get-node-status'),
+  settings: {
+    get: (key: string) => ipcRenderer.invoke('settings:get', key),
+    set: (key: string, value: any) => ipcRenderer.invoke('settings:set', key, value),
+    getAll: () => ipcRenderer.invoke('settings:getAll')
+  }
 }
 
 if (process.contextIsolated) {

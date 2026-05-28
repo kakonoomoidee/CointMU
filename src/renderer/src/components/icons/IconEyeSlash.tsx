@@ -1,4 +1,4 @@
-import { type SVGProps } from 'react'
+import { type SVGProps, type JSX } from 'react'
 
 const DEFAULT_ICON_SIZE = 24
 const DEFAULT_ICON_COLOR = 'currentColor'

@@ -1,26 +1,36 @@
 import { useState, type JSX } from 'react'
-import { Dashboard, Miner } from '@/views'
-import { useRpcPort } from '@/hooks'
+import { Dashboard, Miner, Wallet, Explorer, Settings } from '@/views'
+import { useRpcPort, useNetworkStatus } from '@/hooks'
 
 const NAV_ITEM_DASHBOARD = 'dashboard'
 const NAV_ITEM_MINER = 'miner'
+const NAV_ITEM_WALLET = 'wallet'
+const NAV_ITEM_EXPLORER = 'explorer'
+const NAV_ITEM_SETTINGS = 'settings'
+type ActiveView = typeof NAV_ITEM_DASHBOARD | typeof NAV_ITEM_MINER | typeof NAV_ITEM_WALLET | typeof NAV_ITEM_EXPLORER | typeof NAV_ITEM_SETTINGS
 
-type ActiveView = typeof NAV_ITEM_DASHBOARD | typeof NAV_ITEM_MINER
+const APP_VERSION = 'v0.4.2'
+const APP_NETWORK = 'testnet'
+const WALLET_ADDRESS_ABBR = '0xC0a7...90a1'
+const WALLET_BALANCE = '1,284.67'
 
 /**
  * Root application component rendering a sidebar navigation layout
- * with view routing between Dashboard and Miner panels.
+ * with view routing between Dashboard and Miner panels. Sidebar
+ * matches the reference design with CointMU branding, workspace
+ * navigation sections, and a bottom wallet status bar.
  * @returns The top-level application shell with sidebar and content area.
  */
 function App(): JSX.Element {
   const [activeView, setActiveView] = useState<ActiveView>(NAV_ITEM_DASHBOARD)
   const { port } = useRpcPort()
+  const networkStatus = useNetworkStatus(port)
 
   return (
-    <div className="flex h-full bg-[var(--color-surface-primary)]">
-      <aside className="w-56 flex flex-col border-r border-[var(--color-border-subtle)] bg-[var(--color-surface-secondary)]">
+    <div className="flex h-full bg-slate-50">
+      <aside className="w-56 flex flex-col border-r border-slate-200 bg-white">
         <div className="flex items-center gap-3 px-5 py-5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--color-accent-primary)] to-[var(--color-accent-secondary)] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-sm shadow-blue-200">
             <svg
               width="16"
               height="16"
@@ -35,21 +45,40 @@ function App(): JSX.Element {
             </svg>
           </div>
           <div>
-            <p className="text-sm font-semibold gradient-text">CointMU</p>
-            <p className="text-[10px] text-[var(--color-text-muted)] tracking-wide">Desktop Client</p>
+            <p className="text-sm font-bold text-slate-800">CointMU</p>
+            <p className="text-[10px] text-slate-400 tracking-wide">{APP_VERSION} - {APP_NETWORK}</p>
           </div>
         </div>
 
-        <nav className="flex-1 px-3 py-2 space-y-1">
+        <div className="px-4 py-2">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-50 border border-slate-100">
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[11px] font-medium text-slate-600">
+              Connected to
+              <span className="font-semibold text-blue-600 ml-1">CointMU Mainnet</span>
+            </span>
+            <span className="ml-auto text-[10px] font-bold text-slate-500">
+              {networkStatus.peerCount !== null ? networkStatus.peerCount : '--'}
+            </span>
+            <span className="text-[10px] text-slate-400">peers</span>
+          </div>
+        </div>
+
+        <div className="px-4 pt-5 pb-1">
+          <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-slate-400 px-2">
+            Workspace
+          </p>
+        </div>
+        <nav className="flex-1 px-3 py-1 space-y-0.5">
           <button
             id="nav-dashboard"
             onClick={() => setActiveView(NAV_ITEM_DASHBOARD)}
             className={`
               w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
-              transition-all duration-200 ease-out text-left
+              transition-all duration-150 text-left
               ${activeView === NAV_ITEM_DASHBOARD
-                ? 'bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-glow)] border border-[var(--color-accent-primary)]/20'
-                : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-tertiary)] hover:text-[var(--color-text-primary)] border border-transparent'
+                ? 'bg-blue-600 text-white shadow-sm shadow-blue-200'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
               }
             `}
           >
@@ -76,10 +105,10 @@ function App(): JSX.Element {
             onClick={() => setActiveView(NAV_ITEM_MINER)}
             className={`
               w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
-              transition-all duration-200 ease-out text-left
+              transition-all duration-150 text-left
               ${activeView === NAV_ITEM_MINER
-                ? 'bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-glow)] border border-[var(--color-accent-primary)]/20'
-                : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-tertiary)] hover:text-[var(--color-text-primary)] border border-transparent'
+                ? 'bg-blue-600 text-white shadow-sm shadow-blue-200'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
               }
             `}
           >
@@ -104,31 +133,139 @@ function App(): JSX.Element {
               <line x1="1" y1="9" x2="4" y2="9" />
               <line x1="1" y1="14" x2="4" y2="14" />
             </svg>
-            Miner
+            Mining
+            <span className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-500" />
+          </button>
+
+          <button
+            id="nav-wallet"
+            onClick={() => setActiveView(NAV_ITEM_WALLET)}
+            className={`
+              w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+              transition-all duration-150 text-left
+              ${activeView === NAV_ITEM_WALLET
+                ? 'bg-blue-600 text-white shadow-sm shadow-blue-200'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+              }
+            `}
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="2" y="6" width="20" height="12" rx="2" />
+              <path d="M22 10H2" />
+            </svg>
+            Wallet
+          </button>
+
+          <button
+            id="nav-explorer"
+            onClick={() => setActiveView(NAV_ITEM_EXPLORER)}
+            className={`
+              w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+              transition-all duration-150 text-left
+              ${activeView === NAV_ITEM_EXPLORER
+                ? 'bg-blue-600 text-white shadow-sm shadow-blue-200'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+              }
+            `}
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            Explorer
+          </button>
+
+          <div className="pt-4 pb-1 px-2">
+            <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-slate-400">
+              System
+            </p>
+          </div>
+
+          <button
+            id="nav-settings"
+            onClick={() => setActiveView(NAV_ITEM_SETTINGS)}
+            className={`
+              w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+              transition-all duration-150 text-left
+              ${activeView === NAV_ITEM_SETTINGS
+                ? 'bg-blue-600 text-white shadow-sm shadow-blue-200'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+              }
+            `}
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
+            </svg>
+            Settings
           </button>
         </nav>
 
-        <div className="px-4 py-4 border-t border-[var(--color-border-subtle)]">
-          <p className="text-[10px] text-[var(--color-text-muted)]">CointMU Desktop v1.0.0</p>
+        <div className="px-4 py-3 border-t border-slate-100">
+          <div className="flex items-center gap-3 px-2 py-2">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
+              <svg
+                className="text-slate-500"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="2" y="6" width="20" height="12" rx="2" />
+                <path d="M22 10H2" />
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-slate-700">Main wallet</p>
+                <p className="text-xs font-bold text-slate-800">{WALLET_BALANCE}</p>
+              </div>
+              <div className="flex items-center justify-between mt-0.5">
+                <p className="text-[10px] text-slate-400 font-mono">{WALLET_ADDRESS_ABBR}</p>
+                <p className="text-[10px] text-slate-400">CMU</p>
+              </div>
+            </div>
+          </div>
         </div>
       </aside>
 
       <main className="flex-1 overflow-hidden">
         {activeView === NAV_ITEM_DASHBOARD && <Dashboard />}
-        {activeView === NAV_ITEM_MINER && (
-          <div className="h-full flex flex-col">
-            <header className="flex items-center justify-between px-8 py-5 border-b border-[var(--color-border-subtle)]">
-              <h1 className="text-lg font-semibold tracking-tight text-[var(--color-text-primary)]">
-                Mining Controller
-              </h1>
-            </header>
-            <div className="flex-1 overflow-y-auto p-8">
-              <div className="max-w-4xl mx-auto">
-                <Miner port={port} />
-              </div>
-            </div>
-          </div>
-        )}
+        {activeView === NAV_ITEM_MINER && <Miner port={port} />}
+        {activeView === NAV_ITEM_WALLET && <Wallet />}
+        {activeView === NAV_ITEM_EXPLORER && <Explorer />}
+        {activeView === NAV_ITEM_SETTINGS && <Settings />}
       </main>
     </div>
   )

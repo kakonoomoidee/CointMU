@@ -1,5 +1,6 @@
 import type { NetworkStatus as NetworkStatusType } from '@/hooks'
 import { formatBlockNumber, formatChainId, formatPeerCount } from '@/utils'
+import { type JSX } from 'react'
 
 interface NetworkStatusProps {
   status: NetworkStatusType

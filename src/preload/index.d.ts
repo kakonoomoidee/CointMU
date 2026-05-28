@@ -8,6 +8,11 @@ interface CointmuAPI {
     sessionValid: boolean
     networkId: string
   }>
+  settings: {
+    get: (key: string) => Promise<any>
+    set: (key: string, value: any) => Promise<void>
+    getAll: () => Promise<any>
+  }
 }
 
 declare global {

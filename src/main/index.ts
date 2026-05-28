@@ -4,6 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { spawn, ChildProcess } from 'child_process'
 import { config } from 'dotenv'
 import detectPort from 'detect-port'
+import Store from 'electron-store'
 
 config({ path: join(app.getAppPath(), '.env') })
 
@@ -220,6 +221,48 @@ app.whenReady().then(async () => {
     sessionValid: isSessionValid(),
     networkId: GETH_NETWORK_ID
   }))
+
+  const store = new Store({
+    defaults: {
+      general: {
+        launchAtLogin: true,
+        openInBackground: false,
+        pushNotifications: true,
+        notificationSound: false,
+        language: 'English',
+        currency: 'CMU (native)'
+      },
+      appearance: {
+        theme: 'Light',
+        accentColor: '#3b82f6', // blue-500
+        density: 'Comfortable',
+        showSidebarColors: true,
+        animatedTransitions: true
+      },
+      network: {
+        network: 'CointMU Mainnet',
+        rpcEndpoint: 'https://rpc.cointmu.net',
+        maxPeers: 14,
+        discovery: true,
+        listenPort: 30303,
+        syncMode: 'Snap (recommended)',
+        pruneOldState: true
+      },
+      mining: {
+        enableMining: false,
+        startAtLaunch: false,
+        threads: 4,
+        intensity: 'Balanced',
+        pauseOnBattery: true,
+        mode: 'Solo',
+        rewardAddress: ''
+      }
+    }
+  })
+
+  ipcMain.handle('settings:get', (_, key) => store.get(key))
+  ipcMain.handle('settings:set', (_, key, value) => store.set(key, value))
+  ipcMain.handle('settings:getAll', () => store.store)
 
   resolvedRpcPort = await findAvailablePort()
 

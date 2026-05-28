@@ -1,4 +1,5 @@
 import { formatPortDisplay, formatTimestamp } from '@/utils'
+import { type JSX } from 'react'
 
 interface NodeInfoProps {
   port: number | null

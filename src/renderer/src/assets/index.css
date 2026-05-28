@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  --color-surface-primary: #0a0a0f;
-  --color-surface-secondary: #12121a;
-  --color-surface-tertiary: #1a1a2e;
-  --color-surface-elevated: #222238;
-  --color-border-subtle: #2a2a40;
-  --color-border-active: #4f46e5;
-  --color-accent-primary: #6366f1;
-  --color-accent-secondary: #8b5cf6;
-  --color-accent-glow: #818cf8;
+  --color-surface-primary: #f8fafc;
+  --color-surface-secondary: #ffffff;
+  --color-surface-tertiary: #f1f5f9;
+  --color-surface-elevated: #ffffff;
+  --color-border-subtle: #e2e8f0;
+  --color-border-active: #3b82f6;
+  --color-accent-primary: #3b82f6;
+  --color-accent-secondary: #2563eb;
+  --color-accent-glow: #3b82f6;
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
-  --color-text-primary: #f1f5f9;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #64748b;
+  --color-text-muted: #94a3b8;
   --font-family-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
   --font-family-mono: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
 }
@@ -64,20 +64,15 @@
 
 @layer components {
   .card-glass {
-    background: linear-gradient(
-      135deg,
-      rgba(26, 26, 46, 0.8),
-      rgba(18, 18, 26, 0.6)
-    );
+    background: var(--color-surface-elevated);
     border: 1px solid var(--color-border-subtle);
     border-radius: 16px;
-    backdrop-filter: blur(12px);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
   .card-glass:hover {
     border-color: var(--color-border-active);
-    box-shadow: 0 0 24px rgba(99, 102, 241, 0.08);
+    box-shadow: 0 1px 12px rgba(59, 130, 246, 0.08);
   }
 
   .status-dot {
@@ -89,17 +84,17 @@
 
   .status-dot-online {
     background-color: var(--color-success);
-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
   }
 
   .status-dot-offline {
     background-color: var(--color-error);
-    box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
   }
 
   .status-dot-syncing {
     background-color: var(--color-warning);
-    box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
   }
 
   .gradient-text {
@@ -133,7 +128,7 @@
   }
 
   .shimmer-border:hover::before {
-    opacity: 0.15;
+    opacity: 0.1;
   }
 }
 
