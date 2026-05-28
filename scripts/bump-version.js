@@ -101,7 +101,7 @@ function calculateNewVersion(currentVersion, bumpType, prereleaseTag) {
  */
 function updateMakefileVersion(makefileContent, newVersion) {
   const versionCore = newVersion.split('-')[0]
-  const prereleaseTag = newVersion.substring(versionCore.length)
+  const prereleaseTag = newVersion.includes('-') ? newVersion.substring(versionCore.length + 1) : ''
   const parts = versionCore.split('.').map(Number)
 
   let updated = makefileContent.replace(/^VERSION\s*=\s*.*$/m, `VERSION = ${parts[PART_MAJOR_INDEX]}`)
@@ -119,7 +119,7 @@ function updateMakefileVersion(makefileContent, newVersion) {
  */
 function runCommand(command) {
   console.log(`Executing: ${command}`)
-  execSync(command, { stdio: 'inherit' })
+  execSync(command, { stdio: 'inherit', cwd: path.resolve(__dirname, '..') })
 }
 
 /**

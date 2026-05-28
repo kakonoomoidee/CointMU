@@ -3,10 +3,9 @@
 # ==========================================
 
 VERSION = 1
-PATCHLEVEL = 1
+PATCHLEVEL = 2
 SUBLEVEL = 0
-EXTRAVERSION = -aries
-NAME = Aries
+EXTRAVERSION = tvrstsp
 
 .PHONY: help dev build\:win clean
 
