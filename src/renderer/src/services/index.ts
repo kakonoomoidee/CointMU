@@ -4,5 +4,9 @@ export {
   getBlockNumber,
   getChainId,
   getPeerCount,
-  getSyncStatus
+  getSyncStatus,
+  startMining,
+  stopMining,
+  getMiningStatus,
+  getHashrate
 } from './web3Provider'

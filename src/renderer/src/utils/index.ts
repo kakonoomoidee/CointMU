@@ -3,5 +3,6 @@ export {
   formatPortDisplay,
   formatPeerCount,
   formatChainId,
-  formatTimestamp
+  formatTimestamp,
+  formatHashrate
 } from './formatters'

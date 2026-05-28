@@ -1,7 +1,6 @@
 import { ethers } from 'ethers'
 
 const RPC_PROTOCOL = 'http'
-const PROVIDER_TIMEOUT_MS = 10000
 
 let providerInstance: ethers.JsonRpcProvider | null = null
 
@@ -93,4 +92,75 @@ async function getSyncStatus(
   }
 }
 
-export { createProvider, resetProvider, getBlockNumber, getChainId, getPeerCount, getSyncStatus }
+const DEFAULT_MINING_THREADS = 1
+const HEX_RADIX = 16
+
+/**
+ * Sends an RPC command to start the miner on the connected node.
+ * @param provider - An active JsonRpcProvider instance.
+ * @param threads - The number of mining threads to use, defaults to one.
+ * @returns True if the command was acknowledged, or null on failure.
+ */
+async function startMining(
+  provider: ethers.JsonRpcProvider,
+  threads: number = DEFAULT_MINING_THREADS
+): Promise<boolean | null> {
+  try {
+    return await provider.send('miner_start', [threads])
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Sends an RPC command to stop the miner on the connected node.
+ * @param provider - An active JsonRpcProvider instance.
+ * @returns True if the command was acknowledged, or null on failure.
+ */
+async function stopMining(provider: ethers.JsonRpcProvider): Promise<boolean | null> {
+  try {
+    return await provider.send('miner_stop', [])
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Queries the node to determine if the miner is currently active.
+ * @param provider - An active JsonRpcProvider instance.
+ * @returns True if actively mining, false if idle, or null on failure.
+ */
+async function getMiningStatus(provider: ethers.JsonRpcProvider): Promise<boolean | null> {
+  try {
+    return await provider.send('eth_mining', [])
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Fetches the current mining hashrate from the connected node.
+ * @param provider - An active JsonRpcProvider instance.
+ * @returns The hashrate in hashes per second, or null on failure.
+ */
+async function getHashrate(provider: ethers.JsonRpcProvider): Promise<number | null> {
+  try {
+    const result = await provider.send('eth_hashrate', [])
+    return parseInt(result, HEX_RADIX)
+  } catch {
+    return null
+  }
+}
+
+export {
+  createProvider,
+  resetProvider,
+  getBlockNumber,
+  getChainId,
+  getPeerCount,
+  getSyncStatus,
+  startMining,
+  stopMining,
+  getMiningStatus,
+  getHashrate
+}

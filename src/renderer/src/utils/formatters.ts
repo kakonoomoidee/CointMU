@@ -2,8 +2,6 @@ const LOCALE_DEFAULT = 'en-US'
 const PORT_DISPLAY_PREFIX = ':'
 const PEER_SINGULAR = 'peer'
 const PEER_PLURAL = 'peers'
-const BLOCK_HASH_PREVIEW_LENGTH = 10
-const ZERO_DISPLAY = '0'
 
 /**
  * Formats a block number into a locale-aware string with thousands separators.
@@ -66,4 +64,34 @@ function formatTimestamp(timestamp: number | null): string {
   return new Date(timestamp).toLocaleTimeString(LOCALE_DEFAULT)
 }
 
-export { formatBlockNumber, formatPortDisplay, formatPeerCount, formatChainId, formatTimestamp }
+const HASHRATE_UNIT_THRESHOLD = 1000
+const HASHRATE_DECIMAL_PLACES = 2
+const HASHRATE_UNITS = ['H/s', 'KH/s', 'MH/s', 'GH/s', 'TH/s']
+
+/**
+ * Formats a raw hashrate value into a human-readable string with automatic
+ * unit scaling from H/s through TH/s.
+ * @param hashrate - The raw hashrate in hashes per second, or null if unavailable.
+ * @returns A formatted hashrate string with the appropriate unit suffix.
+ */
+function formatHashrate(hashrate: number | null): string {
+  if (hashrate === null || hashrate === 0) {
+    return '0 H/s'
+  }
+
+  let scaled = hashrate
+  let unitIndex = 0
+
+  while (scaled >= HASHRATE_UNIT_THRESHOLD && unitIndex < HASHRATE_UNITS.length - 1) {
+    scaled = scaled / HASHRATE_UNIT_THRESHOLD
+    unitIndex++
+  }
+
+  const formatted = unitIndex === 0
+    ? scaled.toString()
+    : scaled.toFixed(HASHRATE_DECIMAL_PLACES)
+
+  return `${formatted} ${HASHRATE_UNITS[unitIndex]}`
+}
+
+export { formatBlockNumber, formatPortDisplay, formatPeerCount, formatChainId, formatTimestamp, formatHashrate }
