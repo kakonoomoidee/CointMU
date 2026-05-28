@@ -1,0 +1,10 @@
+{
+  "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
+  "include": ["src/main/**/*", "electron.vite.config.ts"],
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./out/main",
+    "rootDir": ".",
+    "types": ["node"]
+  }
+}

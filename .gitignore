@@ -1,0 +1,10 @@
+node_modules/
+out/
+dist/
+build/
+data/
+*.log
+.env.local
+.env.*.local
+resources/bin/geth
+resources/bin/geth.exe

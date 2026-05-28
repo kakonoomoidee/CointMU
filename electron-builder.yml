@@ -1,0 +1,38 @@
+appId: com.cointmu.desktop
+productName: CointMU Desktop
+directories:
+  buildResources: build
+files:
+  - '!**/.vscode/*'
+  - '!src/*'
+  - '!electron.vite.config.*'
+  - '!{.env,.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
+  - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+extraResources:
+  - from: resources/bin/
+    to: bin/
+    filter:
+      - '**/*'
+asarUnpack:
+  - resources/**
+win:
+  executableName: CointMU
+  target:
+    - nsis
+nsis:
+  artifactName: CointMU-Setup-${version}.${ext}
+  shortcutName: CointMU
+  uninstallDisplayName: CointMU Desktop
+  createDesktopShortcut: always
+mac:
+  entitlementsInherit: build/entitlements.mac.plist
+  extendInfo:
+    - NSDocumentsFolderUsageDescription: CointMU requires access to store blockchain data.
+    - NSDownloadsFolderUsageDescription: CointMU requires access to manage downloaded binaries.
+  notarize: false
+linux:
+  target:
+    - AppImage
+    - deb
+  maintainer: cointmu.org
+  category: Utility
