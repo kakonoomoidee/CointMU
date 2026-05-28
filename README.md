@@ -45,3 +45,6 @@ node scripts/bump-version.js <major|minor|patch> [prerelease-tag]
   ```bash
   node scripts/bump-version.js patch beta
   ```
+
+## Contributing
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup details and contribution guidelines.
