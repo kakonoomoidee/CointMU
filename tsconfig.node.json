@@ -3,6 +3,8 @@
   "include": ["src/main/**/*", "electron.vite.config.ts"],
   "compilerOptions": {
     "composite": true,
+    "moduleResolution": "bundler",
+    "module": "ESNext",
     "outDir": "./out/main",
     "rootDir": ".",
     "types": ["node"]
