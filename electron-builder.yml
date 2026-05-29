@@ -24,6 +24,7 @@ win:
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
+  installerIcon: resources/icon.ico
   license: resources/license.txt
   artifactName: CointMU-Setup-${version}.${ext}
   shortcutName: CointMU
