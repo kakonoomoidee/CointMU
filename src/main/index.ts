@@ -260,6 +260,10 @@ function createWindow(): BrowserWindow {
     minHeight: WINDOW_MIN_HEIGHT,
     show: false,
     autoHideMenuBar: true,
+    title: 'CointMU',
+    icon: process.platform === 'win32' 
+      ? join(__dirname, '../../resources/icon.ico') 
+      : join(__dirname, '../../resources/icon.png'),
     backgroundColor: '#0a0a0f',
     titleBarStyle: 'hiddenInset',
     webPreferences: {

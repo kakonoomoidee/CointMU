@@ -1,5 +1,6 @@
 {
   "name": "cointmu-desktop",
+  "productName": "CointMU",
   "version": "1.4.0-dino",
   "description": "CointMU Desktop Client - Proof of Work Blockchain Node Manager",
   "main": "./out/main/index.js",

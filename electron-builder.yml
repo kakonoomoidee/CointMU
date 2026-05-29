@@ -1,5 +1,6 @@
 appId: com.cointmu.desktop
-productName: CointMU Desktop
+productName: CointMU
+icon: resources/icon.png
 directories:
   buildResources: build
 files:
@@ -17,6 +18,7 @@ asarUnpack:
   - resources/**
 win:
   executableName: CointMU
+  icon: resources/icon.ico
   target:
     - nsis
 nsis:
@@ -34,6 +36,7 @@ mac:
     - NSDownloadsFolderUsageDescription: CointMU requires access to manage downloaded binaries.
   notarize: false
 linux:
+  icon: resources/icon.png
   target:
     - AppImage
     - deb
