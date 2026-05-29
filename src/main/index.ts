@@ -326,10 +326,16 @@ function setupAutoUpdater(win: BrowserWindow): void {
   })
 
   ipcMain.handle('check-for-updates', async () => {
+    if (!app.isPackaged) {
+      console.warn('[updater] Skipping update check in development mode.')
+      win.webContents.send('update-status', { status: 'idle' })
+      return
+    }
     try {
       await autoUpdater.checkForUpdatesAndNotify()
     } catch (err) {
       console.warn('[updater] Failed to check for updates:', (err as Error).message)
+      win.webContents.send('update-status', { status: 'idle' })
     }
   })
 
