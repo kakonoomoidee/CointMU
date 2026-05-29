@@ -1,81 +1,35 @@
-CointMU Desktop - Terms of Service
+COINTMU DESKTOP - END USER LICENSE AGREEMENT
 
-Last Updated: May 2026
+LAST UPDATED: MAY 2026
 
-PLEASE READ THESE TERMS OF SERVICE CAREFULLY BEFORE USING THE COINTMU DESKTOP APPLICATION.
+PLEASE READ THIS END USER LICENSE AGREEMENT CAREFULLY BEFORE INSTALLING, ACCESSING, OR USING THE COINTMU DESKTOP APPLICATION.
 
 1. ACCEPTANCE OF TERMS
+By installing, accessing, or using the CointMU Desktop application (hereinafter referred to as the Software), you agree to be bound by the terms of this End User License Agreement (hereinafter referred to as the Agreement). If you do not agree to the terms of this Agreement, you must not install or use the Software.
 
-By installing, accessing, or using CointMU Desktop ("the Software"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not install or use the Software.
+2. LICENSE GRANT AND INTELLECTUAL PROPERTY RIGHTS
+Subject to your strict compliance with this Agreement, the CointMU Foundation grants you a non-exclusive, non-transferable, revocable license to use the Software for personal and commercial purposes under the terms of the MIT License. The Software operates as a robust Proof of Work blockchain node bundled within an Electron environment. All rights, title, and interest in and to the Software, including any intellectual property rights therein, remain the exclusive property of the CointMU Foundation and its licensors.
 
-2. LICENSE GRANT
+3. AS-IS PROVISION AND NO WARRANTY
+THE SOFTWARE IS PROVIDED AS IS AND AS AVAILABLE, WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES OF ANY KIND. THE COINTMU FOUNDATION STRICTLY DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. THE ENTIRE RISK ARISING OUT OF THE USE OR PERFORMANCE OF THE SOFTWARE REMAINS WITH YOU.
 
-Subject to these Terms, CointMU Foundation grants you a non-exclusive, non-transferable, revocable license to use the Software for personal and commercial purposes. The Software is licensed under the MIT License. You may copy, modify, and distribute the Software in accordance with the MIT License terms.
+4. HARDWARE LIABILITY DISCLAIMER
+You acknowledge that the Software includes intensive computational features designed for cryptographic mining and continuous blockchain node synchronization. The CointMU Foundation, its developers, and affiliates shall not be held liable for any hardware degradation, overheating, physical damage to internal or external components, reduced hardware lifespan, or increased power consumption costs resulting directly or indirectly from the operation of the Software. You assume all risks associated with the physical and thermal stress placed on your computing hardware.
 
-3. DESCRIPTION OF SERVICE
+5. FINANCIAL AND BLOCKCHAIN RISKS DISCLAIMER
+The Software is designed to handle digital assets and interact with decentralized networks over which the CointMU Foundation possesses no authority or control. The creators, developers, and the CointMU Foundation are explicitly not responsible for any financial losses, lost block rewards, orphaned blocks, network synchronization issues, slashing penalties, or loss of access to funds. You acknowledge that securing cryptographic wallets, safeguarding private keys, and verifying transaction broadcasts are entirely your responsibility.
 
-CointMU Desktop is a blockchain node management application that allows users to:
-  - Run and manage a CointMU proof-of-work blockchain node.
-  - Create and manage cryptographic wallets.
-  - Send and receive CMU tokens.
-  - Mine blocks on the CointMU network.
-  - Explore on-chain data including blocks and transactions.
+6. USER COMPLIANCE AND UTILITY COSTS
+You are solely responsible for ensuring that running a blockchain node and participating in cryptocurrency mining is strictly legal and compliant with the laws, regulations, and policies of your local jurisdiction. Furthermore, you agree to bear all associated utility costs, including but not limited to electricity and internet bandwidth, incurred through the continuous or intermittent operation of the Software.
 
-4. USER RESPONSIBILITIES
+7. LIMITATION OF LIABILITY
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL THE COINTMU FOUNDATION, ITS DEVELOPERS, DIRECTORS, OR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, PUNITIVE, OR CONSEQUENTIAL DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF BUSINESS INFORMATION, OR ANY OTHER PECUNIARY LOSS) ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN IF THE COINTMU FOUNDATION HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 
-You are solely responsible for:
-  a) Safeguarding your private keys, seed phrases, and wallet passwords.
-  b) All transactions initiated through the Software.
-  c) Maintaining adequate backups of your wallet data.
-  d) Ensuring compliance with applicable laws in your jurisdiction.
+8. INDEMNIFICATION
+You agree to indemnify, defend, and hold harmless the CointMU Foundation, its affiliates, contributors, and agents from and against any and all claims, liabilities, damages, losses, costs, expenses, or fees (including reasonable legal fees) arising from your use of the Software, your violation of this Agreement, or your infringement of any intellectual property or other rights of any third party.
 
-5. PRIVATE KEY AND WALLET SECURITY
+9. TERMINATION
+This Agreement is effective until terminated. Your rights under this Agreement will terminate automatically without notice from the CointMU Foundation if you fail to comply with any of the terms outlined herein. Upon termination, you must immediately cease all use of the Software and destroy all copies, whether full or partial, of the Software in your possession or control.
 
-The Software generates and stores cryptographic keys locally on your device. CointMU Foundation does not have access to your private keys, seed phrases, or passwords. If you lose access to your keys or passwords, your funds may be permanently unrecoverable. CointMU Foundation cannot assist in recovering lost keys or funds.
-
-6. NETWORK PARTICIPATION
-
-By running the Software, you may participate in the CointMU peer-to-peer network. This involves:
-  - Broadcasting and receiving blockchain data.
-  - Connecting to other nodes on the network.
-  - Contributing computational resources if mining is enabled.
-
-7. NO WARRANTY
-
-THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. THE ENTIRE RISK ARISING OUT OF THE USE OR PERFORMANCE OF THE SOFTWARE REMAINS WITH YOU.
-
-8. LIMITATION OF LIABILITY
-
-IN NO EVENT SHALL COINTMU FOUNDATION, ITS CONTRIBUTORS, OR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING BUT NOT LIMITED TO LOSS OF DATA, LOSS OF FUNDS, PROCUREMENT OF SUBSTITUTE SERVICES, OR BUSINESS INTERRUPTION) ARISING IN ANY WAY OUT OF THE USE OF THE SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-9. BLOCKCHAIN RISKS
-
-You acknowledge and accept the inherent risks associated with blockchain technology, including but not limited to:
-  a) Volatility of digital asset values.
-  b) Irreversibility of blockchain transactions.
-  c) Potential for network forks or protocol changes.
-  d) Risk of software bugs or vulnerabilities.
-  e) Regulatory uncertainty in various jurisdictions.
-
-10. UPDATES AND MODIFICATIONS
-
-CointMU Foundation may release updates to the Software from time to time. These updates may include security patches, new features, or protocol changes. You are encouraged to keep the Software up to date. Continued use of the Software after updates constitutes acceptance of any modified Terms.
-
-11. OPEN SOURCE
-
-The Software is open source and distributed under the MIT License. The source code is available at github.com/kakonoomoidee/CointMU. Contributions are welcome and subject to the project contribution guidelines.
-
-12. TERMINATION
-
-You may stop using the Software at any time by uninstalling it from your device. CointMU Foundation reserves the right to modify or discontinue the Software at any time without prior notice.
-
-13. GOVERNING LAW
-
-These Terms shall be governed by and construed in accordance with applicable international laws. Any disputes arising from these Terms shall be resolved through good-faith negotiation.
-
-14. CONTACT
-
-For questions regarding these Terms, please open an issue on the project GitHub repository or contact the CointMU Foundation through official channels.
-
-Copyright (c) 2026 CointMU Foundation. All rights reserved.
-Licensed under the MIT License.
+10. GOVERNING LAW
+This Agreement shall be governed by and construed in accordance with applicable international legal standards, without regard to conflict of law principles. Any legal action or proceeding arising under this Agreement will be resolved exclusively through good-faith negotiation or in competent courts explicitly designated by the CointMU Foundation.
