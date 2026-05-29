@@ -20,6 +20,9 @@ win:
   target:
     - nsis
 nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  license: resources/license.txt
   artifactName: CointMU-Setup-${version}.${ext}
   shortcutName: CointMU
   uninstallDisplayName: CointMU Desktop
