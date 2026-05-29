@@ -1,9 +1,6 @@
-import { useRpcPort, useNetworkStatus, useNetworkStats } from '@/hooks'
+import { useNetworkStats, useBalance } from '@/hooks'
 import { formatBlockNumber, formatHashrate, formatDifficulty } from '@/utils'
 import { type JSX } from 'react'
-
-const WALLET_BALANCE_CMU = '1,284.67'
-const WALLET_BALANCE_USD = '$539.66'
 const MINED_BLOCKS_24H = '7'
 const MINED_BLOCKS_REWARD = '+70 CMU rewards'
 const NETWORK_HASHRATE = '48.3 GH/s'
@@ -67,15 +64,12 @@ interface DashboardProps {
  *          KPI grid, latest blocks list, and activity feed.
  */
 function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
-  const { port } = useRpcPort()
-  const networkStatus = useNetworkStatus(port)
-  const networkStats = useNetworkStats(port)
+  const networkStats = useNetworkStats()
+  const { balance } = useBalance(activeWalletAddress, networkStats.isConnected)
 
   const isConnected = networkStats.isConnected
 
-  const syncLabel = isConnected
-    ? (networkStatus.syncing === false ? 'Synced' : 'Syncing')
-    : 'Offline'
+  const syncLabel = isConnected ? 'Synced' : 'Offline'
 
   const syncDotColor = isConnected ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
   const syncBorderColor = isConnected ? 'border-emerald-200 bg-emerald-50' : 'border-slate-200 bg-slate-50'
@@ -180,12 +174,12 @@ function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
               <div className="mb-6">
                 <div className="flex items-baseline gap-2.5">
                   <span className="text-4xl font-bold tracking-tight">
-                    {isConnected ? WALLET_BALANCE_CMU : '0.00'}
+                    {balance}
                   </span>
                   <span className="text-lg font-semibold text-white/70">CMU</span>
                 </div>
                 <p className="text-sm text-white/50 mt-1">
-                  ~ {isConnected ? WALLET_BALANCE_USD : '$0.00'} - estimated
+                  Balance from node
                 </p>
               </div>
 

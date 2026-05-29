@@ -18,7 +18,11 @@ export {
   fetchGasPrice,
   fetchMiningStatus,
   fetchHashrate,
-  fetchDifficulty
+  fetchDifficulty,
+  fetchBalance,
+  setEtherbase,
+  startMiner,
+  stopMiner
 } from './rpcClient'
 
 export {

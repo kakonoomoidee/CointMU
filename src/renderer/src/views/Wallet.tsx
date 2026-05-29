@@ -1,5 +1,6 @@
 import { useState, type JSX } from 'react'
 import { deriveAccount, generateIdenticonGradient, type DerivedAccount } from '@/services'
+import { useNetworkStats, useBalance } from '@/hooks'
 
 type WalletTab = 'activity' | 'tokens' | 'nfts'
 
@@ -18,39 +19,11 @@ interface WalletProps {
 
 
 
-const WATCH_LIST = [
-  { name: 'CointMU Foundation', address: '0xfe1100...4b27' },
-  { name: 'Treasury', address: '0x3b4cee...ee19' }
-]
+const WATCH_LIST: never[] = []
+const TRANSACTIONS: never[] = []
+const TOKEN_LIST: never[] = []
+const NFT_COLLECTION: never[] = []
 
-const TRANSACTIONS = [
-  { type: 'reward' as const, label: 'Mining reward', detail: 'From mining pool - block #28510', amount: '+10.00', unit: 'CMU', time: '6s ago - 1 confs', positive: true },
-  { type: 'sent' as const, label: 'Sent CMU', detail: 'To 0x8f1a3c...6e5f4a', amount: '-24.50', unit: 'CMU', time: '4m ago - 8 confs', positive: false },
-  { type: 'reward' as const, label: 'Mining reward', detail: 'From mining pool - block #28506', amount: '+10.00', unit: 'CMU', time: '7m ago - 5 confs', positive: true },
-  { type: 'contract' as const, label: 'Contract call', detail: 'To 0x4f9d12...a77b88', amount: '-0.12', unit: 'CMU', time: '22m ago - 44 confs', positive: false },
-  { type: 'received' as const, label: 'Received CMU', detail: 'From 0xa91c...3f27', amount: '+75.00', unit: 'CMU', time: '1h ago - 120 confs', positive: true }
-]
-
-const TOKEN_LIST = [
-  { symbol: 'CMU', name: 'CointMU', price: '$0.42', change: '+3.2%', changePositive: true, balance: '1,314.67', value: '$552.16', gradient: 'from-emerald-400 to-emerald-600' },
-  { symbol: 'DAI', name: 'Dai Stablecoin', price: '$1.00', change: '+0.01%', changePositive: true, balance: '250.00', value: '$250.00', gradient: 'from-amber-400 to-amber-500' },
-  { symbol: 'WCMU', name: 'Wrapped CMU', price: '$0.42', change: '+3.1%', changePositive: true, balance: '80.50', value: '$33.81', gradient: 'from-blue-400 to-blue-600' },
-  { symbol: 'USDT', name: 'Tether USD', price: '$1.00', change: '-0.02%', changePositive: false, balance: '15.00', value: '$15.00', gradient: 'from-emerald-500 to-teal-500' },
-  { symbol: 'LP-CMU', name: 'CMU-DAI LP Token', price: '$2.84', change: '+1.4%', changePositive: true, balance: '44.20', value: '$125.53', gradient: 'from-violet-400 to-fuchsia-500' }
-]
-
-const NFT_COLLECTION = [
-  { id: 1, title: 'Certificate #014', collection: 'CointMU Edu', standard: 'ERC-721', gradient: 'from-red-400 via-orange-400 to-amber-300' },
-  { id: 2, title: 'Builder Badge', collection: 'Genesis', standard: 'ERC-1155', gradient: 'from-violet-400 via-purple-400 to-fuchsia-400' },
-  { id: 3, title: 'Hashstar 0x09', collection: 'Hashstars', standard: 'ERC-721', gradient: 'from-emerald-300 via-teal-400 to-cyan-500' },
-  { id: 4, title: 'Validator Pass', collection: 'CointMU Core', standard: 'ERC-721', gradient: 'from-blue-400 via-indigo-400 to-violet-500' },
-  { id: 5, title: 'Node License', collection: 'Genesis', standard: 'ERC-1155', gradient: 'from-pink-400 via-rose-400 to-red-400' },
-  { id: 6, title: 'Miner Trophy', collection: 'Achievements', standard: 'ERC-1155', gradient: 'from-slate-300 via-zinc-200 to-stone-300' }
-]
-
-// Mock balances for UI showcase
-const HERO_BALANCE = '1,314.67'
-const HERO_USD = '$562.16'
 
 /**
  * Comprehensive wallet management view with a split-pane layout featuring
@@ -67,6 +40,8 @@ function Wallet({
   setActiveWalletAddress
 }: WalletProps): JSX.Element {
   const [activeTab, setActiveTab] = useState<WalletTab>('activity')
+  const networkStats = useNetworkStats()
+  const { balance } = useBalance(activeWalletAddress, networkStats.isConnected)
 
   const activeAccount = accounts.find(a => a.address === activeWalletAddress) || accounts[0]
   const activeGradient = activeAccount ? generateIdenticonGradient(activeAccount.address) : 'from-slate-400 to-slate-500'
@@ -162,7 +137,7 @@ function Wallet({
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
                           <p className="text-xs font-semibold text-slate-700 truncate">{acc.label}</p>
-                          <p className="text-xs font-bold text-slate-800 ml-2">{isSelected ? HERO_BALANCE : '0.00'}</p>
+                          <p className="text-xs font-bold text-slate-800 ml-2">{isSelected ? balance : '0.00'}</p>
                         </div>
                         <div className="flex items-center justify-between mt-0.5">
                           <p className="text-[10px] text-slate-400 font-mono" title={acc.address}>{abbrAddress}</p>
@@ -178,15 +153,11 @@ function Wallet({
             <div>
               <h3 className="text-[10px] font-semibold tracking-[0.15em] uppercase text-slate-400 mb-3">Watch List</h3>
               <div className="space-y-2">
-                {WATCH_LIST.map((item, i) => (
-                  <div key={i} className="flex items-center gap-2.5 px-3 py-2">
-                    <div className="w-2 h-2 rounded-full bg-slate-400 flex-shrink-0" />
-                    <div>
-                      <p className="text-xs font-semibold text-slate-700">{item.name}</p>
-                      <p className="text-[10px] text-slate-400 font-mono">{item.address}</p>
-                    </div>
-                  </div>
-                ))}
+                {WATCH_LIST.length > 0 ? WATCH_LIST.map((_, i) => (
+                  <div key={i} />
+                )) : (
+                  <p className="text-xs text-slate-400 px-3 py-2">No watched addresses</p>
+                )}
               </div>
             </div>
 
@@ -219,11 +190,11 @@ function Wallet({
 
                 <div className="mb-5">
                   <div className="flex items-baseline gap-2.5">
-                    <span className="text-4xl font-bold tracking-tight">{HERO_BALANCE}</span>
+                    <span className="text-4xl font-bold tracking-tight">{balance}</span>
                     <span className="text-lg font-semibold text-white/60">CMU</span>
                   </div>
                   <p className="text-sm text-white/40 mt-1">
-                    ~ {HERO_USD} - estimated
+                    Balance from node
                   </p>
                 </div>
 
@@ -290,56 +261,17 @@ function Wallet({
 
               {activeTab === 'activity' && (
                 <div className="rounded-2xl bg-white border border-slate-200 divide-y divide-slate-100">
-                  {TRANSACTIONS.map((tx, i) => (
-                    <div key={i} className="flex items-center justify-between px-5 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-9 h-9 rounded-full flex items-center justify-center ${
-                          tx.type === 'reward'
-                            ? 'bg-blue-50'
-                            : tx.type === 'sent'
-                              ? 'bg-amber-50'
-                              : tx.type === 'received'
-                                ? 'bg-emerald-50'
-                                : 'bg-slate-100'
-                        }`}>
-                          {tx.type === 'reward' && (
-                            <svg className="text-blue-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                            </svg>
-                          )}
-                          {tx.type === 'sent' && (
-                            <svg className="text-amber-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                              <polyline points="17 11 12 6 7 11" />
-                              <line x1="12" y1="6" x2="12" y2="18" />
-                            </svg>
-                          )}
-                          {tx.type === 'received' && (
-                            <svg className="text-emerald-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                              <polyline points="7 13 12 18 17 13" />
-                              <line x1="12" y1="6" x2="12" y2="18" />
-                            </svg>
-                          )}
-                          {tx.type === 'contract' && (
-                            <svg className="text-slate-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                              <polyline points="14 2 14 8 20 8" />
-                            </svg>
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-slate-800">{tx.label}</p>
-                          <p className="text-[10px] text-slate-400 font-mono mt-0.5">{tx.detail}</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className={`text-sm font-bold font-mono ${tx.positive ? 'text-emerald-600' : 'text-slate-800'}`}>
-                          {tx.amount}
-                          <span className="text-[10px] font-medium text-slate-400 ml-1">{tx.unit}</span>
-                        </p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">{tx.time}</p>
-                      </div>
+                  {TRANSACTIONS.length > 0 ? TRANSACTIONS.map((_, i) => (
+                    <div key={i} />
+                  )) : (
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                      <svg className="text-slate-300 mb-3" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                      </svg>
+                      <p className="text-sm font-medium text-slate-400">No activity yet</p>
+                      <p className="text-xs text-slate-400 mt-1">Transactions will appear here once you send or receive CMU</p>
                     </div>
-                  ))}
+                  )}
                 </div>
               )}
 
@@ -355,58 +287,47 @@ function Wallet({
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                      {TOKEN_LIST.map((token, i) => (
-                        <tr key={i} className="hover:bg-slate-50/50 transition-colors">
-                          <td className="px-5 py-3.5">
-                            <div className="flex items-center gap-3">
-                              <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${token.gradient} flex-shrink-0`} />
-                              <div>
-                                <p className="text-sm font-semibold text-slate-800">{token.symbol}</p>
-                                <p className="text-[10px] text-slate-400">{token.name}</p>
-                              </div>
+                      {TOKEN_LIST.length > 0 ? TOKEN_LIST.map((_, i) => (
+                        <tr key={i}><td /></tr>
+                      )) : (
+                        <tr>
+                          <td colSpan={4} className="py-16 text-center">
+                            <div className="flex flex-col items-center justify-center">
+                              <svg className="text-slate-300 mb-3" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="16" />
+                                <line x1="8" y1="12" x2="16" y2="12" />
+                              </svg>
+                              <p className="text-sm font-medium text-slate-400">No tokens detected</p>
+                              <p className="text-xs text-slate-400 mt-1">ERC-20 tokens will appear here when indexed</p>
                             </div>
                           </td>
-                          <td className="px-5 py-3.5 text-right">
-                            <p className="text-sm font-medium text-slate-800">{token.price}</p>
-                            <p className={`text-[10px] font-medium ${token.changePositive ? 'text-emerald-500' : 'text-red-500'}`}>
-                              {token.change}
-                            </p>
-                          </td>
-                          <td className="px-5 py-3.5 text-right">
-                            <p className="text-sm font-semibold text-slate-800 font-mono">{token.balance}</p>
-                            <p className="text-[10px] text-slate-400">{token.symbol}</p>
-                          </td>
-                          <td className="px-5 py-3.5 text-right">
-                            <p className="text-sm font-semibold text-slate-800">{token.value}</p>
-                          </td>
                         </tr>
-                      ))}
+                      )}
                     </tbody>
                   </table>
                 </div>
               )}
 
               {activeTab === 'nfts' && (
-                <div className="grid grid-cols-3 gap-4">
-                  {NFT_COLLECTION.map((nft) => (
-                    <div key={nft.id} className="rounded-2xl bg-white border border-slate-200 overflow-hidden hover:shadow-md hover:border-slate-300 transition-all duration-200 group">
-                      <div className={`relative aspect-square bg-gradient-to-br ${nft.gradient} p-4`}>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
-                        <div className="absolute top-3 right-3">
-                          <span className="text-[9px] font-bold tracking-wider text-white bg-black/30 backdrop-blur-sm px-2 py-1 rounded-md">
-                            {nft.standard}
-                          </span>
-                        </div>
-                        <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-30 transition-opacity">
-                          <div className="w-24 h-24 rounded-full bg-white/30 blur-xl" />
-                        </div>
-                      </div>
-                      <div className="p-4">
-                        <p className="text-sm font-bold text-slate-800">{nft.title}</p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">{nft.collection}</p>
-                      </div>
+                <div className="rounded-2xl bg-white border border-slate-200">
+                  {NFT_COLLECTION.length > 0 ? (
+                    <div className="grid grid-cols-3 gap-4 p-4">
+                      {NFT_COLLECTION.map((_, i) => (
+                        <div key={i} />
+                      ))}
                     </div>
-                  ))}
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                      <svg className="text-slate-300 mb-3" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <polyline points="21 15 16 10 5 21" />
+                      </svg>
+                      <p className="text-sm font-medium text-slate-400">No NFTs found</p>
+                      <p className="text-xs text-slate-400 mt-1">ERC-721 and ERC-1155 tokens will appear here</p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

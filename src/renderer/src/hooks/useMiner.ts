@@ -1,8 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { createProvider, startMining, stopMining, getMiningStatus, getHashrate } from '@/services'
+import {
+  fetchMiningStatus,
+  fetchHashrate,
+  setEtherbase,
+  startMiner,
+  stopMiner
+} from '@/services/rpcClient'
 
 const MINER_POLL_INTERVAL_MS = 3000
-const MINER_THREAD_COUNT = 1
+const DEFAULT_THREAD_COUNT = 4
 
 interface MinerState {
   mining: boolean
@@ -19,12 +25,19 @@ const INITIAL_MINER_STATE: MinerState = {
 }
 
 /**
- * Custom hook that polls the mining status and hashrate from the local node,
- * and exposes imperative start and stop functions for the UI layer.
- * @param port - The dynamically resolved RPC port. Polling activates only when the port is available.
+ * Custom hook that polls the mining status and hashrate from the remote
+ * Core-geth node via raw JSON-RPC calls, and exposes imperative start and
+ * stop functions for the UI layer. Before starting the miner, it sets the
+ * etherbase to the active wallet address to ensure rewards are credited
+ * correctly.
+ * @param activeWalletAddress - The currently active wallet address for etherbase.
+ * @param threadCount - The number of CPU threads to allocate for mining.
  * @returns An object containing the current miner state, a start handler, and a stop handler.
  */
-function useMiner(port: number | null): {
+function useMiner(
+  activeWalletAddress: string | null,
+  threadCount: number = DEFAULT_THREAD_COUNT
+): {
   state: MinerState
   handleStart: () => Promise<void>
   handleStop: () => Promise<void>
@@ -32,90 +45,70 @@ function useMiner(port: number | null): {
   const [state, setState] = useState<MinerState>(INITIAL_MINER_STATE)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  const fetchMinerStatus = useCallback(async (): Promise<void> => {
-    if (port === null) {
-      return
+  const poll = useCallback(async (): Promise<void> => {
+    try {
+      const [miningResult, hashrateResult] = await Promise.all([
+        fetchMiningStatus(),
+        fetchHashrate()
+      ])
+
+      setState((prev) => ({
+        ...prev,
+        mining: miningResult !== null ? miningResult : prev.mining,
+        hashrate: hashrateResult
+      }))
+    } catch {
+      setState((prev) => ({
+        ...prev,
+        mining: false,
+        hashrate: null
+      }))
     }
-
-    const provider = createProvider(port)
-
-    const [miningResult, hashrateResult] = await Promise.allSettled([
-      getMiningStatus(provider),
-      getHashrate(provider)
-    ])
-
-    setState((prev) => ({
-      ...prev,
-      mining:
-        miningResult.status === 'fulfilled' && miningResult.value !== null
-          ? miningResult.value
-          : prev.mining,
-      hashrate:
-        hashrateResult.status === 'fulfilled' ? hashrateResult.value : prev.hashrate
-    }))
-  }, [port])
+  }, [])
 
   useEffect(() => {
-    if (port === null) {
-      return
-    }
+    poll()
 
-    fetchMinerStatus()
-
-    intervalRef.current = setInterval(fetchMinerStatus, MINER_POLL_INTERVAL_MS)
+    intervalRef.current = setInterval(poll, MINER_POLL_INTERVAL_MS)
 
     return (): void => {
       if (intervalRef.current !== null) {
         clearInterval(intervalRef.current)
       }
     }
-  }, [port, fetchMinerStatus])
+  }, [poll])
 
   const handleStart = useCallback(async (): Promise<void> => {
-    if (port === null) {
+    if (activeWalletAddress === null) {
+      setState((prev) => ({ ...prev, error: 'No active wallet address available' }))
       return
     }
 
     setState((prev) => ({ ...prev, toggling: true, error: null }))
 
     try {
-      const provider = createProvider(port)
-      const result = await startMining(provider, MINER_THREAD_COUNT)
-
-      if (result === null) {
-        setState((prev) => ({ ...prev, toggling: false, error: 'Failed to start miner' }))
-        return
-      }
-
-      await fetchMinerStatus()
+      await setEtherbase(activeWalletAddress)
+      await startMiner(threadCount)
+      await poll()
       setState((prev) => ({ ...prev, toggling: false }))
-    } catch {
-      setState((prev) => ({ ...prev, toggling: false, error: 'Failed to start miner' }))
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to start miner'
+      setState((prev) => ({ ...prev, toggling: false, error: message }))
     }
-  }, [port, fetchMinerStatus])
+  }, [activeWalletAddress, threadCount, poll])
 
   const handleStop = useCallback(async (): Promise<void> => {
-    if (port === null) {
-      return
-    }
-
     setState((prev) => ({ ...prev, toggling: true, error: null }))
 
     try {
-      const provider = createProvider(port)
-      const result = await stopMining(provider)
-
-      if (result === null) {
-        setState((prev) => ({ ...prev, toggling: false, error: 'Failed to stop miner' }))
-        return
-      }
-
-      await fetchMinerStatus()
+      await stopMiner()
+      await poll()
       setState((prev) => ({ ...prev, toggling: false }))
-    } catch {
-      setState((prev) => ({ ...prev, toggling: false, error: 'Failed to stop miner' }))
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to stop miner'
+      setState((prev) => ({ ...prev, toggling: false, error: message }))
     }
-  }, [port, fetchMinerStatus])
+  }, [poll])
 
   return { state, handleStart, handleStop }
 }

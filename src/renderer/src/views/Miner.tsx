@@ -3,7 +3,6 @@ import { useMiner, useNetworkStats } from '@/hooks'
 import { formatHashrate } from '@/utils'
 
 interface MinerProps {
-  port: number | null
   activeWalletAddress: string | null
 }
 
@@ -11,12 +10,6 @@ const BLOCK_REWARD_CMU = '10.00'
 const TARGET_DIFFICULTY = '0000_ffff...'
 const TOTAL_CORES = 8
 const ACTIVE_CORES = 4
-
-const SESSION_TIME_ACTIVE = '1h 23m'
-const SESSION_TIME_IDLE = '--'
-const BLOCKS_FOUND_COUNT = '7'
-const TOTAL_EARNED_CMU = '+127.5'
-const REWARDS_TODAY_CMU = '+100.0'
 
 const INTENSITY_OPTIONS = ['Eco', 'Balanced', 'Turbo'] as const
 type IntensityLevel = (typeof INTENSITY_OPTIONS)[number]
@@ -26,36 +19,34 @@ const ACTIVITY_TAB_SHARES = 'Shares'
 const ACTIVITY_TAB_LOG = 'Log'
 const ACTIVITY_TABS = [ACTIVITY_TAB_FOUND, ACTIVITY_TAB_SHARES, ACTIVITY_TAB_LOG] as const
 
-const MINED_BLOCKS = [
-  { number: '#28,477', hash: '0x9a3f...11c2', time: '12 min ago', nonce: '4,891,283', reward: '+10.00' },
-  { number: '#28,461', hash: '0x7c2b...0a8e', time: '34 min ago', nonce: '2,103,882', reward: '+10.00' },
-  { number: '#28,442', hash: '0xfe11...4b27', time: '1h 8m ago', nonce: '8,277,103', reward: '+10.00' },
-  { number: '#28,419', hash: '0x3b4c...ee19', time: '2h 14m ago', nonce: '1,902,445', reward: '+10.00' }
-]
+const MINED_BLOCKS: never[] = []
 
-const NONCES_TRIED = '43,168,656'
-const CANDIDATE_BLOCK = '#28503'
+const EMPTY_BLOCKS_FOUND = '0'
+const EMPTY_TOTAL_EARNED = '0.00'
+const EMPTY_REWARDS_TODAY = '0.00'
+const EMPTY_SESSION_TIME = '--'
 
 /**
  * Full-featured mining controller view presenting a dynamic hero section
  * that toggles between active (green gradient) and idle (dark slate) states,
  * a 4-column KPI stats grid, worker configuration panel, and mining activity
- * feed. All layout and styling uses Tailwind CSS utility classes exclusively.
- * @param props - Contains the dynamically resolved RPC port for node communication.
+ * feed. Connects to the remote Core-geth node via raw JSON-RPC calls for
+ * miner_start, miner_stop, and miner_setEtherbase. All layout and styling
+ * uses Tailwind CSS utility classes exclusively.
+ * @param props - Contains the active wallet address for etherbase configuration.
  * @returns The complete mining view with header, hero, stats, worker settings,
  *          and activity log.
  */
-function Miner({ port, activeWalletAddress }: MinerProps): JSX.Element {
-  const { state, handleStart, handleStop } = useMiner(port)
-  const networkStats = useNetworkStats(port)
+function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
+  const { state, handleStart, handleStop } = useMiner(activeWalletAddress, ACTIVE_CORES)
+  const networkStats = useNetworkStats()
   const isConnected = networkStats.isConnected
 
   const [intensity, setIntensity] = useState<IntensityLevel>('Balanced')
   const [activeTab, setActiveTab] = useState<string>(ACTIVITY_TAB_FOUND)
 
   const isMining = state.mining && isConnected
-  const hashrateDisplay = formatHashrate(state.hashrate)
-  const avgHashrate = isMining ? 'Avg 5.8 MH/s' : 'Avg 0.0 MH/s'
+  const hashrateDisplay = formatHashrate(networkStats.hashrate)
 
   const abbrAddress = activeWalletAddress 
     ? `${activeWalletAddress.substring(0, 6)}...${activeWalletAddress.substring(activeWalletAddress.length - 4)}` 
@@ -112,7 +103,7 @@ function Miner({ port, activeWalletAddress }: MinerProps): JSX.Element {
                     </span>
                   </div>
                   <p className="text-sm text-white/60 mt-2">
-                    Solving candidate {CANDIDATE_BLOCK} - {NONCES_TRIED} nonces tried
+                    Mining with {ACTIVE_CORES} threads
                   </p>
                 </div>
 
@@ -120,7 +111,7 @@ function Miner({ port, activeWalletAddress }: MinerProps): JSX.Element {
                   <div className="text-right">
                     <p className="text-[10px] font-semibold tracking-wider uppercase text-white/50">Rewards today</p>
                     <p className="text-xl font-bold text-white mt-0.5">
-                      {REWARDS_TODAY_CMU}
+                      {EMPTY_REWARDS_TODAY}
                       <span className="text-sm font-medium text-white/60 ml-1.5">CMU</span>
                     </p>
                   </div>
@@ -175,7 +166,7 @@ function Miner({ port, activeWalletAddress }: MinerProps): JSX.Element {
                   <div className="text-right">
                     <p className="text-[10px] font-semibold tracking-wider uppercase text-white/40">Rewards today</p>
                     <p className="text-xl font-bold text-white/70 mt-0.5">
-                      {REWARDS_TODAY_CMU}
+                      {EMPTY_REWARDS_TODAY}
                       <span className="text-sm font-medium text-white/40 ml-1.5">CMU</span>
                     </p>
                   </div>
@@ -202,7 +193,12 @@ function Miner({ port, activeWalletAddress }: MinerProps): JSX.Element {
         )}
 
         {state.error && (
-          <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200">
+          <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 flex items-center gap-3">
+            <svg className="text-red-500 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="15" y1="9" x2="9" y2="15" />
+              <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
             <p className="text-sm text-red-600 font-medium">{state.error}</p>
           </div>
         )}
@@ -211,15 +207,15 @@ function Miner({ port, activeWalletAddress }: MinerProps): JSX.Element {
           <div className="rounded-2xl bg-white border border-slate-200 p-5">
             <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-3">Session Time</p>
             <p className="text-2xl font-bold text-slate-800 tracking-tight">
-              {isMining ? SESSION_TIME_ACTIVE : SESSION_TIME_IDLE}
+              {EMPTY_SESSION_TIME}
             </p>
-            <p className="text-xs text-slate-400 mt-1">{avgHashrate}</p>
+            <p className="text-xs text-slate-400 mt-1">{isMining ? 'Active' : 'Idle'}</p>
           </div>
 
           <div className="rounded-2xl bg-white border border-slate-200 p-5">
             <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-3">Blocks Found</p>
             <p className="text-2xl font-bold text-slate-800 tracking-tight">
-              {isConnected ? BLOCKS_FOUND_COUNT : '0'}
+              {EMPTY_BLOCKS_FOUND}
             </p>
             <p className="text-xs text-slate-400 mt-1">past 24 hours</p>
           </div>
@@ -227,7 +223,7 @@ function Miner({ port, activeWalletAddress }: MinerProps): JSX.Element {
           <div className="rounded-2xl bg-white border border-slate-200 p-5">
             <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-3">Total Earned</p>
             <p className="text-2xl font-bold text-emerald-600 tracking-tight">
-              {isConnected ? TOTAL_EARNED_CMU : '0.00'}
+              {EMPTY_TOTAL_EARNED}
               <span className="text-sm font-medium text-slate-400 ml-1.5">CMU</span>
             </p>
             <p className="text-xs text-slate-400 mt-1">across this wallet</p>
@@ -359,30 +355,17 @@ function Miner({ port, activeWalletAddress }: MinerProps): JSX.Element {
             </div>
 
             <div className="mt-4 divide-y divide-slate-100">
-              {(isConnected ? MINED_BLOCKS : []).map((block) => (
-                <div key={block.number} className="flex items-center justify-between py-3.5">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">
-                      <svg className="text-emerald-500" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-slate-800 font-mono">{block.number}</span>
-                        <span className="text-[10px] text-slate-400 font-mono">{block.hash}</span>
-                      </div>
-                      <p className="text-[10px] text-slate-400 mt-0.5">
-                        {block.time} - nonce {block.nonce}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-sm font-bold text-emerald-600 font-mono">{block.reward}</span>
-                    <span className="text-[10px] font-medium text-slate-400 ml-1">CMU</span>
-                  </div>
+              {MINED_BLOCKS.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <svg className="text-slate-300 mb-3" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <rect x="7" y="7" width="3" height="9" />
+                    <rect x="14" y="7" width="3" height="5" />
+                  </svg>
+                  <p className="text-sm font-medium text-slate-400">Awaiting mining activity</p>
+                  <p className="text-xs text-slate-400 mt-1">Mined blocks will appear here</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>

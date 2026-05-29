@@ -1,7 +1,7 @@
 import { useState, useEffect, type JSX } from 'react'
 import { Dashboard, Miner, Wallet, Explorer, Settings, Onboarding } from '@/views'
 import { type DerivedAccount } from '@/services'
-import { useRpcPort, useNetworkStatus } from '@/hooks'
+import { useRpcPort, useNetworkStats, useBalance } from '@/hooks'
 
 const NAV_ITEM_DASHBOARD = 'dashboard'
 const NAV_ITEM_MINER = 'miner'
@@ -12,7 +12,6 @@ type ActiveView = typeof NAV_ITEM_DASHBOARD | typeof NAV_ITEM_MINER | typeof NAV
 
 const APP_VERSION = 'v0.4.2'
 const APP_NETWORK = 'testnet'
-const WALLET_BALANCE = '1,284.67'
 
 /**
  * Root application component rendering a sidebar navigation layout
@@ -27,7 +26,8 @@ function App(): JSX.Element {
   const [isLoadingWallet, setIsLoadingWallet] = useState<boolean>(true)
   const [activeView, setActiveView] = useState<ActiveView>(NAV_ITEM_DASHBOARD)
   const { port } = useRpcPort()
-  const networkStatus = useNetworkStatus(port)
+  const networkStats = useNetworkStats()
+  const { balance } = useBalance(activeWalletAddress, networkStats.isConnected)
 
   useEffect(() => {
     async function checkWallet(): Promise<void> {
@@ -56,10 +56,32 @@ function App(): JSX.Element {
   }
 
   if (!activeWalletAddress) {
-    return <Onboarding onComplete={(address) => setActiveWalletAddress(address)} />
+    const handleOnboardingComplete = async (address: string): Promise<void> => {
+      const storedAccounts = await window.api.settings.get('accounts') || []
+      setAccounts(storedAccounts)
+      setActiveWalletAddress(address)
+    }
+
+    return <Onboarding onComplete={(address) => handleOnboardingComplete(address)} />
   }
 
-  // Format address for sidebar
+  /**
+   * Clears all persisted wallet data from the electron-store and resets
+   * the component state to redirect the user to the Onboarding screen.
+   */
+  const handleLogout = async (): Promise<void> => {
+    try {
+      await window.api.settings.set('activeWalletAddress', null)
+      await window.api.settings.set('accounts', [])
+      await window.api.settings.set('mnemonic', null)
+    } catch {
+      /** Ignore write failures during logout */
+    }
+    setActiveWalletAddress(null)
+    setAccounts([])
+    setActiveView(NAV_ITEM_DASHBOARD)
+  }
+
   const abbrAddress = `${activeWalletAddress.substring(0, 6)}...${activeWalletAddress.substring(activeWalletAddress.length - 4)}`
 
   return (
@@ -94,7 +116,7 @@ function App(): JSX.Element {
               <span className="font-semibold text-blue-600 ml-1">CointMU Mainnet</span>
             </span>
             <span className="ml-auto text-[10px] font-bold text-slate-500">
-              {networkStatus.peerCount !== null ? networkStatus.peerCount : '--'}
+              {networkStats.peerCount !== null ? networkStats.peerCount : '--'}
             </span>
             <span className="text-[10px] text-slate-400">peers</span>
           </div>
@@ -265,10 +287,15 @@ function App(): JSX.Element {
         </nav>
 
         <div className="px-4 py-3 border-t border-slate-100">
-          <div className="flex items-center gap-3 px-2 py-2">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
+          <button
+            id="sidebar-logout"
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-red-50 transition-colors group"
+            title="Click to logout and lock wallet"
+          >
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center group-hover:from-red-100 group-hover:to-red-200 transition-colors">
               <svg
-                className="text-slate-500"
+                className="text-slate-500 group-hover:text-red-500 transition-colors"
                 width="16"
                 height="16"
                 viewBox="0 0 24 24"
@@ -284,8 +311,8 @@ function App(): JSX.Element {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-semibold text-slate-700">Main wallet</p>
-                <p className="text-xs font-bold text-slate-800">{WALLET_BALANCE}</p>
+                <p className="text-xs font-semibold text-slate-700 group-hover:text-red-600 transition-colors">Main wallet</p>
+                <p className="text-xs font-bold text-slate-800">{balance}</p>
               </div>
               <div className="flex items-center justify-between mt-0.5">
                 <p className="text-[10px] text-slate-400 font-mono" title={activeWalletAddress}>
@@ -294,7 +321,7 @@ function App(): JSX.Element {
                 <p className="text-[10px] text-slate-400">CMU</p>
               </div>
             </div>
-          </div>
+          </button>
         </div>
       </aside>
 
@@ -303,7 +330,7 @@ function App(): JSX.Element {
           <Dashboard activeWalletAddress={activeWalletAddress} />
         )}
         {activeView === NAV_ITEM_MINER && (
-          <Miner port={port} activeWalletAddress={activeWalletAddress} />
+          <Miner activeWalletAddress={activeWalletAddress} />
         )}
         {activeView === NAV_ITEM_WALLET && (
           <Wallet 

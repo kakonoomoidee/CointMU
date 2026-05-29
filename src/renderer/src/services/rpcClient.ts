@@ -1,30 +1,34 @@
-const RPC_HOST = '127.0.0.1'
-const RPC_PROTOCOL = 'http'
+const RPC_BASE_URL = 'http://10.64.24.248:8585'
 const JSON_RPC_VERSION = '2.0'
 const HEX_RADIX = 16
 const WEI_PER_GWEI = 1_000_000_000
+const WEI_PER_CMU = 1e18
+const BALANCE_DECIMAL_PLACES = 2
+const LATEST_BLOCK_TAG = 'latest'
 
 let requestCounter = 0
 
-/**
- * Constructs the full JSON-RPC endpoint URL for the given port.
- * @param port - The dynamically resolved RPC port.
- * @returns The fully qualified HTTP URL string.
- */
-function buildEndpoint(port: number): string {
-  return `${RPC_PROTOCOL}://${RPC_HOST}:${port}`
+interface RpcResponse {
+  result: any
+  hasError: boolean
+  errorMessage: string | null
+}
+
+const RPC_SUCCESS_NO_ERROR: Pick<RpcResponse, 'hasError' | 'errorMessage'> = {
+  hasError: false,
+  errorMessage: null
 }
 
 /**
- * Performs a single JSON-RPC 2.0 call to the local Core-geth node using the
- * native Fetch API. Returns the raw `result` field from the response, or null
- * if the node is unreachable or the call produces an error.
- * @param port - The RPC port the local node is listening on.
+ * Performs a single JSON-RPC 2.0 call to the remote Core-geth node using the
+ * native Fetch API. Returns the full RPC response including error state.
+ * For read-only queries that return null on success (like miner_start),
+ * callers must check hasError rather than the result value.
  * @param method - The JSON-RPC method name (e.g. 'eth_blockNumber').
  * @param params - The ordered parameter array for the method.
- * @returns The raw result value from the JSON-RPC response, or null on failure.
+ * @returns An RpcResponse object with the result, error flag, and error message.
  */
-async function call(port: number, method: string, params: any[] = []): Promise<any> {
+async function callRaw(method: string, params: unknown[] = []): Promise<RpcResponse> {
   requestCounter += 1
 
   const body = JSON.stringify({
@@ -35,47 +39,63 @@ async function call(port: number, method: string, params: any[] = []): Promise<a
   })
 
   try {
-    const response = await fetch(buildEndpoint(port), {
+    const response = await fetch(RPC_BASE_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body
     })
 
     if (!response.ok) {
-      return null
+      return { result: null, hasError: true, errorMessage: `HTTP ${response.status}` }
     }
 
     const json = await response.json()
 
     if (json.error) {
-      return null
+      return {
+        result: null,
+        hasError: true,
+        errorMessage: json.error.message || 'Unknown RPC error'
+      }
     }
 
-    return json.result
+    return { result: json.result, ...RPC_SUCCESS_NO_ERROR }
   } catch {
-    return null
+    return { result: null, hasError: true, errorMessage: 'Node unreachable' }
   }
+}
+
+/**
+ * Convenience wrapper around callRaw that returns only the result value
+ * or null on any failure. Suitable for read-only queries where null
+ * result always means failure.
+ * @param method - The JSON-RPC method name.
+ * @param params - The ordered parameter array.
+ * @returns The raw result value, or null on failure.
+ */
+async function call(method: string, params: unknown[] = []): Promise<any> {
+  const response = await callRaw(method, params)
+  if (response.hasError) return null
+  return response.result
 }
 
 /**
  * Fetches the latest block number from the node and converts the hex result
  * to a decimal integer.
- * @param port - The RPC port.
  * @returns The block height as a number, or null on failure.
  */
-async function fetchBlockNumber(port: number): Promise<number | null> {
-  const result = await call(port, 'eth_blockNumber')
+async function fetchBlockNumber(): Promise<number | null> {
+  const result = await call('eth_blockNumber')
   if (result === null) return null
   return parseInt(result, HEX_RADIX)
 }
 
 /**
  * Fetches the connected peer count and converts the hex result to a decimal integer.
- * @param port - The RPC port.
  * @returns The peer count as a number, or null on failure.
  */
-async function fetchPeerCount(port: number): Promise<number | null> {
-  const result = await call(port, 'net_peerCount')
+async function fetchPeerCount(): Promise<number | null> {
+  const result = await call('net_peerCount')
   if (result === null) return null
   return parseInt(result, HEX_RADIX)
 }
@@ -83,11 +103,10 @@ async function fetchPeerCount(port: number): Promise<number | null> {
 /**
  * Fetches the current suggested gas price and converts the hex wei result
  * to a human-readable gwei string.
- * @param port - The RPC port.
  * @returns The gas price in gwei as a formatted string, or null on failure.
  */
-async function fetchGasPrice(port: number): Promise<string | null> {
-  const result = await call(port, 'eth_gasPrice')
+async function fetchGasPrice(): Promise<string | null> {
+  const result = await call('eth_gasPrice')
   if (result === null) return null
   const wei = parseInt(result, HEX_RADIX)
   const gwei = Math.round(wei / WEI_PER_GWEI)
@@ -96,21 +115,19 @@ async function fetchGasPrice(port: number): Promise<string | null> {
 
 /**
  * Queries the node to check whether the internal miner is active.
- * @param port - The RPC port.
  * @returns True if mining, false if idle, or null on failure.
  */
-async function fetchMiningStatus(port: number): Promise<boolean | null> {
-  return await call(port, 'eth_mining')
+async function fetchMiningStatus(): Promise<boolean | null> {
+  return await call('eth_mining')
 }
 
 /**
  * Fetches the current mining hashrate and converts the hex result to a
  * decimal integer representing hashes per second.
- * @param port - The RPC port.
  * @returns The hashrate in H/s, or null on failure.
  */
-async function fetchHashrate(port: number): Promise<number | null> {
-  const result = await call(port, 'eth_hashrate')
+async function fetchHashrate(): Promise<number | null> {
+  const result = await call('eth_hashrate')
   if (result === null) return null
   return parseInt(result, HEX_RADIX)
 }
@@ -118,13 +135,72 @@ async function fetchHashrate(port: number): Promise<number | null> {
 /**
  * Fetches the current network difficulty and converts the hex result
  * to a decimal integer.
- * @param port - The RPC port.
  * @returns The difficulty as a number, or null on failure.
  */
-async function fetchDifficulty(port: number): Promise<number | null> {
-  const result = await call(port, 'eth_getBlockByNumber', ['latest', false])
+async function fetchDifficulty(): Promise<number | null> {
+  const result = await call('eth_getBlockByNumber', [LATEST_BLOCK_TAG, false])
   if (result === null || result.difficulty === undefined) return null
   return parseInt(result.difficulty, HEX_RADIX)
+}
+
+/**
+ * Fetches the CMU balance for a given wallet address by calling eth_getBalance.
+ * Converts the hexadecimal Wei result to CMU (divided by 1e18) and formats
+ * the output to two decimal places.
+ * @param address - The wallet address to query the balance for.
+ * @returns The balance as a formatted CMU string (e.g. "1,284.67"), or null on failure.
+ */
+async function fetchBalance(address: string): Promise<string | null> {
+  const result = await call('eth_getBalance', [address, LATEST_BLOCK_TAG])
+  if (result === null) return null
+  const weiValue = parseInt(result, HEX_RADIX)
+  const cmuValue = weiValue / WEI_PER_CMU
+  return cmuValue.toLocaleString('en-US', {
+    minimumFractionDigits: BALANCE_DECIMAL_PLACES,
+    maximumFractionDigits: BALANCE_DECIMAL_PLACES
+  })
+}
+
+/**
+ * Sets the etherbase (coinbase) address on the remote node. This determines
+ * which address receives mining rewards. Must be called before starting
+ * the miner to ensure rewards are credited to the correct wallet.
+ * Sends params as: [{address}]
+ * @param address - The wallet address to set as the etherbase.
+ * @throws Error if the RPC call fails or the node rejects the address.
+ */
+async function setEtherbase(address: string): Promise<void> {
+  const response = await callRaw('miner_setEtherbase', [address])
+  if (response.hasError) {
+    throw new Error(response.errorMessage || 'Failed to set etherbase address on the node')
+  }
+}
+
+/**
+ * Starts the internal miner on the remote node with the specified number
+ * of mining threads. Core-geth miner_start returns null on success, so
+ * we must check for RPC-level errors rather than the result value.
+ * Sends params as: [{threads}] where threads is a strict integer.
+ * @param threads - The number of CPU threads to allocate for mining.
+ * @throws Error if the RPC call fails or the node rejects the start command.
+ */
+async function startMiner(threads: number): Promise<void> {
+  const response = await callRaw('miner_start', [Math.floor(threads)])
+  if (response.hasError) {
+    throw new Error(response.errorMessage || 'Failed to start miner on the node')
+  }
+}
+
+/**
+ * Stops the internal miner on the remote node. Core-geth miner_stop
+ * returns null on success, so we check for RPC-level errors only.
+ * @throws Error if the RPC call fails or the node rejects the stop command.
+ */
+async function stopMiner(): Promise<void> {
+  const response = await callRaw('miner_stop')
+  if (response.hasError) {
+    throw new Error(response.errorMessage || 'Failed to stop miner on the node')
+  }
 }
 
 export {
@@ -134,5 +210,9 @@ export {
   fetchGasPrice,
   fetchMiningStatus,
   fetchHashrate,
-  fetchDifficulty
+  fetchDifficulty,
+  fetchBalance,
+  setEtherbase,
+  startMiner,
+  stopMiner
 }
