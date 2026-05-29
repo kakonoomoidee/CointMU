@@ -100,8 +100,8 @@ function App(): JSX.Element {
         {activeView === NAV_ITEM_DASHBOARD && (
           <Dashboard activeWalletAddress={activeWalletAddress} />
         )}
-        {activeView === NAV_ITEM_MINER && (
-          <Miner activeWalletAddress={activeWalletAddress} balance={balance} sessionSeconds={sessionSeconds} />
+        {activeView === 'miner' && (
+          <Miner activeWalletAddress={activeWalletAddress} balance={balance} sessionSeconds={sessionSeconds} accounts={accounts} />
         )}
         {activeView === NAV_ITEM_WALLET && (
           <Wallet 

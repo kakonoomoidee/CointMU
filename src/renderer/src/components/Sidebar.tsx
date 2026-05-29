@@ -11,7 +11,7 @@ interface SidebarProps {
   onLogout: () => void
 }
 
-const APP_VERSION = 'v0.4.2'
+const APP_VERSION = `v${__APP_VERSION__}`
 const APP_NETWORK = 'testnet'
 
 /**

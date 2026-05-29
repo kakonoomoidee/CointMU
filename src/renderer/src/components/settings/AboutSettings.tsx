@@ -16,7 +16,7 @@ export function AboutSettings(): JSX.Element {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-slate-900">CointMU</h1>
-          <p className="text-sm font-medium text-slate-600 mt-1">Version 0.4.2 (build 1284) • Apple silicon</p>
+          <p className="text-sm font-medium text-slate-600 mt-1">Version {__APP_VERSION__} (build 1284) • Apple silicon</p>
           <p className="text-sm font-medium text-slate-400 mt-1">© 2026 CointMU Foundation • MIT License</p>
           <div className="flex gap-3 mt-4">
             <button className="px-4 py-1.5 bg-blue-500 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-blue-600 transition-colors">
@@ -35,7 +35,7 @@ export function AboutSettings(): JSX.Element {
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <p className="text-sm font-bold text-slate-800">Node version</p>
-              <span className="text-sm font-medium font-mono text-slate-600">cointmu/0.4.2-stable</span>
+              <span className="text-sm font-medium font-mono text-slate-600">cointmu/{__APP_VERSION__}-stable</span>
             </div>
             
             <div className="flex items-center justify-between p-4">

@@ -1,9 +1,37 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
+import { writeFileSync, existsSync } from 'fs'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { spawn, ChildProcess } from 'child_process'
 import { config } from 'dotenv'
 import detectPort from 'detect-port'
+
+const GENESIS_CONFIG = {
+  "config": {
+    "chainId": 7012,
+    "homesteadBlock": 0,
+    "eip150Block": 0,
+    "eip155Block": 0,
+    "eip158Block": 0,
+    "byzantiumBlock": 0,
+    "constantinopleBlock": 0,
+    "petersburgBlock": 0,
+    "istanbulBlock": 0,
+    "muirGlacierBlock": 0,
+    "ethash": {}
+  },
+  "nonce": "0x0000000000000042",
+  "timestamp": "0x00",
+  "extraData": "0x485721206172696573206174204d7568616d6d61646979616820556e6976",
+  "gasLimit": "0x8000000",
+  "difficulty": "0x400",
+  "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "coinbase": "0x0000000000000000000000000000000000000000",
+  "alloc": {},
+  "number": "0x0",
+  "gasUsed": "0x0",
+  "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+}
 
 config({ path: join(app.getAppPath(), '.env') })
 
@@ -28,16 +56,13 @@ const WINDOW_MIN_WIDTH = 900
 const WINDOW_MIN_HEIGHT = 600
 
 const DEFAULT_RPC_PORT = parseInt(process.env.GETH_HTTP_PORT || '8585', 10)
-const GETH_HTTP_HOST = process.env.GETH_HTTP_HOST || '127.0.0.1'
-const GETH_NETWORK_ID = process.env.GETH_NETWORK_ID || '1024'
-const GETH_DATA_DIR = process.env.GETH_DATA_DIR || './data/cointmu'
+const GETH_NETWORK_ID = '7012'
+const GETH_DATA_DIR = join(process.cwd(), 'data', 'cointmu')
+const GETH_HTTP_HOST = '127.0.0.1'
 const GETH_BOOTNODE_ENODE = process.env.GETH_BOOTNODE_ENODE || ''
 const GETH_HTTP_API = process.env.GETH_HTTP_API || 'eth,net,web3'
 const GETH_P2P_PORT = process.env.GETH_P2P_PORT || '30303'
 const GETH_LOG_VERBOSITY = process.env.GETH_LOG_VERBOSITY || '3'
-
-const WINDOWS_PLATFORM = 'win32'
-const GETH_BINARY_NAME = process.platform === WINDOWS_PLATFORM ? 'geth.exe' : 'geth'
 
 let resolvedRpcPort: number = DEFAULT_RPC_PORT
 let gethProcess: ChildProcess | null = null
@@ -50,10 +75,11 @@ let sessionStartTimestamp: number = Date.now()
  * @returns The absolute filesystem path to the geth executable.
  */
 function resolveGethBinaryPath(): string {
+  const binaryName = process.platform === 'win32' ? 'geth.exe' : 'geth'
   if (app.isPackaged) {
-    return join(process.resourcesPath, 'bin', GETH_BINARY_NAME)
+    return join(process.resourcesPath, 'bin', binaryName)
   }
-  return join(app.getAppPath(), 'resources', 'bin', GETH_BINARY_NAME)
+  return join(app.getAppPath(), 'resources', 'bin', binaryName)
 }
 
 /**
@@ -79,12 +105,70 @@ async function findAvailablePort(): Promise<number> {
 }
 
 /**
+ * Initializes the Geth node with the bundled genesis block if it hasn't been initialized yet.
+ * @returns A promise that resolves when initialization is complete.
+ */
+function initGethNode(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    // Determine the datadir. Use userData if GETH_DATA_DIR is missing or relative.
+    const dataDir = GETH_DATA_DIR.startsWith('.') ? join(app.getPath('userData'), GETH_DATA_DIR) : GETH_DATA_DIR
+    const chainDataPath = join(dataDir, 'geth', 'chaindata')
+
+    if (existsSync(chainDataPath)) {
+      console.log('[geth:init] Chain data already exists, skipping genesis initialization.')
+      resolve()
+      return
+    }
+
+    console.log('[geth:init] Initializing chain with genesis block...')
+    const genesisPath = join(app.getPath('userData'), 'genesis.json')
+    try {
+      writeFileSync(genesisPath, JSON.stringify(GENESIS_CONFIG, null, 2))
+    } catch (err) {
+      console.error(`[geth:init] Failed to write genesis file: ${(err as Error).message}`)
+      reject(err)
+      return
+    }
+
+    const binaryPath = resolveGethBinaryPath()
+    if (!existsSync(binaryPath)) {
+      console.error(`[geth:init] Fatal error: Geth binary not found at ${binaryPath}`)
+      reject(new Error(`Geth binary not found at ${binaryPath}`))
+      return
+    }
+
+    const args = ['--datadir', dataDir, 'init', genesisPath]
+    
+    const initProcess = spawn(binaryPath, args, { stdio: 'ignore' })
+
+    initProcess.on('close', (code) => {
+      if (code === 0) {
+        console.log('[geth:init] Genesis initialization successful.')
+        resolve()
+      } else {
+        console.error(`[geth:init] Initialization failed with code ${code}`)
+        reject(new Error(`Geth init failed with code ${code}`))
+      }
+    })
+
+    initProcess.on('error', (err) => {
+      console.error(`[geth:init] Failed to start geth init process: ${err.message}`)
+      reject(err)
+    })
+  })
+}
+
+/**
  * Spawns the Core-geth binary as a managed child process with environment-driven
  * configuration for networking, RPC, and data storage.
  * @param rpcPort - The dynamically resolved RPC port to bind the HTTP server to.
  */
 function spawnGethProcess(rpcPort: number): void {
   const binaryPath = resolveGethBinaryPath()
+  if (!existsSync(binaryPath)) {
+    console.error(`[geth:spawn] Fatal error: Geth binary not found at ${binaryPath}`)
+    return
+  }
 
   const args = [
     '--networkid', GETH_NETWORK_ID,
@@ -98,7 +182,7 @@ function spawnGethProcess(rpcPort: number): void {
     '--syncmode', 'full'
   ]
 
-  if (GETH_BOOTNODE_ENODE && !GETH_BOOTNODE_ENODE.includes('PLACEHOLDER')) {
+  if (GETH_BOOTNODE_ENODE) {
     args.push('--bootnodes', GETH_BOOTNODE_ENODE)
   }
 
@@ -279,6 +363,12 @@ app.whenReady().then(async () => {
   ipcMain.handle('settings:getAll', () => store.store)
 
   resolvedRpcPort = await findAvailablePort()
+
+  try {
+    await initGethNode()
+  } catch (err) {
+    console.error('[geth:init] Fatal error during genesis init:', err)
+  }
 
   spawnGethProcess(resolvedRpcPort)
 

@@ -1,17 +1,17 @@
 import { useState, useEffect, useRef, type JSX } from 'react'
 import { useMiner, useNetworkStats, useRecentBlocks } from '@/hooks'
+import { call, generateIdenticonGradient, type DerivedAccount } from '@/services'
 import { formatHashrate } from '@/utils'
 
 interface MinerProps {
   activeWalletAddress: string | null
   balance: string
   sessionSeconds: number
+  accounts: DerivedAccount[]
 }
 
 const BLOCK_REWARD_CMU = '10.00'
 const TARGET_DIFFICULTY = '0000_ffff...'
-const TOTAL_CORES = 8
-const ACTIVE_CORES = 4
 
 const INTENSITY_OPTIONS = ['Eco', 'Balanced', 'Turbo'] as const
 type IntensityLevel = (typeof INTENSITY_OPTIONS)[number]
@@ -62,8 +62,25 @@ interface LogEntry {
  * @returns The complete mining view with header, hero, stats, worker settings,
  *          and activity log.
  */
-function Miner({ activeWalletAddress, balance, sessionSeconds }: MinerProps): JSX.Element {
-  const { state, handleStart, handleStop } = useMiner(activeWalletAddress, ACTIVE_CORES)
+function Miner({
+  activeWalletAddress,
+  balance,
+  sessionSeconds,
+  accounts
+}: MinerProps): JSX.Element {
+  const getSafeConcurrency = (): number => {
+    try {
+      return (typeof navigator !== 'undefined' && navigator.hardwareConcurrency) || 8
+    } catch {
+      return 8
+    }
+  }
+
+  const [maxCores] = useState(getSafeConcurrency())
+  const [activeThreads, setActiveThreads] = useState(Math.max(1, getSafeConcurrency() - 1))
+  const [rewardAddress, setRewardAddress] = useState(activeWalletAddress || '')
+
+  const { state, handleStart, handleStop } = useMiner(activeWalletAddress, activeThreads)
   const networkStats = useNetworkStats()
   const isConnected = networkStats.isConnected
   const recentBlocks = useRecentBlocks(networkStats.blockHeight, isConnected)
@@ -71,7 +88,45 @@ function Miner({ activeWalletAddress, balance, sessionSeconds }: MinerProps): JS
   const [intensity, setIntensity] = useState<IntensityLevel>('Balanced')
   const [activeTab, setActiveTab] = useState<string>(ACTIVITY_TAB_FOUND)
   const [logs, setLogs] = useState<LogEntry[]>([])
+  
   const lastProcessedBlock = useRef<number | null>(null)
+
+  useEffect(() => {
+    if (activeWalletAddress && !rewardAddress) {
+       setRewardAddress(activeWalletAddress)
+    }
+  }, [activeWalletAddress])
+
+  /**
+   * Handles adjusting the active mining thread count.
+   * @param {number} threads - The target number of active threads.
+   * @returns {Promise<void>}
+   */
+  const handleThreadsUpdate = async (threads: number): Promise<void> => {
+    setActiveThreads(threads)
+    if (isMining) {
+      try {
+        await call('miner_start', [threads])
+      } catch (e) {
+        console.error('Failed to restart miner with new threads', e)
+      }
+    }
+  }
+
+  /**
+   * Sets the active Etherbase/reward address for the mining node.
+   * @param {React.ChangeEvent<HTMLSelectElement>} e - The select change event.
+   * @returns {Promise<void>}
+   */
+  const handleRewardAddressChange = async (e: React.ChangeEvent<HTMLSelectElement>): Promise<void> => {
+    const address = e.target.value
+    setRewardAddress(address)
+    try {
+      await call('miner_setEtherbase', [address])
+    } catch (err) {
+      console.error('Failed to set etherbase', err)
+    }
+  }
 
   useEffect(() => {
     if (!recentBlocks || recentBlocks.length === 0) return
@@ -129,7 +184,7 @@ function Miner({ activeWalletAddress, balance, sessionSeconds }: MinerProps): JS
   
   let displayHashrate = networkStats.hashrate
   if (isMining && (!displayHashrate || displayHashrate === 0)) {
-    displayHashrate = ACTIVE_CORES * 1.45 * 1000000 
+    displayHashrate = activeThreads * 1.45 * 1000000 
   }
   const hashrateDisplay = formatHashrate(displayHashrate)
 
@@ -144,8 +199,9 @@ function Miner({ activeWalletAddress, balance, sessionSeconds }: MinerProps): JS
   const nextBlock = (networkStats.blockHeight || 0) + 1
 
   const sharesData = Array.from({ length: 60 }).map((_, i) => {
-    if (i < recentBlocks.length) {
-      const block = recentBlocks[i]
+    const blockIndex = 59 - i
+    if (blockIndex < recentBlocks.length) {
+      const block = recentBlocks[blockIndex]
       return block.miner.toLowerCase() === activeWalletAddress?.toLowerCase()
     }
     return null
@@ -155,10 +211,6 @@ function Miner({ activeWalletAddress, balance, sessionSeconds }: MinerProps): JS
   
   const acceptedShares = sharesData.filter(s => s === true).length
   const networkShares = sharesData.filter(s => s === false).length
-
-  const abbrAddress = activeWalletAddress 
-    ? `${activeWalletAddress.substring(0, 6)}...${activeWalletAddress.substring(activeWalletAddress.length - 4)}` 
-    : '--'
 
   return (
     <div className="flex flex-col h-full bg-slate-50/80">
@@ -211,7 +263,7 @@ function Miner({ activeWalletAddress, balance, sessionSeconds }: MinerProps): JS
                     </span>
                   </div>
                   <p className="text-sm text-white/60 mt-2">
-                    Mining with {ACTIVE_CORES} threads
+                    Mining with {activeThreads} threads
                   </p>
                 </div>
 
@@ -387,13 +439,15 @@ function Miner({ activeWalletAddress, balance, sessionSeconds }: MinerProps): JS
               <div className="flex items-center justify-between py-4">
                 <div>
                   <p className="text-sm font-semibold text-slate-700">Worker threads</p>
-                  <p className="text-xs text-slate-400 mt-0.5">{ACTIVE_CORES} of {TOTAL_CORES} cores</p>
+                  <p className="text-xs text-slate-400 mt-0.5">{activeThreads} of {maxCores} cores</p>
                 </div>
                 <div className="flex items-center gap-1">
-                  {Array.from({ length: TOTAL_CORES }).map((_, i) => (
+                  {Array.from({ length: maxCores }).map((_, i) => (
                     <div
                       key={i}
-                      className={`w-4 h-6 rounded-sm ${i < ACTIVE_CORES ? 'bg-emerald-500' : 'bg-slate-200'}`}
+                      onClick={() => handleThreadsUpdate(i + 1)}
+                      className={`w-4 h-6 rounded-sm cursor-pointer hover:opacity-80 transition-opacity ${i < activeThreads ? 'bg-emerald-500' : 'bg-slate-200'}`}
+                      title={`${i + 1} Thread${i === 0 ? '' : 's'}`}
                     />
                   ))}
                 </div>
@@ -426,17 +480,22 @@ function Miner({ activeWalletAddress, balance, sessionSeconds }: MinerProps): JS
                   <p className="text-sm font-semibold text-slate-700">Reward address</p>
                   <p className="text-xs text-slate-400 mt-0.5">Block rewards are credited here</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600" />
-                  <span className="text-xs font-mono text-slate-600" title={activeWalletAddress || undefined}>
-                    {abbrAddress}
-                  </span>
-                  <button className="text-slate-400 hover:text-slate-600 transition-colors">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                      <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-                    </svg>
-                  </button>
+                <div className="flex items-center gap-2 relative">
+                  <div className={`w-6 h-6 rounded-full bg-gradient-to-br ${generateIdenticonGradient(rewardAddress)} flex-shrink-0`} />
+                  <select 
+                    value={rewardAddress}
+                    onChange={handleRewardAddressChange}
+                    className="appearance-none bg-transparent text-xs font-mono text-slate-600 focus:outline-none focus:ring-0 cursor-pointer pr-4"
+                  >
+                    {accounts.map(acc => (
+                      <option key={acc.address} value={acc.address}>
+                        {acc.label} ({acc.address.substring(0, 6)}...{acc.address.substring(acc.address.length - 4)})
+                      </option>
+                    ))}
+                  </select>
+                  <svg className="absolute right-0 pointer-events-none text-slate-400" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
                 </div>
               </div>
             </div>
@@ -518,10 +577,10 @@ function Miner({ activeWalletAddress, balance, sessionSeconds }: MinerProps): JS
                         key={index} 
                         className={`w-4 h-4 rounded-sm ${
                           status === true 
-                            ? 'bg-emerald-500' 
+                            ? 'bg-green-500' 
                             : status === false 
-                              ? 'bg-emerald-200' 
-                              : 'bg-emerald-100/50'
+                              ? 'bg-green-200' 
+                              : 'bg-slate-100'
                         }`}
                       />
                     ))}
@@ -532,10 +591,9 @@ function Miner({ activeWalletAddress, balance, sessionSeconds }: MinerProps): JS
                     </p>
                     <div className="flex items-center gap-1.5">
                       <span className="text-[10px] text-slate-400 mr-1">Less</span>
-                      <div className="w-3 h-3 rounded-sm bg-emerald-100/50" />
-                      <div className="w-3 h-3 rounded-sm bg-emerald-200" />
-                      <div className="w-3 h-3 rounded-sm bg-emerald-400" />
-                      <div className="w-3 h-3 rounded-sm bg-emerald-500" />
+                      <div className="w-3 h-3 rounded-sm bg-slate-100" />
+                      <div className="w-3 h-3 rounded-sm bg-green-200" />
+                      <div className="w-3 h-3 rounded-sm bg-green-500" />
                       <span className="text-[10px] text-slate-400 ml-1">More</span>
                     </div>
                   </div>
