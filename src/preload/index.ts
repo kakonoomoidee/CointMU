@@ -44,6 +44,17 @@ const api = {
     get: (key: string) => ipcRenderer.invoke('settings:get', key),
     set: (key: string, value: any) => ipcRenderer.invoke('settings:set', key, value),
     getAll: () => ipcRenderer.invoke('settings:getAll')
+  },
+  updater: {
+    checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
+    quitAndInstall: () => ipcRenderer.invoke('quit-and-install'),
+    onUpdateStatus: (callback: (payload: { status: string; percent?: number }) => void) => {
+      const handler = (_: any, payload: { status: string; percent?: number }): void => {
+        callback(payload)
+      }
+      ipcRenderer.on('update-status', handler)
+      return () => ipcRenderer.removeListener('update-status', handler)
+    }
   }
 }
 

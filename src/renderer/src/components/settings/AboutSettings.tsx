@@ -1,5 +1,5 @@
 import { useState, useEffect, type JSX } from 'react'
-import { useNetworkStats } from '@/hooks'
+import { useNetworkStats, useUpdateStatus } from '@/hooks'
 
 /**
  * Formats raw system uptime seconds into a readable string.
@@ -19,13 +19,29 @@ const formatUptime = (seconds: number): string => {
 }
 
 /**
+ * Returns the appropriate label text for the update button based on the
+ * current update lifecycle status.
+ * @param {string} status - The current update status identifier.
+ * @returns {string} The human-readable button label.
+ */
+const getUpdateButtonLabel = (status: string): string => {
+  if (status === 'checking') return 'Checking...'
+  if (status === 'available') return 'Downloading update...'
+  if (status === 'downloading') return 'Downloading...'
+  if (status === 'ready') return 'Restart to install'
+  return 'Check for updates'
+}
+
+/**
  * About pane containing system information, node version, chain ID,
- * uptime, and external resource links. Does not require configuration state.
- * @returns The About Settings view component.
+ * uptime, external resource links, and an integrated auto-update control
+ * bound to the Electron IPC bridge.
+ * @returns {JSX.Element} The About Settings view component.
  */
 export function AboutSettings(): JSX.Element {
   const [uptimeStr, setUptimeStr] = useState<string>('Loading...')
   const networkStats = useNetworkStats()
+  const updateState = useUpdateStatus()
 
   const sysInfo = window.systemInfo || {
     version: '0.0.1',
@@ -44,6 +60,25 @@ export function AboutSettings(): JSX.Element {
     return () => clearInterval(interval)
   }, [])
 
+  /**
+   * Dispatches the appropriate update action based on the current lifecycle
+   * status through the Electron IPC bridge.
+   * @returns {void}
+   */
+  const handleUpdateAction = (): void => {
+    if (updateState.status === 'ready') {
+      window.api?.updater?.quitAndInstall()
+      return
+    }
+    if (updateState.status === 'idle') {
+      window.api?.updater?.checkForUpdates()
+    }
+  }
+
+  const isButtonDisabled = updateState.status === 'checking'
+    || updateState.status === 'available'
+    || updateState.status === 'downloading'
+
   return (
     <div>
       <div className="flex items-start gap-6 mb-12">
@@ -55,12 +90,22 @@ export function AboutSettings(): JSX.Element {
         <div>
           <h1 className="text-2xl font-bold text-slate-900">CointMU</h1>
           <p className="text-sm font-medium text-slate-600 mt-1">
-            Version {window.systemInfo?.version || '0.0.1'} (build {window.systemInfo?.build || 0}) • {window.systemInfo?.platform || 'Unknown'}
+            Version {window.systemInfo?.version || '0.0.1'} (build {window.systemInfo?.build || 0}) {'\u2022'} {window.systemInfo?.platform || 'Unknown'}
           </p>
-          <p className="text-sm font-medium text-slate-400 mt-1">© 2026 CointMU Foundation • MIT License</p>
+          <p className="text-sm font-medium text-slate-400 mt-1">{'\u00A9'} 2026 CointMU Foundation {'\u2022'} MIT License</p>
           <div className="flex gap-3 mt-4">
-            <button className="px-4 py-1.5 bg-blue-500 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-blue-600 transition-colors">
-              Check for updates
+            <button
+              onClick={handleUpdateAction}
+              disabled={isButtonDisabled}
+              className={`px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm transition-colors ${
+                updateState.status === 'ready'
+                  ? 'bg-emerald-500 text-white hover:bg-emerald-600'
+                  : isButtonDisabled
+                    ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                    : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
+            >
+              {getUpdateButtonLabel(updateState.status)}
             </button>
             <button className="px-4 py-1.5 bg-slate-100 text-slate-800 rounded-lg text-sm font-bold border border-slate-200 hover:bg-slate-200 transition-colors">
               Release notes
@@ -103,7 +148,7 @@ export function AboutSettings(): JSX.Element {
                 <p className="text-sm font-bold text-slate-800">Documentation</p>
                 <p className="text-xs text-slate-500 mt-0.5">Guides, API reference, RPC schema</p>
               </div>
-              <span className="text-sm font-bold text-slate-800 group-hover:text-blue-500 transition-colors">Open ›</span>
+              <span className="text-sm font-bold text-slate-800 group-hover:text-blue-500 transition-colors">{'Open \u203A'}</span>
             </button>
             
             <button className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors group">
@@ -111,7 +156,7 @@ export function AboutSettings(): JSX.Element {
                 <p className="text-sm font-bold text-slate-800">GitHub</p>
                 <p className="text-xs text-slate-500 mt-0.5">github.com/cointmu/node</p>
               </div>
-              <span className="text-sm font-bold text-slate-800 group-hover:text-blue-500 transition-colors">Open ›</span>
+              <span className="text-sm font-bold text-slate-800 group-hover:text-blue-500 transition-colors">{'Open \u203A'}</span>
             </button>
             
             <button className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors group">
@@ -119,7 +164,7 @@ export function AboutSettings(): JSX.Element {
                 <p className="text-sm font-bold text-slate-800">Report an issue</p>
                 <p className="text-xs text-slate-500 mt-0.5">Send a bug report or feature request</p>
               </div>
-              <span className="text-sm font-bold text-slate-800 group-hover:text-blue-500 transition-colors">Open ›</span>
+              <span className="text-sm font-bold text-slate-800 group-hover:text-blue-500 transition-colors">{'Open \u203A'}</span>
             </button>
           </div>
         </section>

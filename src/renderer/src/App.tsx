@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, type JSX } from 'react'
 import { Dashboard, Miner, Wallet, Explorer, Settings, Onboarding } from '@/views'
 import { type DerivedAccount } from '@/services'
-import { useNetworkStats, useBalance } from '@/hooks'
+import { useNetworkStats, useBalance, useUpdateStatus } from '@/hooks'
 
 import { Sidebar } from '@/components'
 
@@ -26,6 +26,7 @@ function App(): JSX.Element {
   const [activeView, setActiveView] = useState<ActiveView>(NAV_ITEM_DASHBOARD)
   const networkStats = useNetworkStats()
   const { balance } = useBalance(activeWalletAddress, networkStats.isConnected)
+  const updateState = useUpdateStatus()
 
   const [sessionSeconds, setSessionSeconds] = useState<number>(0)
   const prevIsMining = useRef<boolean>(false)
@@ -94,6 +95,7 @@ function App(): JSX.Element {
         activeView={activeView}
         setActiveView={(view) => setActiveView(view as ActiveView)}
         onLogout={handleLogout}
+        updateStatus={updateState.status}
       />
 
       <main className="flex-1 overflow-hidden">

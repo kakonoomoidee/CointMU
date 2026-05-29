@@ -1,4 +1,5 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { autoUpdater } from 'electron-updater'
 import { join } from 'path'
 import { writeFileSync, existsSync } from 'fs'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
@@ -287,6 +288,56 @@ function createWindow(): BrowserWindow {
   return mainWindow
 }
 
+/**
+ * Configures the electron-updater auto-update lifecycle and binds IPC
+ * event forwarding to the renderer process for real-time UI synchronization.
+ * @param {BrowserWindow} win - The main BrowserWindow instance to send events to.
+ * @returns {void}
+ */
+function setupAutoUpdater(win: BrowserWindow): void {
+  autoUpdater.autoDownload = true
+  autoUpdater.logger = console
+
+  autoUpdater.on('checking-for-update', () => {
+    win.webContents.send('update-status', { status: 'checking' })
+  })
+
+  autoUpdater.on('update-available', () => {
+    win.webContents.send('update-status', { status: 'available' })
+  })
+
+  autoUpdater.on('update-not-available', () => {
+    win.webContents.send('update-status', { status: 'idle' })
+  })
+
+  autoUpdater.on('download-progress', (progress) => {
+    win.webContents.send('update-status', {
+      status: 'downloading',
+      percent: progress.percent
+    })
+  })
+
+  autoUpdater.on('update-downloaded', () => {
+    win.webContents.send('update-status', { status: 'ready' })
+  })
+
+  autoUpdater.on('error', () => {
+    win.webContents.send('update-status', { status: 'idle' })
+  })
+
+  ipcMain.handle('check-for-updates', async () => {
+    try {
+      await autoUpdater.checkForUpdatesAndNotify()
+    } catch (err) {
+      console.warn('[updater] Failed to check for updates:', (err as Error).message)
+    }
+  })
+
+  ipcMain.handle('quit-and-install', () => {
+    autoUpdater.quitAndInstall()
+  })
+}
+
 app.whenReady().then(async () => {
   electronApp.setAppUserModelId('com.cointmu.desktop')
 
@@ -372,7 +423,8 @@ app.whenReady().then(async () => {
 
   spawnGethProcess(resolvedRpcPort)
 
-  createWindow()
+  const win = createWindow()
+  setupAutoUpdater(win)
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) {
