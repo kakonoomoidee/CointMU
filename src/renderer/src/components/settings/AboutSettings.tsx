@@ -1,4 +1,22 @@
-import type { JSX } from 'react'
+import { useState, useEffect, type JSX } from 'react'
+import { useNetworkStats } from '@/hooks'
+
+/**
+ * Formats raw system uptime seconds into a readable string.
+ * @param {number} seconds - The total uptime in seconds.
+ * @returns {string} The formatted uptime string.
+ */
+const formatUptime = (seconds: number): string => {
+  const d = Math.floor(seconds / 86400)
+  const h = Math.floor((seconds % 86400) / 3600)
+  const m = Math.floor((seconds % 3600) / 60)
+  const s = Math.floor(seconds % 60)
+  
+  if (d > 0) return `${d} days ${h} hours`
+  if (h > 0) return `${h} hours ${m} minutes`
+  if (m > 0) return `${m} minutes ${s} seconds`
+  return `${s} seconds`
+}
 
 /**
  * About pane containing system information, node version, chain ID,
@@ -6,6 +24,26 @@ import type { JSX } from 'react'
  * @returns The About Settings view component.
  */
 export function AboutSettings(): JSX.Element {
+  const [uptimeStr, setUptimeStr] = useState<string>('Loading...')
+  const networkStats = useNetworkStats()
+
+  const sysInfo = window.systemInfo || {
+    version: '0.0.1',
+    build: 0,
+    platform: 'Unknown',
+    nodeVersion: 'Unknown',
+    getUptime: () => 0
+  }
+
+  useEffect(() => {
+    const updateUptime = (): void => {
+      setUptimeStr(formatUptime(sysInfo.getUptime()))
+    }
+    updateUptime()
+    const interval = setInterval(updateUptime, 60000)
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <div>
       <div className="flex items-start gap-6 mb-12">
@@ -16,7 +54,9 @@ export function AboutSettings(): JSX.Element {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-slate-900">CointMU</h1>
-          <p className="text-sm font-medium text-slate-600 mt-1">Version {__APP_VERSION__} (build 1284) • Apple silicon</p>
+          <p className="text-sm font-medium text-slate-600 mt-1">
+            Version {window.systemInfo?.version || '0.0.1'} (build {window.systemInfo?.build || 0}) • {window.systemInfo?.platform || 'Unknown'}
+          </p>
           <p className="text-sm font-medium text-slate-400 mt-1">© 2026 CointMU Foundation • MIT License</p>
           <div className="flex gap-3 mt-4">
             <button className="px-4 py-1.5 bg-blue-500 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-blue-600 transition-colors">
@@ -35,7 +75,7 @@ export function AboutSettings(): JSX.Element {
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <p className="text-sm font-bold text-slate-800">Node version</p>
-              <span className="text-sm font-medium font-mono text-slate-600">cointmu/{__APP_VERSION__}-stable</span>
+              <span className="text-sm font-medium font-mono text-slate-600">cointmu/v{sysInfo.version}-stable (Node v{sysInfo.nodeVersion})</span>
             </div>
             
             <div className="flex items-center justify-between p-4">
@@ -45,12 +85,12 @@ export function AboutSettings(): JSX.Element {
             
             <div className="flex items-center justify-between p-4">
               <p className="text-sm font-bold text-slate-800">Connected peers</p>
-              <span className="text-sm font-medium font-mono text-slate-600">14</span>
+              <span className="text-sm font-medium font-mono text-slate-600">{networkStats.peerCount !== null ? networkStats.peerCount : '--'}</span>
             </div>
 
             <div className="flex items-center justify-between p-4">
               <p className="text-sm font-bold text-slate-800">Uptime</p>
-              <span className="text-sm font-bold text-slate-800">2 days 4 hours</span>
+              <span className="text-sm font-bold text-slate-800">{uptimeStr}</span>
             </div>
           </div>
         </section>

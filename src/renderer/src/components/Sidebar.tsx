@@ -11,7 +11,6 @@ interface SidebarProps {
   onLogout: () => void
 }
 
-const APP_VERSION = `v${__APP_VERSION__}`
 const APP_NETWORK = 'testnet'
 
 /**
@@ -57,7 +56,7 @@ export function Sidebar({
         </div>
         <div>
           <p className="text-sm font-bold text-slate-800">CointMU</p>
-          <p className="text-[10px] text-slate-400 tracking-wide">{APP_VERSION} - {APP_NETWORK}</p>
+          <p className="text-[10px] text-slate-400 tracking-wide">v{window.systemInfo?.version || '0.0.1'} - {APP_NETWORK}</p>
         </div>
       </div>
 

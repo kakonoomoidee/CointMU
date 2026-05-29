@@ -19,5 +19,12 @@ declare global {
   interface Window {
     electron: ElectronAPI
     api: CointmuAPI
+    systemInfo?: {
+      version: string
+      build: number
+      platform: string
+      nodeVersion: string
+      getUptime: () => number
+    }
   }
 }

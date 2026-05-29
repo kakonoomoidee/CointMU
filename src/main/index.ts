@@ -132,8 +132,8 @@ function initGethNode(): Promise<void> {
 
     const binaryPath = resolveGethBinaryPath()
     if (!existsSync(binaryPath)) {
-      console.error(`[geth:init] Fatal error: Geth binary not found at ${binaryPath}`)
-      reject(new Error(`Geth binary not found at ${binaryPath}`))
+      console.warn(`[geth:init] Warning: Geth binary not found at ${binaryPath}. Skipping node init.`)
+      resolve()
       return
     }
 
@@ -166,7 +166,7 @@ function initGethNode(): Promise<void> {
 function spawnGethProcess(rpcPort: number): void {
   const binaryPath = resolveGethBinaryPath()
   if (!existsSync(binaryPath)) {
-    console.error(`[geth:spawn] Fatal error: Geth binary not found at ${binaryPath}`)
+    console.warn(`[geth:spawn] Warning: Geth binary not found at ${binaryPath}. Skipping node spawn.`)
     return
   }
 
