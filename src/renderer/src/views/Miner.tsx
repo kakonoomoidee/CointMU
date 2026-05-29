@@ -45,7 +45,7 @@ function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
   const [intensity, setIntensity] = useState<IntensityLevel>('Balanced')
   const [activeTab, setActiveTab] = useState<string>(ACTIVITY_TAB_FOUND)
 
-  const isMining = state.mining && isConnected
+  const isMining = networkStats.isMining === true && isConnected
   const hashrateDisplay = formatHashrate(networkStats.hashrate)
 
   const abbrAddress = activeWalletAddress 

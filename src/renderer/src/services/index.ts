@@ -28,6 +28,7 @@ export {
 export {
   generateMnemonic,
   deriveAccount,
+  deriveAccountFromPrivateKey,
   generateIdenticonGradient
 } from './walletService'
 export type { DerivedAccount } from './walletService'

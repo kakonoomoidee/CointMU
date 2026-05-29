@@ -50,6 +50,22 @@ export function deriveAccount(mnemonic: string, index: number, label: string): D
 }
 
 /**
+ * Derives an Ethereum account from a raw private key.
+ * @param privateKey - The hex-encoded private key.
+ * @param label - A user-friendly label for the account.
+ * @returns The derived account details.
+ */
+export function deriveAccountFromPrivateKey(privateKey: string, label: string): DerivedAccount {
+  const wallet = new Wallet(privateKey)
+  
+  return {
+    index: 0,
+    address: wallet.address,
+    label
+  }
+}
+
+/**
  * Deterministically generates a Tailwind gradient class string based on an Ethereum address.
  * @param address - The Ethereum address.
  * @returns A Tailwind gradient class string.

@@ -1,17 +1,23 @@
-import { useState, type JSX } from 'react'
-import { useNetworkStats } from '@/hooks'
+import { useState, useEffect, type JSX } from 'react'
+import { useNetworkStats, useRecentBlocks } from '@/hooks'
 import { formatBlockNumber, formatDifficulty } from '@/utils'
 
 type TabState = 'blocks' | 'transactions' | 'accounts'
 
-const TIMELINE_BLOCKS: never[] = []
-const LATEST_BLOCKS: never[] = []
 const TRANSACTIONS: never[] = []
 const TOP_ACCOUNTS: never[] = []
 const MINER_DISTRIBUTION: never[] = []
 
 const EMPTY_STAT_LABEL = '--'
 const EMPTY_COUNT_LABEL = '0'
+
+function formatAge(timestamp: number): string {
+  const diff = Math.floor(Date.now() / 1000) - timestamp
+  if (diff < 0) return 'Just now'
+  if (diff < 60) return `${diff} secs ago`
+  if (diff < 3600) return `${Math.floor(diff / 60)} mins ago`
+  return `${Math.floor(diff / 3600)} hrs ago`
+}
 
 /**
  * Explorer view featuring a global search, network statistics sourced from
@@ -25,6 +31,14 @@ const EMPTY_COUNT_LABEL = '0'
 function Explorer(): JSX.Element {
   const networkStats = useNetworkStats()
   const isConnected = networkStats.isConnected
+
+  const recentBlocks = useRecentBlocks(networkStats.blockHeight, isConnected)
+  const [, setCurrentTime] = useState<number>(Date.now())
+
+  useEffect(() => {
+    const interval = setInterval(() => setCurrentTime(Date.now()), 5000)
+    return () => clearInterval(interval)
+  }, [])
 
   const [selectedBlock, setSelectedBlock] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<TabState>('blocks')
@@ -171,8 +185,12 @@ function Explorer(): JSX.Element {
               </div>
 
               <div className="flex items-end justify-between gap-2 overflow-x-auto pb-2">
-                {TIMELINE_BLOCKS.length > 0 ? TIMELINE_BLOCKS.map((_, i) => (
-                  <div key={i} />
+                {recentBlocks.length > 0 ? recentBlocks.map((block) => (
+                  <div key={block.hash} className="flex-1 flex flex-col items-center">
+                    <div className="w-full h-1 bg-emerald-500 rounded-full mb-2" />
+                    <p className="text-[10px] font-bold text-slate-700">#{block.number}</p>
+                    <p className="text-[9px] text-slate-400">{block.txCount} txs</p>
+                  </div>
                 )) : (
                   <div className="w-full py-8 flex flex-col items-center justify-center">
                     <svg className="text-slate-300 mb-2" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -215,8 +233,28 @@ function Explorer(): JSX.Element {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
-                        {LATEST_BLOCKS.length > 0 ? LATEST_BLOCKS.map((_, i) => (
-                          <tr key={i}><td /></tr>
+                        {recentBlocks.length > 0 ? recentBlocks.map((block) => (
+                          <tr key={block.hash} className="hover:bg-slate-50/50 transition-colors">
+                            <td className="px-5 py-3.5">
+                              <p className="text-sm font-semibold text-blue-600 cursor-pointer" onClick={() => setSelectedBlock(block.number.toString())}>#{block.number}</p>
+                            </td>
+                            <td className="px-5 py-3.5">
+                              <p className="text-xs font-mono text-slate-800">{block.miner.substring(0, 10)}...{block.miner.substring(block.miner.length - 8)}</p>
+                              <p className="text-[10px] text-slate-400 mt-0.5">Hash: {block.hash.substring(0, 14)}...</p>
+                            </td>
+                            <td className="px-5 py-3.5">
+                              <p className="text-xs font-semibold text-slate-700">{block.txCount}</p>
+                            </td>
+                            <td className="px-5 py-3.5">
+                              <div className="flex items-center gap-1">
+                                <p className="text-xs font-bold text-slate-800">5.00</p>
+                                <span className="text-[9px] font-semibold text-slate-400">CMU</span>
+                              </div>
+                            </td>
+                            <td className="px-5 py-3.5 text-right">
+                              <p className="text-[10px] text-slate-500">{formatAge(block.timestamp)}</p>
+                            </td>
+                          </tr>
                         )) : (
                           <tr>
                             <td colSpan={5} className="px-5 py-12 text-center">

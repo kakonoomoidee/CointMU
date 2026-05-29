@@ -1,4 +1,5 @@
 export { NetworkStatus } from './NetworkStatus'
 export { NodeInfo } from './NodeInfo'
 export { IconEyeSlash } from './icons'
+export { Sidebar } from './Sidebar'
 export type { IconProps } from './icons'

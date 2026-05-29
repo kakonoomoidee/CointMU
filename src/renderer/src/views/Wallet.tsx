@@ -1,7 +1,5 @@
 import { useState, type JSX } from 'react'
 import { deriveAccount, generateIdenticonGradient, type DerivedAccount } from '@/services'
-import { useNetworkStats, useBalance } from '@/hooks'
-
 type WalletTab = 'activity' | 'tokens' | 'nfts'
 
 const WALLET_TABS = [
@@ -15,6 +13,7 @@ interface WalletProps {
   setAccounts: (accounts: DerivedAccount[]) => void
   activeWalletAddress: string | null
   setActiveWalletAddress: (address: string) => void
+  balance: string
 }
 
 
@@ -37,11 +36,10 @@ function Wallet({
   accounts,
   setAccounts,
   activeWalletAddress,
-  setActiveWalletAddress
+  setActiveWalletAddress,
+  balance
 }: WalletProps): JSX.Element {
   const [activeTab, setActiveTab] = useState<WalletTab>('activity')
-  const networkStats = useNetworkStats()
-  const { balance } = useBalance(activeWalletAddress, networkStats.isConnected)
 
   const activeAccount = accounts.find(a => a.address === activeWalletAddress) || accounts[0]
   const activeGradient = activeAccount ? generateIdenticonGradient(activeAccount.address) : 'from-slate-400 to-slate-500'
