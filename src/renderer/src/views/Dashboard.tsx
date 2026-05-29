@@ -1,56 +1,17 @@
-import { useNetworkStats, useBalance } from '@/hooks'
+import { useState, useEffect, type JSX } from 'react'
+import { useNetworkStats, useBalance, useRecentBlocks } from '@/hooks'
 import { formatBlockNumber, formatHashrate, formatDifficulty } from '@/utils'
-import { type JSX } from 'react'
-const MINED_BLOCKS_24H = '7'
-const MINED_BLOCKS_REWARD = '+70 CMU rewards'
-const NETWORK_HASHRATE = '48.3 GH/s'
-const NETWORK_HASHRATE_TREND = '2.1% past hour'
-const SMART_CONTRACTS_COUNT = '124'
-const SMART_CONTRACTS_DEPLOYED = '3 deployed by you'
+
 const CONSENSUS_LABEL = 'PoW - Block 30s'
-const BLOCKS_PAST_HOUR = '119'
 
-const LATEST_BLOCKS = [
-  {
-    number: '#28,481',
-    reward: '+10 CMU mined',
-    txHash: '0x9a3f...11c2',
-    txCount: '0 txs',
-    age: '8s ago',
-    miner: '0xC0a7...90a1'
-  },
-  {
-    number: '#28,480',
-    reward: null,
-    txHash: '0xa1c2...f9e3',
-    txCount: '2 txs',
-    age: '42s ago',
-    miner: '0x3b7f...a201'
-  }
-]
-
-const ACTIVITY_LOG = [
-  {
-    type: 'reward' as const,
-    label: 'Mining reward',
-    detail: 'block #28481',
-    time: '8s ago - 1 confirmations',
-    amount: '+10.00',
-    unit: 'CMU',
-    fee: 'fee 0 gwei',
-    positive: true
-  },
-  {
-    type: 'sent' as const,
-    label: 'Sent',
-    detail: 'to 0x8f1a...5f4a',
-    time: '',
-    amount: '-24.50',
-    unit: 'CMU',
-    fee: '',
-    positive: false
-  }
-]
+const formatAge = (timestamp: number): string => {
+  const diff = Math.floor(Date.now() / 1000) - timestamp
+  if (diff < 60) return `${diff} secs ago`
+  if (diff < 3600) return `${Math.floor(diff / 60)} min ago`
+  const h = Math.floor(diff / 3600)
+  const m = Math.floor((diff % 3600) / 60)
+  return `${h}h ${m}m ago`
+}
 
 interface DashboardProps {
   activeWalletAddress: string | null
@@ -66,6 +27,13 @@ interface DashboardProps {
 function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
   const networkStats = useNetworkStats()
   const { balance } = useBalance(activeWalletAddress, networkStats.isConnected)
+  const recentBlocks = useRecentBlocks(networkStats.blockHeight, networkStats.isConnected)
+
+  const [, setCurrentTime] = useState<number>(Date.now())
+  useEffect(() => {
+    const tickInterval = setInterval(() => setCurrentTime(Date.now()), 5000)
+    return () => clearInterval(tickInterval)
+  }, [])
 
   const isConnected = networkStats.isConnected
 
@@ -75,15 +43,18 @@ function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
   const syncBorderColor = isConnected ? 'border-emerald-200 bg-emerald-50' : 'border-slate-200 bg-slate-50'
   const syncTextColor = isConnected ? 'text-emerald-600' : 'text-slate-500'
 
-  const miningLabel = isConnected && networkStats.isMining
-    ? formatHashrate(networkStats.hashrate)
-    : '0 H/s'
+  const parsedBalance = parseFloat(balance.replace(/,/g, ''))
+  const minedBlocksCount = isNaN(parsedBalance) ? 0 : Math.floor(parsedBalance / 10)
+
+  const hashrateDisplay = isConnected ? formatHashrate(networkStats.hashrate) : '0.00 H/s'
+
+  const miningLabel = hashrateDisplay
   const miningUptimeLabel = isConnected && networkStats.isMining
     ? 'Actively mining'
     : 'Miner idle'
 
   const difficultyDisplay = isConnected ? formatDifficulty(networkStats.difficulty) : '--'
-  const gasDisplay = isConnected && networkStats.gasPriceGwei !== null ? networkStats.gasPriceGwei : '--'
+  const gasDisplay = isConnected && networkStats.gasPriceGwei !== null ? networkStats.gasPriceGwei : '0'
   const blockDisplay = isConnected ? formatBlockNumber(networkStats.blockHeight) : '--'
   const peerDisplay = isConnected && networkStats.peerCount !== null ? String(networkStats.peerCount) : '--'
 
@@ -260,7 +231,7 @@ function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
             <div className="rounded-xl bg-slate-50 border border-slate-100 p-3.5 flex items-center justify-between">
               <div>
                 <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-0.5">Blocks past hour</p>
-                <p className="text-2xl font-bold text-slate-800 font-mono">{BLOCKS_PAST_HOUR}</p>
+                <p className="text-2xl font-bold text-slate-800 font-mono">{isConnected ? recentBlocks.length.toString() : '--'}</p>
               </div>
               <div className="flex items-end gap-0.5 h-10">
                 {(isConnected ? [28, 35, 22, 40, 32, 45, 38, 30, 42, 36, 48, 34, 26, 44, 50, 38, 33, 46, 42, 28] : []).map((h, i) => (
@@ -310,10 +281,10 @@ function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
               <span className="text-xs font-medium text-slate-500">Mined blocks (24h)</span>
             </div>
             <p className="text-2xl font-bold text-slate-800 tracking-tight">
-              {isConnected ? MINED_BLOCKS_24H : '0'}
+              {isConnected ? minedBlocksCount : '0'}
             </p>
             <p className="text-xs text-slate-400 mt-1">
-              {isConnected ? MINED_BLOCKS_REWARD : '--'}
+              {isConnected ? `+${minedBlocksCount * 10} CMU rewards` : '--'}
             </p>
           </div>
 
@@ -329,10 +300,10 @@ function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
               <span className="text-xs font-medium text-slate-500">Network hashrate</span>
             </div>
             <p className="text-2xl font-bold text-slate-800 tracking-tight">
-              {isConnected ? NETWORK_HASHRATE : '--'}
+              {hashrateDisplay}
             </p>
             <p className="text-xs text-slate-400 mt-1">
-              {isConnected ? NETWORK_HASHRATE_TREND : '--'}
+              {isConnected ? 'Real-time via RPC' : '--'}
             </p>
           </div>
 
@@ -346,10 +317,10 @@ function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
               <span className="text-xs font-medium text-slate-500">Smart contracts</span>
             </div>
             <p className="text-2xl font-bold text-slate-800 tracking-tight">
-              {isConnected ? SMART_CONTRACTS_COUNT : '0'}
+              0
             </p>
             <p className="text-xs text-slate-400 mt-1">
-              {isConnected ? SMART_CONTRACTS_DEPLOYED : '--'}
+              {isConnected ? '0 deployed by you' : '--'}
             </p>
           </div>
         </div>
@@ -368,8 +339,8 @@ function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
             <p className="text-[10px] text-slate-400 mb-4">Mined across the network</p>
 
             <div className="space-y-0">
-              {(isConnected ? LATEST_BLOCKS : []).map((block, i) => (
-                <div key={i} className="flex items-center justify-between py-3.5 border-t border-slate-100 first:border-t-0">
+              {(isConnected ? recentBlocks : []).slice(0, 10).map((block) => (
+                <div key={block.hash} className="flex items-center justify-between py-3.5 border-t border-slate-100 first:border-t-0 hover:bg-slate-50/50 transition-colors px-2 rounded-lg">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
                       <svg className="text-blue-500" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -378,24 +349,33 @@ function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-slate-800 font-mono">{block.number}</span>
-                        {block.reward && (
+                        <span className="text-sm font-bold text-slate-800 font-mono">#{block.number}</span>
+                        {block.miner.toLowerCase() === activeWalletAddress?.toLowerCase() && (
                           <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                            {block.reward}
+                            +10 CMU mined
                           </span>
                         )}
                       </div>
                       <p className="text-[10px] text-slate-400 font-mono mt-0.5">
-                        {block.txHash} - {block.txCount}
+                        {block.hash.substring(0, 10)}...{block.hash.substring(block.hash.length - 8)} - {block.txCount} txs
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-slate-500">{block.age}</p>
-                    <p className="text-[10px] text-slate-400 font-mono">{block.miner}</p>
+                    <p className="text-xs text-slate-500">{formatAge(block.timestamp)}</p>
+                    <p className="text-[10px] text-slate-400 font-mono">{block.miner.substring(0, 8)}...</p>
                   </div>
                 </div>
               ))}
+              
+              {isConnected && recentBlocks.length === 0 && (
+                <div className="py-8 flex flex-col items-center justify-center">
+                  <svg className="text-slate-300 mb-2" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                  </svg>
+                  <p className="text-sm font-medium text-slate-400">Awaiting network blocks</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -409,45 +389,48 @@ function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
                 </svg>
               </button>
             </div>
-            <p className="text-[10px] text-slate-400 mb-4 font-mono">Transactions for 0xC0a7...90a1</p>
+            <p className="text-[10px] text-slate-400 mb-4 font-mono">Transactions for {abbrAddress}</p>
 
             <div className="space-y-0">
-              {(isConnected ? ACTIVITY_LOG : []).map((tx, i) => (
-                <div key={i} className="flex items-center justify-between py-3.5 border-t border-slate-100 first:border-t-0">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${tx.positive ? 'bg-blue-50' : 'bg-amber-50'}`}>
-                      {tx.positive ? (
-                        <svg className="text-blue-500" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                        </svg>
-                      ) : (
-                        <svg className="text-amber-500" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="17 11 12 6 7 11" />
-                          <line x1="12" y1="6" x2="12" y2="18" />
-                        </svg>
-                      )}
+              {isConnected && recentBlocks.filter(b => b.miner.toLowerCase() === activeWalletAddress?.toLowerCase()).length > 0 ? (
+                recentBlocks
+                  .filter(b => b.miner.toLowerCase() === activeWalletAddress?.toLowerCase())
+                  .slice(0, 10)
+                  .map((block) => (
+                    <div key={block.hash} className="flex items-center justify-between py-3.5 border-t border-slate-100 first:border-t-0 hover:bg-slate-50/50 transition-colors px-2 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-blue-50">
+                          <svg className="text-blue-500" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-slate-800">
+                            Mining reward
+                            <span className="font-normal text-slate-400 ml-1.5 font-mono">block #{block.number}</span>
+                          </p>
+                          <p className="text-[10px] text-slate-400 mt-0.5">{formatAge(block.timestamp)} - confirmed</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-bold font-mono text-emerald-600">
+                          +10.00
+                          <span className="text-[10px] font-medium text-slate-400 ml-1">CMU</span>
+                        </p>
+                        <p className="text-[10px] text-slate-400">fee 0 gwei</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-slate-800">
-                        {tx.label}
-                        <span className="font-normal text-slate-400 ml-1.5">{tx.detail}</span>
-                      </p>
-                      {tx.time && (
-                        <p className="text-[10px] text-slate-400 mt-0.5">{tx.time}</p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className={`text-sm font-bold font-mono ${tx.positive ? 'text-emerald-600' : 'text-slate-800'}`}>
-                      {tx.amount}
-                      <span className="text-[10px] font-medium text-slate-400 ml-1">{tx.unit}</span>
-                    </p>
-                    {tx.fee && (
-                      <p className="text-[10px] text-slate-400">{tx.fee}</p>
-                    )}
-                  </div>
+                  ))
+              ) : (
+                <div className="py-8 flex flex-col items-center justify-center">
+                  <svg className="text-slate-300 mb-2" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  <p className="text-sm font-medium text-slate-400">No activity yet</p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">Start mining to see rewards</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>

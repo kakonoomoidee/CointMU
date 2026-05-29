@@ -1,4 +1,4 @@
-import { useState, useEffect, type JSX } from 'react'
+import { useState, useEffect, useRef, type JSX } from 'react'
 import { Dashboard, Miner, Wallet, Explorer, Settings, Onboarding } from '@/views'
 import { type DerivedAccount } from '@/services'
 import { useNetworkStats, useBalance } from '@/hooks'
@@ -26,6 +26,28 @@ function App(): JSX.Element {
   const [activeView, setActiveView] = useState<ActiveView>(NAV_ITEM_DASHBOARD)
   const networkStats = useNetworkStats()
   const { balance } = useBalance(activeWalletAddress, networkStats.isConnected)
+
+  const [sessionSeconds, setSessionSeconds] = useState<number>(0)
+  const prevIsMining = useRef<boolean>(false)
+
+  const isMining = networkStats.isMining === true && networkStats.isConnected
+
+  useEffect(() => {
+    if (isMining && !prevIsMining.current) {
+      setSessionSeconds(0)
+    }
+    prevIsMining.current = isMining
+
+    let interval: ReturnType<typeof setInterval>
+    if (isMining) {
+      interval = setInterval(() => {
+        setSessionSeconds(s => s + 1)
+      }, 1000)
+    }
+    return () => {
+      if (interval) clearInterval(interval)
+    }
+  }, [isMining])
 
   useEffect(() => {
     // We only simulate a loading delay. We DO NOT auto-load activeWalletAddress
@@ -79,7 +101,7 @@ function App(): JSX.Element {
           <Dashboard activeWalletAddress={activeWalletAddress} />
         )}
         {activeView === NAV_ITEM_MINER && (
-          <Miner activeWalletAddress={activeWalletAddress} />
+          <Miner activeWalletAddress={activeWalletAddress} balance={balance} sessionSeconds={sessionSeconds} />
         )}
         {activeView === NAV_ITEM_WALLET && (
           <Wallet 
@@ -90,7 +112,7 @@ function App(): JSX.Element {
             balance={balance}
           />
         )}
-        {activeView === NAV_ITEM_EXPLORER && <Explorer />}
+        {activeView === NAV_ITEM_EXPLORER && <Explorer activeWalletAddress={activeWalletAddress} />}
         {activeView === NAV_ITEM_SETTINGS && <Settings />}
       </main>
     </div>
