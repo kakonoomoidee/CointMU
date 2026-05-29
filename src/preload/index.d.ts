@@ -23,6 +23,12 @@ interface CointmuAPI {
     quitAndInstall: () => Promise<void>
     onUpdateStatus: (callback: (payload: UpdateStatusPayload) => void) => () => void
   }
+  mining: {
+    toggle: (enabled: boolean) => Promise<void>
+    setThreads: (cores: number) => Promise<void>
+    setPoolAddress: (address: string) => Promise<void>
+    onMiningStatusChanged: (callback: (status: string) => void) => () => void
+  }
 }
 
 declare global {

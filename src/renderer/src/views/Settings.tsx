@@ -90,6 +90,9 @@ const CATEGORIES: { id: SettingsCategory; label: string; icon: JSX.Element }[] =
 ]
 
 export interface SettingsStore {
+  mnemonic: string | null
+  activeWalletAddress: string | null
+  accounts: { address: string; label: string }[]
   general: {
     launchAtLogin: boolean
     openInBackground: boolean
@@ -115,13 +118,13 @@ export interface SettingsStore {
     pruneOldState: boolean
   }
   mining: {
-    enableMining: boolean
+    isMiningEnabled: boolean
     startAtLaunch: boolean
-    threads: number
+    cpuThreads: number
     intensity: string
     pauseOnBattery: boolean
-    mode: string
-    rewardAddress: string
+    miningMode: string
+    poolAddress: string
   }
   security: {
     autoLockWallet: boolean
@@ -166,7 +169,7 @@ function Settings(): JSX.Element {
     const updatedSettings = {
       ...settings,
       [section]: {
-        ...settings[section],
+        ...(settings[section] as any),
         [key]: value
       }
     }
@@ -239,7 +242,7 @@ function Settings(): JSX.Element {
               <NetworkSettings config={settings.network} onUpdate={(k, v) => updateSetting('network', k, v)} />
             )}
             {activeCategory === 'mining' && (
-              <MiningSettings config={settings.mining} onUpdate={(k, v) => updateSetting('mining', k, v)} />
+              <MiningSettings config={settings.mining} accounts={settings.accounts} onUpdate={(k, v) => updateSetting('mining', k, v)} />
             )}
             {activeCategory === 'security' && (
               <SecuritySettings config={settings.security} onUpdate={(k, v) => updateSetting('security', k, v)} />

@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, powerMonitor } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { join } from 'path'
 import { writeFileSync, existsSync } from 'fs'
@@ -344,6 +344,148 @@ function setupAutoUpdater(win: BrowserWindow): void {
   })
 }
 
+/**
+ * Dispatches a JSON-RPC 2.0 call to the locally running Core-geth HTTP endpoint.
+ * @param {number} rpcPort - The resolved RPC port of the running Geth node.
+ * @param {string} method - The JSON-RPC method name.
+ * @param {unknown[]} params - The ordered parameter array for the method.
+ * @returns {Promise<any>} The raw result from the RPC response, or null on failure.
+ */
+async function callGethRpc(rpcPort: number, method: string, params: unknown[] = []): Promise<any> {
+  try {
+    const response = await fetch(`http://127.0.0.1:${rpcPort}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jsonrpc: '2.0', method, params, id: Date.now() })
+    })
+    const json = await response.json()
+    if (json.error) {
+      console.warn(`[geth:rpc] ${method} error:`, json.error.message)
+      return null
+    }
+    return json.result
+  } catch (err) {
+    console.warn(`[geth:rpc] ${method} unreachable:`, (err as Error).message)
+    return null
+  }
+}
+
+/**
+ * Central controller for managing the underlying Geth mining process.
+ * Handles RPC dispatch, power state transitions via powerMonitor, and syncing
+ * with the global electron-store configuration.
+ */
+class MiningController {
+  private rpcPort: number
+  private store: any
+  private win: BrowserWindow | null
+
+  constructor(rpcPort: number, store: any) {
+    this.rpcPort = rpcPort
+    this.store = store
+    this.win = null
+
+    this.setupPowerMonitor()
+    this.setupIpcHandlers()
+  }
+
+  public setWindow(win: BrowserWindow): void {
+    this.win = win
+  }
+
+  /**
+   * Toggles the mining state on or off. Dispatches miner_start or miner_stop.
+   * @param {boolean} enabled - Target mining state.
+   * @returns {Promise<void>}
+   */
+  private async toggleMining(enabled: boolean): Promise<void> {
+    this.store.set('mining.isMiningEnabled', enabled)
+    if (enabled) {
+      const threads = this.store.get('mining.cpuThreads') || 4
+      const mode = this.store.get('mining.miningMode') || 'Solo'
+      const poolAddress = this.store.get('mining.poolAddress') || ''
+      const activeWalletAddress = this.store.get('activeWalletAddress')
+
+      if (mode === 'Pool' && poolAddress) {
+        await callGethRpc(this.rpcPort, 'miner_setEtherbase', [poolAddress])
+      } else if (activeWalletAddress) {
+        await callGethRpc(this.rpcPort, 'miner_setEtherbase', [activeWalletAddress])
+      }
+
+      await callGethRpc(this.rpcPort, 'miner_start', [Math.floor(threads)])
+    } else {
+      await callGethRpc(this.rpcPort, 'miner_stop')
+    }
+  }
+
+  /**
+   * Updates the allocated CPU threads. If mining is currently enabled, it gracefully
+   * restarts the miner to apply the new thread count.
+   * @param {number} cores - Number of CPU cores to allocate.
+   * @returns {Promise<void>}
+   */
+  private async updateThreads(cores: number): Promise<void> {
+    this.store.set('mining.cpuThreads', cores)
+    const isMiningEnabled = this.store.get('mining.isMiningEnabled')
+    
+    if (isMiningEnabled) {
+      await callGethRpc(this.rpcPort, 'miner_stop')
+      await callGethRpc(this.rpcPort, 'miner_start', [Math.floor(cores)])
+    }
+  }
+
+  /**
+   * Sets the target pool address in the persistent store and dispatches
+   * miner_setEtherbase to the running node.
+   * @param {string} address - The 42-character hex wallet address.
+   * @returns {Promise<void>}
+   */
+  private async setPoolAddress(address: string): Promise<void> {
+    this.store.set('mining.poolAddress', address)
+    await callGethRpc(this.rpcPort, 'miner_setEtherbase', [address])
+  }
+
+  private setupPowerMonitor(): void {
+    powerMonitor.on('on-battery', async () => {
+      const pauseOnBattery = this.store.get('mining.pauseOnBattery')
+      if (pauseOnBattery) {
+        console.log('[power] On battery - pausing miner')
+        await callGethRpc(this.rpcPort, 'miner_stop')
+        if (this.win) {
+          this.win.webContents.send('mining:status-changed', 'Paused (Battery)')
+        }
+      }
+    })
+
+    powerMonitor.on('on-ac', async () => {
+      const isMiningEnabled = this.store.get('mining.isMiningEnabled')
+      const pauseOnBattery = this.store.get('mining.pauseOnBattery')
+      if (isMiningEnabled && pauseOnBattery) {
+        const threads = this.store.get('mining.cpuThreads') || 4
+        console.log('[power] On AC - resuming miner with', threads, 'threads')
+        await callGethRpc(this.rpcPort, 'miner_start', [threads])
+        if (this.win) {
+          this.win.webContents.send('mining:status-changed', 'Mining')
+        }
+      }
+    })
+  }
+
+  private setupIpcHandlers(): void {
+    ipcMain.handle('mining:toggle', async (_, enabled: boolean) => {
+      await this.toggleMining(enabled)
+    })
+
+    ipcMain.handle('mining:setThreads', async (_, cores: number) => {
+      await this.updateThreads(cores)
+    })
+
+    ipcMain.handle('mining:setPoolAddress', async (_, address: string) => {
+      await this.setPoolAddress(address)
+    })
+  }
+}
+
 app.whenReady().then(async () => {
   electronApp.setAppUserModelId('com.cointmu.desktop')
 
@@ -393,13 +535,13 @@ app.whenReady().then(async () => {
         pruneOldState: true
       },
       mining: {
-        enableMining: false,
+        isMiningEnabled: false,
         startAtLaunch: false,
-        threads: 4,
+        cpuThreads: 4,
         intensity: 'Balanced',
         pauseOnBattery: true,
-        mode: 'Solo',
-        rewardAddress: ''
+        miningMode: 'Solo',
+        poolAddress: ''
       },
       security: {
         autoLockWallet: true,
@@ -428,9 +570,12 @@ app.whenReady().then(async () => {
   }
 
   spawnGethProcess(resolvedRpcPort)
+  
+  const miningController = new MiningController(resolvedRpcPort, store)
 
   const win = createWindow()
   setupAutoUpdater(win)
+  miningController.setWindow(win)
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) {

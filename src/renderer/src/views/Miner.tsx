@@ -1,20 +1,18 @@
 import { useState, useEffect, useRef, type JSX } from 'react'
 import { useMiner, useNetworkStats, useRecentBlocks } from '@/hooks'
-import { call, generateIdenticonGradient, type DerivedAccount } from '@/services'
+import { generateIdenticonGradient } from '@/services'
 import { formatHashrate } from '@/utils'
 
 interface MinerProps {
   activeWalletAddress: string | null
   balance: string
   sessionSeconds: number
-  accounts: DerivedAccount[]
 }
 
 const BLOCK_REWARD_CMU = '10.00'
 const TARGET_DIFFICULTY = '0000_ffff...'
 
 const INTENSITY_OPTIONS = ['Eco', 'Balanced', 'Turbo'] as const
-type IntensityLevel = (typeof INTENSITY_OPTIONS)[number]
 
 const ACTIVITY_TAB_FOUND = 'Found'
 const ACTIVITY_TAB_SHARES = 'Shares'
@@ -65,8 +63,7 @@ interface LogEntry {
 function Miner({
   activeWalletAddress,
   balance,
-  sessionSeconds,
-  accounts
+  sessionSeconds
 }: MinerProps): JSX.Element {
   const getSafeConcurrency = (): number => {
     try {
@@ -77,56 +74,56 @@ function Miner({
   }
 
   const [maxCores] = useState(getSafeConcurrency())
-  const [activeThreads, setActiveThreads] = useState(Math.max(1, getSafeConcurrency() - 1))
-  const [rewardAddress, setRewardAddress] = useState(activeWalletAddress || '')
 
-  const { state, handleStart, handleStop } = useMiner(activeWalletAddress, activeThreads)
   const networkStats = useNetworkStats()
   const isConnected = networkStats.isConnected
   const recentBlocks = useRecentBlocks(networkStats.blockHeight, isConnected)
 
-  const [intensity, setIntensity] = useState<IntensityLevel>('Balanced')
   const [activeTab, setActiveTab] = useState<string>(ACTIVITY_TAB_FOUND)
   const [logs, setLogs] = useState<LogEntry[]>([])
   
+  const [globalMiningEnabled, setGlobalMiningEnabled] = useState<boolean>(true)
+  const [globalCpuThreads, setGlobalCpuThreads] = useState<number>(Math.max(1, maxCores - 1))
+  const [globalIntensity, setGlobalIntensity] = useState<string>('Balanced')
+  const [globalPoolAddress, setGlobalPoolAddress] = useState<string>(activeWalletAddress || '')
+  const [powerStatus, setPowerStatus] = useState<string>('')
+
+  const { state, handleStart, handleStop } = useMiner(activeWalletAddress, globalCpuThreads)
+
   const lastProcessedBlock = useRef<number | null>(null)
 
   useEffect(() => {
-    if (activeWalletAddress && !rewardAddress) {
-       setRewardAddress(activeWalletAddress)
-    }
-  }, [activeWalletAddress])
-
-  /**
-   * Handles adjusting the active mining thread count.
-   * @param {number} threads - The target number of active threads.
-   * @returns {Promise<void>}
-   */
-  const handleThreadsUpdate = async (threads: number): Promise<void> => {
-    setActiveThreads(threads)
-    if (isMining) {
+    const syncSettings = async () => {
       try {
-        await call('miner_start', [threads])
-      } catch (e) {
-        console.error('Failed to restart miner with new threads', e)
+        const storeData = await window.api.settings.getAll()
+        const config = storeData.mining || {}
+        setGlobalMiningEnabled(config.isMiningEnabled === true)
+        if (typeof config.cpuThreads === 'number') setGlobalCpuThreads(config.cpuThreads)
+        if (typeof config.intensity === 'string') setGlobalIntensity(config.intensity)
+        if (typeof config.poolAddress === 'string') setGlobalPoolAddress(config.poolAddress || activeWalletAddress || '')
+      } catch (err) {
+        console.error('Failed to sync global mining setting', err)
       }
     }
-  }
+    syncSettings()
+    const interval = setInterval(syncSettings, 1000)
+    return () => clearInterval(interval)
+  }, [])
 
-  /**
-   * Sets the active Etherbase/reward address for the mining node.
-   * @param {React.ChangeEvent<HTMLSelectElement>} e - The select change event.
-   * @returns {Promise<void>}
-   */
-  const handleRewardAddressChange = async (e: React.ChangeEvent<HTMLSelectElement>): Promise<void> => {
-    const address = e.target.value
-    setRewardAddress(address)
-    try {
-      await call('miner_setEtherbase', [address])
-    } catch (err) {
-      console.error('Failed to set etherbase', err)
+  useEffect(() => {
+    const unsub = window.api?.mining?.onMiningStatusChanged((status) => {
+      setPowerStatus(status)
+    })
+    return () => {
+      if (unsub) unsub()
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    if (activeWalletAddress && !globalPoolAddress) {
+       setGlobalPoolAddress(activeWalletAddress)
+    }
+  }, [activeWalletAddress])
 
   useEffect(() => {
     if (!recentBlocks || recentBlocks.length === 0) return
@@ -184,7 +181,7 @@ function Miner({
   
   let displayHashrate = networkStats.hashrate
   if (isMining && (!displayHashrate || displayHashrate === 0)) {
-    displayHashrate = activeThreads * 1.45 * 1000000 
+    displayHashrate = globalCpuThreads * 1.45 * 1000000 
   }
   const hashrateDisplay = formatHashrate(displayHashrate)
 
@@ -229,6 +226,11 @@ function Miner({
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span className="text-xs font-semibold text-emerald-600">Mining</span>
             </div>
+          ) : powerStatus === 'Paused (Battery)' ? (
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-amber-200 bg-amber-50">
+              <span className="w-2 h-2 rounded-full bg-amber-500" />
+              <span className="text-xs font-semibold text-amber-700">{powerStatus}</span>
+            </div>
           ) : (
             <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-slate-50">
               <span className="text-xs font-semibold text-slate-500">Stopped</span>
@@ -263,7 +265,7 @@ function Miner({
                     </span>
                   </div>
                   <p className="text-sm text-white/60 mt-2">
-                    Mining with {activeThreads} threads
+                    Mining with {globalCpuThreads} threads
                   </p>
                 </div>
 
@@ -321,7 +323,10 @@ function Miner({
                     <span className="text-xl font-semibold text-white/40">MH/s</span>
                   </div>
                   <p className="text-sm text-white/50 mt-2">
-                    Press Start to join consensus. Earn <span className="font-semibold text-white/70">10 CMU</span> per block found.
+                    {globalMiningEnabled 
+                      ? <>Press Start to join consensus. Earn <span className="font-semibold text-white/70">10 CMU</span> per block found.</>
+                      : <>Mining is disabled globally. Enable it in Settings first.</>
+                    }
                   </p>
                 </div>
 
@@ -336,8 +341,9 @@ function Miner({
                   <button
                     id="miner-start-button"
                     onClick={handleStart}
-                    disabled={state.toggling}
+                    disabled={state.toggling || !globalMiningEnabled}
                     className="flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-600 text-sm font-bold text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/30"
+                    title={!globalMiningEnabled ? 'Mining is disabled in Settings' : ''}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                       <polygon points="5 3 19 12 5 21 5 3" />
@@ -431,22 +437,21 @@ function Miner({
         <div className="grid grid-cols-[1fr_1.2fr] gap-5">
           <div className="rounded-2xl bg-white border border-slate-200 p-6">
             <div className="mb-1">
-              <h3 className="text-sm font-bold text-slate-800">Worker</h3>
-              <p className="text-[10px] text-slate-400 mt-0.5">Tune your miner intensity and threads</p>
+              <h3 className="text-sm font-bold text-slate-800">Worker configuration</h3>
+              <p className="text-[10px] text-slate-400 mt-0.5">Current internal node configuration</p>
             </div>
 
-            <div className="divide-y divide-slate-100 mt-4">
+            <div className="divide-y divide-slate-100 mt-4 opacity-80 pointer-events-none">
               <div className="flex items-center justify-between py-4">
                 <div>
                   <p className="text-sm font-semibold text-slate-700">Worker threads</p>
-                  <p className="text-xs text-slate-400 mt-0.5">{activeThreads} of {maxCores} cores</p>
+                  <p className="text-xs text-slate-400 mt-0.5">{globalCpuThreads} of {maxCores} cores</p>
                 </div>
                 <div className="flex items-center gap-1">
                   {Array.from({ length: maxCores }).map((_, i) => (
                     <div
                       key={i}
-                      onClick={() => handleThreadsUpdate(i + 1)}
-                      className={`w-4 h-6 rounded-sm cursor-pointer hover:opacity-80 transition-opacity ${i < activeThreads ? 'bg-emerald-500' : 'bg-slate-200'}`}
+                      className={`w-4 h-6 rounded-sm cursor-default ${i < globalCpuThreads ? 'bg-emerald-400' : 'bg-slate-200'}`}
                       title={`${i + 1} Thread${i === 0 ? '' : 's'}`}
                     />
                   ))}
@@ -460,17 +465,16 @@ function Miner({
                 </div>
                 <div className="flex items-center rounded-lg border border-slate-200 overflow-hidden">
                   {INTENSITY_OPTIONS.map((option) => (
-                    <button
+                    <div
                       key={option}
-                      onClick={() => setIntensity(option)}
-                      className={`px-3.5 py-1.5 text-xs font-semibold transition-colors ${
-                        intensity === option
-                          ? 'bg-slate-800 text-white'
-                          : 'bg-white text-slate-500 hover:bg-slate-50'
+                      className={`px-3.5 py-1.5 text-xs font-semibold cursor-default transition-colors ${
+                        globalIntensity === option
+                          ? 'bg-slate-300 text-slate-700'
+                          : 'bg-white text-slate-400'
                       }`}
                     >
                       {option}
-                    </button>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -480,22 +484,11 @@ function Miner({
                   <p className="text-sm font-semibold text-slate-700">Reward address</p>
                   <p className="text-xs text-slate-400 mt-0.5">Block rewards are credited here</p>
                 </div>
-                <div className="flex items-center gap-2 relative">
-                  <div className={`w-6 h-6 rounded-full bg-gradient-to-br ${generateIdenticonGradient(rewardAddress)} flex-shrink-0`} />
-                  <select 
-                    value={rewardAddress}
-                    onChange={handleRewardAddressChange}
-                    className="appearance-none bg-transparent text-xs font-mono text-slate-600 focus:outline-none focus:ring-0 cursor-pointer pr-4"
-                  >
-                    {accounts.map(acc => (
-                      <option key={acc.address} value={acc.address}>
-                        {acc.label} ({acc.address.substring(0, 6)}...{acc.address.substring(acc.address.length - 4)})
-                      </option>
-                    ))}
-                  </select>
-                  <svg className="absolute right-0 pointer-events-none text-slate-400" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                  </svg>
+                <div className="flex items-center gap-3">
+                  <div className={`w-5 h-5 rounded-full bg-gradient-to-br ${generateIdenticonGradient(globalPoolAddress)} flex-shrink-0`} />
+                  <span className="text-xs font-mono text-slate-500 font-medium tracking-tight">
+                    {globalPoolAddress.substring(0, 10)}...{globalPoolAddress.substring(globalPoolAddress.length - 8)}
+                  </span>
                 </div>
               </div>
             </div>

@@ -55,6 +55,18 @@ const api = {
       ipcRenderer.on('update-status', handler)
       return () => ipcRenderer.removeListener('update-status', handler)
     }
+  },
+  mining: {
+    toggle: (enabled: boolean) => ipcRenderer.invoke('mining:toggle', enabled),
+    setThreads: (cores: number) => ipcRenderer.invoke('mining:setThreads', cores),
+    setPoolAddress: (address: string) => ipcRenderer.invoke('mining:setPoolAddress', address),
+    onMiningStatusChanged: (callback: (status: string) => void) => {
+      const handler = (_: any, status: string): void => {
+        callback(status)
+      }
+      ipcRenderer.on('mining:status-changed', handler)
+      return () => ipcRenderer.removeListener('mining:status-changed', handler)
+    }
   }
 }
 
