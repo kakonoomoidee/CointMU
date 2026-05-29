@@ -3,9 +3,9 @@
 # ==========================================
 
 VERSION = 1
-PATCHLEVEL = 3
+PATCHLEVEL = 4
 SUBLEVEL = 0
-EXTRAVERSION = nebula
+EXTRAVERSION = dino
 
 .PHONY: help dev build\:win clean
 
