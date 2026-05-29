@@ -36,3 +36,7 @@ linux:
     - deb
   maintainer: cointmu.org
   category: Utility
+publish:
+  provider: github
+  owner: kakonoomoidee
+  repo: CointMU
