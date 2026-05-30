@@ -194,7 +194,7 @@ function spawnGethProcess(store: any): void {
   }
 
   const hardcodedUbuntuEnode =
-    "enode://ebfb332054e14291511ac5a0df9655006a2967078de8189da206c546a7227c38c19231d1f05ca37acc8864e20a67c798b690136de5b6e88b363a091ef0646dc4@10.64.24.248:30303";
+    "enode://ec322d10efbf7a7ffd8baafa97855aa33c7bf412b92fd4b9656868216d14064609d4d0a2c1fed048150bbe38f202d1cd0ab3779a771afbadd5fc85b85a08a849@10.64.24.248:30303";
   args.push("--bootnodes", GETH_BOOTNODE_ENODE || hardcodedUbuntuEnode);
 
   try {
@@ -525,22 +525,24 @@ class MiningController {
     });
 
     /**
-     * Retrieves the current mining status, hashrate, and block difficulty directly from the Geth node.
-     * @returns {Promise<{isMining: boolean, hashrate: number, difficulty: number}>} The current stats.
+     * Retrieves the current mining status, hashrate, block difficulty, and latest block height directly from the Geth node.
+     * @returns {Promise<{isMining: boolean, hashrate: number, difficulty: number, blockNumber: number}>} The current stats.
      */
-    ipcMain.handle("mining:getStats", async (): Promise<{isMining: boolean, hashrate: number, difficulty: number}> => {
+    ipcMain.handle("mining:getStats", async (): Promise<{isMining: boolean, hashrate: number, difficulty: number, blockNumber: number}> => {
       try {
         const isMiningHex = await callGethRpc(this.rpcPort, "eth_mining");
         const hashrateHex = await callGethRpc(this.rpcPort, "eth_hashrate");
         const latestBlock = await callGethRpc(this.rpcPort, "eth_getBlockByNumber", ["latest", false]);
         const difficulty = latestBlock && latestBlock.difficulty ? parseInt(latestBlock.difficulty, 16) : 0;
+        const blockNumber = latestBlock && latestBlock.number ? parseInt(latestBlock.number, 16) : 0;
         return {
           isMining: isMiningHex === true || isMiningHex === "true",
           hashrate: parseInt(hashrateHex, 16) || 0,
-          difficulty
+          difficulty,
+          blockNumber
         };
       } catch (error) {
-        return { isMining: false, hashrate: 0, difficulty: 0 };
+        return { isMining: false, hashrate: 0, difficulty: 0, blockNumber: 0 };
       }
     });
 

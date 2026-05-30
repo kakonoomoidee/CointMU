@@ -1,4 +1,5 @@
-const RPC_BASE_URL = 'http://10.64.24.248:8585'
+const RPC_HOST = '127.0.0.1'
+const RPC_FALLBACK_PORT = 8585
 const JSON_RPC_VERSION = '2.0'
 const HEX_RADIX = 16
 const WEI_PER_GWEI = 1_000_000_000
@@ -7,6 +8,38 @@ const BALANCE_DECIMAL_PLACES = 2
 const LATEST_BLOCK_TAG = 'latest'
 
 let requestCounter = 0
+let cachedRpcUrl: string | null = null
+let pendingPortResolution: Promise<string> | null = null
+
+/**
+ * Resolves the JSON-RPC base URL of the locally running Core-geth node. The
+ * dynamically allocated port is fetched once from the Electron main process via
+ * the IPC bridge and cached for all subsequent calls. On a successful resolution
+ * the URL is memoized; on failure the fallback port is used for the current call
+ * and the resolution is retried on the next invocation.
+ * @returns The fully qualified base URL of the local node HTTP endpoint.
+ */
+async function resolveRpcUrl(): Promise<string> {
+  if (cachedRpcUrl !== null) {
+    return cachedRpcUrl
+  }
+
+  if (pendingPortResolution === null) {
+    pendingPortResolution = window.api
+      .getRpcPort()
+      .then((resolved) => {
+        const port = typeof resolved === 'number' && resolved > 0 ? resolved : RPC_FALLBACK_PORT
+        cachedRpcUrl = `http://${RPC_HOST}:${port}`
+        return cachedRpcUrl
+      })
+      .catch(() => {
+        pendingPortResolution = null
+        return `http://${RPC_HOST}:${RPC_FALLBACK_PORT}`
+      })
+  }
+
+  return pendingPortResolution
+}
 
 interface RpcResponse {
   result: any
@@ -39,7 +72,8 @@ async function callRaw(method: string, params: unknown[] = []): Promise<RpcRespo
   })
 
   try {
-    const response = await fetch(RPC_BASE_URL, {
+    const baseUrl = await resolveRpcUrl()
+    const response = await fetch(baseUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body

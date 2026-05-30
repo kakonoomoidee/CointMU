@@ -45,7 +45,7 @@ interface CointmuAPI {
     toggle: (enabled: boolean) => Promise<void>
     setThreads: (cores: number) => Promise<void>
     setPoolAddress: (address: string) => Promise<void>
-    getStats: () => Promise<{isMining: boolean; hashrate: number; difficulty: number}>
+    getStats: () => Promise<{isMining: boolean; hashrate: number; difficulty: number; blockNumber: number}>
     onDagProgress: (callback: (progress: number) => void) => () => void
     onMiningStatusChanged: (callback: (status: string) => void) => () => void
   }

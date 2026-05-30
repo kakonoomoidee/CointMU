@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, type JSX } from 'react'
 import { useMiner, useNetworkStats, useRecentBlocks } from '@/hooks'
 import { generateIdenticonGradient } from '@/services'
+import { useMiningStore } from '@/store/useMiningStore'
 
 interface MinerProps {
   activeWalletAddress: string | null
@@ -25,18 +26,20 @@ const formatAge = (timestamp: number): string => {
   return `${h}h ${m}m ago`
 }
 
-const formatSessionTime = (totalSeconds: number): string => {
-  if (totalSeconds === 0) return EMPTY_SESSION_TIME
-  const h = Math.floor(totalSeconds / 3600)
-  const m = Math.floor((totalSeconds % 3600) / 60)
+/**
+ * Formats duration in milliseconds to human-readable string.
+ * @param {number} ms - The duration in milliseconds.
+ * @returns {string} The formatted duration string.
+ */
+const formatDuration = (ms: number): string => {
+  const totalSeconds = Math.floor(ms / 1000)
+  const m = Math.floor(totalSeconds / 60)
   const s = totalSeconds % 60
-  if (h > 0) return `${h}h ${m}m`
-  if (m > 0) return `${m}m ${s}s`
-  return `${s}s`
+  return `${m}m ${s}s`
 }
 
+
 const EMPTY_REWARDS_TODAY = '0.00'
-const EMPTY_SESSION_TIME = '--'
 
 interface LogEntry {
   id: string
@@ -59,8 +62,7 @@ interface LogEntry {
  */
 function Miner({
   activeWalletAddress,
-  balance,
-  sessionSeconds
+  balance
 }: MinerProps): JSX.Element {
   const getSafeConcurrency = (): number => {
     try {
@@ -89,6 +91,9 @@ function Miner({
   const [dagProgress, setDagProgress] = useState<number>(0)
   const [noncesTried, setNoncesTried] = useState<number>(0)
   const [targetDifficulty, setTargetDifficulty] = useState<number>(0)
+  const [currentBlockHeight, setCurrentBlockHeight] = useState<number>(0)
+  const [elapsedTime, setElapsedTime] = useState<string>('--')
+  const { isMining, startTime, toggleMining } = useMiningStore()
 
   const { state } = useMiner(activeWalletAddress, globalCpuThreads)
 
@@ -121,6 +126,7 @@ function Miner({
     try {
       await window.api.settings.set('mining.isMiningEnabled', nextState)
       await window.api.mining.toggle(nextState)
+      toggleMining(nextState)
     } catch (err) {
       console.error('Failed to toggle miner', err)
     }
@@ -184,7 +190,6 @@ function Miner({
     }
   }, [recentBlocks, activeWalletAddress])
 
-  const [isMining, setIsMining] = useState<boolean>(false)
   const [hashrate, setHashrate] = useState<number>(0)
 
   /**
@@ -195,21 +200,37 @@ function Miner({
     const fetchStats = async (): Promise<void> => {
       try {
         const stats = await window.api.mining.getStats()
-        console.log('Raw mining stats:', stats)
-        const rawHashrate = Number(stats?.hashrate) || 0
-        setIsMining(stats?.isMining || false)
-        setHashrate(rawHashrate / 1000000)
-        setTargetDifficulty(stats?.difficulty || 0)
+        console.log('Polled Stats:', stats)
+
+        if (stats && typeof stats.hashrate !== 'undefined') {
+          const rawHashrate = Number(stats.hashrate)
+          setHashrate(rawHashrate / 1000000)
+          toggleMining(stats.isMining)
+          setTargetDifficulty(stats.difficulty || 0)
+          if (stats.blockNumber) {
+            setCurrentBlockHeight(stats.blockNumber)
+          }
+        }
       } catch (err) {
-        setIsMining(false)
-        setHashrate(0)
-        console.error('Failed to fetch mining stats', err)
+        console.error('IPC Error fetching stats:', err)
       }
     }
 
     const intervalId = setInterval(fetchStats, 2000)
     return () => clearInterval(intervalId)
-  }, [])
+  }, [toggleMining])
+
+  useEffect(() => {
+    let timerId: ReturnType<typeof setInterval>
+    if (startTime !== null && isMining) {
+      timerId = setInterval(() => {
+        setElapsedTime(formatDuration(Date.now() - startTime))
+      }, 1000)
+    } else {
+      setElapsedTime('--')
+    }
+    return () => clearInterval(timerId)
+  }, [startTime, isMining])
 
   useEffect(() => {
     let intervalId: ReturnType<typeof setInterval>
@@ -240,7 +261,7 @@ function Miner({
     maximumFractionDigits: 2
   })
 
-  const nextBlock = (networkStats.blockHeight || 0) + 1
+  const nextBlock = (currentBlockHeight || networkStats.blockHeight || 0) + 1
 
   const sharesData = Array.from({ length: 60 }).map((_, i) => {
     const blockIndex = 59 - i
@@ -470,8 +491,8 @@ function Miner({
         <div className="grid grid-cols-4 gap-5">
           <div className="rounded-2xl bg-white border border-slate-200 p-5">
             <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-3">Session Time</p>
-            <p className="text-2xl font-bold text-slate-800 tracking-tight">
-              {formatSessionTime(sessionSeconds)}
+            <p className="text-2xl font-bold text-slate-800 tracking-tight font-mono">
+              {elapsedTime}
             </p>
             <p className="text-xs text-slate-400 mt-1">{isMining ? 'Active' : 'Idle'}</p>
           </div>

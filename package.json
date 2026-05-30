@@ -25,7 +25,8 @@
     "ethers": "^6.14.3",
     "qrcode.react": "^4.2.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@electron-toolkit/preload": "^3.0.1",
