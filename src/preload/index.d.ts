@@ -13,6 +13,24 @@ interface CointmuAPI {
     sessionValid: boolean
     networkId: string
   }>
+  network: {
+    getInsights: () => Promise<{
+      isOnline: boolean
+      height: number
+      blockTime: number
+      transactions: number
+      activeAddresses: number
+      difficulty: number
+      blocks: {
+        number: number
+        hash: string
+        miner: string
+        timestamp: number
+        txCount: number
+      }[]
+      coinbase: string
+    }>
+  }
   settings: {
     get: (key: string) => Promise<any>
     set: (key: string, value: any) => Promise<void>

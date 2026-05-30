@@ -40,6 +40,9 @@ const api = {
     sessionValid: boolean
     networkId: string
   }> => ipcRenderer.invoke('get-node-status'),
+  network: {
+    getInsights: () => ipcRenderer.invoke('network:getInsights')
+  },
   settings: {
     get: (key: string) => ipcRenderer.invoke('settings:get', key),
     set: (key: string, value: any) => ipcRenderer.invoke('settings:set', key, value),

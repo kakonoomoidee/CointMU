@@ -9,11 +9,6 @@ files:
   - '!electron.vite.config.*'
   - '!{.env,.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
-extraResources:
-  - from: resources/bin/
-    to: bin/
-    filter:
-      - '**/*'
 asarUnpack:
   - resources/**
 win:
@@ -21,6 +16,11 @@ win:
   icon: resources/icon.ico
   target:
     - nsis
+  extraResources:
+    - from: resources/bin/win/
+      to: bin/win/
+      filter:
+        - '**/*'
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
@@ -43,7 +43,13 @@ linux:
     - deb
   maintainer: cointmu.org
   category: Utility
+  extraResources:
+    - from: resources/bin/linux/
+      to: bin/linux/
+      filter:
+        - '**/*'
 publish:
   provider: github
+  releaseType: release
   owner: kakonoomoidee
   repo: CointMU
