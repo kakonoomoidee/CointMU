@@ -63,6 +63,14 @@ const api = {
     toggle: (enabled: boolean) => ipcRenderer.invoke('mining:toggle', enabled),
     setThreads: (cores: number) => ipcRenderer.invoke('mining:setThreads', cores),
     setPoolAddress: (address: string) => ipcRenderer.invoke('mining:setPoolAddress', address),
+    getStats: () => ipcRenderer.invoke('mining:getStats'),
+    onDagProgress: (callback: (progress: number) => void) => {
+      const handler = (_event: any, value: number): void => {
+        callback(value)
+      }
+      ipcRenderer.on('mining:dagProgress', handler)
+      return () => ipcRenderer.removeListener('mining:dagProgress', handler)
+    },
     onMiningStatusChanged: (callback: (status: string) => void) => {
       const handler = (_: any, status: string): void => {
         callback(status)

@@ -1,39 +1,11 @@
 import { app, shell, BrowserWindow, ipcMain, powerMonitor } from "electron";
 import { autoUpdater } from "electron-updater";
 import { join } from "path";
-import { writeFileSync, existsSync } from "fs";
+import { existsSync } from "fs";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import { spawn, ChildProcess } from "child_process";
 import { config } from "dotenv";
 import detectPort from "detect-port";
-
-const GENESIS_CONFIG = {
-  config: {
-    chainId: 7012,
-    homesteadBlock: 0,
-    eip150Block: 0,
-    eip155Block: 0,
-    eip158Block: 0,
-    byzantiumBlock: 0,
-    constantinopleBlock: 0,
-    petersburgBlock: 0,
-    istanbulBlock: 0,
-    muirGlacierBlock: 0,
-    ethash: {},
-  },
-  nonce: "0x0000000000000042",
-  timestamp: "0x00",
-  extraData: "0x485721206172696573206174204d7568616d6d61646979616820556e6976",
-  gasLimit: "0x8000000",
-  difficulty: "0x400",
-  mixHash: "0x0000000000000000000000000000000000000000000000000000000000000000",
-  coinbase: "0x0000000000000000000000000000000000000000",
-  alloc: {},
-  number: "0x0",
-  gasUsed: "0x0",
-  parentHash:
-    "0x0000000000000000000000000000000000000000000000000000000000000000",
-};
 
 config({ path: join(app.getAppPath(), ".env") });
 
@@ -83,6 +55,17 @@ function resolveGethBinaryPath(): string {
 }
 
 /**
+ * Resolves the absolute path to the bundled static genesis.json template.
+ * @returns {string} The absolute filesystem path to the genesis config.
+ */
+function resolveGenesisSourcePath(): string {
+  if (app.isPackaged) {
+    return join(process.resourcesPath, 'genesis.json');
+  }
+  return join(app.getAppPath(), 'resources', 'genesis.json');
+}
+
+/**
  * Scans for the first available TCP port starting from the configured default.
  * Uses detect-port to avoid binding conflicts with other local services.
  * @returns A promise resolving to the first available port number.
@@ -110,7 +93,7 @@ async function findAvailablePort(): Promise<number> {
 
 /**
  * Initializes the Geth node with the bundled genesis block if it hasn't been initialized yet.
- * @returns A promise that resolves when initialization is complete.
+ * @returns {Promise<void>} A promise that resolves when initialization is complete.
  */
 function initGethNode(): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -129,16 +112,6 @@ function initGethNode(): Promise<void> {
     }
 
     console.log("[geth:init] Initializing chain with genesis block...");
-    const genesisPath = join(app.getPath("userData"), "genesis.json");
-    try {
-      writeFileSync(genesisPath, JSON.stringify(GENESIS_CONFIG, null, 2));
-    } catch (err) {
-      console.error(
-        `[geth:init] Failed to write genesis file: ${(err as Error).message}`,
-      );
-      reject(err);
-      return;
-    }
 
     const binaryPath = resolveGethBinaryPath();
     if (!existsSync(binaryPath)) {
@@ -149,7 +122,7 @@ function initGethNode(): Promise<void> {
       return;
     }
 
-    const args = ["--datadir", dataDir, "init", genesisPath];
+    const args = ["--datadir", dataDir, "init", resolveGenesisSourcePath()];
 
     const initProcess = spawn(binaryPath, args, { stdio: "ignore" });
 
@@ -234,9 +207,23 @@ function spawnGethProcess(store: any): void {
       console.log("[Geth Log]", data.toString());
     });
 
-    gethProcess.stderr?.on("data", (data: Buffer) => {
-      console.log("[Geth Log]", data.toString());
-    });
+    /**
+     * Parses Geth standard error output to stream DAG generation progress.
+     * @param {Buffer} data - The raw output chunk from the Geth process.
+     * @returns {void}
+     */
+    const handleGethStderr = (data: Buffer): void => {
+      const output = data.toString();
+      console.log("[Geth Log]", output);
+      const dagMatch = output.match(/percentage=(\d+)/);
+      if (dagMatch && dagMatch[1]) {
+        BrowserWindow.getAllWindows().forEach((win) => {
+          win.webContents.send('mining:dagProgress', parseInt(dagMatch[1], 10));
+        });
+      }
+    };
+
+    gethProcess.stderr?.on("data", handleGethStderr);
 
     gethProcess.on("error", (err: Error) => {
       console.error(
@@ -454,19 +441,14 @@ class MiningController {
   private async toggleMining(enabled: boolean): Promise<void> {
     this.store.set("mining.isMiningEnabled", enabled);
     if (enabled) {
-      const threads = this.store.get("mining.cpuThreads") || 4;
-      const mode = this.store.get("mining.miningMode") || "Solo";
-      const poolAddress = this.store.get("mining.poolAddress") || "";
-      const activeWalletAddress = this.store.get("activeWalletAddress");
-
-      if (mode === "Pool" && poolAddress) {
-        await callGethRpc(this.rpcPort, "miner_setEtherbase", [poolAddress]);
-      } else if (activeWalletAddress) {
-        await callGethRpc(this.rpcPort, "miner_setEtherbase", [
-          activeWalletAddress,
-        ]);
+      const activeAddress = this.store.get("activeWalletAddress");
+      if (!activeAddress) {
+        throw new Error("No active wallet address found to set as etherbase.");
       }
 
+      await callGethRpc(this.rpcPort, "miner_setEtherbase", [activeAddress]);
+
+      const threads = this.store.get("mining.cpuThreads") || 4;
       await callGethRpc(this.rpcPort, "miner_start", [Math.floor(threads)]);
     } else {
       await callGethRpc(this.rpcPort, "miner_stop");
@@ -540,6 +522,26 @@ class MiningController {
 
     ipcMain.handle("mining:setPoolAddress", async (_, address: string) => {
       await this.setPoolAddress(address);
+    });
+
+    /**
+     * Retrieves the current mining status, hashrate, and block difficulty directly from the Geth node.
+     * @returns {Promise<{isMining: boolean, hashrate: number, difficulty: number}>} The current stats.
+     */
+    ipcMain.handle("mining:getStats", async (): Promise<{isMining: boolean, hashrate: number, difficulty: number}> => {
+      try {
+        const isMiningHex = await callGethRpc(this.rpcPort, "eth_mining");
+        const hashrateHex = await callGethRpc(this.rpcPort, "eth_hashrate");
+        const latestBlock = await callGethRpc(this.rpcPort, "eth_getBlockByNumber", ["latest", false]);
+        const difficulty = latestBlock && latestBlock.difficulty ? parseInt(latestBlock.difficulty, 16) : 0;
+        return {
+          isMining: isMiningHex === true || isMiningHex === "true",
+          hashrate: parseInt(hashrateHex, 16) || 0,
+          difficulty
+        };
+      } catch (error) {
+        return { isMining: false, hashrate: 0, difficulty: 0 };
+      }
     });
 
     /**

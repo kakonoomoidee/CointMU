@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, type JSX } from 'react'
 import { useMiner, useNetworkStats, useRecentBlocks } from '@/hooks'
 import { generateIdenticonGradient } from '@/services'
-import { formatHashrate } from '@/utils'
 
 interface MinerProps {
   activeWalletAddress: string | null
@@ -9,9 +8,7 @@ interface MinerProps {
   sessionSeconds: number
 }
 
-const BLOCK_REWARD_CMU = '10.00'
-const TARGET_DIFFICULTY = '0000_ffff...'
-
+const BLOCK_REWARD_CMU = '2.00'
 const INTENSITY_OPTIONS = ['Eco', 'Balanced', 'Turbo'] as const
 
 const ACTIVITY_TAB_FOUND = 'Found'
@@ -88,7 +85,12 @@ function Miner({
   const [globalPoolAddress, setGlobalPoolAddress] = useState<string>(activeWalletAddress || '')
   const [powerStatus, setPowerStatus] = useState<string>('')
 
-  const { state, handleStart, handleStop } = useMiner(activeWalletAddress, globalCpuThreads)
+  const [isGeneratingDag, setIsGeneratingDag] = useState<boolean>(false)
+  const [dagProgress, setDagProgress] = useState<number>(0)
+  const [noncesTried, setNoncesTried] = useState<number>(0)
+  const [targetDifficulty, setTargetDifficulty] = useState<number>(0)
+
+  const { state } = useMiner(activeWalletAddress, globalCpuThreads)
 
   const lastProcessedBlock = useRef<number | null>(null)
 
@@ -110,9 +112,38 @@ function Miner({
     return () => clearInterval(interval)
   }, [])
 
+  /**
+   * Toggles the actual Geth mining process via IPC.
+   * @param {boolean} nextState - Whether to start or stop mining.
+   * @returns {Promise<void>}
+   */
+  const handleToggleMining = async (nextState: boolean): Promise<void> => {
+    try {
+      await window.api.settings.set('mining.isMiningEnabled', nextState)
+      await window.api.mining.toggle(nextState)
+    } catch (err) {
+      console.error('Failed to toggle miner', err)
+    }
+  }
+
   useEffect(() => {
     const unsub = window.api?.mining?.onMiningStatusChanged((status) => {
       setPowerStatus(status)
+    })
+    return () => {
+      if (unsub) unsub()
+    }
+  }, [])
+
+  useEffect(() => {
+    const unsub = window.api?.mining?.onDagProgress((progress) => {
+      if (progress < 100) {
+        setIsGeneratingDag(true)
+        setDagProgress(progress)
+      } else {
+        setIsGeneratingDag(false)
+        setDagProgress(0)
+      }
     })
     return () => {
       if (unsub) unsub()
@@ -144,7 +175,7 @@ function Miner({
           id: `${block.hash}-${now.getTime()}-${idx}`,
           timestamp,
           level: isMine ? 'OK' : 'INFO',
-          message: isMine ? `Block #${block.number} sealed · 10.00 CMU rewarded` : `Synced block #${block.number} · ${block.txCount} txs`,
+          message: isMine ? `Block #${block.number} sealed · 2.00 CMU rewarded` : `Synced block #${block.number} · ${block.txCount} txs`,
           color: isMine ? 'text-emerald-500' : 'text-blue-400'
         }
       })
@@ -153,40 +184,56 @@ function Miner({
     }
   }, [recentBlocks, activeWalletAddress])
 
-  const isMining = networkStats.isMining === true && isConnected
+  const [isMining, setIsMining] = useState<boolean>(false)
+  const [hashrate, setHashrate] = useState<number>(0)
+
+  /**
+   * Initializes the polling interval for live mining statistics.
+   * @returns {Function} The cleanup function to clear the interval.
+   */
+  useEffect(() => {
+    const fetchStats = async (): Promise<void> => {
+      try {
+        const stats = await window.api.mining.getStats()
+        console.log('Raw mining stats:', stats)
+        const rawHashrate = Number(stats?.hashrate) || 0
+        setIsMining(stats?.isMining || false)
+        setHashrate(rawHashrate / 1000000)
+        setTargetDifficulty(stats?.difficulty || 0)
+      } catch (err) {
+        setIsMining(false)
+        setHashrate(0)
+        console.error('Failed to fetch mining stats', err)
+      }
+    }
+
+    const intervalId = setInterval(fetchStats, 2000)
+    return () => clearInterval(intervalId)
+  }, [])
+
+  useEffect(() => {
+    let intervalId: ReturnType<typeof setInterval>
+    if (isMining && hashrate > 0) {
+      const hashesPerTick = (hashrate * 1000000) / 10
+      intervalId = setInterval(() => {
+        setNoncesTried((prev) => prev + Math.floor(hashesPerTick))
+      }, 100)
+    } else {
+      setNoncesTried(0)
+    }
+    return () => clearInterval(intervalId)
+  }, [isMining, hashrate])
 
   const [, setCurrentTime] = useState<number>(Date.now())
-  const [nonceCount, setNonceCount] = useState<number>(0)
-
-  useEffect(() => {
-    setNonceCount(0)
-  }, [networkStats.blockHeight])
-
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval>
-    if (isMining) {
-      interval = setInterval(() => {
-        setNonceCount((prev) => prev + Math.floor(Math.random() * 1000000) + 500000)
-      }, 100)
-    }
-    return () => {
-      if (interval) clearInterval(interval)
-    }
-  }, [isMining])
 
   useEffect(() => {
     const tickInterval = setInterval(() => setCurrentTime(Date.now()), 5000)
     return () => clearInterval(tickInterval)
   }, [])
   
-  let displayHashrate = networkStats.hashrate
-  if (isMining && (!displayHashrate || displayHashrate === 0)) {
-    displayHashrate = globalCpuThreads * 1.45 * 1000000 
-  }
-  const hashrateDisplay = formatHashrate(displayHashrate)
 
   const parsedBalance = parseFloat(balance.replace(/,/g, ''))
-  const blocksFound = isNaN(parsedBalance) ? 0 : Math.floor(parsedBalance / 10)
+  const blocksFound = isNaN(parsedBalance) ? 0 : Math.floor(parsedBalance / 2)
   
   const formattedRewards = isNaN(parsedBalance) ? '0.0' : parsedBalance.toLocaleString(undefined, {
     minimumFractionDigits: parsedBalance % 1 === 0 ? 1 : 2,
@@ -258,10 +305,10 @@ function Miner({
                 <div>
                   <div className="flex items-baseline gap-3">
                     <span className="text-5xl font-bold tracking-tight font-mono">
-                      {hashrateDisplay.split(' ')[0]}
+                      {hashrate.toFixed(2)}
                     </span>
                     <span className="text-xl font-semibold text-white/70">
-                      {hashrateDisplay.split(' ').slice(1).join(' ')}
+                      MH/s
                     </span>
                   </div>
                   <p className="text-sm text-white/60 mt-2">
@@ -279,7 +326,7 @@ function Miner({
                   </div>
                   <button
                     id="miner-stop-button"
-                    onClick={handleStop}
+                    onClick={() => handleToggleMining(false)}
                     disabled={state.toggling}
                     className="flex items-center gap-2 px-6 py-3 rounded-full bg-red-500 hover:bg-red-600 text-sm font-bold text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-red-500/30"
                   >
@@ -293,7 +340,7 @@ function Miner({
 
               <div className="mt-4 mb-3">
                 <p className="text-[11px] text-emerald-100/80 font-mono mb-2 tracking-wide font-medium">
-                  Solving candidate #{nextBlock.toLocaleString()} &middot; {nonceCount.toLocaleString()} nonces tried
+                  Solving candidate #{nextBlock.toLocaleString()} &middot; {noncesTried.toLocaleString()} nonces tried
                 </p>
                 <div className="w-full h-1.5 rounded-full bg-emerald-950/50 overflow-hidden relative">
                   <div className={`h-full rounded-full bg-emerald-400 ${isMining ? 'animate-[fillBar_2s_linear_infinite]' : 'w-0'}`} />
@@ -301,8 +348,56 @@ function Miner({
               </div>
 
               <div className="flex items-center justify-between text-xs text-white/40 font-mono">
-                <span>Target difficulty {TARGET_DIFFICULTY}</span>
+                <span>Target difficulty {targetDifficulty > 0 ? '0x' + targetDifficulty.toString(16) : 'Loading...'}</span>
                 <span>Block reward {BLOCK_REWARD_CMU} CMU</span>
+              </div>
+            </div>
+          </div>
+        ) : isGeneratingDag ? (
+          <div className="rounded-2xl bg-gradient-to-br from-slate-800 via-slate-850 to-slate-950 p-7 text-white relative overflow-hidden">
+            <div className="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-slate-700/20 blur-2xl" />
+
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-xs font-semibold tracking-wider uppercase text-emerald-400">Initializing</span>
+              </div>
+
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-5xl font-bold tracking-tight font-mono text-white/90">{dagProgress}</span>
+                    <span className="text-xl font-semibold text-white/50">%</span>
+                  </div>
+                  <p className="text-sm text-white/50 mt-2">
+                    Generating Directed Acyclic Graph (DAG) for verification...
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <p className="text-[10px] font-semibold tracking-wider uppercase text-white/40">Rewards today</p>
+                    <p className="text-xl font-bold text-white/70 mt-0.5">
+                      {EMPTY_REWARDS_TODAY}
+                      <span className="text-sm font-medium text-white/40 ml-1.5">CMU</span>
+                    </p>
+                  </div>
+                  <button
+                    disabled
+                    className="flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500/50 text-sm font-bold text-white/50 transition-colors cursor-not-allowed shadow-lg"
+                  >
+                    Generating DAG...
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-4 mb-3">
+                <div className="w-full h-1.5 rounded-full bg-slate-900/50 overflow-hidden relative">
+                  <div 
+                    className="h-full rounded-full bg-emerald-400 transition-all duration-300 ease-out"
+                    style={{ width: `${dagProgress}%` }}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -324,7 +419,7 @@ function Miner({
                   </div>
                   <p className="text-sm text-white/50 mt-2">
                     {globalMiningEnabled 
-                      ? <>Press Start to join consensus. Earn <span className="font-semibold text-white/70">10 CMU</span> per block found.</>
+                      ? <>Press Start to join consensus. Earn <span className="font-semibold text-white/70">2 CMU</span> per block found.</>
                       : <>Mining is disabled globally. Enable it in Settings first.</>
                     }
                   </p>
@@ -340,7 +435,7 @@ function Miner({
                   </div>
                   <button
                     id="miner-start-button"
-                    onClick={handleStart}
+                    onClick={() => handleToggleMining(true)}
                     disabled={state.toggling || !globalMiningEnabled}
                     className="flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-600 text-sm font-bold text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/30"
                     title={!globalMiningEnabled ? 'Mining is disabled in Settings' : ''}
@@ -354,7 +449,7 @@ function Miner({
               </div>
 
               <div className="flex items-center justify-between text-xs text-white/30 font-mono mt-4">
-                <span>Target difficulty {TARGET_DIFFICULTY}</span>
+                <span>Target difficulty {targetDifficulty > 0 ? '0x' + targetDifficulty.toString(16) : 'Loading...'}</span>
                 <span>Block reward {BLOCK_REWARD_CMU} CMU</span>
               </div>
             </div>
@@ -406,7 +501,7 @@ function Miner({
               </span>
             </div>
             <p className="text-2xl font-bold text-slate-800 tracking-tight font-mono">
-              {isMining ? hashrateDisplay : '0.00 MH/s'}
+              {isMining ? `${hashrate.toFixed(2)} MH/s` : '0.00 MH/s'}
             </p>
             <div className="mt-3 h-10">
               <svg viewBox="0 0 200 40" className="w-full h-full" preserveAspectRatio="none">
