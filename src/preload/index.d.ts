@@ -36,6 +36,11 @@ interface CointmuAPI {
     set: (key: string, value: any) => Promise<void>
     getAll: () => Promise<any>
   }
+  wallet: {
+    encrypt: (secret: string, password: string) => Promise<string>
+    decrypt: (payload: string, password: string) => Promise<string>
+    verify: (payload: string, password: string) => Promise<boolean>
+  }
   updater: {
     checkForUpdates: () => Promise<void>
     quitAndInstall: () => Promise<void>

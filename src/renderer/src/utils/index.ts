@@ -5,7 +5,8 @@ export {
   formatChainId,
   formatTimestamp,
   formatHashrate,
-  formatDifficulty
+  formatDifficulty,
+  formatMhs
 } from './formatters'
 
 export { formatElapsed, formatAge, isWithinLastDay } from './time'

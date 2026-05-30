@@ -16,9 +16,14 @@ export {
   generateMnemonic,
   deriveAccount,
   deriveAccountFromPrivateKey,
-  generateIdenticonGradient
+  generateIdenticonGradient,
+  encryptSecret,
+  decryptSecret,
+  verifyPassword
 } from './walletService'
 export type { DerivedAccount } from './walletService'
+
+export { unlockSession, getSessionPassword, lockSession } from './walletSession'
 
 export { getSetting, setSetting, getAllSettings } from './settingsService'
 

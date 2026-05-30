@@ -65,6 +65,7 @@ function useMiningActivity(
   const [logs, setLogs] = useState<LogEntry[]>([])
   const [noncesTried, setNoncesTried] = useState<number>(0)
   const lastProcessedBlock = useRef<number | null>(null)
+  const nonceAccumulator = useRef<number>(0)
   const recordFoundBlocks = useMiningStore((state) => state.recordFoundBlocks)
 
   useEffect(() => {
@@ -102,13 +103,15 @@ function useMiningActivity(
 
   useEffect(() => {
     if (!isMining || hashrateMhs <= 0) {
+      nonceAccumulator.current = 0
       setNoncesTried(0)
       return
     }
 
     const hashesPerTick = (hashrateMhs * HASHES_PER_MEGAHASH) / NONCE_TICKS_PER_SECOND
     const intervalId = setInterval(() => {
-      setNoncesTried((prev) => prev + Math.floor(hashesPerTick))
+      nonceAccumulator.current += hashesPerTick
+      setNoncesTried(Math.floor(nonceAccumulator.current))
     }, NONCE_TICK_INTERVAL_MS)
 
     return (): void => clearInterval(intervalId)

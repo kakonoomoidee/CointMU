@@ -68,6 +68,38 @@ export function deriveAccountFromPrivateKey(privateKey: string, label: string): 
 }
 
 /**
+ * Encrypts a secret (mnemonic or private key) under a password. The KDF and
+ * AES-GCM encryption run in the main process so plaintext never lives at rest.
+ * @param secret - The plaintext secret to protect.
+ * @param password - The password used to derive the encryption key.
+ * @returns The serialized encrypted payload to persist.
+ */
+export function encryptSecret(secret: string, password: string): Promise<string> {
+  return window.api.wallet.encrypt(secret, password)
+}
+
+/**
+ * Decrypts an encrypted payload produced by {@link encryptSecret}. Rejects if
+ * the password is incorrect (GCM auth failure) or the payload is corrupt.
+ * @param payload - The serialized encrypted payload.
+ * @param password - The password used to derive the decryption key.
+ * @returns The recovered plaintext secret.
+ */
+export function decryptSecret(payload: string, password: string): Promise<string> {
+  return window.api.wallet.decrypt(payload, password)
+}
+
+/**
+ * Verifies a password against an encrypted payload without exposing the secret.
+ * @param payload - The serialized encrypted payload.
+ * @param password - The password to check.
+ * @returns True if the password decrypts the payload.
+ */
+export function verifyPassword(payload: string, password: string): Promise<boolean> {
+  return window.api.wallet.verify(payload, password)
+}
+
+/**
  * Deterministically generates a Tailwind gradient class string based on an Ethereum address.
  * @param address - The Ethereum address.
  * @returns A Tailwind gradient class string.

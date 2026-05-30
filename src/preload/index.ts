@@ -48,6 +48,14 @@ const api = {
     set: (key: string, value: any) => ipcRenderer.invoke('settings:set', key, value),
     getAll: () => ipcRenderer.invoke('settings:getAll')
   },
+  wallet: {
+    encrypt: (secret: string, password: string): Promise<string> =>
+      ipcRenderer.invoke('wallet:encrypt', secret, password),
+    decrypt: (payload: string, password: string): Promise<string> =>
+      ipcRenderer.invoke('wallet:decrypt', payload, password),
+    verify: (payload: string, password: string): Promise<boolean> =>
+      ipcRenderer.invoke('wallet:verify', payload, password)
+  },
   updater: {
     checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
     quitAndInstall: () => ipcRenderer.invoke('quit-and-install'),

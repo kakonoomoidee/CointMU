@@ -6,6 +6,9 @@ import {
   getSetting,
   setSetting,
   call,
+  encryptSecret,
+  decryptSecret,
+  getSessionPassword,
   type DerivedAccount
 } from '@/services'
 import { QRCodeSVG } from 'qrcode.react'
@@ -127,18 +130,19 @@ function Wallet({
       setSendError('')
       setSendLoading(true)
       
+      const password = getSessionPassword()
+      if (!password) throw new Error('Wallet is locked. Please log in again.')
+
       let wallet
       if (activeAccount.encryptedKey) {
-        const decodedAcc = atob(activeAccount.encryptedKey)
-        const accSecret = decodedAcc.split(':')[0]
+        const accSecret = await decryptSecret(activeAccount.encryptedKey, password)
         wallet = new ethers.Wallet(accSecret)
       } else {
         const encryptedPayload = await getSetting<string | null>('encryptedPayload')
         if (!encryptedPayload) throw new Error('Wallet is not unlocked')
-        
-        const decoded = atob(encryptedPayload)
-        const secretKey = decoded.split(':')[0]
-        
+
+        const secretKey = await decryptSecret(encryptedPayload, password)
+
         if (secretKey.split(' ').length === 12) {
            wallet = ethers.HDNodeWallet.fromPhrase(secretKey, undefined, `m/44'/60'/0'/0/${activeAccount.index}`)
         } else {
@@ -179,12 +183,13 @@ function Wallet({
     try {
       const encryptedPayload = await getSetting<string | null>('encryptedPayload')
       if (!encryptedPayload) throw new Error('Not unlocked')
-      
-      const decoded = atob(encryptedPayload)
-      const secretKey = decoded.split(':')[0]
-      const password = decoded.split(':')[1]
+
+      const password = getSessionPassword()
+      if (!password) throw new Error('Wallet is locked. Please log in again.')
+
+      const secretKey = await decryptSecret(encryptedPayload, password)
       const newIndex = accounts.length
-      
+
       let newAccount: DerivedAccount
       if (secretKey.split(' ').length === 12) {
         newAccount = deriveAccount(secretKey, newIndex, `Account ${newIndex + 1}`)
@@ -192,7 +197,7 @@ function Wallet({
         const { Wallet } = ethers
         const randomWallet = Wallet.createRandom()
         newAccount = deriveAccountFromPrivateKey(randomWallet.privateKey, `Account ${newIndex + 1}`)
-        newAccount.encryptedKey = btoa(randomWallet.privateKey + ':' + password)
+        newAccount.encryptedKey = await encryptSecret(randomWallet.privateKey, password)
       }
 
       const updatedAccounts = [...accounts, newAccount]
@@ -208,19 +213,16 @@ function Wallet({
     try {
       setAddAccountError('')
       let newAccount: DerivedAccount
-      const encryptedPayload = await getSetting<string | null>('encryptedPayload')
-      if (!encryptedPayload) throw new Error('Not unlocked')
-      
-      const decoded = atob(encryptedPayload)
-      const password = decoded.split(':')[1]
+      const password = getSessionPassword()
+      if (!password) throw new Error('Wallet is locked. Please log in again.')
 
       if (addAccountType === 'IMPORT_PK') {
          const pk = (!importInput.startsWith('0x') && importInput.length === 64) ? '0x' + importInput : importInput
          newAccount = deriveAccountFromPrivateKey(pk, `Imported Account`)
-         newAccount.encryptedKey = btoa(pk + ':' + password)
+         newAccount.encryptedKey = await encryptSecret(pk, password)
       } else if (addAccountType === 'IMPORT_SEED') {
          newAccount = deriveAccount(importInput, 0, `Imported Seed Account`)
-         newAccount.encryptedKey = btoa(importInput + ':' + password)
+         newAccount.encryptedKey = await encryptSecret(importInput, password)
       } else {
          return
       }

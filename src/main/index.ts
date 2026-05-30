@@ -6,6 +6,7 @@ import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import { spawn, ChildProcess } from "child_process";
 import { config } from "dotenv";
 import detectPort from "detect-port";
+import { registerCryptoHandlers } from "./crypto";
 
 config({ path: join(app.getAppPath(), ".env") });
 
@@ -535,12 +536,17 @@ class MiningController {
         const latestBlock = await callGethRpc(this.rpcPort, "eth_getBlockByNumber", ["latest", false]);
         const difficulty = latestBlock && latestBlock.difficulty ? parseInt(latestBlock.difficulty, 16) : 0;
         const blockNumber = latestBlock && latestBlock.number ? parseInt(latestBlock.number, 16) : 0;
-        return {
-          isMining: isMiningHex === true || isMiningHex === "true",
-          hashrate: parseInt(hashrateHex, 16) || 0,
-          difficulty,
-          blockNumber
-        };
+        const hashrate =
+          typeof hashrateHex === "string"
+            ? parseInt(hashrateHex, 16) || 0
+            : Number(hashrateHex) || 0;
+        const isMining = isMiningHex === true || isMiningHex === "true";
+
+        console.log(
+          `[mining:getStats] eth_mining=${isMiningHex} eth_hashrate raw=${hashrateHex} parsed=${hashrate} H/s`,
+        );
+
+        return { isMining, hashrate, difficulty, blockNumber };
       } catch (error) {
         return { isMining: false, hashrate: 0, difficulty: 0, blockNumber: 0 };
       }
@@ -841,6 +847,8 @@ app.whenReady().then(async () => {
   ipcMain.handle("settings:get", (_, key) => store.get(key));
   ipcMain.handle("settings:set", (_, key, value) => store.set(key, value));
   ipcMain.handle("settings:getAll", () => store.store);
+
+  registerCryptoHandlers();
 
   ipcMain.on("network:restartNode", () => {
     console.log("[network] Restarting node with new configurations...");

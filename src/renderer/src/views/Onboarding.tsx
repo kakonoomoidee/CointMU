@@ -4,7 +4,10 @@ import {
   deriveAccount,
   deriveAccountFromPrivateKey,
   getSetting,
-  setSetting
+  setSetting,
+  encryptSecret,
+  verifyPassword,
+  unlockSession
 } from '@/services'
 
 interface OnboardingProps {
@@ -87,17 +90,15 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
         return
       }
 
-      const decoded = atob(encryptedPayload)
-      const parts = decoded.split(':')
-      const savedPassword = parts[1]
-
-      if (password !== savedPassword) {
+      const valid = await verifyPassword(encryptedPayload, password)
+      if (!valid) {
         setError('Invalid password')
         return
       }
 
       const activeAddress = await getSetting<string | null>('activeWalletAddress')
       if (activeAddress) {
+        unlockSession(password)
         onComplete(activeAddress)
       } else {
         setError('Wallet data corrupted. Please import again.')
@@ -125,14 +126,14 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
         firstAccount = deriveAccount(secretKey, 0, 'Main wallet')
       }
 
-      // Mock AES symmetric encryption by saving a payload flag
-      const encryptedPayload = btoa(secretKey + ':' + password)
-      
+      // Encrypt the secret with a scrypt-derived key + AES-GCM in the main process.
+      const encryptedPayload = await encryptSecret(secretKey, password)
+
       await setSetting('encryptedPayload', encryptedPayload)
-      await setSetting('mnemonic', isPrivateKey ? null : secretKey)
       await setSetting('accounts', [firstAccount])
       await setSetting('activeWalletAddress', firstAccount.address)
-      
+
+      unlockSession(password)
       onComplete(firstAccount.address)
     } catch {
       setError('Failed to generate account from the provided credentials')

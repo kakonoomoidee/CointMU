@@ -124,4 +124,19 @@ function formatDifficulty(difficulty: number | null): string {
   return `${formatted}${DIFFICULTY_UNITS[unitIndex]}`
 }
 
-export { formatBlockNumber, formatPortDisplay, formatPeerCount, formatChainId, formatTimestamp, formatHashrate, formatDifficulty }
+const MHS_DECIMAL_PLACES = 2
+
+/**
+ * Formats a hashrate already expressed in megahashes per second into a fixed
+ * two-decimal string suitable for direct display.
+ * @param megahashes - The hashrate in MH/s.
+ * @returns The formatted value such as '2.50', or '0.00' when not positive.
+ */
+function formatMhs(megahashes: number): string {
+  if (!Number.isFinite(megahashes) || megahashes <= 0) {
+    return '0.00'
+  }
+  return megahashes.toFixed(MHS_DECIMAL_PLACES)
+}
+
+export { formatBlockNumber, formatPortDisplay, formatPeerCount, formatChainId, formatTimestamp, formatHashrate, formatDifficulty, formatMhs }

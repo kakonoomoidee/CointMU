@@ -9,7 +9,7 @@ import {
 } from '@/hooks'
 import { useMiningStore } from '@/store'
 import { generateIdenticonGradient } from '@/services'
-import { formatAge, isWithinLastDay } from '@/utils'
+import { formatAge, isWithinLastDay, formatMhs } from '@/utils'
 import { Card, Button, Badge, StatusPill, StatCard } from '@/components'
 import { IconPlay, IconStop, IconSettings, IconCheck, IconCube, IconAlertCircle } from '@/assets/icons'
 
@@ -59,12 +59,13 @@ function Miner({ activeWalletAddress, balance }: MinerProps): JSX.Element {
   const isConnected = networkStats.isConnected
   const recentBlocks = useRecentBlocks(networkStats.blockHeight, isConnected)
 
-  const telemetry = useMiningStats()
   const { config, toggling, error, toggle } = useMiningControls()
+  const telemetry = useMiningStats(config.cpuThreads)
   const { startTime, toggleMining, foundBlocks } = useMiningStore()
 
   const isMining = telemetry.isMining
   const elapsedTime = useTimer(startTime, isMining)
+
   const { logs, noncesTried } = useMiningActivity(
     recentBlocks,
     activeWalletAddress,
@@ -77,7 +78,7 @@ function Miner({ activeWalletAddress, balance }: MinerProps): JSX.Element {
   }, [isMining, toggleMining])
 
   const rewardAddress = config.poolAddress || activeWalletAddress || ''
-  const hashrate = telemetry.hashrateMhs
+  const hashrateLabel = formatMhs(telemetry.hashrateMhs)
 
   const parsedBalance = parseFloat(balance.replace(/,/g, ''))
   const blocksFoundToday = foundBlocks.filter((block) => isWithinLastDay(block.timestamp)).length
@@ -140,7 +141,7 @@ function Miner({ activeWalletAddress, balance }: MinerProps): JSX.Element {
                 <div>
                   <div className="flex items-baseline gap-3">
                     <span className="text-5xl font-bold tracking-tight font-mono">
-                      {hashrate.toFixed(2)}
+                      {hashrateLabel}
                     </span>
                     <span className="text-xl font-semibold text-white/70">MH/s</span>
                   </div>
@@ -324,7 +325,7 @@ function Miner({ activeWalletAddress, balance }: MinerProps): JSX.Element {
           <StatCard
             label="Hashrate - 5 min"
             action={<Badge tone={isMining ? 'success' : 'neutral'}>{isMining ? 'Stable' : 'Idle'}</Badge>}
-            value={isMining ? `${hashrate.toFixed(2)} MH/s` : '0.00 MH/s'}
+            value={isMining ? `${hashrateLabel} MH/s` : '0.00 MH/s'}
             valueClassName="font-mono"
             hint={
               <span className="block mt-2 h-10">
