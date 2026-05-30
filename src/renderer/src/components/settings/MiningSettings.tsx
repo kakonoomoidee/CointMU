@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, type JSX } from 'react'
 import type { SettingsStore } from '@/views/Settings'
+import { getSetting, setSetting, toggleMiner, setThreads, setPoolAddress } from '@/services'
 
 interface MiningSettingsProps {
   config: SettingsStore['mining']
@@ -38,10 +39,10 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
 
   useEffect(() => {
     const ensureEtherbase = async (): Promise<void> => {
-      const activeAddress = await window.api.settings.get('activeWalletAddress')
+      const activeAddress = await getSetting<string | null>('activeWalletAddress')
       if (!activeAddress || activeAddress.length !== 42) {
         if (accounts.length > 0) {
-          await window.api.settings.set('activeWalletAddress', accounts[0].address)
+          await setSetting('activeWalletAddress', accounts[0].address)
         }
       }
     }
@@ -55,26 +56,26 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
    */
   const handleToggleMining = async (isEnabled: boolean): Promise<void> => {
     onUpdate('isMiningEnabled', isEnabled)
-    await window.api.settings.set('mining.isMiningEnabled', isEnabled)
+    await setSetting('mining.isMiningEnabled', isEnabled)
 
-    const activeAddress = await window.api.settings.get('activeWalletAddress')
+    const activeAddress = await getSetting<string | null>('activeWalletAddress')
     if (isEnabled && (!activeAddress || activeAddress.length !== 42)) {
       if (accounts.length > 0) {
-        await window.api.settings.set('activeWalletAddress', accounts[0].address)
+        await setSetting('activeWalletAddress', accounts[0].address)
       } else {
         console.warn('Cannot enable mining: No active wallet address available')
         onUpdate('isMiningEnabled', false)
-        await window.api.settings.set('mining.isMiningEnabled', false)
+        await setSetting('mining.isMiningEnabled', false)
         return
       }
     }
 
     try {
-      await window.api?.mining?.toggle(isEnabled)
+      await toggleMiner(isEnabled)
     } catch (err) {
       console.error('Failed to toggle miner', err)
       onUpdate('isMiningEnabled', !isEnabled)
-      await window.api.settings.set('mining.isMiningEnabled', !isEnabled)
+      await setSetting('mining.isMiningEnabled', !isEnabled)
     }
   }
 
@@ -85,11 +86,10 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
    */
   const handleThreadChange = async (newCores: number): Promise<void> => {
     onUpdate('cpuThreads', newCores)
-    await window.api.settings.set('mining.cpuThreads', newCores)
-    
+    await setSetting('mining.cpuThreads', newCores)
+
     try {
-      // Directly trigger the backend to update Geth miner threads
-      await window.api?.mining?.setThreads(newCores)
+      await setThreads(newCores)
     } catch (err) {
       console.error('Failed to update threads', err)
     }
@@ -111,7 +111,7 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
       onUpdate('poolAddress', value)
       if (value.startsWith('0x') && value.length === 42) {
         try {
-          await window.api?.mining?.setPoolAddress(value)
+          await setPoolAddress(value)
         } catch (err) {
           console.error('Failed to set pool address', err)
           onUpdate('poolAddress', previous)
@@ -135,7 +135,7 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
       const previous = config.poolAddress
       onUpdate('poolAddress', value)
       try {
-        await window.api?.mining?.setPoolAddress(value)
+        await setPoolAddress(value)
       } catch (err) {
         console.error('Failed to set pool address', err)
         onUpdate('poolAddress', previous)

@@ -1,17 +1,4 @@
 export {
-  createProvider,
-  resetProvider,
-  getBlockNumber,
-  getChainId,
-  getPeerCount,
-  getSyncStatus,
-  startMining,
-  stopMining,
-  getMiningStatus,
-  getHashrate
-} from './web3Provider'
-
-export {
   call,
   fetchBlockNumber,
   fetchPeerCount,
@@ -32,3 +19,22 @@ export {
   generateIdenticonGradient
 } from './walletService'
 export type { DerivedAccount } from './walletService'
+
+export { getSetting, setSetting, getAllSettings } from './settingsService'
+
+export {
+  getMiningConfig,
+  setMiningEnabled,
+  toggleMiner,
+  setThreads,
+  setPoolAddress,
+  fetchMiningStats,
+  subscribeMiningStatus,
+  subscribeDagProgress
+} from './miningService'
+export type { MiningStats, MiningConfig } from './miningService'
+
+export { getNetworkInsights } from './networkService'
+export type { NetworkInsights, NetworkInsightBlock } from './networkService'
+
+export { checkForUpdates, quitAndInstall } from './updaterService'

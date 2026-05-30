@@ -1,5 +1,6 @@
 import { useState, useEffect, type JSX } from 'react'
 import { useNetworkStats, useUpdateStatus } from '@/hooks'
+import { checkForUpdates, quitAndInstall } from '@/services'
 
 /**
  * Formats raw system uptime seconds into a readable string.
@@ -67,11 +68,11 @@ export function AboutSettings(): JSX.Element {
    */
   const handleUpdateAction = (): void => {
     if (updateState.status === 'ready') {
-      window.api?.updater?.quitAndInstall()
+      quitAndInstall()
       return
     }
     if (updateState.status === 'idle') {
-      window.api?.updater?.checkForUpdates()
+      checkForUpdates()
     }
   }
 

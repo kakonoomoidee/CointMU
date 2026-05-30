@@ -1,8 +1,15 @@
 import { useState, useEffect, type JSX } from 'react'
-import { deriveAccount, generateIdenticonGradient, deriveAccountFromPrivateKey, type DerivedAccount } from '@/services'
+import {
+  deriveAccount,
+  generateIdenticonGradient,
+  deriveAccountFromPrivateKey,
+  getSetting,
+  setSetting,
+  call,
+  type DerivedAccount
+} from '@/services'
 import { QRCodeSVG } from 'qrcode.react'
 import { ethers } from 'ethers'
-import { call } from '@/services'
 
 type WalletTab = 'activity' | 'tokens' | 'nfts'
 type ModalState = 'NONE' | 'RECEIVE' | 'SEND' | 'ADD_ACCOUNT' | 'MANAGE_HIDDEN'
@@ -78,7 +85,7 @@ function Wallet({
   }, [modalState])
 
   const handleAccountSwitch = async (address: string): Promise<void> => {
-    await window.api.settings.set('activeWalletAddress', address)
+    await setSetting('activeWalletAddress', address)
     setActiveWalletAddress(address)
   }
 
@@ -90,7 +97,7 @@ function Wallet({
     const updatedAccounts = accounts.map(acc => 
       acc.address === address ? { ...acc, isHidden: true } : acc
     )
-    await window.api.settings.set('accounts', updatedAccounts)
+    await setSetting('accounts', updatedAccounts)
     setAccounts(updatedAccounts)
   }
 
@@ -98,7 +105,7 @@ function Wallet({
     const updatedAccounts = accounts.map(acc => 
       acc.address === address ? { ...acc, isHidden: false } : acc
     )
-    await window.api.settings.set('accounts', updatedAccounts)
+    await setSetting('accounts', updatedAccounts)
     setAccounts(updatedAccounts)
   }
 
@@ -126,7 +133,7 @@ function Wallet({
         const accSecret = decodedAcc.split(':')[0]
         wallet = new ethers.Wallet(accSecret)
       } else {
-        const encryptedPayload = await window.api.settings.get('encryptedPayload')
+        const encryptedPayload = await getSetting<string | null>('encryptedPayload')
         if (!encryptedPayload) throw new Error('Wallet is not unlocked')
         
         const decoded = atob(encryptedPayload)
@@ -170,7 +177,7 @@ function Wallet({
 
   const handleHDDerivation = async () => {
     try {
-      const encryptedPayload = await window.api.settings.get('encryptedPayload')
+      const encryptedPayload = await getSetting<string | null>('encryptedPayload')
       if (!encryptedPayload) throw new Error('Not unlocked')
       
       const decoded = atob(encryptedPayload)
@@ -189,7 +196,7 @@ function Wallet({
       }
 
       const updatedAccounts = [...accounts, newAccount]
-      await window.api.settings.set('accounts', updatedAccounts)
+      await setSetting('accounts', updatedAccounts)
       setAccounts(updatedAccounts)
       await handleAccountSwitch(newAccount.address)
     } catch (e: any) {
@@ -201,7 +208,7 @@ function Wallet({
     try {
       setAddAccountError('')
       let newAccount: DerivedAccount
-      const encryptedPayload = await window.api.settings.get('encryptedPayload')
+      const encryptedPayload = await getSetting<string | null>('encryptedPayload')
       if (!encryptedPayload) throw new Error('Not unlocked')
       
       const decoded = atob(encryptedPayload)
@@ -219,7 +226,7 @@ function Wallet({
       }
 
       const updatedAccounts = [...accounts, newAccount]
-      await window.api.settings.set('accounts', updatedAccounts)
+      await setSetting('accounts', updatedAccounts)
       setAccounts(updatedAccounts)
       
       await handleAccountSwitch(newAccount.address)

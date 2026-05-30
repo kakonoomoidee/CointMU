@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, type JSX } from "react";
 import { useNetworkStats, useRecentBlocks } from "@/hooks";
-import { call, fetchBalance, generateIdenticonGradient } from "@/services";
+import { call, fetchBalance, generateIdenticonGradient, getNetworkInsights } from "@/services";
 import { formatBlockNumber } from "@/utils";
 
 import { Insights } from "../components/explorer/Insights";
@@ -104,7 +104,7 @@ function Explorer({ activeWalletAddress }: ExplorerProps): JSX.Element {
 
     async function fetchInsights() {
       try {
-        const data = await window.api.network.getInsights();
+        const data = await getNetworkInsights();
         if (mounted && data) setInsights(data);
       } catch (err) {
         console.warn("Failed to fetch insights:", err);

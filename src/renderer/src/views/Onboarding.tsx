@@ -1,5 +1,11 @@
 import { useState, useEffect, type JSX } from 'react'
-import { generateMnemonic, deriveAccount, deriveAccountFromPrivateKey } from '@/services'
+import {
+  generateMnemonic,
+  deriveAccount,
+  deriveAccountFromPrivateKey,
+  getSetting,
+  setSetting
+} from '@/services'
 
 interface OnboardingProps {
   onComplete: (address: string) => void
@@ -41,7 +47,7 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
 
   useEffect(() => {
     async function checkExisting(): Promise<void> {
-      const encrypted = await window.api.settings.get('encryptedPayload')
+      const encrypted = await getSetting<string | null>('encryptedPayload')
       if (encrypted) {
         setHasExistingWallet(true)
       }
@@ -75,7 +81,7 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
     }
     
     try {
-      const encryptedPayload = await window.api.settings.get('encryptedPayload')
+      const encryptedPayload = await getSetting<string | null>('encryptedPayload')
       if (!encryptedPayload) {
         setError('Wallet data corrupted. Please import again.')
         return
@@ -90,7 +96,7 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
         return
       }
 
-      const activeAddress = await window.api.settings.get('activeWalletAddress')
+      const activeAddress = await getSetting<string | null>('activeWalletAddress')
       if (activeAddress) {
         onComplete(activeAddress)
       } else {
@@ -122,10 +128,10 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
       // Mock AES symmetric encryption by saving a payload flag
       const encryptedPayload = btoa(secretKey + ':' + password)
       
-      await window.api.settings.set('encryptedPayload', encryptedPayload)
-      await window.api.settings.set('mnemonic', isPrivateKey ? null : secretKey)
-      await window.api.settings.set('accounts', [firstAccount])
-      await window.api.settings.set('activeWalletAddress', firstAccount.address)
+      await setSetting('encryptedPayload', encryptedPayload)
+      await setSetting('mnemonic', isPrivateKey ? null : secretKey)
+      await setSetting('accounts', [firstAccount])
+      await setSetting('activeWalletAddress', firstAccount.address)
       
       onComplete(firstAccount.address)
     } catch {

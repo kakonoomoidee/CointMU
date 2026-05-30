@@ -19,6 +19,7 @@
     "build:linux": "npm run build && electron-builder --linux"
   },
   "dependencies": {
+    "date-fns": "^4.4.0",
     "dotenv": "^16.5.0",
     "electron-store": "^11.0.2",
     "electron-updater": "^6.8.3",

@@ -6,6 +6,7 @@ import { MiningSettings } from '@/components/settings/MiningSettings'
 import { SecuritySettings } from '@/components/settings/SecuritySettings'
 import { AdvancedSettings } from '@/components/settings/AdvancedSettings'
 import { AboutSettings } from '@/components/settings/AboutSettings'
+import { getAllSettings, setSetting } from '@/services'
 
 export type SettingsCategory = 'general' | 'appearance' | 'network' | 'mining' | 'security' | 'advanced' | 'about'
 
@@ -153,8 +154,8 @@ function Settings(): JSX.Element {
     // Load initial settings from the Electron main process via preload bridge
     const loadSettings = async () => {
       try {
-        const data = await window.api.settings.getAll()
-        setSettings(data)
+        const data = await getAllSettings()
+        setSettings(data as SettingsStore)
       } catch (err) {
         console.error('Failed to load settings from electron-store', err)
       }
@@ -177,7 +178,7 @@ function Settings(): JSX.Element {
 
     // Persist to electron-store (e.g. key: 'general.launchAtLogin')
     try {
-      await window.api.settings.set(`${section}.${key}`, value)
+      await setSetting(`${section}.${key}`, value)
     } catch (err) {
       console.error(`Failed to save setting ${section}.${key}`, err)
       // Revert if necessary, but omitting for simplicity in this implementation

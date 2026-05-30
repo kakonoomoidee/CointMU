@@ -7,3 +7,7 @@ export {
   formatHashrate,
   formatDifficulty
 } from './formatters'
+
+export { formatElapsed, formatAge, isWithinLastDay } from './time'
+
+export { cn } from './cn'

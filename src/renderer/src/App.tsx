@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, type JSX } from 'react'
+import { useState, useEffect, type JSX } from 'react'
 import { Dashboard, Miner, Wallet, Explorer, Settings, Onboarding } from '@/views'
-import { type DerivedAccount } from '@/services'
+import { type DerivedAccount, getSetting } from '@/services'
 import { useNetworkStats, useBalance, useUpdateStatus } from '@/hooks'
 
 import { Sidebar } from '@/components'
@@ -10,6 +10,7 @@ const NAV_ITEM_MINER = 'miner'
 const NAV_ITEM_WALLET = 'wallet'
 const NAV_ITEM_EXPLORER = 'explorer'
 const NAV_ITEM_SETTINGS = 'settings'
+const WALLET_LOAD_DELAY_MS = 300
 type ActiveView = typeof NAV_ITEM_DASHBOARD | typeof NAV_ITEM_MINER | typeof NAV_ITEM_WALLET | typeof NAV_ITEM_EXPLORER | typeof NAV_ITEM_SETTINGS
 
 /**
@@ -28,33 +29,9 @@ function App(): JSX.Element {
   const { balance } = useBalance(activeWalletAddress, networkStats.isConnected)
   const updateState = useUpdateStatus()
 
-  const [sessionSeconds, setSessionSeconds] = useState<number>(0)
-  const prevIsMining = useRef<boolean>(false)
-
-  const isMining = networkStats.isMining === true && networkStats.isConnected
-
   useEffect(() => {
-    if (isMining && !prevIsMining.current) {
-      setSessionSeconds(0)
-    }
-    prevIsMining.current = isMining
-
-    let interval: ReturnType<typeof setInterval>
-    if (isMining) {
-      interval = setInterval(() => {
-        setSessionSeconds(s => s + 1)
-      }, 1000)
-    }
-    return () => {
-      if (interval) clearInterval(interval)
-    }
-  }, [isMining])
-
-  useEffect(() => {
-    // We only simulate a loading delay. We DO NOT auto-load activeWalletAddress
-    // because enterprise wallets require the user to enter their password
-    // via the Onboarding (Unlock) screen first.
-    setTimeout(() => setIsLoadingWallet(false), 300)
+    const loadingTimer = setTimeout(() => setIsLoadingWallet(false), WALLET_LOAD_DELAY_MS)
+    return (): void => clearTimeout(loadingTimer)
   }, [])
 
   if (isLoadingWallet) {
@@ -67,7 +44,7 @@ function App(): JSX.Element {
 
   if (!activeWalletAddress) {
     const handleOnboardingComplete = async (address: string): Promise<void> => {
-      const storedAccounts = await window.api.settings.get('accounts') || []
+      const storedAccounts = (await getSetting<DerivedAccount[]>('accounts')) || []
       setAccounts(storedAccounts)
       setActiveWalletAddress(address)
     }
@@ -102,8 +79,8 @@ function App(): JSX.Element {
         {activeView === NAV_ITEM_DASHBOARD && (
           <Dashboard activeWalletAddress={activeWalletAddress} />
         )}
-        {activeView === 'miner' && (
-          <Miner activeWalletAddress={activeWalletAddress} balance={balance} sessionSeconds={sessionSeconds} />
+        {activeView === NAV_ITEM_MINER && (
+          <Miner activeWalletAddress={activeWalletAddress} balance={balance} />
         )}
         {activeView === NAV_ITEM_WALLET && (
           <Wallet 
