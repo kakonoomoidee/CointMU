@@ -210,7 +210,7 @@ function spawnGethProcess(store: any): void {
       "--http.addr",
       "127.0.0.1",
       "--http.port",
-      "8545",
+      String(resolvedRpcPort),
       "--http.api",
       "eth,net,web3,miner,personal",
       "--http.corsdomain",
@@ -221,7 +221,7 @@ function spawnGethProcess(store: any): void {
   }
 
   const hardcodedUbuntuEnode =
-    "enode://<INSERT_UBUNTU_PUBLIC_KEY>@10.64.24.248:30303";
+    "enode://ebfb332054e14291511ac5a0df9655006a2967078de8189da206c546a7227c38c19231d1f05ca37acc8864e20a67c798b690136de5b6e88b363a091ef0646dc4@10.64.24.248:30303";
   args.push("--bootnodes", GETH_BOOTNODE_ENODE || hardcodedUbuntuEnode);
 
   try {
@@ -842,7 +842,7 @@ app.whenReady().then(async () => {
     console.log("[network] Restarting node with new configurations...");
     killGethProcess();
     setTimeout(() => {
-      spawnGethProcess(resolvedRpcPort);
+      spawnGethProcess(store);
     }, 1000);
   });
 
@@ -854,7 +854,7 @@ app.whenReady().then(async () => {
     console.error("[geth:init] Fatal error during genesis init:", err);
   }
 
-  spawnGethProcess(resolvedRpcPort);
+  spawnGethProcess(store);
 
   const miningController = new MiningController(resolvedRpcPort, store);
 

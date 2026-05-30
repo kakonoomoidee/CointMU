@@ -301,6 +301,7 @@ function Explorer({ activeWalletAddress }: ExplorerProps): JSX.Element {
               blocks={insights?.blocks || []}
               coinbase={insights?.coinbase || ""}
               isOnline={insights?.isOnline ?? false}
+              onBlockClick={handleBlockSelect}
             />
 
             <div className="flex gap-6">

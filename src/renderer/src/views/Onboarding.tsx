@@ -35,6 +35,8 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
 
   const [password, setPassword] = useState<string>('')
   const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -72,12 +74,30 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
       return
     }
     
-    // Mock decryption validation
-    const activeAddress = await window.api.settings.get('activeWalletAddress')
-    if (activeAddress) {
-      onComplete(activeAddress)
-    } else {
-      setError('Wallet data corrupted. Please import again.')
+    try {
+      const encryptedPayload = await window.api.settings.get('encryptedPayload')
+      if (!encryptedPayload) {
+        setError('Wallet data corrupted. Please import again.')
+        return
+      }
+
+      const decoded = atob(encryptedPayload)
+      const parts = decoded.split(':')
+      const savedPassword = parts[1]
+
+      if (password !== savedPassword) {
+        setError('Invalid password')
+        return
+      }
+
+      const activeAddress = await window.api.settings.get('activeWalletAddress')
+      if (activeAddress) {
+        onComplete(activeAddress)
+      } else {
+        setError('Wallet data corrupted. Please import again.')
+      }
+    } catch {
+      setError('Failed to decrypt wallet')
     }
   }
 
@@ -140,18 +160,39 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
 
   const renderLogin = (): JSX.Element => (
     <div className="w-full flex flex-col gap-5">
-      <div>
+      <div className="relative">
         <label className="block text-xs font-semibold text-slate-600 mb-1.5">Enter Password</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value)
-            setError(null)
-          }}
-          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-          placeholder="Password"
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value)
+              setError(null)
+            }}
+            className="w-full px-4 py-3 pr-12 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            placeholder="Password"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+          >
+            {showPassword ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
+                <line x1="2" y1="2" x2="22" y2="22" />
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
       {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
       <div className="flex gap-3">
@@ -241,29 +282,71 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
     <div className="w-full flex flex-col gap-4">
       <div>
         <label className="block text-xs font-semibold text-slate-600 mb-1.5">New Password</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value)
-            setError(null)
-          }}
-          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-          placeholder="At least 8 characters"
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value)
+              setError(null)
+            }}
+            className="w-full px-4 py-3 pr-12 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            placeholder="At least 8 characters"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+          >
+            {showPassword ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
+                <line x1="2" y1="2" x2="22" y2="22" />
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
       <div>
         <label className="block text-xs font-semibold text-slate-600 mb-1.5">Confirm Password</label>
-        <input
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => {
-            setConfirmPassword(e.target.value)
-            setError(null)
-          }}
-          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-          placeholder="Confirm your password"
-        />
+        <div className="relative">
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            value={confirmPassword}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value)
+              setError(null)
+            }}
+            className="w-full px-4 py-3 pr-12 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            placeholder="Confirm your password"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+          >
+            {showConfirmPassword ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
+                <line x1="2" y1="2" x2="22" y2="22" />
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
 
       {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
@@ -282,7 +365,8 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
         </button>
         <button
           onClick={() => handleSaveWallet(secretKey, isPrivateKey)}
-          className="flex-[2] py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm flex items-center justify-center gap-2"
+          disabled={!password || password.length < 8 || password !== confirmPassword}
+          className="flex-[2] py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
