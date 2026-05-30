@@ -36,36 +36,62 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
     }
   }, [config.poolAddress, accounts])
 
+  useEffect(() => {
+    const ensureEtherbase = async (): Promise<void> => {
+      const activeAddress = await window.api.settings.get('activeWalletAddress')
+      if (!activeAddress || activeAddress.length !== 42) {
+        if (accounts.length > 0) {
+          await window.api.settings.set('activeWalletAddress', accounts[0].address)
+        }
+      }
+    }
+    ensureEtherbase()
+  }, [accounts])
+
   /**
-   * Toggles the mining state by dispatching either miner_start or miner_stop
-   * through the IPC bridge and persisting the new setting. Reverts on failure.
-   * @param {boolean} enable - Whether to enable or disable mining.
+   * Handles the Enable Mining toggle switch.
+   * @param {boolean} isEnabled - The new active state of the mining toggle.
    * @returns {Promise<void>}
    */
-  const handleToggleMining = async (enable: boolean): Promise<void> => {
-    onUpdate('isMiningEnabled', enable)
+  const handleToggleMining = async (isEnabled: boolean): Promise<void> => {
+    onUpdate('isMiningEnabled', isEnabled)
+    await window.api.settings.set('mining.isMiningEnabled', isEnabled)
+
+    const activeAddress = await window.api.settings.get('activeWalletAddress')
+    if (isEnabled && (!activeAddress || activeAddress.length !== 42)) {
+      if (accounts.length > 0) {
+        await window.api.settings.set('activeWalletAddress', accounts[0].address)
+      } else {
+        console.warn('Cannot enable mining: No active wallet address available')
+        onUpdate('isMiningEnabled', false)
+        await window.api.settings.set('mining.isMiningEnabled', false)
+        return
+      }
+    }
+
     try {
-      await window.api?.mining?.toggle(enable)
+      await window.api?.mining?.toggle(isEnabled)
     } catch (err) {
       console.error('Failed to toggle miner', err)
-      onUpdate('isMiningEnabled', !enable)
+      onUpdate('isMiningEnabled', !isEnabled)
+      await window.api.settings.set('mining.isMiningEnabled', !isEnabled)
     }
   }
 
   /**
-   * Updates the active CPU thread count, persists it, and restarts the miner
-   * if mining is currently enabled. Reverts on failure.
-   * @param {number} cores - The number of CPU threads to allocate.
+   * Handles the CPU thread slider value change.
+   * @param {number} newCores - The newly selected core count.
    * @returns {Promise<void>}
    */
-  const handleThreadChange = async (cores: number): Promise<void> => {
-    const previous = config.cpuThreads
-    onUpdate('cpuThreads', cores)
+  const handleThreadChange = async (newCores: number): Promise<void> => {
+    onUpdate('cpuThreads', newCores)
+    await window.api.settings.set('mining.cpuThreads', newCores)
+    
     try {
-      await window.api?.mining?.setThreads(cores)
+      // Directly trigger the backend to update Geth miner threads
+      await window.api?.mining?.setThreads(newCores)
     } catch (err) {
       console.error('Failed to update threads', err)
-      onUpdate('cpuThreads', previous)
     }
   }
 
