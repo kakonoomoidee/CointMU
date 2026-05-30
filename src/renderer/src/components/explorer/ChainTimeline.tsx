@@ -27,6 +27,17 @@ function formatAge(timestamp: number, now: number): string {
 }
 
 /**
+ * Determines if a block was mined by the active local wallet.
+ * @param {string} minerAddress - The full hex address of the block miner.
+ * @param {string} localAddress - The full hex address of the active wallet.
+ * @returns {boolean} True if the addresses match, false otherwise.
+ */
+const checkIsMinedByMe = (minerAddress: string, localAddress: string): boolean => {
+  if (!minerAddress || !localAddress) return false
+  return minerAddress.toLowerCase() === localAddress.toLowerCase()
+}
+
+/**
  * A horizontal timeline component rendering recent blocks as cards.
  * Highlights blocks mined by the local node automatically and newest block in blue.
  * @param {ChainTimelineProps} props - The network insights data.
@@ -73,32 +84,35 @@ export function ChainTimeline({ blocks, coinbase, isOnline, onBlockClick }: Chai
           </div>
         ) : blocks.length > 0 ? (
           // Reverse blocks so newest is on the right
-          [...blocks].reverse().map((block) => {
-            const isLocal = coinbase && block.miner.toLowerCase() === coinbase.toLowerCase()
-            const isNewest = blocks[0] && block.number === blocks[0].number
+          [...blocks].reverse().map((block, index, arr) => {
+            const isLatest = index === arr.length - 1
+            const isMinedByMe = block.miner && coinbase && block.miner.toLowerCase() === coinbase.toLowerCase()
+
+            const cardStyle = isLatest
+              ? 'bg-blue-500 border-blue-600 text-white shadow-blue-500/20'
+              : isMinedByMe
+                ? 'bg-emerald-500 border-emerald-600 text-white shadow-emerald-500/20'
+                : 'bg-white border-slate-200 text-slate-800 hover:border-slate-300'
+
+            const labelStyle = isLatest ? 'text-blue-100' : isMinedByMe ? 'text-emerald-100' : 'text-slate-400'
+            const subLabelStyle = isLatest ? 'text-blue-100' : isMinedByMe ? 'text-emerald-100' : 'text-slate-500'
 
             return (
               <div key={block.hash} className="flex flex-col items-center flex-shrink-0 min-w-[70px]">
                 <div 
-                  className={`relative w-full rounded-xl border flex flex-col items-center justify-center py-3 mb-3 shadow-sm transition-transform hover:-translate-y-1 cursor-pointer ${
-                    isLocal 
-                      ? 'bg-emerald-500 border-emerald-600 text-white shadow-emerald-500/20' 
-                      : isNewest
-                        ? 'bg-blue-500 border-blue-600 text-white shadow-blue-500/20'
-                        : 'bg-white border-slate-200 text-slate-800 hover:border-slate-300'
-                  }`}
+                  className={`relative w-full rounded-xl border flex flex-col items-center justify-center py-3 mb-3 shadow-sm transition-transform hover:-translate-y-1 cursor-pointer ${cardStyle}`}
                   onClick={() => onBlockClick?.(block.number)}
                 >
-                  {isLocal && (
+                  {isMinedByMe && (
                     <div className="absolute -top-2 -right-2 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-sm border border-emerald-100">
                       <svg className="text-emerald-500" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
                     </div>
                   )}
-                  <span className={`text-[8px] font-bold tracking-widest uppercase mb-1 ${isLocal ? 'text-emerald-100' : isNewest ? 'text-blue-100' : 'text-slate-400'}`}>Block</span>
+                  <span className={`text-[8px] font-bold tracking-widest uppercase mb-1 ${labelStyle}`}>Block</span>
                   <span className="text-sm font-bold font-mono">#{block.number}</span>
-                  <span className={`text-[9px] mt-1 ${isLocal ? 'text-emerald-100' : isNewest ? 'text-blue-100' : 'text-slate-500'}`}>{block.txCount} tx</span>
+                  <span className={`text-[9px] mt-1 ${subLabelStyle}`}>{block.txCount} tx</span>
                 </div>
                 <span className="text-[10px] font-semibold text-slate-400 whitespace-nowrap">
                   {formatAge(block.timestamp, now)}

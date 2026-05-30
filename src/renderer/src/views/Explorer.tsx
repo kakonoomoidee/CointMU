@@ -299,7 +299,7 @@ function Explorer({ activeWalletAddress }: ExplorerProps): JSX.Element {
             <Insights insights={insights} />
             <ChainTimeline
               blocks={insights?.blocks || []}
-              coinbase={insights?.coinbase || ""}
+              coinbase={activeWalletAddress || insights?.coinbase || ""}
               isOnline={insights?.isOnline ?? false}
               onBlockClick={handleBlockSelect}
             />
