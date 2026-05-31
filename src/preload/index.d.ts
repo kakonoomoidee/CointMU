@@ -40,6 +40,7 @@ interface CointmuAPI {
     encrypt: (secret: string, password: string) => Promise<string>
     decrypt: (payload: string, password: string) => Promise<string>
     verify: (payload: string, password: string) => Promise<boolean>
+    getActivity: (address: string) => Promise<{id: string, type: 'mining' | 'send' | 'receive' | 'contract', title: string, subtitle: string, amount: string, timestampStr: string}[]>
   }
   updater: {
     checkForUpdates: () => Promise<void>

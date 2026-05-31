@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { MiningIcon, SendIcon, ReceiveIcon, ContractIcon } from '@/assets/icons'
 
 export type ActivityType = 'mining' | 'send' | 'receive' | 'contract'
 
@@ -34,51 +35,28 @@ function ActivityItem({ activity }: ActivityItemProps): JSX.Element {
       textClass = 'text-emerald-500'
       amountClass = 'text-emerald-500'
       displayAmount = `+${activity.amount}`
-      Icon = (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-          <polyline points="22 4 12 14.01 9 11.01" />
-        </svg>
-      )
+      Icon = <MiningIcon />
       break
     case 'send':
       bgClass = 'bg-orange-100 text-orange-500'
       textClass = 'text-slate-800'
       amountClass = 'text-slate-800'
       displayAmount = `-${activity.amount}`
-      Icon = (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="12" y1="19" x2="12" y2="5" />
-          <polyline points="5 12 12 5 19 12" />
-        </svg>
-      )
+      Icon = <SendIcon />
       break
     case 'receive':
       bgClass = 'bg-blue-100 text-blue-500'
       textClass = 'text-emerald-500'
       amountClass = 'text-emerald-500'
       displayAmount = `+${activity.amount}`
-      Icon = (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="12" y1="5" x2="12" y2="19" />
-          <polyline points="19 12 12 19 5 12" />
-        </svg>
-      )
+      Icon = <ReceiveIcon />
       break
     case 'contract':
       bgClass = 'bg-purple-100 text-purple-500'
       textClass = 'text-slate-800'
       amountClass = 'text-slate-800'
       displayAmount = `-${activity.amount}`
-      Icon = (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-          <polyline points="14 2 14 8 20 8" />
-          <line x1="16" y1="13" x2="8" y2="13" />
-          <line x1="16" y1="17" x2="8" y2="17" />
-          <polyline points="10 9 9 9 8 9" />
-        </svg>
-      )
+      Icon = <ContractIcon />
       break
   }
 

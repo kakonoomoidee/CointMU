@@ -552,6 +552,103 @@ class MiningController {
       }
     });
 
+    ipcMain.handle("wallet:getActivity", async (_, address: string) => {
+      try {
+        const latestBlockHex = await callGethRpc(this.rpcPort, "eth_blockNumber");
+        if (!latestBlockHex) return [];
+        const latest = parseInt(latestBlockHex, 16);
+        const start = Math.max(0, latest - 100);
+        
+        const activities: any[] = [];
+        const now = Math.floor(Date.now() / 1000);
+        
+        const timeAgo = (timestamp: number) => {
+          const diff = now - timestamp;
+          if (diff < 60) return `${Math.max(1, diff)}s ago`;
+          if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
+          if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+          return `${Math.floor(diff/86400)}d ago`;
+        };
+        
+        for (let i = latest; i > start; i--) {
+          const block = await callGethRpc(this.rpcPort, "eth_getBlockByNumber", ["0x" + i.toString(16), true]);
+          if (!block) continue;
+          
+          const blockNum = parseInt(block.number, 16);
+          const timestamp = parseInt(block.timestamp, 16);
+          const confs = latest - blockNum + 1;
+          const tsStr = `${timeAgo(timestamp)} · ${confs} confs`;
+          
+          if (block.miner && block.miner.toLowerCase() === address.toLowerCase()) {
+            activities.push({
+              id: `block-${block.number}`,
+              type: 'mining',
+              title: 'Mining reward',
+              subtitle: `From mining pool · block #${blockNum}`,
+              amount: '2.00',
+              timestampStr: tsStr
+            });
+          }
+          
+          if (block.transactions) {
+            for (const tx of block.transactions) {
+              const isFrom = tx.from && tx.from.toLowerCase() === address.toLowerCase();
+              const isTo = tx.to && tx.to.toLowerCase() === address.toLowerCase();
+              if (!isFrom && !isTo) continue;
+              
+              let valueFormat = '0.00';
+              if (tx.value) {
+                valueFormat = (parseInt(tx.value, 16) / 1e18).toFixed(2);
+              }
+              
+              if (isFrom && !tx.to) {
+                activities.push({
+                  id: tx.hash,
+                  type: 'contract',
+                  title: 'Contract deployment',
+                  subtitle: `Hash ${tx.hash.substring(0, 8)}...`,
+                  amount: valueFormat,
+                  timestampStr: tsStr
+                });
+              } else if (isFrom && tx.to && tx.input && tx.input !== '0x') {
+                activities.push({
+                  id: tx.hash,
+                  type: 'contract',
+                  title: 'Contract call',
+                  subtitle: `To ${tx.to.substring(0, 6)}...${tx.to.substring(tx.to.length - 4)}`,
+                  amount: valueFormat,
+                  timestampStr: tsStr
+                });
+              } else if (isFrom) {
+                activities.push({
+                  id: tx.hash,
+                  type: 'send',
+                  title: 'Sent CMU',
+                  subtitle: `To ${tx.to.substring(0, 6)}...${tx.to.substring(tx.to.length - 4)}`,
+                  amount: valueFormat,
+                  timestampStr: tsStr
+                });
+              } else if (isTo) {
+                activities.push({
+                  id: tx.hash,
+                  type: 'receive',
+                  title: 'Received CMU',
+                  subtitle: `From ${tx.from.substring(0, 6)}...${tx.from.substring(tx.from.length - 4)}`,
+                  amount: valueFormat,
+                  timestampStr: tsStr
+                });
+              }
+            }
+          }
+        }
+        
+        return activities;
+      } catch (err) {
+        console.error("Failed to get activity:", err);
+        return [];
+      }
+    });
+
     /**
      * Fetches real-time blockchain insights from the local Geth node via JSON-RPC.
      * Uses direct fetch with strict hex parameters, Promise.allSettled for isolated

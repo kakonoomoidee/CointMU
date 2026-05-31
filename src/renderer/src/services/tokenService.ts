@@ -76,8 +76,23 @@ export async function getTokenBalance(walletAddress: string, tokenContractAddres
     if (result && result !== '0x') {
       const decoded = iface.decodeFunctionResult('balanceOf', result)
       const balanceBigInt = decoded[0]
-      // We assume 18 decimals for these mock tokens, but realistically we would call decimals()
-      return parseFloat(ethers.formatUnits(balanceBigInt, 18)).toFixed(2)
+      
+      let decimals = 18
+      try {
+        const decimalsData = iface.encodeFunctionData('decimals', [])
+        const decimalsResult = await call('eth_call', [{
+          to: tokenContractAddress,
+          data: decimalsData
+        }, 'latest'])
+        
+        if (decimalsResult && decimalsResult !== '0x') {
+          decimals = Number(iface.decodeFunctionResult('decimals', decimalsResult)[0])
+        }
+      } catch (err) {
+        console.warn(`Failed to fetch decimals for ${tokenContractAddress}, defaulting to 18`, err)
+      }
+      
+      return parseFloat(ethers.formatUnits(balanceBigInt, decimals)).toFixed(2)
     }
     return '0.00'
   } catch (error) {
