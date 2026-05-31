@@ -9,3 +9,5 @@ data/
 .env
 resources/bin/geth
 resources/bin/geth.exe
+.claude/
+.vscode/

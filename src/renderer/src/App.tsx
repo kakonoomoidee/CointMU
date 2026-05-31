@@ -2,6 +2,7 @@ import { useState, useEffect, type JSX } from 'react'
 import { Dashboard, Miner, Wallet, Explorer, Settings, Onboarding } from '@/views'
 import { type DerivedAccount, getSetting } from '@/services'
 import { useNetworkStats, useBalance, useBalances, useUpdateStatus } from '@/hooks'
+import { useOnboardingStore } from '@/store'
 
 import { Sidebar } from '@/components'
 
@@ -56,8 +57,10 @@ function App(): JSX.Element {
   /**
    * Locks the wallet by clearing the decrypted session state in React.
    * Does NOT delete the encrypted payload from the persistent electron-store.
+   * Also resets the transient Onboarding UI state back to the initial screen.
    */
   const handleLogout = (): void => {
+    useOnboardingStore.getState().reset()
     setActiveWalletAddress(null)
     setAccounts([])
     setActiveView(NAV_ITEM_DASHBOARD)
