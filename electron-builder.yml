@@ -31,7 +31,8 @@ nsis:
   uninstallDisplayName: CointMU Desktop
   createDesktopShortcut: always
 mac:
-  entitlementsInherit: build/entitlements.mac.plist
+  entitlements: resources/mac/entitlements.mac.plist
+  entitlementsInherit: resources/mac/entitlements.mac.inherit.plist
   extendInfo:
     - NSDocumentsFolderUsageDescription: CointMU requires access to store blockchain data.
     - NSDownloadsFolderUsageDescription: CointMU requires access to manage downloaded binaries.

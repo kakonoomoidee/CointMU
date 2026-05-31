@@ -47,8 +47,8 @@ let sessionStartTimestamp: number = Date.now();
  * @returns {string} The absolute filesystem path to the geth executable.
  */
 function resolveGethBinaryPath(): string {
-  const platformDir = process.platform === "win32" ? "win" : "linux";
-  const binaryName = process.platform === "win32" ? "geth.exe" : "geth";
+  const platformDir = process.platform === 'win32' ? 'win' : process.platform === 'darwin' ? 'mac' : 'linux'
+  const binaryName = process.platform === 'win32' ? 'geth.exe' : 'geth'
   if (app.isPackaged) {
     return join(process.resourcesPath, "bin", platformDir, binaryName);
   }
