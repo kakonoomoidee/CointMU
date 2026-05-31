@@ -54,8 +54,7 @@ function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
 
   const { logs } = useMiningActivity(
     recentBlocks,
-    activeWalletAddress,
-    isMining
+    activeWalletAddress
   )
 
   useEffect(() => {

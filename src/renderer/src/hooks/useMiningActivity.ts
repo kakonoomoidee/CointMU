@@ -48,13 +48,11 @@ function buildLogEntries(blocks: BlockData[], activeWalletAddress: string | null
  * counter advances proportionally to the current hashrate while mining.
  * @param recentBlocks - The most recent blocks observed on the network.
  * @param activeWalletAddress - The address used to attribute self-mined blocks.
- * @param isMining - Whether mining is currently active.
  * @returns The capped log entries.
  */
 function useMiningActivity(
   recentBlocks: BlockData[],
-  activeWalletAddress: string | null,
-  isMining: boolean
+  activeWalletAddress: string | null
 ): MiningActivity {
   const [logs, setLogs] = useState<LogEntry[]>([])
   const lastProcessedBlock = useRef<number | null>(null)
