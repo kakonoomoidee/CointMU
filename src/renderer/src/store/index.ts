@@ -1,3 +1,6 @@
+export { useAppStore } from './useAppStore'
+export type { AppState } from './useAppStore'
+
 export { useMiningStore } from './useMiningStore'
 export type { FoundBlock } from './useMiningStore'
 

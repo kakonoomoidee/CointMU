@@ -1,12 +1,11 @@
 import { useState, useRef, useEffect, type JSX } from 'react'
 import { type DerivedAccount } from '@/services'
 import { type UpdateStatus } from '@/hooks'
+import { useAppStore } from '@/store'
 
 interface SidebarProps {
   accounts: DerivedAccount[]
   activeWalletAddress: string | null
-  balance: string
-  peerCount: number | null
   activeView: string
   setActiveView: (view: string) => void
   onLogout: () => void
@@ -24,13 +23,13 @@ const APP_NETWORK = 'testnet'
 export function Sidebar({
   accounts,
   activeWalletAddress,
-  balance,
-  peerCount,
   activeView,
   setActiveView,
   onLogout,
   updateStatus
 }: SidebarProps): JSX.Element {
+  const balance = useAppStore((s) => s.balance)
+  const peerCount = useAppStore((s) => s.peerCount)
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
   const popoverRef = useRef<HTMLDivElement>(null)
 

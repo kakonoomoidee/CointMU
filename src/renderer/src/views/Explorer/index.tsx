@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, type JSX, type FormEvent } from 'react'
-import { useNetworkStats, useRecentBlocks } from '@/hooks'
+import { useRecentBlocks } from '@/hooks'
+import { useAppStore } from '@/store'
 import { call, fetchBalance, getNetworkInsights } from '@/services'
 import { formatBlockNumber } from '@/utils'
 import { Insights } from '@/components/explorer/Insights'
@@ -34,8 +35,8 @@ const TX_HASH_LENGTH = 66
  * @returns The complete explorer interface.
  */
 function Explorer({ activeWalletAddress }: ExplorerProps): JSX.Element {
-  const networkStats = useNetworkStats()
-  const isConnected = networkStats.isConnected
+  const blockHeight = useAppStore((s) => s.blockHeight)
+  const isConnected = useAppStore((s) => s.isConnected)
 
   const [insights, setInsights] = useState<any>(null)
 
@@ -60,7 +61,7 @@ function Explorer({ activeWalletAddress }: ExplorerProps): JSX.Element {
     }
   }, [isConnected])
 
-  const recentBlocks = useRecentBlocks(networkStats.blockHeight, isConnected)
+  const recentBlocks = useRecentBlocks(blockHeight, isConnected)
   const [, setCurrentTime] = useState<number>(Date.now())
 
   useEffect(() => {
@@ -172,9 +173,7 @@ function Explorer({ activeWalletAddress }: ExplorerProps): JSX.Element {
     }
   }, [activeTab, recentBlocks, activeWalletAddress, isConnected])
 
-  const networkHeight = isConnected
-    ? formatBlockNumber(networkStats.blockHeight)
-    : EMPTY_STAT_LABEL
+  const networkHeight = isConnected ? formatBlockNumber(blockHeight) : EMPTY_STAT_LABEL
 
   return (
     <div className="flex flex-col h-full bg-slate-50/80">

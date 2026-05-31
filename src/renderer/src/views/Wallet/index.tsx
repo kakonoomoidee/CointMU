@@ -11,7 +11,7 @@ import {
   getSessionPassword,
   type DerivedAccount
 } from '@/services'
-import { useWalletUiStore } from '@/store'
+import { useWalletUiStore, useAppStore } from '@/store'
 import { ethers } from 'ethers'
 import { WalletHeader } from './WalletHeader'
 import { AccountSidebar } from './AccountSidebar'
@@ -26,25 +26,24 @@ interface WalletProps {
   setAccounts: (accounts: DerivedAccount[]) => void
   activeWalletAddress: string | null
   setActiveWalletAddress: (address: string) => void
-  balance: string
-  balances: Record<string, string>
 }
 
 /**
  * Wallet view orchestrator. It owns the account-management and transaction
  * signing business logic, sources transient UI and form state from the wallet UI
- * store, and composes the layout from focused presentational sub-components.
- * @param props - Account list and setters, the active address and setter, and balance.
+ * store, reads the shared balances from the global app store, and composes the
+ * layout from focused presentational sub-components.
+ * @param props - Account list and setters, and the active address and setter.
  * @returns The complete wallet view with sidebar, hero card, tabs, and modals.
  */
 function Wallet({
   accounts,
   setAccounts,
   activeWalletAddress,
-  setActiveWalletAddress,
-  balance,
-  balances
+  setActiveWalletAddress
 }: WalletProps): JSX.Element {
+  const balance = useAppStore((s) => s.balance)
+  const balances = useAppStore((s) => s.balances)
   const [activeTab, setActiveTab] = useState<WalletTab>('activity')
 
   const copied = useWalletUiStore((s) => s.copied)

@@ -1,8 +1,8 @@
 import { useState, useEffect, type JSX } from 'react'
 import { Dashboard, Miner, Wallet, Explorer, Settings, Onboarding } from '@/views'
 import { type DerivedAccount, getSetting } from '@/services'
-import { useNetworkStats, useBalance, useBalances, useUpdateStatus } from '@/hooks'
-import { useOnboardingStore } from '@/store'
+import { useUpdateStatus } from '@/hooks'
+import { useOnboardingStore, useAppStore } from '@/store'
 
 import { Sidebar } from '@/components'
 
@@ -12,6 +12,7 @@ const NAV_ITEM_WALLET = 'wallet'
 const NAV_ITEM_EXPLORER = 'explorer'
 const NAV_ITEM_SETTINGS = 'settings'
 const WALLET_LOAD_DELAY_MS = 300
+const GLOBAL_POLL_INTERVAL_MS = 3000
 type ActiveView = typeof NAV_ITEM_DASHBOARD | typeof NAV_ITEM_MINER | typeof NAV_ITEM_WALLET | typeof NAV_ITEM_EXPLORER | typeof NAV_ITEM_SETTINGS
 
 /**
@@ -26,15 +27,28 @@ function App(): JSX.Element {
   const [accounts, setAccounts] = useState<DerivedAccount[]>([])
   const [isLoadingWallet, setIsLoadingWallet] = useState<boolean>(true)
   const [activeView, setActiveView] = useState<ActiveView>(NAV_ITEM_DASHBOARD)
-  const networkStats = useNetworkStats()
-  const { balance } = useBalance(activeWalletAddress, networkStats.isConnected)
-  const { balances } = useBalances(accounts.map((a) => a.address), networkStats.isConnected)
   const updateState = useUpdateStatus()
+
+  const accountsKey = accounts.map((a) => a.address).join(',')
 
   useEffect(() => {
     const loadingTimer = setTimeout(() => setIsLoadingWallet(false), WALLET_LOAD_DELAY_MS)
     return (): void => clearTimeout(loadingTimer)
   }, [])
+
+  useEffect(() => {
+    useAppStore.getState().setActiveAccount(activeWalletAddress)
+  }, [activeWalletAddress])
+
+  useEffect(() => {
+    const addresses = accountsKey.length > 0 ? accountsKey.split(',') : []
+    const runPoll = (): void => {
+      void useAppStore.getState().fetchGlobalStats(activeWalletAddress, addresses)
+    }
+    runPoll()
+    const intervalId = setInterval(runPoll, GLOBAL_POLL_INTERVAL_MS)
+    return (): void => clearInterval(intervalId)
+  }, [activeWalletAddress, accountsKey])
 
   if (isLoadingWallet) {
     return (
@@ -71,8 +85,6 @@ function App(): JSX.Element {
       <Sidebar
         accounts={accounts}
         activeWalletAddress={activeWalletAddress}
-        balance={balance}
-        peerCount={networkStats.peerCount}
         activeView={activeView}
         setActiveView={(view) => setActiveView(view as ActiveView)}
         onLogout={handleLogout}
@@ -84,16 +96,14 @@ function App(): JSX.Element {
           <Dashboard activeWalletAddress={activeWalletAddress} />
         )}
         {activeView === NAV_ITEM_MINER && (
-          <Miner activeWalletAddress={activeWalletAddress} balance={balance} />
+          <Miner activeWalletAddress={activeWalletAddress} />
         )}
         {activeView === NAV_ITEM_WALLET && (
-          <Wallet 
+          <Wallet
             accounts={accounts}
             setAccounts={setAccounts}
             activeWalletAddress={activeWalletAddress}
             setActiveWalletAddress={setActiveWalletAddress}
-            balance={balance}
-            balances={balances}
           />
         )}
         {activeView === NAV_ITEM_EXPLORER && <Explorer activeWalletAddress={activeWalletAddress} />}

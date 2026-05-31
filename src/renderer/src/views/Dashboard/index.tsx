@@ -1,5 +1,6 @@
 import { useState, useEffect, type JSX } from 'react'
-import { useNetworkStats, useBalance, useRecentBlocks } from '@/hooks'
+import { useRecentBlocks } from '@/hooks'
+import { useAppStore } from '@/store'
 import {
   formatBlockNumber,
   formatHashrate,
@@ -27,9 +28,16 @@ interface DashboardProps {
  * @returns The complete dashboard layout.
  */
 function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
-  const networkStats = useNetworkStats()
-  const { balance } = useBalance(activeWalletAddress, networkStats.isConnected)
-  const recentBlocks = useRecentBlocks(networkStats.blockHeight, networkStats.isConnected)
+  const blockHeight = useAppStore((s) => s.blockHeight)
+  const peerCount = useAppStore((s) => s.peerCount)
+  const gasPriceGwei = useAppStore((s) => s.gasPriceGwei)
+  const isMining = useAppStore((s) => s.isMining)
+  const hashrate = useAppStore((s) => s.hashrate)
+  const difficulty = useAppStore((s) => s.difficulty)
+  const isConnected = useAppStore((s) => s.isConnected)
+  const loading = useAppStore((s) => s.loading)
+  const balance = useAppStore((s) => s.balance)
+  const recentBlocks = useRecentBlocks(blockHeight, isConnected)
 
   const [, setCurrentTime] = useState<number>(Date.now())
   useEffect(() => {
@@ -37,25 +45,20 @@ function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
     return () => clearInterval(tickInterval)
   }, [])
 
-  const isConnected = networkStats.isConnected
-
   const minedBlocksCount = isConnected ? computeMinedBlocksCount(balance) : 0
-  const hashrateDisplay = isConnected ? formatHashrate(networkStats.hashrate) : '0.00 H/s'
-  const miningUptimeLabel =
-    isConnected && networkStats.isMining ? 'Actively mining' : 'Miner idle'
+  const hashrateDisplay = isConnected ? formatHashrate(hashrate) : '0.00 H/s'
+  const miningUptimeLabel = isConnected && isMining ? 'Actively mining' : 'Miner idle'
 
-  const difficultyDisplay = isConnected ? formatDifficulty(networkStats.difficulty) : '--'
-  const gasDisplay =
-    isConnected && networkStats.gasPriceGwei !== null ? networkStats.gasPriceGwei : '0'
-  const blockDisplay = isConnected ? formatBlockNumber(networkStats.blockHeight) : '--'
-  const peerDisplay =
-    isConnected && networkStats.peerCount !== null ? String(networkStats.peerCount) : '--'
+  const difficultyDisplay = isConnected ? formatDifficulty(difficulty) : '--'
+  const gasDisplay = isConnected && gasPriceGwei !== null ? gasPriceGwei : '0'
+  const blockDisplay = isConnected ? formatBlockNumber(blockHeight) : '--'
+  const peerDisplay = isConnected && peerCount !== null ? String(peerCount) : '--'
 
   const abbrAddress = activeWalletAddress
     ? `${activeWalletAddress.substring(0, 6)}...${activeWalletAddress.substring(activeWalletAddress.length - 4)}`
     : '--'
 
-  if (networkStats.loading) {
+  if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-full bg-slate-50/80 gap-3">
         <div className="w-8 h-8 rounded-full border-2 border-slate-200 border-t-blue-500 animate-spin" />

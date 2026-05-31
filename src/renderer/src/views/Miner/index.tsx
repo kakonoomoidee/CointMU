@@ -1,13 +1,12 @@
 import { useState, useEffect, type JSX } from 'react'
 import {
-  useNetworkStats,
   useRecentBlocks,
   useMiningStats,
   useMiningControls,
   useMiningActivity,
   useTimer
 } from '@/hooks'
-import { useMiningStore } from '@/store'
+import { useMiningStore, useAppStore } from '@/store'
 import {
   formatMhs,
   isWithinLastDay,
@@ -25,7 +24,6 @@ import { MiningActivity, ACTIVITY_TAB_FOUND } from './MiningActivity'
 
 interface MinerProps {
   activeWalletAddress: string | null
-  balance: string
 }
 
 const SHARES_WINDOW_SIZE = 60
@@ -35,16 +33,17 @@ const SHARES_WINDOW_SIZE = 60
  * activity state is sourced from dedicated hooks, derived values are computed via
  * pure utilities, and the UI is composed from focused presentational
  * sub-components. The view contains no IPC or business-effect logic of its own.
- * @param props - The active wallet address and current wallet balance.
+ * @param props - The active wallet address.
  * @returns The complete mining view with header, hero, KPI grid, and panels.
  */
-function Miner({ activeWalletAddress, balance }: MinerProps): JSX.Element {
+function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
   const [maxCores] = useState<number>(getSafeConcurrency())
   const [activeTab, setActiveTab] = useState<string>(ACTIVITY_TAB_FOUND)
 
-  const networkStats = useNetworkStats()
-  const isConnected = networkStats.isConnected
-  const recentBlocks = useRecentBlocks(networkStats.blockHeight, isConnected)
+  const blockHeight = useAppStore((s) => s.blockHeight)
+  const isConnected = useAppStore((s) => s.isConnected)
+  const balance = useAppStore((s) => s.balance)
+  const recentBlocks = useRecentBlocks(blockHeight, isConnected)
 
   const { config, toggling, error, toggle } = useMiningControls()
   const telemetry = useMiningStats(config.cpuThreads)
@@ -69,7 +68,7 @@ function Miner({ activeWalletAddress, balance }: MinerProps): JSX.Element {
   const formattedRewards = formatRewards(balance)
   const blocksFoundToday = foundBlocks.filter((block) => isWithinLastDay(block.timestamp)).length
 
-  const nextBlock = (telemetry.blockNumber || networkStats.blockHeight || 0) + 1
+  const nextBlock = (telemetry.blockNumber || blockHeight || 0) + 1
   const difficultyLabel = formatDifficultyLabel(telemetry.difficulty)
 
   const sharesData = computeSharesData(recentBlocks, SHARES_WINDOW_SIZE, activeWalletAddress)

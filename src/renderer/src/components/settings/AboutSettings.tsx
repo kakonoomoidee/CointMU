@@ -1,5 +1,6 @@
 import { useState, useEffect, type JSX } from 'react'
-import { useNetworkStats, useUpdateStatus } from '@/hooks'
+import { useUpdateStatus } from '@/hooks'
+import { useAppStore } from '@/store'
 import { checkForUpdates, quitAndInstall } from '@/services'
 
 /**
@@ -41,7 +42,7 @@ const getUpdateButtonLabel = (status: string): string => {
  */
 export function AboutSettings(): JSX.Element {
   const [uptimeStr, setUptimeStr] = useState<string>('Loading...')
-  const networkStats = useNetworkStats()
+  const peerCount = useAppStore((s) => s.peerCount)
   const updateState = useUpdateStatus()
 
   const sysInfo = window.systemInfo || {
@@ -131,7 +132,7 @@ export function AboutSettings(): JSX.Element {
             
             <div className="flex items-center justify-between p-4">
               <p className="text-sm font-bold text-slate-800">Connected peers</p>
-              <span className="text-sm font-medium font-mono text-slate-600">{networkStats.peerCount !== null ? networkStats.peerCount : '--'}</span>
+              <span className="text-sm font-medium font-mono text-slate-600">{peerCount !== null ? peerCount : '--'}</span>
             </div>
 
             <div className="flex items-center justify-between p-4">
