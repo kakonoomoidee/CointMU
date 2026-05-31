@@ -25,35 +25,30 @@ interface ActivityItemProps {
 function ActivityItem({ activity }: ActivityItemProps): JSX.Element {
   let Icon: JSX.Element
   let bgClass: string
-  let textClass: string
   let amountClass: string
   let displayAmount: string
 
   switch (activity.type) {
     case 'mining':
       bgClass = 'bg-emerald-100 text-emerald-600'
-      textClass = 'text-emerald-500'
       amountClass = 'text-emerald-500'
       displayAmount = `+${activity.amount}`
       Icon = <MiningIcon />
       break
     case 'send':
       bgClass = 'bg-orange-100 text-orange-500'
-      textClass = 'text-slate-800'
       amountClass = 'text-slate-800'
       displayAmount = `-${activity.amount}`
       Icon = <SendIcon />
       break
     case 'receive':
       bgClass = 'bg-blue-100 text-blue-500'
-      textClass = 'text-emerald-500'
       amountClass = 'text-emerald-500'
       displayAmount = `+${activity.amount}`
       Icon = <ReceiveIcon />
       break
     case 'contract':
       bgClass = 'bg-purple-100 text-purple-500'
-      textClass = 'text-slate-800'
       amountClass = 'text-slate-800'
       displayAmount = `-${activity.amount}`
       Icon = <ContractIcon />

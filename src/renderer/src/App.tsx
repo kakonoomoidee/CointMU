@@ -93,7 +93,10 @@ function App(): JSX.Element {
 
       <main className="flex-1 overflow-hidden">
         {activeView === NAV_ITEM_DASHBOARD && (
-          <Dashboard activeWalletAddress={activeWalletAddress} />
+          <Dashboard
+            activeWalletAddress={activeWalletAddress}
+            onNavigate={(view) => setActiveView(view as ActiveView)}
+          />
         )}
         {activeView === NAV_ITEM_MINER && (
           <Miner activeWalletAddress={activeWalletAddress} />

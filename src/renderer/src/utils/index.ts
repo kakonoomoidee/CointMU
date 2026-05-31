@@ -23,3 +23,5 @@ export { formatRelativeAge, computeMinedBlocksCount } from './dashboard'
 export { formatTxAge, hexToAscii } from './explorer'
 
 export { cn } from './cn'
+
+export { downloadActivityCsv } from './csvExport'

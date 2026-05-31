@@ -1,36 +1,39 @@
 import { type JSX } from 'react'
-import { type BlockData } from '@/hooks'
-import { formatRelativeAge } from '@/utils'
+import { ActivityItem, type ActivityData } from '@/views/Wallet/ActivityItem'
+import { downloadActivityCsv } from '@/utils'
+
+const ACTIVITY_CSV_FILENAME = 'cointmu-activity.csv'
+const MAX_VISIBLE_ACTIVITY = 10
 
 interface ActivityFeedProps {
   isConnected: boolean
-  recentBlocks: BlockData[]
-  activeWalletAddress: string | null
+  activity: ActivityData[]
   abbrAddress: string
 }
 
 /**
- * Activity feed panel listing mining-reward transactions credited to the active
- * wallet, derived from recent blocks the wallet mined.
- * @param props - Connection state, recent blocks, active address, and its label.
+ * Activity feed panel listing the active wallet's recent transactions and
+ * exposing a CSV export of the full fetched history.
+ * @param props - Connection state, the activity records, and the address label.
  * @returns The rendered activity feed panel.
  */
-function ActivityFeed({
-  isConnected,
-  recentBlocks,
-  activeWalletAddress,
-  abbrAddress
-}: ActivityFeedProps): JSX.Element {
-  const selfMinedBlocks = recentBlocks.filter(
-    (block) => block.miner.toLowerCase() === activeWalletAddress?.toLowerCase()
-  )
-  const hasActivity = isConnected && selfMinedBlocks.length > 0
+function ActivityFeed({ isConnected, activity, abbrAddress }: ActivityFeedProps): JSX.Element {
+  const hasActivity = isConnected && activity.length > 0
+
+  /**
+   * Exports the currently fetched activity history to a CSV download.
+   */
+  const handleExport = (): void => downloadActivityCsv(activity, ACTIVITY_CSV_FILENAME)
 
   return (
     <div className="rounded-2xl bg-white border border-slate-200 p-6">
       <div className="flex items-center justify-between mb-1">
         <h3 className="text-sm font-bold text-slate-800">Your activity</h3>
-        <button className="text-[11px] font-semibold text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-0.5">
+        <button
+          onClick={handleExport}
+          disabled={!hasActivity}
+          className="text-[11px] font-semibold text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-0.5 disabled:opacity-40 disabled:cursor-not-allowed"
+        >
           Export
           <svg
             width="10"
@@ -50,48 +53,11 @@ function ActivityFeed({
 
       <div className="space-y-0">
         {hasActivity ? (
-          selfMinedBlocks.slice(0, 10).map((block) => (
-            <div
-              key={block.hash}
-              className="flex items-center justify-between py-3.5 border-t border-slate-100 first:border-t-0 hover:bg-slate-50/50 transition-colors px-2 rounded-lg"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-blue-50">
-                  <svg
-                    className="text-blue-500"
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-800">
-                    Mining reward
-                    <span className="font-normal text-slate-400 ml-1.5 font-mono">
-                      block #{block.number}
-                    </span>
-                  </p>
-                  <p className="text-[10px] text-slate-400 mt-0.5">
-                    {formatRelativeAge(block.timestamp)} - confirmed
-                  </p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-bold font-mono text-emerald-600">
-                  +2.00
-                  <span className="text-[10px] font-medium text-slate-400 ml-1">CMU</span>
-                </p>
-                <p className="text-[10px] text-slate-400">fee 0 gwei</p>
-              </div>
-            </div>
-          ))
+          <div className="divide-y divide-slate-100 -mx-2">
+            {activity.slice(0, MAX_VISIBLE_ACTIVITY).map((item) => (
+              <ActivityItem key={item.id} activity={item} />
+            ))}
+          </div>
         ) : (
           <div className="py-8 flex flex-col items-center justify-center">
             <svg

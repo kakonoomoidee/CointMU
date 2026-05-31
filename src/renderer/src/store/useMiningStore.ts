@@ -10,30 +10,28 @@ interface FoundBlock {
 }
 
 interface MiningStore {
-  startTime: number | null
-  isMining: boolean
+  sessionStartTime: number | null
   foundBlocks: FoundBlock[]
-  toggleMining: (status: boolean) => void
-  resetTimer: () => void
+  startMining: () => void
+  stopMining: () => void
   recordFoundBlocks: (blocks: FoundBlock[]) => void
 }
 
 /**
  * Global mining state shared across route transitions. Persisting the session
- * timer and the accumulated list of found blocks here, rather than in component
- * state, ensures both survive view switches that would otherwise unmount the
- * mining view and discard local state.
+ * start timestamp and the accumulated list of found blocks here, rather than in
+ * component state, ensures both survive view switches that would otherwise
+ * unmount the mining view and discard local state. startMining is idempotent so
+ * that the transient isMining flicker on remount cannot restart the clock.
  */
 export const useMiningStore = create<MiningStore>((set, get) => ({
-  startTime: null,
-  isMining: false,
+  sessionStartTime: null,
   foundBlocks: [],
-  toggleMining: (status: boolean) => {
-    const current = get()
-    if (current.isMining === status) return
-    set({ isMining: status, startTime: status ? Date.now() : null })
+  startMining: () => {
+    if (get().sessionStartTime !== null) return
+    set({ sessionStartTime: Date.now() })
   },
-  resetTimer: () => set({ startTime: null }),
+  stopMining: () => set({ sessionStartTime: null }),
   recordFoundBlocks: (blocks: FoundBlock[]) => {
     if (blocks.length === 0) return
     set((state) => {

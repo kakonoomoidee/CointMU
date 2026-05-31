@@ -1,12 +1,9 @@
 import { useState, useEffect, type JSX } from 'react'
-import { useRecentBlocks } from '@/hooks'
-import { useAppStore } from '@/store'
-import {
-  formatBlockNumber,
-  formatHashrate,
-  formatDifficulty,
-  computeMinedBlocksCount
-} from '@/utils'
+import { useRecentBlocks, useMiningStats, useMiningControls } from '@/hooks'
+import { useAppStore, useMiningStore, useWalletUiStore } from '@/store'
+import { getTransactions } from '@/services/transactionService'
+import { type ActivityData } from '@/views/Wallet/ActivityItem'
+import { formatBlockNumber, formatHashrate, formatDifficulty, formatMhs, isWithinLastDay } from '@/utils'
 import { DashboardHeader } from './DashboardHeader'
 import { WalletOverviewCard } from './WalletOverviewCard'
 import { NetworkHealthPanel } from './NetworkHealthPanel'
@@ -18,20 +15,22 @@ const DASHBOARD_TICK_INTERVAL_MS = 5000
 
 interface DashboardProps {
   activeWalletAddress: string | null
+  onNavigate: (view: string) => void
 }
 
 /**
- * Primary dashboard view orchestrator. It sources live network, balance, and
- * recent-block state from dedicated hooks, derives the formatted display values,
- * and composes the layout from focused presentational sub-components.
- * @param props - The active wallet address.
+ * Primary dashboard view orchestrator. It sources global network and balance
+ * state from the app store, local mining telemetry from the mining hooks, and
+ * the wallet activity history over IPC, derives the formatted display values,
+ * and composes the layout from focused presentational sub-components. Navigation
+ * intents are forwarded to the application router.
+ * @param props - The active wallet address and the view navigation callback.
  * @returns The complete dashboard layout.
  */
-function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
+function Dashboard({ activeWalletAddress, onNavigate }: DashboardProps): JSX.Element {
   const blockHeight = useAppStore((s) => s.blockHeight)
   const peerCount = useAppStore((s) => s.peerCount)
   const gasPriceGwei = useAppStore((s) => s.gasPriceGwei)
-  const isMining = useAppStore((s) => s.isMining)
   const hashrate = useAppStore((s) => s.hashrate)
   const difficulty = useAppStore((s) => s.difficulty)
   const isConnected = useAppStore((s) => s.isConnected)
@@ -39,15 +38,29 @@ function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
   const balance = useAppStore((s) => s.balance)
   const recentBlocks = useRecentBlocks(blockHeight, isConnected)
 
+  const { config } = useMiningControls()
+  const telemetry = useMiningStats(config.cpuThreads)
+  const foundBlocks = useMiningStore((s) => s.foundBlocks)
+
+  const [activity, setActivity] = useState<ActivityData[]>([])
+  useEffect(() => {
+    if (!activeWalletAddress) {
+      setActivity([])
+      return
+    }
+    getTransactions(activeWalletAddress).then(setActivity)
+  }, [activeWalletAddress])
+
   const [, setCurrentTime] = useState<number>(Date.now())
   useEffect(() => {
     const tickInterval = setInterval(() => setCurrentTime(Date.now()), DASHBOARD_TICK_INTERVAL_MS)
     return () => clearInterval(tickInterval)
   }, [])
 
-  const minedBlocksCount = isConnected ? computeMinedBlocksCount(balance) : 0
-  const hashrateDisplay = isConnected ? formatHashrate(hashrate) : '0.00 H/s'
-  const miningUptimeLabel = isConnected && isMining ? 'Actively mining' : 'Miner idle'
+  const minedBlocksCount = foundBlocks.filter((block) => isWithinLastDay(block.timestamp)).length
+  const localHashrateLabel = isConnected ? `${formatMhs(telemetry.hashrateMhs)} MH/s` : '0.00 MH/s'
+  const networkHashrateDisplay = isConnected ? formatHashrate(hashrate) : '0.00 H/s'
+  const miningUptimeLabel = isConnected && telemetry.isMining ? 'Actively mining' : 'Miner idle'
 
   const difficultyDisplay = isConnected ? formatDifficulty(difficulty) : '--'
   const gasDisplay = isConnected && gasPriceGwei !== null ? gasPriceGwei : '0'
@@ -57,6 +70,29 @@ function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
   const abbrAddress = activeWalletAddress
     ? `${activeWalletAddress.substring(0, 6)}...${activeWalletAddress.substring(activeWalletAddress.length - 4)}`
     : '--'
+
+  /**
+   * Opens the wallet receive flow by priming the wallet modal state and routing
+   * the user to the wallet view.
+   */
+  const handleReceive = (): void => {
+    useWalletUiStore.getState().setModalState('RECEIVE')
+    onNavigate('wallet')
+  }
+
+  /**
+   * Opens the wallet send flow by priming the wallet modal state and routing the
+   * user to the wallet view.
+   */
+  const handleSend = (): void => {
+    useWalletUiStore.getState().setModalState('SEND')
+    onNavigate('wallet')
+  }
+
+  /**
+   * Routes the user to the explorer view to browse the full block history.
+   */
+  const handleViewAllBlocks = (): void => onNavigate('explorer')
 
   if (loading) {
     return (
@@ -69,7 +105,7 @@ function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
 
   return (
     <div className="flex flex-col h-full bg-slate-50/80">
-      <DashboardHeader isConnected={isConnected} />
+      <DashboardHeader isConnected={isConnected} onReceive={handleReceive} onSend={handleSend} />
 
       <main className="flex-1 overflow-y-auto px-8 pb-8 space-y-5">
         <div className="grid grid-cols-[1.35fr_1fr] gap-5">
@@ -90,10 +126,11 @@ function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
 
         <DashboardStatsGrid
           isConnected={isConnected}
-          miningLabel={hashrateDisplay}
+          miningLabel={localHashrateLabel}
           miningUptimeLabel={miningUptimeLabel}
           minedBlocksCount={minedBlocksCount}
-          hashrateDisplay={hashrateDisplay}
+          hashrateDisplay={networkHashrateDisplay}
+          onNavigate={onNavigate}
         />
 
         <div className="grid grid-cols-2 gap-5 min-h-0">
@@ -101,13 +138,9 @@ function Dashboard({ activeWalletAddress }: DashboardProps): JSX.Element {
             isConnected={isConnected}
             recentBlocks={recentBlocks}
             activeWalletAddress={activeWalletAddress}
+            onViewAll={handleViewAllBlocks}
           />
-          <ActivityFeed
-            isConnected={isConnected}
-            recentBlocks={recentBlocks}
-            activeWalletAddress={activeWalletAddress}
-            abbrAddress={abbrAddress}
-          />
+          <ActivityFeed isConnected={isConnected} activity={activity} abbrAddress={abbrAddress} />
         </div>
       </main>
     </div>

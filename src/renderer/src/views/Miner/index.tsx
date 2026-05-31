@@ -47,10 +47,10 @@ function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
 
   const { config, toggling, error, toggle } = useMiningControls()
   const telemetry = useMiningStats(config.cpuThreads)
-  const { startTime, toggleMining, foundBlocks } = useMiningStore()
+  const { sessionStartTime, startMining, stopMining, foundBlocks } = useMiningStore()
 
   const isMining = telemetry.isMining
-  const elapsedTime = useTimer(startTime, isMining)
+  const elapsedTime = useTimer(sessionStartTime, isMining)
 
   const { logs, noncesTried } = useMiningActivity(
     recentBlocks,
@@ -60,8 +60,21 @@ function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
   )
 
   useEffect(() => {
-    toggleMining(isMining)
-  }, [isMining, toggleMining])
+    if (isMining) startMining()
+  }, [isMining, startMining])
+
+  /**
+   * Toggles the node miner while making the user's explicit start/stop the
+   * authoritative driver of the session clock. Starting stamps the session
+   * start time, stopping clears it, and only then is the node toggled.
+   * @param enabled - Whether mining should be turned on.
+   * @returns A promise that resolves once the node toggle completes.
+   */
+  const handleToggle = async (enabled: boolean): Promise<void> => {
+    if (enabled) startMining()
+    else stopMining()
+    await toggle(enabled)
+  }
 
   const rewardAddress = config.poolAddress || activeWalletAddress || ''
   const hashrateLabel = formatMhs(telemetry.hashrateMhs)
@@ -92,7 +105,7 @@ function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
           nextBlock={nextBlock}
           noncesTried={noncesTried}
           toggling={toggling}
-          onToggle={toggle}
+          onToggle={handleToggle}
         />
 
         {error && (

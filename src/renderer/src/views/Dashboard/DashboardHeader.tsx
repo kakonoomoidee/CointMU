@@ -2,15 +2,17 @@ import { type JSX } from 'react'
 
 interface DashboardHeaderProps {
   isConnected: boolean
+  onReceive: () => void
+  onSend: () => void
 }
 
 /**
  * Dashboard header presenting the workspace breadcrumb, the node sync status
  * pill, and the primary receive and send actions.
- * @param props - Whether the local node is currently connected.
+ * @param props - Connection state and the receive and send action handlers.
  * @returns The rendered dashboard header.
  */
-function DashboardHeader({ isConnected }: DashboardHeaderProps): JSX.Element {
+function DashboardHeader({ isConnected, onReceive, onSend }: DashboardHeaderProps): JSX.Element {
   const syncLabel = isConnected ? 'Synced' : 'Offline'
   const syncDotColor = isConnected ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
   const syncBorderColor = isConnected
@@ -34,7 +36,10 @@ function DashboardHeader({ isConnected }: DashboardHeaderProps): JSX.Element {
           <span className={`text-xs font-semibold ${syncTextColor}`}>{syncLabel}</span>
         </div>
 
-        <button className="flex items-center gap-2 px-5 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+        <button
+          onClick={onReceive}
+          className="flex items-center gap-2 px-5 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+        >
           <svg
             width="14"
             height="14"
@@ -51,7 +56,10 @@ function DashboardHeader({ isConnected }: DashboardHeaderProps): JSX.Element {
           Receive
         </button>
 
-        <button className="flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200">
+        <button
+          onClick={onSend}
+          className="flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200"
+        >
           <svg
             width="14"
             height="14"

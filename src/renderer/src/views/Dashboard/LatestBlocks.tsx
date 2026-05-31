@@ -6,24 +6,30 @@ interface LatestBlocksProps {
   isConnected: boolean
   recentBlocks: BlockData[]
   activeWalletAddress: string | null
+  onViewAll: () => void
 }
 
 /**
  * Latest blocks panel listing the most recent blocks mined across the network,
  * flagging blocks credited to the active wallet.
- * @param props - Connection state, the recent blocks, and the active address.
+ * @param props - Connection state, recent blocks, active address, and the
+ * view-all navigation handler.
  * @returns The rendered latest blocks panel.
  */
 function LatestBlocks({
   isConnected,
   recentBlocks,
-  activeWalletAddress
+  activeWalletAddress,
+  onViewAll
 }: LatestBlocksProps): JSX.Element {
   return (
     <div className="rounded-2xl bg-white border border-slate-200 p-6">
       <div className="flex items-center justify-between mb-1">
         <h3 className="text-sm font-bold text-slate-800">Latest blocks</h3>
-        <button className="text-[11px] font-semibold text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-0.5">
+        <button
+          onClick={onViewAll}
+          className="text-[11px] font-semibold text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-0.5"
+        >
           View all
           <svg
             width="10"
