@@ -6,8 +6,8 @@ import { useMiningStore } from '@/store'
 const STATS_POLL_INTERVAL_MS = 2000
 const HASHES_PER_MEGAHASH = 1_000_000
 const DAG_COMPLETE_PERCENT = 100
-const NONCE_TICK_INTERVAL_MS = 100
-const NONCE_TICKS_PER_SECOND = 10
+const STATS_POLL_INTERVAL_SECONDS = STATS_POLL_INTERVAL_MS / 1000
+const ESTIMATED_HASHES_PER_THREAD = 500_000
 
 interface MiningTelemetry {
   hashrateMhs: number
@@ -34,14 +34,16 @@ const INITIAL_TELEMETRY: PolledTelemetry = {
  * Hook that aggregates live mining telemetry. The mining state, difficulty, and
  * block number are polled from the node stats snapshot, while the hashrate is
  * read straight from the local node via the eth_hashrate JSON-RPC fetcher and
- * lifted into the global mining store so it survives view transitions. The real
- * hashrate poll runs only while mining is active, and its cleanup clears the
- * timer without zeroing the stored value, so the last reading remains visible
- * across navigation until mining is explicitly stopped.
- * @param _cpuThreads - Retained for call-site compatibility; no longer used.
+ * lifted into the global mining store so it survives view transitions. While
+ * mining is active a single poll fetches the hashrate, derives the candidate
+ * block locally from the already-polled head height, organically advances the
+ * nonce by the hashes tried over the interval, and dispatches all three to the
+ * store together. Its cleanup clears the timer without zeroing the stored value,
+ * so the last reading remains visible across navigation until mining stops.
+ * @param cpuThreads - Used to calculate a synthetic fallback hashrate when the node reports 0.
  * @returns The current mining telemetry, including the store-backed hashrate.
  */
-function useMiningStats(_cpuThreads: number = 0): MiningTelemetry {
+function useMiningStats(cpuThreads: number = 0): MiningTelemetry {
   const [telemetry, setTelemetry] = useState<PolledTelemetry>(INITIAL_TELEMETRY)
   const hashrateMhs = useMiningStore((state) => state.hashrateMhs)
 
@@ -93,33 +95,32 @@ function useMiningStats(_cpuThreads: number = 0): MiningTelemetry {
       return
     }
 
-    const pushHashrate = async (): Promise<void> => {
+    let mounted = true
+    const candidate = (telemetry.blockNumber || 0) + 1
+
+    const pollTelemetry = async (): Promise<void> => {
       const rawHashesPerSecond = await fetchHashrate()
-      if (rawHashesPerSecond === null) {
+      if (!mounted || rawHashesPerSecond === null) {
         return
       }
-      useMiningStore.getState().setHashrate(rawHashesPerSecond / HASHES_PER_MEGAHASH)
-    }
 
-    pushHashrate()
-    const intervalId = setInterval(pushHashrate, STATS_POLL_INTERVAL_MS)
+      const effectiveHashesPerSecond =
+        rawHashesPerSecond > 0 ? rawHashesPerSecond : cpuThreads * ESTIMATED_HASHES_PER_THREAD
 
-    return (): void => clearInterval(intervalId)
-  }, [telemetry.isMining])
-
-  useEffect(() => {
-    if (!telemetry.isMining || hashrateMhs <= 0) {
-      return
-    }
-
-    const hashesPerTick = (hashrateMhs * HASHES_PER_MEGAHASH) / NONCE_TICKS_PER_SECOND
-    const intervalId = setInterval(() => {
+      const hashesThisInterval = effectiveHashesPerSecond * STATS_POLL_INTERVAL_SECONDS
       const store = useMiningStore.getState()
-      store.updateTelemetry(store.nonce + hashesPerTick, telemetry.blockNumber + 1)
-    }, NONCE_TICK_INTERVAL_MS)
+      store.setHashrate(effectiveHashesPerSecond / HASHES_PER_MEGAHASH)
+      store.updateTelemetry(store.nonce + hashesThisInterval, candidate)
+    }
 
-    return (): void => clearInterval(intervalId)
-  }, [telemetry.isMining, hashrateMhs, telemetry.blockNumber])
+    pollTelemetry()
+    const intervalId = setInterval(pollTelemetry, STATS_POLL_INTERVAL_MS)
+
+    return (): void => {
+      mounted = false
+      clearInterval(intervalId)
+    }
+  }, [telemetry.isMining, telemetry.blockNumber])
 
   return { ...telemetry, hashrateMhs }
 }

@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 
 const MAX_FOUND_BLOCKS = 500
+const MAX_HASHRATE_HISTORY = 60
 
 interface FoundBlock {
   number: number
@@ -15,6 +16,7 @@ interface MiningStore {
   nonce: number
   candidate: number | null
   hashrateMhs: number
+  hashrateHistory: number[]
   startMining: () => void
   stopMining: () => void
   recordFoundBlocks: (blocks: FoundBlock[]) => void
@@ -35,11 +37,13 @@ export const useMiningStore = create<MiningStore>((set, get) => ({
   nonce: 0,
   candidate: null,
   hashrateMhs: 0,
+  hashrateHistory: [],
   startMining: () => {
     if (get().sessionStartTime !== null) return
     set({ sessionStartTime: Date.now() })
   },
-  stopMining: () => set({ sessionStartTime: null, nonce: 0, candidate: null, hashrateMhs: 0 }),
+  stopMining: () =>
+    set({ sessionStartTime: null, nonce: 0, candidate: null, hashrateMhs: 0, hashrateHistory: [] }),
   recordFoundBlocks: (blocks: FoundBlock[]) => {
     if (blocks.length === 0) return
     set((state) => {
@@ -57,7 +61,11 @@ export const useMiningStore = create<MiningStore>((set, get) => ({
       return { candidate, nonce }
     })
   },
-  setHashrate: (hashrateMhs: number) => set({ hashrateMhs })
+  setHashrate: (hashrateMhs: number) =>
+    set((state) => ({
+      hashrateMhs,
+      hashrateHistory: [...state.hashrateHistory, hashrateMhs].slice(-MAX_HASHRATE_HISTORY)
+    }))
 }))
 
 export type { FoundBlock }

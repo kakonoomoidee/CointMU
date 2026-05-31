@@ -47,7 +47,7 @@ function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
 
   const { config, toggling, error, toggle } = useMiningControls()
   const telemetry = useMiningStats(config.cpuThreads)
-  const { sessionStartTime, startMining, stopMining, foundBlocks } = useMiningStore()
+  const { sessionStartTime, startMining, stopMining, foundBlocks, hashrateHistory } = useMiningStore()
 
   const isMining = telemetry.isMining
   const elapsedTime = useTimer(sessionStartTime, isMining)
@@ -115,7 +115,10 @@ function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
           blocksFoundToday={blocksFoundToday}
           balance={balance}
           hashrateLabel={hashrateLabel}
+          hashrateHistory={hashrateHistory}
         />
+
+
 
         <div className="grid grid-cols-[1fr_1.2fr] gap-5">
           <WorkerConfiguration
