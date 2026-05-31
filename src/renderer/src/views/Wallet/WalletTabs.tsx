@@ -1,7 +1,7 @@
 import { type JSX, useState, useEffect } from 'react'
 import { ActivityItem, type ActivityData } from './ActivityItem'
 import { getTransactions } from '@/services/transactionService'
-import { KNOWN_TOKENS, getTokenBalance, type TokenInfo } from '@/services/tokenService'
+import { KNOWN_TOKENS, getTokenBalance } from '@/services/tokenService'
 import { fetchBalance } from '@/services/rpcClient'
 
 type WalletTab = 'activity' | 'tokens' | 'nfts'
@@ -12,7 +12,6 @@ const WALLET_TABS: Array<{ id: WalletTab; label: string }> = [
   { id: 'nfts', label: 'NFTs' }
 ]
 
-const TRANSACTIONS: never[] = []
 
 interface WalletTabsProps {
   activeWalletAddress: string | null

@@ -6,7 +6,6 @@ const WATCH_LIST: never[] = []
 interface AccountSidebarProps {
   accounts: DerivedAccount[]
   activeWalletAddress: string | null
-  balance: string
   balances: Record<string, string>
   onAccountSwitch: (address: string) => void
   onHideAccount: (event: MouseEvent, address: string) => void
@@ -25,7 +24,6 @@ interface AccountSidebarProps {
 function AccountSidebar({
   accounts,
   activeWalletAddress,
-  balance,
   balances,
   onAccountSwitch,
   onHideAccount,

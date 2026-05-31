@@ -250,7 +250,6 @@ function Wallet({
           <AccountSidebar
             accounts={accounts}
             activeWalletAddress={activeWalletAddress}
-            balance={balance}
             balances={balances}
             onAccountSwitch={handleAccountSwitch}
             onHideAccount={handleHideAccount}

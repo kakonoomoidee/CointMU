@@ -60,7 +60,7 @@ const MOCK_TRANSACTIONS: Record<string, ActivityData[]> = {
  * @param address - The wallet address to query.
  * @returns A promise resolving to an array of transaction activities.
  */
-export async function getTransactions(address: string): Promise<ActivityData[]> {
+export async function getTransactions(_address: string): Promise<ActivityData[]> {
   // In a real implementation, this would query electron-store for outgoing txs
   // and scan recent blocks for incoming txs/mining rewards.
   return new Promise((resolve) => {
