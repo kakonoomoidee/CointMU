@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 5
-SUBLEVEL = 2
-EXTRAVERSION = gcsa
+SUBLEVEL = 3
+EXTRAVERSION = pouch
 
 .PHONY: help dev build\:win build\:linux build\:mac clean
 
