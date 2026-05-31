@@ -1,5 +1,6 @@
 import { type JSX } from 'react'
 import { useWalletUiStore } from '@/store'
+import { IconDownload, IconLock } from '@/assets/icons'
 
 interface AddAccountModalProps {
   onImport: () => void
@@ -31,20 +32,7 @@ function AddAccountModal({ onImport }: AddAccountModalProps): JSX.Element {
             className="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50 transition-all text-left"
           >
             <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-500 flex items-center justify-center flex-shrink-0">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
+              <IconDownload width={20} height={20} strokeWidth={2.5} />
             </div>
             <div>
               <p className="text-sm font-bold text-slate-800">Import Seed Phrase</p>
@@ -56,19 +44,7 @@ function AddAccountModal({ onImport }: AddAccountModalProps): JSX.Element {
             className="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-purple-300 hover:bg-purple-50 transition-all text-left"
           >
             <div className="w-10 h-10 rounded-full bg-purple-100 text-purple-500 flex items-center justify-center flex-shrink-0">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
+              <IconLock width={20} height={20} strokeWidth={2.5} />
             </div>
             <div>
               <p className="text-sm font-bold text-slate-800">Import Private Key</p>

@@ -1,5 +1,6 @@
 import { type JSX } from 'react'
 import { type DerivedAccount } from '@/services'
+import { IconEye } from '@/assets/icons'
 
 interface ManageHiddenModalProps {
   accounts: DerivedAccount[]
@@ -38,19 +39,7 @@ function ManageHiddenModal({ accounts, onUnhideAccount }: ManageHiddenModalProps
                 className="flex-shrink-0 w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all flex items-center justify-center shadow-sm"
                 title="Unhide account"
               >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
+                <IconEye width={14} height={14} strokeWidth={2.5} />
               </button>
             </div>
           ))

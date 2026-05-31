@@ -1,5 +1,6 @@
 import { type JSX, type ReactNode } from 'react'
 import { type OnboardingStep, type ImportMethod } from '@/store'
+import { IconBolt } from '@/assets/icons'
 
 interface OnboardingShellProps {
   step: OnboardingStep
@@ -70,18 +71,7 @@ function OnboardingShell({ step, importMethod, children }: OnboardingShellProps)
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 text-slate-800">
       <div className="w-full max-w-md p-10 bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col items-center">
         <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-md mb-8">
-          <svg
-            width="40"
-            height="40"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="white"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-          </svg>
+          <IconBolt color="white" width={40} height={40} />
         </div>
 
         <h1 className="text-2xl font-bold tracking-tight mb-2 text-center">{title}</h1>

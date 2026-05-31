@@ -3,6 +3,7 @@ import { ActivityItem, type ActivityData } from './ActivityItem'
 import { getTransactions } from '@/services/transactionService'
 import { KNOWN_TOKENS, getTokenBalance } from '@/services/tokenService'
 import { fetchBalance } from '@/services/rpcClient'
+import { IconBolt } from '@/assets/icons'
 
 type WalletTab = 'activity' | 'tokens' | 'nfts'
 
@@ -75,19 +76,7 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
             transactions.map((tx) => <ActivityItem key={tx.id} activity={tx} />)
           ) : (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <svg
-                className="text-slate-300 mb-3"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-              </svg>
+              <IconBolt className="text-slate-300 mb-3" width={32} height={32} strokeWidth={1.5} />
               <p className="text-sm font-medium text-slate-400">No activity yet</p>
               <p className="text-xs text-slate-400 mt-1">
                 Transactions will appear here once you send or receive CMU

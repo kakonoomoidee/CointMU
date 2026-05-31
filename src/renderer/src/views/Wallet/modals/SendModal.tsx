@@ -1,5 +1,6 @@
 import { type JSX } from 'react'
 import { useWalletUiStore } from '@/store'
+import { IconCheck } from '@/assets/icons'
 
 interface SendModalProps {
   gasEstFormatted: string
@@ -32,18 +33,7 @@ function SendModal({ gasEstFormatted, totalDeducted, onSend, onDone }: SendModal
       {sendSuccess ? (
         <div className="text-center py-6">
           <div className="w-16 h-16 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
+            <IconCheck width={32} height={32} strokeWidth={3} />
           </div>
           <p className="text-lg font-bold text-slate-800 mb-2">Transaction Sent!</p>
           <p className="text-sm text-slate-500 mb-4 break-all font-mono">Hash: {sendSuccess}</p>

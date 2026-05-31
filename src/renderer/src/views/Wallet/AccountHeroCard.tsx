@@ -1,6 +1,7 @@
 import { type JSX } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import { type DerivedAccount } from '@/services'
+import { IconArrowUp, IconArrowDown, IconRefresh, IconCheck, IconCopy } from '@/assets/icons'
 
 interface AccountHeroCardProps {
   activeAccount: DerivedAccount | undefined
@@ -71,81 +72,29 @@ function AccountHeroCard({
             onClick={onSend}
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors"
           >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="17 11 12 6 7 11" />
-              <line x1="12" y1="6" x2="12" y2="18" />
-            </svg>
+            <IconArrowUp width={12} height={12} strokeWidth={2.5} />
             Send
           </button>
           <button
             onClick={onReceive}
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors"
           >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="7 13 12 18 17 13" />
-              <line x1="12" y1="6" x2="12" y2="18" />
-            </svg>
+            <IconArrowDown width={12} height={12} strokeWidth={2.5} />
             Receive
           </button>
           <button className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors">
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="17 1 21 5 17 9" />
-              <path d="M3 11V9a4 4 0 014-4h14" />
-              <polyline points="7 23 3 19 7 15" />
-              <path d="M21 13v2a4 4 0 01-4 4H3" />
-            </svg>
+            <IconRefresh width={12} height={12} />
             Swap
           </button>
           <button
             onClick={onCopy}
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors"
           >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              {copied ? (
-                <polyline points="20 6 9 17 4 12" />
-              ) : (
-                <>
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                  <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-                </>
-              )}
-            </svg>
+            {copied ? (
+              <IconCheck width={12} height={12} />
+            ) : (
+              <IconCopy width={12} height={12} />
+            )}
             {copied ? 'Copied!' : 'Copy address'}
           </button>
         </div>

@@ -2,6 +2,7 @@ import { useState, useEffect, type JSX } from 'react'
 import { useUpdateStatus } from '@/hooks'
 import { useAppStore } from '@/store'
 import { checkForUpdates, quitAndInstall } from '@/services'
+import { IconLayers } from '@/assets/icons'
 
 /**
  * Formats raw system uptime seconds into a readable string.
@@ -85,9 +86,7 @@ export function AboutSettings(): JSX.Element {
     <div>
       <div className="flex items-start gap-6 mb-12">
         <div className="w-20 h-20 rounded-2xl bg-blue-500 flex items-center justify-center flex-shrink-0 shadow-md">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-          </svg>
+          <IconLayers width={40} height={40} className="text-white" />
         </div>
         <div>
           <h1 className="text-2xl font-bold text-slate-900">CointMU</h1>

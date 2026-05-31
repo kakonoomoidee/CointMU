@@ -1,6 +1,7 @@
 import { type JSX } from 'react'
 import { type DerivedAccount } from '@/services'
 import { useWalletUiStore } from '@/store'
+import { IconX } from '@/assets/icons'
 import { ReceiveModal } from './ReceiveModal'
 import { SendModal } from './SendModal'
 import { AddAccountModal } from './AddAccountModal'
@@ -51,19 +52,7 @@ function WalletModals({
           onClick={onClose}
           className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors"
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
+          <IconX width={20} height={20} strokeWidth={2.5} />
         </button>
 
         {modalState === 'RECEIVE' && (

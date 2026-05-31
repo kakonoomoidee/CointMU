@@ -1,5 +1,6 @@
 import { type JSX } from 'react'
 import { useOnboardingStore } from '@/store'
+import { IconFileText, IconChevronRight, IconKey } from '@/assets/icons'
 
 interface ImportWalletStepProps {
   mode: 'method' | 'input'
@@ -37,40 +38,14 @@ function ImportWalletStep({
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-colors">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M4 22h14a2 2 0 002-2V7.5L14.5 2H6a2 2 0 00-2 2v4" />
-                <polyline points="14 2 14 8 20 8" />
-                <path d="M4 15h6" />
-                <path d="M4 18h6" />
-              </svg>
+              <IconFileText width={20} height={20} />
             </div>
             <div className="text-left">
               <p className="text-sm font-bold text-slate-800">12-word Seed Phrase</p>
               <p className="text-[10px] text-slate-500">Standard BIP39 mnemonic</p>
             </div>
           </div>
-          <svg
-            className="text-slate-300 group-hover:text-blue-500 transition-colors"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
+          <IconChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
         </button>
 
         <button
@@ -79,37 +54,14 @@ function ImportWalletStep({
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
-              </svg>
+              <IconKey width={20} height={20} />
             </div>
             <div className="text-left">
               <p className="text-sm font-bold text-slate-800">Private Key</p>
               <p className="text-[10px] text-slate-500">Raw hex string (0x...)</p>
             </div>
           </div>
-          <svg
-            className="text-slate-300 group-hover:text-blue-500 transition-colors"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
+          <IconChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
         </button>
 
         <button

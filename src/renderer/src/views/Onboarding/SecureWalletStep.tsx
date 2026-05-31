@@ -1,6 +1,7 @@
 import { type JSX } from 'react'
 import { useOnboardingStore } from '@/store'
 import { PasswordField } from './PasswordField'
+import { IconLock } from '@/assets/icons'
 
 const MIN_PASSWORD_LENGTH = 8
 
@@ -71,19 +72,7 @@ function SecureWalletStep({ onSave, onBack }: SecureWalletStepProps): JSX.Elemen
           disabled={!isValid}
           className="flex-[2] py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-            <path d="M7 11V7a5 5 0 0110 0v4" />
-          </svg>
+          <IconLock width={16} height={16} strokeWidth={2.5} />
           Encrypt & Save
         </button>
       </div>

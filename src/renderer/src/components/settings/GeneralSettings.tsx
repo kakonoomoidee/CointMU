@@ -1,5 +1,6 @@
 import type { JSX } from 'react'
 import type { SettingsStore } from '@/views/Settings'
+import { IconChevronDown } from '@/assets/icons'
 
 interface GeneralSettingsProps {
   config: SettingsStore['general']
@@ -97,9 +98,7 @@ export function GeneralSettings({ config, onUpdate }: GeneralSettingsProps): JSX
                   <option>French</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
+                  <IconChevronDown width={12} height={12} strokeWidth={2.5} />
                 </div>
               </div>
             </div>
@@ -119,9 +118,7 @@ export function GeneralSettings({ config, onUpdate }: GeneralSettingsProps): JSX
                   <option>EUR (€)</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
+                  <IconChevronDown width={12} height={12} strokeWidth={2.5} />
                 </div>
               </div>
             </div>

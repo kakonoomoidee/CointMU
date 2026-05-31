@@ -1,6 +1,7 @@
 import { type JSX } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import { type DerivedAccount } from '@/services'
+import { IconCheck, IconCopy } from '@/assets/icons'
 
 interface ReceiveModalProps {
   activeAccount: DerivedAccount | undefined
@@ -39,25 +40,11 @@ function ReceiveModal({ activeAccount, copied, onCopy }: ReceiveModalProps): JSX
         onClick={onCopy}
         className="w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl shadow-sm shadow-blue-200 hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
       >
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {copied ? (
-            <polyline points="20 6 9 17 4 12" />
-          ) : (
-            <>
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-            </>
-          )}
-        </svg>
+        {copied ? (
+          <IconCheck width={16} height={16} strokeWidth={2.5} />
+        ) : (
+          <IconCopy width={16} height={16} strokeWidth={2.5} />
+        )}
         {copied ? 'Address Copied!' : 'Copy Address'}
       </button>
     </div>

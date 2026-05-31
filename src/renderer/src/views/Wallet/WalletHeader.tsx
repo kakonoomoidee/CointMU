@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { IconPlus } from '@/assets/icons'
 
 interface WalletHeaderProps {
   onAddAccount: () => void
@@ -35,19 +36,7 @@ function WalletHeader({ onAddAccount }: WalletHeaderProps): JSX.Element {
           onClick={onAddAccount}
           className="flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200"
         >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
+          <IconPlus width={12} height={12} strokeWidth={3} />
           New account
         </button>
       </div>
