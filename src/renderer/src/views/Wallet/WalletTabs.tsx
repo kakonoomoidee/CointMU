@@ -117,11 +117,7 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {KNOWN_TOKENS.map((token) => {
-                const bal = parseFloat(tokenBalances[token.symbol] || '0')
-                const price = parseFloat(token.price)
-                const value = (bal * price).toFixed(2)
-                
+              {KNOWN_TOKENS.filter((token) => Number(tokenBalances[token.symbol]) > 0).map((token) => {
                 return (
                   <tr key={token.symbol} className="hover:bg-slate-50/50 transition-colors">
                     <td className="px-5 py-4">
@@ -136,18 +132,15 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
                       </div>
                     </td>
                     <td className="px-5 py-4 text-right">
-                      <p className="text-sm font-semibold text-slate-700 font-mono">${token.price}</p>
-                      <p className={`text-xs font-medium mt-0.5 ${token.change.startsWith('+') ? 'text-emerald-500' : 'text-red-500'}`}>
-                        {token.change}
-                      </p>
+                      <p className="text-sm font-semibold text-slate-700 font-mono">N/A</p>
                     </td>
                     <td className="px-5 py-4 text-right">
                       <p className="text-sm font-semibold text-slate-700 font-mono">
-                        {tokenBalances[token.symbol] || '0.00'}
+                        {tokenBalances[token.symbol]}
                       </p>
                     </td>
                     <td className="px-5 py-4 text-right">
-                      <p className="text-sm font-bold text-slate-800 font-mono">${value}</p>
+                      <p className="text-sm font-bold text-slate-800 font-mono">N/A</p>
                     </td>
                   </tr>
                 )
