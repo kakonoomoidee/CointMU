@@ -14,10 +14,12 @@ interface MiningStore {
   foundBlocks: FoundBlock[]
   nonce: number
   candidate: number | null
+  hashrateMhs: number
   startMining: () => void
   stopMining: () => void
   recordFoundBlocks: (blocks: FoundBlock[]) => void
   updateTelemetry: (nonce: number, candidate: number | null) => void
+  setHashrate: (hashrateMhs: number) => void
 }
 
 /**
@@ -32,11 +34,12 @@ export const useMiningStore = create<MiningStore>((set, get) => ({
   foundBlocks: [],
   nonce: 0,
   candidate: null,
+  hashrateMhs: 0,
   startMining: () => {
     if (get().sessionStartTime !== null) return
     set({ sessionStartTime: Date.now() })
   },
-  stopMining: () => set({ sessionStartTime: null, nonce: 0, candidate: null }),
+  stopMining: () => set({ sessionStartTime: null, nonce: 0, candidate: null, hashrateMhs: 0 }),
   recordFoundBlocks: (blocks: FoundBlock[]) => {
     if (blocks.length === 0) return
     set((state) => {
@@ -53,7 +56,8 @@ export const useMiningStore = create<MiningStore>((set, get) => ({
       }
       return { candidate, nonce }
     })
-  }
+  },
+  setHashrate: (hashrateMhs: number) => set({ hashrateMhs })
 }))
 
 export type { FoundBlock }
