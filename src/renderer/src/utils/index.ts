@@ -11,4 +11,15 @@ export {
 
 export { formatElapsed, formatAge, isWithinLastDay } from './time'
 
+export {
+  getSafeConcurrency,
+  computeSharesData,
+  formatRewards,
+  formatDifficultyLabel
+} from './mining'
+
+export { formatRelativeAge, computeMinedBlocksCount } from './dashboard'
+
+export { formatTxAge, hexToAscii } from './explorer'
+
 export { cn } from './cn'
