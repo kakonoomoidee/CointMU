@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 5
-SUBLEVEL = 1
-EXTRAVERSION = grizzly
+SUBLEVEL = 2
+EXTRAVERSION = gcsa
 
 .PHONY: help dev build\:win build\:linux build\:mac clean
 
