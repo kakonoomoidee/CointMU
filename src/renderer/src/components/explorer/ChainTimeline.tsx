@@ -1,4 +1,5 @@
 import { type JSX, useEffect, useState } from "react";
+import { useAppStore } from '@/store'
 import { IconX, IconAlertTriangle, IconCheck, IconCube } from '@/assets/icons'
 
 interface BlockItem {
@@ -35,11 +36,17 @@ function formatAge(timestamp: number, now: number): string {
  */
 export function ChainTimeline({
   blocks,
-  coinbase,
   isOnline,
   onBlockClick,
 }: ChainTimelineProps): JSX.Element {
   const [now, setNow] = useState<number>(Date.now());
+  const balances = useAppStore((s) => s.balances);
+
+  const checkIfMinedByMe = (minerAddress: string, balancesMap: Record<string, string>): boolean => {
+    if (!minerAddress || !balancesMap) return false;
+    const allMyAddresses = Object.keys(balancesMap).map((addr) => addr.toLowerCase());
+    return allMyAddresses.includes(minerAddress.toLowerCase());
+  };
 
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000);
@@ -85,10 +92,7 @@ export function ChainTimeline({
           // Reverse blocks so newest is on the right
           [...blocks].reverse().map((block, index, arr) => {
             const isLatest = index === arr.length - 1;
-            const isMinedByMe =
-              block.miner &&
-              coinbase &&
-              block.miner.toLowerCase() === coinbase.toLowerCase();
+            const isMinedByMe = checkIfMinedByMe(block.miner, balances);
 
             const cardStyle = isLatest
               ? "bg-blue-500 border-blue-600 text-white shadow-blue-500/20"

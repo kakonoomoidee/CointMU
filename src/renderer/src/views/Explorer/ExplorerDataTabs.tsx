@@ -1,5 +1,6 @@
 import { type JSX } from 'react'
 import { type BlockData } from '@/hooks'
+import { useAppStore } from '@/store'
 import { IconActivity } from '@/assets/icons'
 import { formatTxAge } from '@/utils'
 
@@ -37,9 +38,16 @@ function ExplorerDataTabs({
   recentBlocks,
   topAccounts,
   isLoadingAccounts,
-  activeWalletAddress,
   onBlockSelect
 }: ExplorerDataTabsProps): JSX.Element {
+  const balances = useAppStore((s) => s.balances)
+
+  const checkIfMinedByMe = (minerAddress: string, balancesMap: Record<string, string>): boolean => {
+    if (!minerAddress || !balancesMap) return false
+    const allMyAddresses = Object.keys(balancesMap).map((addr) => addr.toLowerCase())
+    return allMyAddresses.includes(minerAddress.toLowerCase())
+  }
+
   return (
     <div className="flex gap-6">
       <div className="flex-[2] min-w-0 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
@@ -116,10 +124,17 @@ function ExplorerDataTabs({
                         </p>
                       </td>
                       <td className="px-5 py-3.5">
-                        <p className="text-xs font-mono text-slate-800">
-                          {block.miner.substring(0, 10)}...
-                          {block.miner.substring(block.miner.length - 8)}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs font-mono text-slate-800">
+                            {block.miner.substring(0, 10)}...
+                            {block.miner.substring(block.miner.length - 8)}
+                          </p>
+                          {checkIfMinedByMe(block.miner, balances) && (
+                            <span className="px-1.5 py-0.5 rounded bg-blue-50 text-[9px] font-bold text-blue-600 uppercase tracking-wider">
+                              You
+                            </span>
+                          )}
+                        </div>
                         <p className="text-[10px] text-slate-400 mt-0.5">
                           Hash: {block.hash.substring(0, 14)}...
                         </p>
@@ -234,7 +249,7 @@ function ExplorerDataTabs({
                             {acc.address.substring(0, 10)}...
                             {acc.address.substring(acc.address.length - 8)}
                           </p>
-                          {acc.address.toLowerCase() === activeWalletAddress?.toLowerCase() && (
+                          {checkIfMinedByMe(acc.address, balances) && (
                             <span className="px-1.5 py-0.5 rounded bg-blue-50 text-[9px] font-bold text-blue-600 uppercase tracking-wider">
                               You
                             </span>
