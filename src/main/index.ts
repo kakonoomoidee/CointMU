@@ -557,7 +557,7 @@ class MiningController {
         const latestBlockHex = await callGethRpc(this.rpcPort, "eth_blockNumber");
         if (!latestBlockHex) return [];
         const latest = parseInt(latestBlockHex, 16);
-        const start = Math.max(0, latest - 100);
+        const start = Math.max(0, latest - 500);
         
         const activities: any[] = [];
         const now = Math.floor(Date.now() / 1000);
