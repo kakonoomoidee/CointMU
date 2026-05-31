@@ -7,6 +7,7 @@ interface AccountSidebarProps {
   accounts: DerivedAccount[]
   activeWalletAddress: string | null
   balance: string
+  balances: Record<string, string>
   onAccountSwitch: (address: string) => void
   onHideAccount: (event: MouseEvent, address: string) => void
   onDeriveAccount: () => void
@@ -25,6 +26,7 @@ function AccountSidebar({
   accounts,
   activeWalletAddress,
   balance,
+  balances,
   onAccountSwitch,
   onHideAccount,
   onDeriveAccount,
@@ -83,7 +85,7 @@ function AccountSidebar({
                     <div className="flex items-center justify-between">
                       <p className="text-xs font-semibold text-slate-700 truncate">{acc.label}</p>
                       <p className="text-xs font-bold text-slate-800 ml-2 group-hover:opacity-0 transition-opacity">
-                        {isSelected ? balance : '0.00'}
+                        {balances[acc.address] || '0.00'}
                       </p>
                     </div>
                     <div className="flex items-center justify-between mt-0.5">

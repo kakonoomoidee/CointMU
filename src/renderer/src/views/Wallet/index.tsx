@@ -27,6 +27,7 @@ interface WalletProps {
   activeWalletAddress: string | null
   setActiveWalletAddress: (address: string) => void
   balance: string
+  balances: Record<string, string>
 }
 
 /**
@@ -41,7 +42,8 @@ function Wallet({
   setAccounts,
   activeWalletAddress,
   setActiveWalletAddress,
-  balance
+  balance,
+  balances
 }: WalletProps): JSX.Element {
   const [activeTab, setActiveTab] = useState<WalletTab>('activity')
 
@@ -249,6 +251,7 @@ function Wallet({
             accounts={accounts}
             activeWalletAddress={activeWalletAddress}
             balance={balance}
+            balances={balances}
             onAccountSwitch={handleAccountSwitch}
             onHideAccount={handleHideAccount}
             onDeriveAccount={handleHDDerivation}
@@ -270,7 +273,11 @@ function Wallet({
               onCopy={handleCopy}
             />
 
-            <WalletTabs activeTab={activeTab} onTabChange={setActiveTab} />
+            <WalletTabs 
+              activeWalletAddress={activeWalletAddress}
+              activeTab={activeTab} 
+              onTabChange={setActiveTab} 
+            />
           </div>
         </div>
       </main>

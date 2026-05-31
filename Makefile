@@ -7,23 +7,61 @@ PATCHLEVEL = 4
 SUBLEVEL = 0
 EXTRAVERSION = dino
 
-.PHONY: help dev build\:win clean
+.PHONY: help dev build\:win build\:linux build\:mac clean
 
 help:
-	@echo "=========================================="
-	@echo "  CointMU Desktop Makefile Help           "
-	@echo "=========================================="
-	@echo "  dev        - Start development server"
-	@echo "  build:win  - Build Windows executable"
-	@echo "  clean      - Clean build artifacts"
-	@echo "  help       - Print this help message"
-	@echo "=========================================="
+	@echo "============================================="
+	@echo "  CointMU Desktop Makefile Help           	"
+	@echo "============================================="
+	@echo "  dev        	- Start development server"
+	@echo "  build:win  	- Build Windows executable"
+	@echo "  build:mac  	- Build MacOS executable"
+	@echo "  build:linux 	- Build Linux executable"
+	@echo "  clean      	- Clean build artifacts"
+	@echo "  help       	- Print this help message"
+	@echo "============================================="
 
 dev:
 	npm run dev
 
 build\:win:
 	npm run build:win
+	@echo ""
+	@echo "=========================================="
+	@echo "  CointMU Desktop Client"
+	@echo "  Version: $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)"
+	@echo "  Release: $(EXTRAVERSION)"
+	@echo "=========================================="
+	@echo ""
+	@echo "Build completed!"
+	@echo "Executable: ./dist/$(EXTRAVERSION)"
+	@echo ""
+
+build\:linux:
+	npm run build:linux
+	@echo ""
+	@echo "=========================================="
+	@echo "  CointMU Desktop Client"
+	@echo "  Version: $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)"
+	@echo "  Release: $(EXTRAVERSION)"
+	@echo "=========================================="
+	@echo ""
+	@echo "Build completed!"
+	@echo "Executable: ./dist/$(EXTRAVERSION)"
+	@echo ""
+
+build\:mac:
+	npm run build:mac
+	@echo ""
+	@echo "=========================================="
+	@echo "  CointMU Desktop Client"
+	@echo "  Version: $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)"
+	@echo "  Release: $(EXTRAVERSION)"
+	@echo "=========================================="
+	@echo ""
+	@echo "Build completed!"
+	@echo "Executable: ./dist/$(EXTRAVERSION)"
+	@echo ""
 
 clean:
 	rm -rf out dist build

@@ -1,7 +1,7 @@
 import { useState, useEffect, type JSX } from 'react'
 import { Dashboard, Miner, Wallet, Explorer, Settings, Onboarding } from '@/views'
 import { type DerivedAccount, getSetting } from '@/services'
-import { useNetworkStats, useBalance, useUpdateStatus } from '@/hooks'
+import { useNetworkStats, useBalance, useBalances, useUpdateStatus } from '@/hooks'
 
 import { Sidebar } from '@/components'
 
@@ -27,6 +27,7 @@ function App(): JSX.Element {
   const [activeView, setActiveView] = useState<ActiveView>(NAV_ITEM_DASHBOARD)
   const networkStats = useNetworkStats()
   const { balance } = useBalance(activeWalletAddress, networkStats.isConnected)
+  const { balances } = useBalances(accounts.map((a) => a.address), networkStats.isConnected)
   const updateState = useUpdateStatus()
 
   useEffect(() => {
@@ -89,6 +90,7 @@ function App(): JSX.Element {
             activeWalletAddress={activeWalletAddress}
             setActiveWalletAddress={setActiveWalletAddress}
             balance={balance}
+            balances={balances}
           />
         )}
         {activeView === NAV_ITEM_EXPLORER && <Explorer activeWalletAddress={activeWalletAddress} />}

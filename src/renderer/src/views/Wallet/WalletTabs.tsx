@@ -1,4 +1,8 @@
-import { type JSX } from 'react'
+import { type JSX, useState, useEffect } from 'react'
+import { ActivityItem, type ActivityData } from './ActivityItem'
+import { getTransactions } from '@/services/transactionService'
+import { KNOWN_TOKENS, getTokenBalance, type TokenInfo } from '@/services/tokenService'
+import { fetchBalance } from '@/services/rpcClient'
 
 type WalletTab = 'activity' | 'tokens' | 'nfts'
 
@@ -11,6 +15,7 @@ const WALLET_TABS: Array<{ id: WalletTab; label: string }> = [
 const TRANSACTIONS: never[] = []
 
 interface WalletTabsProps {
+  activeWalletAddress: string | null
   activeTab: WalletTab
   onTabChange: (tab: WalletTab) => void
 }
@@ -22,7 +27,29 @@ interface WalletTabsProps {
  * @param props - The active tab and the tab change handler.
  * @returns The rendered tabbed content area.
  */
-function WalletTabs({ activeTab, onTabChange }: WalletTabsProps): JSX.Element {
+function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsProps): JSX.Element {
+  const [transactions, setTransactions] = useState<ActivityData[]>([])
+  const [tokenBalances, setTokenBalances] = useState<Record<string, string>>({})
+  
+  useEffect(() => {
+    if (activeTab === 'activity' && activeWalletAddress) {
+      getTransactions(activeWalletAddress).then(setTransactions)
+    } else if (activeTab === 'tokens' && activeWalletAddress) {
+      const fetchTokens = async (): Promise<void> => {
+        const balances: Record<string, string> = {}
+        for (const token of KNOWN_TOKENS) {
+          if (token.address === 'native') {
+            const bal = await fetchBalance(activeWalletAddress)
+            balances[token.symbol] = bal || '0.00'
+          } else {
+            balances[token.symbol] = await getTokenBalance(activeWalletAddress, token.address)
+          }
+        }
+        setTokenBalances(balances)
+      }
+      fetchTokens()
+    }
+  }, [activeTab, activeWalletAddress])
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
@@ -44,9 +71,9 @@ function WalletTabs({ activeTab, onTabChange }: WalletTabsProps): JSX.Element {
       </div>
 
       {activeTab === 'activity' && (
-        <div className="rounded-2xl bg-white border border-slate-200 divide-y divide-slate-100">
-          {TRANSACTIONS.length > 0 ? (
-            TRANSACTIONS.map((_, i) => <div key={i} />)
+        <div className="rounded-2xl bg-white border border-slate-200 divide-y divide-slate-100 overflow-hidden">
+          {transactions.length > 0 ? (
+            transactions.map((tx) => <ActivityItem key={tx.id} activity={tx} />)
           ) : (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <svg
@@ -80,16 +107,52 @@ function WalletTabs({ activeTab, onTabChange }: WalletTabsProps): JSX.Element {
                   Token
                 </th>
                 <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400">
+                  Price
+                </th>
+                <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400">
                   Balance
+                </th>
+                <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400">
+                  Value
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              <tr>
-                <td colSpan={2} className="py-16 text-center">
-                  <p className="text-sm font-medium text-slate-400">No tokens detected</p>
-                </td>
-              </tr>
+              {KNOWN_TOKENS.map((token) => {
+                const bal = parseFloat(tokenBalances[token.symbol] || '0')
+                const price = parseFloat(token.price)
+                const value = (bal * price).toFixed(2)
+                
+                return (
+                  <tr key={token.symbol} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-[10px] font-bold ${token.colorClass}`}>
+                          {token.symbol.substring(0, 3)}
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold text-slate-800">{token.name}</p>
+                          <p className="text-xs font-semibold text-slate-400">{token.symbol}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-5 py-4 text-right">
+                      <p className="text-sm font-semibold text-slate-700 font-mono">${token.price}</p>
+                      <p className={`text-xs font-medium mt-0.5 ${token.change.startsWith('+') ? 'text-emerald-500' : 'text-red-500'}`}>
+                        {token.change}
+                      </p>
+                    </td>
+                    <td className="px-5 py-4 text-right">
+                      <p className="text-sm font-semibold text-slate-700 font-mono">
+                        {tokenBalances[token.symbol] || '0.00'}
+                      </p>
+                    </td>
+                    <td className="px-5 py-4 text-right">
+                      <p className="text-sm font-bold text-slate-800 font-mono">${value}</p>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
