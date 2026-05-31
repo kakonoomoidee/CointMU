@@ -54,7 +54,9 @@ const api = {
     decrypt: (payload: string, password: string): Promise<string> =>
       ipcRenderer.invoke('wallet:decrypt', payload, password),
     verify: (payload: string, password: string): Promise<boolean> =>
-      ipcRenderer.invoke('wallet:verify', payload, password)
+      ipcRenderer.invoke('wallet:verify', payload, password),
+    getActivity: (address: string): Promise<any[]> =>
+      ipcRenderer.invoke('wallet:getActivity', address)
   },
   updater: {
     checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),

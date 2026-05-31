@@ -5,7 +5,7 @@ import { formatAge } from '@/utils'
 import { type FoundBlock } from '@/store'
 import { type LogEntry } from '@/hooks'
 
-const SELF_BLOCK_REWARD = '+10.00'
+const SELF_BLOCK_REWARD = '+2.00'
 
 const ACTIVITY_TAB_FOUND = 'Found'
 const ACTIVITY_TAB_SHARES = 'Shares'

@@ -85,7 +85,7 @@ function ActivityFeed({
               </div>
               <div className="text-right">
                 <p className="text-sm font-bold font-mono text-emerald-600">
-                  +10.00
+                  +2.00
                   <span className="text-[10px] font-medium text-slate-400 ml-1">CMU</span>
                 </p>
                 <p className="text-[10px] text-slate-400">fee 0 gwei</p>

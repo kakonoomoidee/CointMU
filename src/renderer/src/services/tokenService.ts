@@ -16,37 +16,10 @@ export const KNOWN_TOKENS: TokenInfo[] = [
     symbol: 'CMU',
     name: 'CointMU',
     address: 'native', // Special case for native coin
-    price: '0.42',
+    price: '0.42', // Note: USD prices are no longer rendered in the UI
     change: '+2.4%',
     decimals: 18,
     colorClass: 'bg-blue-500'
-  },
-  {
-    symbol: 'mUSD',
-    name: 'CointMU USD',
-    address: '0x0000000000000000000000000000000000000001',
-    price: '1.00',
-    change: '+0.0%',
-    decimals: 18,
-    colorClass: 'bg-green-500'
-  },
-  {
-    symbol: 'cREDU',
-    name: 'Campus Edu Token',
-    address: '0x0000000000000000000000000000000000000002',
-    price: '0.12',
-    change: '-1.1%',
-    decimals: 18,
-    colorClass: 'bg-orange-500'
-  },
-  {
-    symbol: 'LP',
-    name: 'CMU-mUSD LP',
-    address: '0x0000000000000000000000000000000000000003',
-    price: '18.30',
-    change: '+5.7%',
-    decimals: 18,
-    colorClass: 'bg-purple-500'
   }
 ]
 

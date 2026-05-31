@@ -89,7 +89,7 @@ function DashboardStatsGrid({
           {isConnected ? minedBlocksCount : '0'}
         </p>
         <p className="text-xs text-slate-400 mt-1">
-          {isConnected ? `+${minedBlocksCount * 10} CMU rewards` : '--'}
+          {isConnected ? `+${minedBlocksCount * 2} CMU rewards` : '--'}
         </p>
       </div>
 

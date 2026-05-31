@@ -70,7 +70,7 @@ function LatestBlocks({
                   </span>
                   {block.miner.toLowerCase() === activeWalletAddress?.toLowerCase() && (
                     <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                      +10 CMU mined
+                      +2 CMU mined
                     </span>
                   )}
                 </div>
