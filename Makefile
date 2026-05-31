@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 5
-SUBLEVEL = 0
-EXTRAVERSION = alaska
+SUBLEVEL = 1
+EXTRAVERSION = grizzly
 
 .PHONY: help dev build\:win build\:linux build\:mac clean
 
