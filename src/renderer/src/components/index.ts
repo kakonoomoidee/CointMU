@@ -1,4 +1,5 @@
 export { Sidebar } from './Sidebar'
+export { Sparkline } from './Sparkline'
 export * from './ui'
 export { IconEyeSlash } from '@/assets/icons'
 export type { IconProps } from '@/assets/icons'

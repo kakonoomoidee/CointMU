@@ -59,7 +59,10 @@ function Dashboard({ activeWalletAddress, onNavigate }: DashboardProps): JSX.Ele
 
   const minedBlocksCount = foundBlocks.filter((block) => isWithinLastDay(block.timestamp)).length
   const localHashrateLabel = isConnected ? `${formatMhs(telemetry.hashrateMhs)} MH/s` : '0.00 MH/s'
-  const networkHashrateDisplay = isConnected ? formatHashrate(hashrate) : '0.00 H/s'
+  
+  const effectiveNetworkHashrate = (hashrate !== null && hashrate > 0) ? hashrate : telemetry.hashrateMhs * 1_000_000
+  const networkHashrateDisplay = isConnected ? formatHashrate(effectiveNetworkHashrate) : '0.00 H/s'
+  
   const miningUptimeLabel = isConnected && telemetry.isMining ? 'Actively mining' : 'Miner idle'
 
   const difficultyDisplay = isConnected ? formatDifficulty(difficulty) : '--'
@@ -121,6 +124,7 @@ function Dashboard({ activeWalletAddress, onNavigate }: DashboardProps): JSX.Ele
             difficultyDisplay={difficultyDisplay}
             gasDisplay={gasDisplay}
             blocksPastHour={recentBlocks.length}
+            sparklineData={isConnected && recentBlocks.length > 0 ? [...recentBlocks].reverse().map((b) => b.txCount + 1) : []}
           />
         </div>
 

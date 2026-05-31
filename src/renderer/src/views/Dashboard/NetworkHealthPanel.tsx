@@ -1,10 +1,7 @@
 import { type JSX } from 'react'
+import { Sparkline } from '@/components'
 
 const CONSENSUS_LABEL = 'PoW - Block 30s'
-
-const BLOCK_BAR_HEIGHTS = [
-  28, 35, 22, 40, 32, 45, 38, 30, 42, 36, 48, 34, 26, 44, 50, 38, 33, 46, 42, 28
-]
 
 interface NetworkHealthPanelProps {
   isConnected: boolean
@@ -13,6 +10,7 @@ interface NetworkHealthPanelProps {
   difficultyDisplay: string
   gasDisplay: string
   blocksPastHour: number
+  sparklineData: number[]
 }
 
 /**
@@ -27,7 +25,8 @@ function NetworkHealthPanel({
   peerDisplay,
   difficultyDisplay,
   gasDisplay,
-  blocksPastHour
+  blocksPastHour,
+  sparklineData
 }: NetworkHealthPanelProps): JSX.Element {
   return (
     <div className="rounded-2xl bg-white border border-slate-200 p-6">
@@ -87,10 +86,13 @@ function NetworkHealthPanel({
             {isConnected ? blocksPastHour.toString() : '--'}
           </p>
         </div>
-        <div className="flex items-end gap-0.5 h-10">
-          {(isConnected ? BLOCK_BAR_HEIGHTS : []).map((h, i) => (
-            <div key={i} className="w-1 rounded-full bg-slate-300" style={{ height: `${h}%` }} />
-          ))}
+        <div className="flex items-end h-10 w-24">
+          <Sparkline 
+            data={sparklineData} 
+            className="w-full h-full opacity-80" 
+            color="#94a3b8" 
+            strokeWidth={2} 
+          />
         </div>
       </div>
     </div>
