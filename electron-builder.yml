@@ -12,6 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
+  artifactName: windows-cointmu-desktop-${version}-installer.${ext}
   executableName: CointMU
   icon: resources/icon.ico
   target:
@@ -26,11 +27,11 @@ nsis:
   allowToChangeInstallationDirectory: true
   installerIcon: resources/icon.ico
   license: resources/license.txt
-  artifactName: CointMU-Setup-${version}.${ext}
   shortcutName: CointMU
   uninstallDisplayName: CointMU Desktop
   createDesktopShortcut: always
 mac:
+  artifactName: macos-cointmu-desktop-${version}-installer.${ext}
   entitlements: resources/mac/entitlements.mac.plist
   entitlementsInherit: resources/mac/entitlements.mac.inherit.plist
   extendInfo:
@@ -38,6 +39,7 @@ mac:
     - NSDownloadsFolderUsageDescription: CointMU requires access to manage downloaded binaries.
   notarize: false
 linux:
+  artifactName: linux-cointmu-desktop-${version}-installer.${ext}
   icon: resources/icon.png
   target:
     - AppImage
