@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { IconChevronLeft, IconCheck } from '@/assets/icons'
 import { AddressBadge } from './AddressBadge'
 
 interface TransactionDetailProps {
@@ -21,18 +22,7 @@ function TransactionDetail({ tx, onBack, onBlockSelect }: TransactionDetailProps
           onClick={onBack}
           className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors shadow-sm"
         >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
+          <IconChevronLeft width={12} height={12} strokeWidth={2.5} />
           Back
         </button>
 
@@ -43,9 +33,7 @@ function TransactionDetail({ tx, onBack, onBlockSelect }: TransactionDetailProps
           <div className="flex items-center gap-3">
             <h2 className="text-xl font-bold text-slate-800 tracking-tight font-mono">{tx.hash}</h2>
             <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100 flex items-center gap-1.5">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+              <IconCheck width={10} height={10} strokeWidth={3} />
               Success
             </span>
           </div>
@@ -61,9 +49,7 @@ function TransactionDetail({ tx, onBack, onBlockSelect }: TransactionDetailProps
           <div className="flex items-center pb-4 border-b border-slate-100">
             <span className="text-xs font-semibold text-slate-500 w-1/4">Status:</span>
             <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100 flex items-center gap-1.5">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+              <IconCheck width={10} height={10} strokeWidth={3} />
               Confirmed
             </span>
           </div>

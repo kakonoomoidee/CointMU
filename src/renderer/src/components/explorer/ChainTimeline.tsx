@@ -1,4 +1,5 @@
 import { type JSX, useEffect, useState } from "react";
+import { IconX, IconAlertTriangle, IconCheck, IconCube } from '@/assets/icons'
 
 interface BlockItem {
   number: number;
@@ -60,19 +61,7 @@ export function ChainTimeline({
           {isOnline ? (
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
           ) : (
-            <svg
-              width="10"
-              height="10"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <IconX width={10} height={10} strokeWidth={3} />
           )}
           <span className="text-[10px] font-bold">
             {isOnline ? "Updating - 3s" : "Offline"}
@@ -83,21 +72,7 @@ export function ChainTimeline({
       <div className="flex items-center gap-3 overflow-x-auto pb-4 pt-2 hide-scrollbar">
         {!isOnline ? (
           <div className="w-full py-8 flex flex-col items-center justify-center text-center">
-            <svg
-              className="text-red-300 mb-2"
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-              <line x1="12" y1="9" x2="12" y2="13"></line>
-              <line x1="12" y1="17" x2="12.01" y2="17"></line>
-            </svg>
+            <IconAlertTriangle className="text-red-300 mb-2" width={28} height={28} strokeWidth={1.5} />
             <p className="text-sm font-medium text-slate-500">
               Node is offline
             </p>
@@ -143,19 +118,7 @@ export function ChainTimeline({
                 >
                   {isMinedByMe && (
                     <div className="absolute -top-2 -right-2 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-sm border border-emerald-100">
-                      <svg
-                        className="text-emerald-500"
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
+                      <IconCheck className="text-emerald-500" width={12} height={12} strokeWidth={3} />
                     </div>
                   )}
                   <span
@@ -178,19 +141,7 @@ export function ChainTimeline({
           })
         ) : (
           <div className="w-full py-8 flex flex-col items-center justify-center">
-            <svg
-              className="text-slate-300 mb-2"
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-            </svg>
+            <IconCube className="text-slate-300 mb-2" width={28} height={28} strokeWidth={1.5} />
             <p className="text-sm font-medium text-slate-400">
               Awaiting network activity
             </p>

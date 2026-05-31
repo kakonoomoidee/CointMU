@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { IconArrowDown, IconArrowUp } from '@/assets/icons'
 
 interface DashboardHeaderProps {
   isConnected: boolean
@@ -40,19 +41,7 @@ function DashboardHeader({ isConnected, onReceive, onSend }: DashboardHeaderProp
           onClick={onReceive}
           className="flex items-center gap-2 px-5 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="7 13 12 18 17 13" />
-            <line x1="12" y1="6" x2="12" y2="18" />
-          </svg>
+          <IconArrowDown width={14} height={14} />
           Receive
         </button>
 
@@ -60,19 +49,7 @@ function DashboardHeader({ isConnected, onReceive, onSend }: DashboardHeaderProp
           onClick={onSend}
           className="flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200"
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="17 11 12 6 7 11" />
-            <line x1="12" y1="6" x2="12" y2="18" />
-          </svg>
+          <IconArrowUp width={14} height={14} strokeWidth={2.5} />
           Send
         </button>
       </div>

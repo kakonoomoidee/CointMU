@@ -1,5 +1,6 @@
 import { type JSX } from 'react'
 import { type BlockData } from '@/hooks'
+import { IconActivity } from '@/assets/icons'
 import { formatTxAge } from '@/utils'
 
 type TabState = 'blocks' | 'transactions' | 'accounts'
@@ -288,19 +289,7 @@ function ExplorerDataTabs({
             MINER_DISTRIBUTION.map((_, i) => <div key={i} />)
           ) : (
             <div className="py-8 flex flex-col items-center justify-center text-center">
-              <svg
-                className="text-slate-300 mb-2"
-                width="28"
-                height="28"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-              </svg>
+              <IconActivity className="text-slate-300 mb-2" width={28} height={28} strokeWidth={1.5} />
               <p className="text-sm font-medium text-slate-400">Awaiting network activity</p>
               <p className="text-xs text-slate-400 mt-0.5">Distribution requires an indexer</p>
             </div>

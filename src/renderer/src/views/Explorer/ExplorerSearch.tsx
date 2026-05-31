@@ -1,4 +1,5 @@
 import { type JSX, type FormEvent, type RefObject } from 'react'
+import { IconSearch } from '@/assets/icons'
 
 interface ExplorerSearchProps {
   searchValue: string
@@ -28,20 +29,7 @@ function ExplorerSearch({
 
       <form onSubmit={onSubmit} className="relative mb-4">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <svg
-            className="text-slate-400"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
+          <IconSearch className="text-slate-400" width={20} height={20} />
         </div>
         <input
           ref={searchInputRef}

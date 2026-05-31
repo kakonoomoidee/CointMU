@@ -1,5 +1,6 @@
 import { type JSX } from 'react'
 import { ActivityItem, type ActivityData } from '@/views/Wallet/ActivityItem'
+import { IconChevronRight, IconClock } from '@/assets/icons'
 import { downloadActivityCsv } from '@/utils'
 
 const ACTIVITY_CSV_FILENAME = 'cointmu-activity.csv'
@@ -35,18 +36,7 @@ function ActivityFeed({ isConnected, activity, abbrAddress }: ActivityFeedProps)
           className="text-[11px] font-semibold text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-0.5 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           Export
-          <svg
-            width="10"
-            height="10"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
+          <IconChevronRight width={10} height={10} strokeWidth={3} />
         </button>
       </div>
       <p className="text-[10px] text-slate-400 mb-4 font-mono">Transactions for {abbrAddress}</p>
@@ -60,20 +50,7 @@ function ActivityFeed({ isConnected, activity, abbrAddress }: ActivityFeedProps)
           </div>
         ) : (
           <div className="py-8 flex flex-col items-center justify-center">
-            <svg
-              className="text-slate-300 mb-2"
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <polyline points="12 6 12 12 16 14" />
-            </svg>
+            <IconClock className="text-slate-300 mb-2" width={28} height={28} strokeWidth={1.5} />
             <p className="text-sm font-medium text-slate-400">No activity yet</p>
             <p className="text-[10px] text-slate-400 mt-0.5">Start mining to see rewards</p>
           </div>
