@@ -3,9 +3,9 @@
 # ==========================================
 
 VERSION = 1
-PATCHLEVEL = 4
+PATCHLEVEL = 5
 SUBLEVEL = 0
-EXTRAVERSION = dino
+EXTRAVERSION = alaska
 
 .PHONY: help dev build\:win build\:linux build\:mac clean
 
