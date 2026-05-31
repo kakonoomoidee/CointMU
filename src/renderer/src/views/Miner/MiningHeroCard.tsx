@@ -1,6 +1,7 @@
 import { type JSX } from 'react'
 import { Button } from '@/components'
 import { IconPlay, IconStop } from '@/assets/icons'
+import { NonceCounter } from './NonceCounter'
 
 const BLOCK_REWARD_CMU = '2.00'
 
@@ -13,8 +14,6 @@ interface MiningHeroCardProps {
   hashrateLabel: string
   formattedRewards: string
   difficultyLabel: string
-  nextBlock: number
-  noncesTried: number
   toggling: boolean
   onToggle: (enabled: boolean) => void
 }
@@ -35,8 +34,6 @@ function MiningHeroCard({
   hashrateLabel,
   formattedRewards,
   difficultyLabel,
-  nextBlock,
-  noncesTried,
   toggling,
   onToggle
 }: MiningHeroCardProps): JSX.Element {
@@ -79,15 +76,7 @@ function MiningHeroCard({
             </div>
           </div>
 
-          <div className="mt-4 mb-3">
-            <p className="text-[11px] text-emerald-100/80 font-mono mb-2 tracking-wide font-medium">
-              Solving candidate #{nextBlock.toLocaleString()} - {noncesTried.toLocaleString()} nonces
-              tried
-            </p>
-            <div className="w-full h-1.5 rounded-full bg-emerald-950/50 overflow-hidden relative">
-              <div className="h-full rounded-full bg-emerald-400 animate-[fillBar_2s_linear_infinite]" />
-            </div>
-          </div>
+          <NonceCounter />
 
           <div className="flex items-center justify-between text-xs text-white/40 font-mono">
             <span>Target difficulty {difficultyLabel}</span>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { fetchMiningStats, subscribeDagProgress, subscribeMiningStatus } from '@/services'
+import { useMiningStore } from '@/store'
 
 const STATS_POLL_INTERVAL_MS = 2000
 const HASHES_PER_MEGAHASH = 1_000_000
@@ -97,6 +98,20 @@ function useMiningStats(cpuThreads: number = 0): MiningTelemetry {
       setTelemetry((prev) => ({ ...prev, powerStatus: status }))
     })
   }, [])
+
+  useEffect(() => {
+    if (!telemetry.isMining || telemetry.hashrateMhs <= 0) {
+      return
+    }
+
+    const hashesPerTick = (telemetry.hashrateMhs * HASHES_PER_MEGAHASH) / 10
+    const intervalId = setInterval(() => {
+      const store = useMiningStore.getState()
+      store.updateTelemetry(store.nonce + hashesPerTick, telemetry.blockNumber + 1)
+    }, 100)
+
+    return (): void => clearInterval(intervalId)
+  }, [telemetry.isMining, telemetry.hashrateMhs, telemetry.blockNumber])
 
   return telemetry
 }

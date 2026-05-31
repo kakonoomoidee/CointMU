@@ -12,9 +12,12 @@ interface FoundBlock {
 interface MiningStore {
   sessionStartTime: number | null
   foundBlocks: FoundBlock[]
+  nonce: number
+  candidate: number | null
   startMining: () => void
   stopMining: () => void
   recordFoundBlocks: (blocks: FoundBlock[]) => void
+  updateTelemetry: (nonce: number, candidate: number | null) => void
 }
 
 /**
@@ -27,11 +30,13 @@ interface MiningStore {
 export const useMiningStore = create<MiningStore>((set, get) => ({
   sessionStartTime: null,
   foundBlocks: [],
+  nonce: 0,
+  candidate: null,
   startMining: () => {
     if (get().sessionStartTime !== null) return
     set({ sessionStartTime: Date.now() })
   },
-  stopMining: () => set({ sessionStartTime: null }),
+  stopMining: () => set({ sessionStartTime: null, nonce: 0, candidate: null }),
   recordFoundBlocks: (blocks: FoundBlock[]) => {
     if (blocks.length === 0) return
     set((state) => {
@@ -39,6 +44,14 @@ export const useMiningStore = create<MiningStore>((set, get) => ({
       const additions = blocks.filter((block) => !knownHashes.has(block.hash))
       if (additions.length === 0) return state
       return { foundBlocks: [...additions, ...state.foundBlocks].slice(0, MAX_FOUND_BLOCKS) }
+    })
+  },
+  updateTelemetry: (nonce: number, candidate: number | null) => {
+    set((state) => {
+      if (state.candidate !== null && state.candidate !== candidate) {
+        return { candidate, nonce: 0 }
+      }
+      return { candidate, nonce }
     })
   }
 }))

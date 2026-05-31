@@ -52,11 +52,10 @@ function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
   const isMining = telemetry.isMining
   const elapsedTime = useTimer(sessionStartTime, isMining)
 
-  const { logs, noncesTried } = useMiningActivity(
+  const { logs } = useMiningActivity(
     recentBlocks,
     activeWalletAddress,
-    isMining,
-    telemetry.hashrateMhs
+    isMining
   )
 
   useEffect(() => {
@@ -80,8 +79,6 @@ function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
   const hashrateLabel = formatMhs(telemetry.hashrateMhs)
   const formattedRewards = formatRewards(balance)
   const blocksFoundToday = foundBlocks.filter((block) => isWithinLastDay(block.timestamp)).length
-
-  const nextBlock = (telemetry.blockNumber || blockHeight || 0) + 1
   const difficultyLabel = formatDifficultyLabel(telemetry.difficulty)
 
   const sharesData = computeSharesData(recentBlocks, SHARES_WINDOW_SIZE, activeWalletAddress)
@@ -102,8 +99,6 @@ function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
           hashrateLabel={hashrateLabel}
           formattedRewards={formattedRewards}
           difficultyLabel={difficultyLabel}
-          nextBlock={nextBlock}
-          noncesTried={noncesTried}
           toggling={toggling}
           onToggle={handleToggle}
         />

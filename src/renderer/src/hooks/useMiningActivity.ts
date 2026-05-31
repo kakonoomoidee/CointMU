@@ -4,9 +4,6 @@ import { useMiningStore } from '@/store'
 import { type BlockData } from './useRecentBlocks'
 
 const MAX_LOG_ENTRIES = 50
-const NONCE_TICK_INTERVAL_MS = 100
-const NONCE_TICKS_PER_SECOND = 10
-const HASHES_PER_MEGAHASH = 1_000_000
 const LOG_TIME_FORMAT = 'HH:mm:ss'
 const BLOCK_REWARD_LABEL = '2.00 CMU'
 
@@ -20,7 +17,6 @@ interface LogEntry {
 
 interface MiningActivity {
   logs: LogEntry[]
-  noncesTried: number
 }
 
 /**
@@ -53,19 +49,15 @@ function buildLogEntries(blocks: BlockData[], activeWalletAddress: string | null
  * @param recentBlocks - The most recent blocks observed on the network.
  * @param activeWalletAddress - The address used to attribute self-mined blocks.
  * @param isMining - Whether mining is currently active.
- * @param hashrateMhs - The current hashrate in megahashes per second.
- * @returns The capped log entries and the running nonce count.
+ * @returns The capped log entries.
  */
 function useMiningActivity(
   recentBlocks: BlockData[],
   activeWalletAddress: string | null,
-  isMining: boolean,
-  hashrateMhs: number
+  isMining: boolean
 ): MiningActivity {
   const [logs, setLogs] = useState<LogEntry[]>([])
-  const [noncesTried, setNoncesTried] = useState<number>(0)
   const lastProcessedBlock = useRef<number | null>(null)
-  const nonceAccumulator = useRef<number>(0)
   const recordFoundBlocks = useMiningStore((state) => state.recordFoundBlocks)
 
   useEffect(() => {
@@ -101,23 +93,7 @@ function useMiningActivity(
     }
   }, [recentBlocks, activeWalletAddress, recordFoundBlocks])
 
-  useEffect(() => {
-    if (!isMining || hashrateMhs <= 0) {
-      nonceAccumulator.current = 0
-      setNoncesTried(0)
-      return
-    }
-
-    const hashesPerTick = (hashrateMhs * HASHES_PER_MEGAHASH) / NONCE_TICKS_PER_SECOND
-    const intervalId = setInterval(() => {
-      nonceAccumulator.current += hashesPerTick
-      setNoncesTried(Math.floor(nonceAccumulator.current))
-    }, NONCE_TICK_INTERVAL_MS)
-
-    return (): void => clearInterval(intervalId)
-  }, [isMining, hashrateMhs])
-
-  return { logs, noncesTried }
+  return { logs }
 }
 
 export { useMiningActivity }
