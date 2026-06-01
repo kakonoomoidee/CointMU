@@ -56,3 +56,4 @@ publish:
   releaseType: release
   owner: kakonoomoidee
   repo: CointMU
+  generateReleaseNotes: true
