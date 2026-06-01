@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
+import ms from 'ms'
 import { fetchMiningStats, subscribeDagProgress, subscribeMiningStatus, getCpuUsage } from '@/services'
 import { fetchHashrate } from '@/services/rpcClient'
 import { useMiningStore } from '@/store'
 
-const STATS_POLL_INTERVAL_MS = 2000
+const STATS_POLL_INTERVAL_MS = ms('2s')
 const HASHES_PER_MEGAHASH = 1_000_000
 const DAG_COMPLETE_PERCENT = 100
 const STATS_POLL_INTERVAL_SECONDS = STATS_POLL_INTERVAL_MS / 1000

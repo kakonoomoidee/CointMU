@@ -9,21 +9,12 @@ import detectPort from "detect-port";
 import { registerCryptoHandlers } from "./crypto";
 import { registerSystemHandlers } from "./system";
 import { parseGethLogChunk } from "./gethLogParser";
+import ms from "ms";
 
 config({ path: join(app.getAppPath(), ".env") });
 
-const MILLISECONDS_PER_SECOND = 1000;
-const SECONDS_PER_MINUTE = 60;
-const MINUTES_PER_HOUR = 60;
-const HOURS_PER_DAY = 24;
-const DAYS_PER_WEEK = 7;
-
-const SESSION_DURATION_MS =
-  DAYS_PER_WEEK *
-  HOURS_PER_DAY *
-  MINUTES_PER_HOUR *
-  SECONDS_PER_MINUTE *
-  MILLISECONDS_PER_SECOND;
+const SESSION_DURATION_MS = ms("7d");
+const NODE_RESTART_DELAY_MS = ms("1s");
 
 const MAX_PORT_SCAN_ATTEMPTS = 50;
 
@@ -1066,7 +1057,7 @@ app.whenReady().then(async () => {
           await initGethNode();
         } catch (err) {}
         spawnGethProcess(store);
-      }, 1000);
+      }, NODE_RESTART_DELAY_MS);
 
       return true;
     } catch (err) {
@@ -1080,7 +1071,7 @@ app.whenReady().then(async () => {
     killGethProcess();
     setTimeout(() => {
       spawnGethProcess(store);
-    }, 1000);
+    }, NODE_RESTART_DELAY_MS);
   });
 
   resolvedRpcPort = await findAvailablePort();

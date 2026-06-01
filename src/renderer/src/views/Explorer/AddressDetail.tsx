@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, type JSX } from 'react'
+import ms from 'ms'
 import { getAddressSummary, generateIdenticonGradient, type DerivedAccount } from '@/services'
 import { getTransactions } from '@/services/transactionService'
 import { usePagination } from '@/hooks'
@@ -18,7 +19,7 @@ interface AddressDetailProps {
 
 const ADDRESS_TX_PAGE_SIZE = 8
 const MOCK_USD_RATE = 0.42
-const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000
+const MS_PER_WEEK = ms('7d')
 
 
 /**

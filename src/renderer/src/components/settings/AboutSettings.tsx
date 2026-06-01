@@ -1,9 +1,12 @@
 import { useState, useEffect, type JSX } from 'react'
+import ms from 'ms'
 import { useUpdateStatus } from '@/hooks'
 import { useAppStore } from '@/store'
 import { EXTERNAL_LINKS } from '@/constants'
 import { checkForUpdates, quitAndInstall } from '@/services'
 import { IconLayers } from '@/assets/icons'
+
+const UPTIME_REFRESH_MS = ms('1m')
 
 /**
  * Formats raw system uptime seconds into a readable string.
@@ -65,7 +68,7 @@ export function AboutSettings(): JSX.Element {
       setUptimeStr(formatUptime(sysInfo.getUptime()))
     }
     updateUptime()
-    const interval = setInterval(updateUptime, 60000)
+    const interval = setInterval(updateUptime, UPTIME_REFRESH_MS)
 
     const fetchGenesis = async (): Promise<void> => {
       try {

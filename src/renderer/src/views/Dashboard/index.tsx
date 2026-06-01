@@ -1,4 +1,5 @@
 import { useState, useEffect, type JSX } from 'react'
+import ms from 'ms'
 import { useRecentBlocks, useMiningStats, useMiningControls, usePagination } from '@/hooks'
 import { useAppStore, useMiningStore, useWalletUiStore } from '@/store'
 import { getTransactions } from '@/services/transactionService'
@@ -20,8 +21,11 @@ import { DashboardStatsGrid } from './DashboardStatsGrid'
 import { LatestBlocks } from './LatestBlocks'
 import { ActivityFeed } from './ActivityFeed'
 
-const DASHBOARD_TICK_INTERVAL_MS = 5000
+const DASHBOARD_TICK_INTERVAL_MS = ms('5s')
 const ACTIVITY_PAGE_SIZE = 10
+const PAST_HOUR_MS = ms('1h')
+const SPARKLINE_BUCKET_MS = ms('10m')
+const SPARKLINE_WINDOW_MS = ms('1h')
 
 interface DashboardProps {
   activeWalletAddress: string | null
@@ -78,15 +82,15 @@ function Dashboard({ activeWalletAddress, accounts, onNavigate }: DashboardProps
 
   const scopedFoundBlocks = filterFoundBlocks(foundBlocks, historyAddresses)
   const minedBlocksCount = scopedFoundBlocks.filter((block) => isWithinLastDay(block.timestamp)).length
-  const blocksPastHour = scopedFoundBlocks.filter((block) => Date.now() - block.timestamp * 1000 <= 3600_000).length
-  
+  const blocksPastHour = scopedFoundBlocks.filter((block) => Date.now() - block.timestamp * 1000 <= PAST_HOUR_MS).length
+
   const sparklineData = Array(6).fill(0)
   if (isConnected) {
     const now = Date.now()
-    const bucketSizeMs = 10 * 60 * 1000
+    const bucketSizeMs = SPARKLINE_BUCKET_MS
     scopedFoundBlocks.forEach((block) => {
       const ageMs = now - block.timestamp * 1000
-      if (ageMs <= 60 * 60 * 1000) {
+      if (ageMs <= SPARKLINE_WINDOW_MS) {
         const bucketIndex = 5 - Math.floor(ageMs / bucketSizeMs)
         if (bucketIndex >= 0 && bucketIndex < 6) {
           sparklineData[bucketIndex]++

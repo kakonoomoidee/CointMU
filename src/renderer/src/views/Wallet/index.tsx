@@ -1,4 +1,5 @@
 import { useEffect, useState, type JSX, type MouseEvent } from 'react'
+import ms from 'ms'
 import {
   deriveAccount,
   generateIdenticonGradient,
@@ -20,6 +21,7 @@ import { WalletTabs, type WalletTab } from './WalletTabs'
 import { WalletModals } from './modals/WalletModals'
 
 const TX_GAS_LIMIT = 21000n
+const COPY_FEEDBACK_MS = ms('2s')
 
 interface WalletProps {
   accounts: DerivedAccount[]
@@ -109,7 +111,7 @@ function Wallet({
     if (activeAccount?.address) {
       navigator.clipboard.writeText(activeAccount.address)
       setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      setTimeout(() => setCopied(false), COPY_FEEDBACK_MS)
     }
   }
 

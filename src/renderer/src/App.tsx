@@ -1,4 +1,5 @@
 import { useState, useEffect, Suspense, lazy, type JSX } from 'react'
+import ms from 'ms'
 import { Dashboard, Wallet, Onboarding } from '@/views'
 import { type DerivedAccount, getSetting } from '@/services'
 import { useUpdateStatus, useMiningLogStream } from '@/hooks'
@@ -16,7 +17,7 @@ const NAV_ITEM_WALLET = 'wallet'
 const NAV_ITEM_EXPLORER = 'explorer'
 const NAV_ITEM_SETTINGS = 'settings'
 const WALLET_LOAD_DELAY_MS = 300
-const GLOBAL_POLL_INTERVAL_MS = 3000
+const GLOBAL_POLL_INTERVAL_MS = ms('3s')
 type ActiveView = typeof NAV_ITEM_DASHBOARD | typeof NAV_ITEM_MINER | typeof NAV_ITEM_WALLET | typeof NAV_ITEM_EXPLORER | typeof NAV_ITEM_SETTINGS
 
 /**

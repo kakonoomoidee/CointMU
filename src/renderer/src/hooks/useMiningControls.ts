@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
+import ms from 'ms'
 import { getMiningConfig, setMiningEnabled, type MiningConfig } from '@/services'
 
-const CONFIG_SYNC_INTERVAL_MS = 1000
+const CONFIG_SYNC_INTERVAL_MS = ms('1s')
 
 interface MiningControls {
   config: MiningConfig

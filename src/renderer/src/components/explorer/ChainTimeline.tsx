@@ -1,6 +1,9 @@
 import { type JSX, useEffect, useState } from "react";
+import ms from 'ms'
 import { useAppStore } from '@/store'
 import { IconX, IconAlertTriangle, IconCheck, IconCube } from '@/assets/icons'
+
+const TICK_INTERVAL_MS = ms('1s');
 
 interface BlockItem {
   number: number;
@@ -49,7 +52,7 @@ export function ChainTimeline({
   };
 
   useEffect(() => {
-    const interval = setInterval(() => setNow(Date.now()), 1000);
+    const interval = setInterval(() => setNow(Date.now()), TICK_INTERVAL_MS);
     return () => clearInterval(interval);
   }, []);
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo, type JSX, type FormEvent } from 'react'
+import ms from 'ms'
 import { useRecentBlocks, usePagination } from '@/hooks'
 import { useAppStore } from '@/store'
 import { call, fetchBalance, getNetworkInsights, detectSearchType, type DerivedAccount } from '@/services'
@@ -29,8 +30,8 @@ interface TopAccount {
 }
 
 const EMPTY_STAT_LABEL = '--'
-const INSIGHTS_POLL_INTERVAL_MS = 3000
-const TICK_INTERVAL_MS = 5000
+const INSIGHTS_POLL_INTERVAL_MS = ms('3s')
+const TICK_INTERVAL_MS = ms('5s')
 
 /**
  * Explorer view orchestrator. It owns the network insights polling, search,

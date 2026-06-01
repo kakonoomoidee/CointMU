@@ -1,4 +1,5 @@
 import { useEffect, type JSX } from 'react'
+import ms from 'ms'
 import {
   generateMnemonic,
   deriveAccount,
@@ -18,7 +19,7 @@ import { ImportWalletStep } from './ImportWalletStep'
 import { SecureWalletStep } from './SecureWalletStep'
 
 const MIN_PASSWORD_LENGTH = 8
-const COPY_FEEDBACK_MS = 2000
+const COPY_FEEDBACK_MS = ms('2s')
 
 interface OnboardingProps {
   onComplete: (address: string) => void
