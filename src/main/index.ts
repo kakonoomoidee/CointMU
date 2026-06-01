@@ -7,6 +7,7 @@ import { spawn, ChildProcess } from "child_process";
 import { config } from "dotenv";
 import detectPort from "detect-port";
 import { registerCryptoHandlers } from "./crypto";
+import { registerSystemHandlers } from "./system";
 
 config({ path: join(app.getAppPath(), ".env") });
 
@@ -464,9 +465,9 @@ class MiningController {
    */
   private async updateThreads(cores: number): Promise<void> {
     this.store.set("mining.cpuThreads", cores);
-    const isMiningEnabled = this.store.get("mining.isMiningEnabled");
+    const actuallyMining = await callGethRpc(this.rpcPort, "eth_mining");
 
-    if (isMiningEnabled) {
+    if (actuallyMining === true || actuallyMining === "true") {
       await callGethRpc(this.rpcPort, "miner_stop");
       await callGethRpc(this.rpcPort, "miner_start", [Math.floor(cores)]);
     }
@@ -946,6 +947,7 @@ app.whenReady().then(async () => {
   ipcMain.handle("settings:getAll", () => store.store);
 
   registerCryptoHandlers();
+  registerSystemHandlers();
 
   ipcMain.on("network:restartNode", () => {
     console.log("[network] Restarting node with new configurations...");

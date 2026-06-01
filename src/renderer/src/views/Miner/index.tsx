@@ -93,7 +93,7 @@ function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
           isMining={isMining}
           isGeneratingDag={telemetry.isGeneratingDag}
           dagProgress={telemetry.dagProgress}
-          isMiningEnabled={config.isMiningEnabled}
+          isConnected={isConnected}
           cpuThreads={config.cpuThreads}
           hashrateLabel={hashrateLabel}
           formattedRewards={formattedRewards}

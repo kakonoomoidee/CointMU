@@ -34,6 +34,7 @@ const systemInfo = {
 
 const api = {
   getRpcPort: (): Promise<number> => ipcRenderer.invoke('get-rpc-port'),
+  getCpuUsage: (): Promise<number> => ipcRenderer.invoke('get-cpu-usage'),
   getNodeStatus: (): Promise<{
     running: boolean
     port: number

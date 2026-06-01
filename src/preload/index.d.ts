@@ -7,6 +7,7 @@ interface UpdateStatusPayload {
 
 interface CointmuAPI {
   getRpcPort: () => Promise<number>
+  getCpuUsage: () => Promise<number>
   getNodeStatus: () => Promise<{
     running: boolean
     port: number

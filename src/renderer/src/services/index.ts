@@ -43,3 +43,5 @@ export { getNetworkInsights } from './networkService'
 export type { NetworkInsights, NetworkInsightBlock } from './networkService'
 
 export { checkForUpdates, quitAndInstall } from './updaterService'
+
+export { getCpuUsage } from './systemService'

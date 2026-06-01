@@ -51,32 +51,30 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
   }, [accounts])
 
   /**
-   * Handles the Enable Mining toggle switch.
-   * @param {boolean} isEnabled - The new active state of the mining toggle.
+   * Handles the Enable Mining permission switch. This switch only persists the
+   * mining intent and never starts the node by itself, so it can never auto-start
+   * mining when the Settings pane mounts. The Mining view remains the sole control
+   * that starts the miner. Disabling the permission stops a running node as a
+   * safety measure.
+   * @param {boolean} isEnabled - The new value of the mining permission.
    * @returns {Promise<void>}
    */
   const handleToggleMining = async (isEnabled: boolean): Promise<void> => {
     onUpdate('isMiningEnabled', isEnabled)
     await setSetting('mining.isMiningEnabled', isEnabled)
 
-    const activeAddress = await getSetting<string | null>('activeWalletAddress')
-    if (isEnabled && (!activeAddress || activeAddress.length !== 42)) {
-      if (accounts.length > 0) {
+    if (isEnabled) {
+      const activeAddress = await getSetting<string | null>('activeWalletAddress')
+      if ((!activeAddress || activeAddress.length !== 42) && accounts.length > 0) {
         await setSetting('activeWalletAddress', accounts[0].address)
-      } else {
-        console.warn('Cannot enable mining: No active wallet address available')
-        onUpdate('isMiningEnabled', false)
-        await setSetting('mining.isMiningEnabled', false)
-        return
       }
+      return
     }
 
     try {
-      await toggleMiner(isEnabled)
+      await toggleMiner(false)
     } catch (err) {
-      console.error('Failed to toggle miner', err)
-      onUpdate('isMiningEnabled', !isEnabled)
-      await setSetting('mining.isMiningEnabled', !isEnabled)
+      console.error('Failed to stop miner', err)
     }
   }
 

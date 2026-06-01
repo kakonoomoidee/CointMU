@@ -9,7 +9,7 @@ interface MiningHeroCardProps {
   isMining: boolean
   isGeneratingDag: boolean
   dagProgress: number
-  isMiningEnabled: boolean
+  isConnected: boolean
   cpuThreads: number
   hashrateLabel: string
   formattedRewards: string
@@ -29,7 +29,7 @@ function MiningHeroCard({
   isMining,
   isGeneratingDag,
   dagProgress,
-  isMiningEnabled,
+  isConnected,
   cpuThreads,
   hashrateLabel,
   formattedRewards,
@@ -159,13 +159,13 @@ function MiningHeroCard({
               <span className="text-xl font-semibold text-white/40">MH/s</span>
             </div>
             <p className="text-sm text-white/50 mt-2">
-              {isMiningEnabled ? (
+              {isConnected ? (
                 <>
                   Press Start to join consensus. Earn{' '}
                   <span className="font-semibold text-white/70">2 CMU</span> per block found.
                 </>
               ) : (
-                <>Mining is disabled globally. Enable it in Settings first.</>
+                <>Waiting for node connection...</>
               )}
             </p>
           </div>
@@ -185,8 +185,8 @@ function MiningHeroCard({
               variant="success"
               size="lg"
               onClick={() => onToggle(true)}
-              disabled={toggling || !isMiningEnabled}
-              title={!isMiningEnabled ? 'Mining is disabled in Settings' : ''}
+              disabled={toggling || !isConnected}
+              title={!isConnected ? 'Waiting for node connection' : ''}
               leftIcon={<IconPlay width={14} height={14} />}
             >
               {toggling ? 'Starting...' : 'Start mining'}

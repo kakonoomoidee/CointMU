@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { fetchMiningStats, subscribeDagProgress, subscribeMiningStatus } from '@/services'
+import { fetchMiningStats, subscribeDagProgress, subscribeMiningStatus, getCpuUsage } from '@/services'
 import { fetchHashrate } from '@/services/rpcClient'
 import { useMiningStore } from '@/store'
 
@@ -8,6 +8,7 @@ const HASHES_PER_MEGAHASH = 1_000_000
 const DAG_COMPLETE_PERCENT = 100
 const STATS_POLL_INTERVAL_SECONDS = STATS_POLL_INTERVAL_MS / 1000
 const ESTIMATED_HASHES_PER_THREAD = 500_000
+const FALLBACK_BASE_LOAD = 0.2
 
 interface MiningTelemetry {
   hashrateMhs: number
@@ -100,17 +101,26 @@ function useMiningStats(cpuThreads: number = 0): MiningTelemetry {
 
     const pollTelemetry = async (): Promise<void> => {
       const rawHashesPerSecond = await fetchHashrate()
-      if (!mounted || rawHashesPerSecond === null) {
+      if (!mounted) {
         return
       }
 
-      const effectiveHashesPerSecond =
-        rawHashesPerSecond > 0 ? rawHashesPerSecond : cpuThreads * ESTIMATED_HASHES_PER_THREAD
+      let effectiveHashesPerSecond: number
+      if (rawHashesPerSecond !== null && rawHashesPerSecond > 0) {
+        effectiveHashesPerSecond = rawHashesPerSecond
+      } else {
+        const cpuUsage = await getCpuUsage()
+        if (!mounted) {
+          return
+        }
+        const load = FALLBACK_BASE_LOAD + (1 - FALLBACK_BASE_LOAD) * cpuUsage
+        effectiveHashesPerSecond = cpuThreads * ESTIMATED_HASHES_PER_THREAD * load
+      }
 
       const hashesThisInterval = effectiveHashesPerSecond * STATS_POLL_INTERVAL_SECONDS
       const store = useMiningStore.getState()
       store.setHashrate(effectiveHashesPerSecond / HASHES_PER_MEGAHASH)
-      store.updateTelemetry(store.nonce + hashesThisInterval, candidate)
+      store.updateTelemetry(Math.floor(store.nonce + hashesThisInterval), candidate)
     }
 
     pollTelemetry()
