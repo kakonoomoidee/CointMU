@@ -3,10 +3,28 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
+
+permissions:
+  contents: write
 
 jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Create GitHub Release and Generate Notes
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          draft: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   build:
+    needs: create-release
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -19,12 +37,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install System Dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y libarchive-tools build-essential
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Build and Publish
+      - name: Build and Publish Artifacts
         run: npm run build && npx electron-builder --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

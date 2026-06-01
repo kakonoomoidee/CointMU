@@ -2,21 +2,37 @@ changelog:
   exclude:
     labels:
       - ignore-for-release
+      - duplicate
+      - invalid
     authors:
       - dependabot
+      - dependabot[bot]
       - github-actions
+      - github-actions[bot]
   categories:
-    - title: '🚀 Features'
+    - title: "🚀 Features"
       labels:
         - feature
         - enhancement
-    - title: '🐛 Bug Fixes'
+        - feat
+    - title: "🐛 Bug Fixes"
       labels:
         - fix
         - bug
-    - title: '🛠 Maintenance'
+        - hotfix
+    - title: "💅 UI & UX"
+      labels:
+        - ui
+        - ux
+        - design
+    - title: "⚠️ Security"
+      labels:
+        - security
+    - title: "🛠 Maintenance & Chore"
       labels:
         - refactor
         - chore
         - dependencies
         - docs
+        - test
+        - ci
