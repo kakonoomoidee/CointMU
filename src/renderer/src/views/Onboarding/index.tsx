@@ -132,6 +132,7 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
       await setSetting('encryptedPayload', encryptedPayload)
       await setSetting('accounts', [firstAccount])
       await setSetting('activeWalletAddress', firstAccount.address)
+      await setSetting('mining.poolAddress', firstAccount.address)
 
       unlockSession(password)
       onComplete(firstAccount.address)

@@ -43,6 +43,11 @@ const getUpdateButtonLabel = (status: string): string => {
  */
 export function AboutSettings(): JSX.Element {
   const [uptimeStr, setUptimeStr] = useState<string>('Loading...')
+  const [chainId, setChainId] = useState<number | null>(null)
+  const [isEditingChain, setIsEditingChain] = useState<boolean>(false)
+  const [newChainIdInput, setNewChainIdInput] = useState<string>('')
+  const [isSavingChain, setIsSavingChain] = useState<boolean>(false)
+
   const peerCount = useAppStore((s) => s.peerCount)
   const updateState = useUpdateStatus()
 
@@ -60,8 +65,50 @@ export function AboutSettings(): JSX.Element {
     }
     updateUptime()
     const interval = setInterval(updateUptime, 60000)
+
+    const fetchGenesis = async (): Promise<void> => {
+      try {
+        const genesis = await window.api.network.getGenesisConfig()
+        if (genesis && genesis.config && genesis.config.chainId) {
+          setChainId(genesis.config.chainId)
+          setNewChainIdInput(String(genesis.config.chainId))
+        }
+      } catch (err) {
+        console.error('Failed to fetch genesis config', err)
+      }
+    }
+    fetchGenesis()
+
     return () => clearInterval(interval)
   }, [])
+
+  const handleSaveChainId = async (): Promise<void> => {
+    const parsedId = parseInt(newChainIdInput, 10)
+    if (isNaN(parsedId) || parsedId <= 0) return
+
+    const confirmed = window.confirm(
+      'WARNING: Changing the Chain ID will permanently WIPE your existing local blockchain data and restart the node. Are you absolutely sure you want to proceed?'
+    )
+
+    if (!confirmed) return
+
+    setIsSavingChain(true)
+    try {
+      const success = await window.api.network.setChainId(parsedId)
+      if (success) {
+        setChainId(parsedId)
+        setIsEditingChain(false)
+        alert('Chain ID updated successfully. The node is restarting with a fresh blockchain.')
+      } else {
+        alert('Failed to update the Chain ID.')
+      }
+    } catch (err) {
+      console.error(err)
+      alert('An error occurred while setting the Chain ID.')
+    } finally {
+      setIsSavingChain(false)
+    }
+  }
 
   /**
    * Dispatches the appropriate update action based on the current lifecycle
@@ -126,7 +173,48 @@ export function AboutSettings(): JSX.Element {
             
             <div className="flex items-center justify-between p-4">
               <p className="text-sm font-bold text-slate-800">Chain ID</p>
-              <span className="text-sm font-medium font-mono text-slate-600">7012</span>
+              <div className="flex items-center gap-3">
+                {isEditingChain ? (
+                  <>
+                    <input
+                      type="number"
+                      className="w-24 text-sm font-medium font-mono text-slate-600 bg-slate-50 border border-slate-200 rounded px-2 py-1 outline-none focus:border-blue-500"
+                      value={newChainIdInput}
+                      onChange={(e) => setNewChainIdInput(e.target.value)}
+                      disabled={isSavingChain}
+                    />
+                    <button
+                      onClick={handleSaveChainId}
+                      disabled={isSavingChain}
+                      className="text-xs font-bold text-white bg-blue-500 hover:bg-blue-600 rounded px-2.5 py-1 transition-colors"
+                    >
+                      {isSavingChain ? 'Saving...' : 'Save'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsEditingChain(false)
+                        setNewChainIdInput(String(chainId))
+                      }}
+                      disabled={isSavingChain}
+                      className="text-xs font-bold text-slate-500 hover:text-slate-700 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-sm font-medium font-mono text-slate-600">
+                      {chainId !== null ? chainId : '--'}
+                    </span>
+                    <button
+                      onClick={() => setIsEditingChain(true)}
+                      className="text-xs font-bold text-blue-500 hover:text-blue-600 transition-colors"
+                    >
+                      Edit
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
             
             <div className="flex items-center justify-between p-4">

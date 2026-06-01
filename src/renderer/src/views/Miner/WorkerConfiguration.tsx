@@ -75,14 +75,18 @@ function WorkerConfiguration({
             <p className="text-sm font-semibold text-slate-700">Reward address</p>
             <p className="text-xs text-slate-400 mt-0.5">Block rewards are credited here</p>
           </div>
-          <div className="flex items-center gap-3">
-            <div
-              className={`w-5 h-5 rounded-full bg-gradient-to-br ${generateIdenticonGradient(rewardAddress)} flex-shrink-0`}
-            />
-            <span className="text-xs font-mono text-slate-500 font-medium tracking-tight">
-              {rewardAddress.substring(0, 10)}...{rewardAddress.substring(rewardAddress.length - 8)}
-            </span>
-          </div>
+          {rewardAddress ? (
+            <div className="flex items-center gap-3">
+              <div
+                className={`w-5 h-5 rounded-full bg-gradient-to-br ${generateIdenticonGradient(rewardAddress)} flex-shrink-0`}
+              />
+              <span className="text-xs font-mono text-slate-500 font-medium tracking-tight">
+                {rewardAddress.substring(0, 10)}...{rewardAddress.substring(rewardAddress.length - 8)}
+              </span>
+            </div>
+          ) : (
+            <span className="text-xs font-medium text-slate-400">Set in Mining Settings</span>
+          )}
         </div>
       </div>
     </Card>

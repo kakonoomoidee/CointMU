@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, type JSX } from 'react'
 import type { SettingsStore } from '@/views/Settings'
-import { getSetting, setSetting, toggleMiner, setThreads, setPoolAddress } from '@/services'
+import { setSetting, toggleMiner, setThreads, setPoolAddress } from '@/services'
 import { IconChevronDown } from '@/assets/icons'
 
 interface MiningSettingsProps {
@@ -39,23 +39,23 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
   }, [config.poolAddress, accounts])
 
   useEffect(() => {
-    const ensureEtherbase = async (): Promise<void> => {
-      const activeAddress = await getSetting<string | null>('activeWalletAddress')
-      if (!activeAddress || activeAddress.length !== 42) {
-        if (accounts.length > 0) {
-          await setSetting('activeWalletAddress', accounts[0].address)
-        }
+    const ensureRewardAddress = async (): Promise<void> => {
+      const hasValidReward = !!config.poolAddress && config.poolAddress.length === 42
+      if (!hasValidReward && accounts.length > 0) {
+        onUpdate('poolAddress', accounts[0].address)
+        await setPoolAddress(accounts[0].address)
       }
     }
-    ensureEtherbase()
-  }, [accounts])
+    ensureRewardAddress()
+  }, [accounts, config.poolAddress])
 
   /**
    * Handles the Enable Mining permission switch. This switch only persists the
    * mining intent and never starts the node by itself, so it can never auto-start
    * mining when the Settings pane mounts. The Mining view remains the sole control
    * that starts the miner. Disabling the permission stops a running node as a
-   * safety measure.
+   * safety measure. The reward address is intentionally untouched here; it is
+   * owned exclusively by the reward-address selector below.
    * @param {boolean} isEnabled - The new value of the mining permission.
    * @returns {Promise<void>}
    */
@@ -64,10 +64,6 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
     await setSetting('mining.isMiningEnabled', isEnabled)
 
     if (isEnabled) {
-      const activeAddress = await getSetting<string | null>('activeWalletAddress')
-      if ((!activeAddress || activeAddress.length !== 42) && accounts.length > 0) {
-        await setSetting('activeWalletAddress', accounts[0].address)
-      }
       return
     }
 

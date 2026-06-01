@@ -85,7 +85,7 @@ function Miner({ activeWalletAddress, accounts }: MinerProps): JSX.Element {
     await toggle(enabled)
   }
 
-  const rewardAddress = config.poolAddress || activeWalletAddress || ''
+  const rewardAddress = config.poolAddress || ''
   const hashrateLabel = formatMhs(telemetry.hashrateMhs)
   const formattedRewards = formatRewards(balance)
   const blocksFoundToday = scopedFoundBlocks.filter((block) => isWithinLastDay(block.timestamp)).length

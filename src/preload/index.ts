@@ -42,7 +42,9 @@ const api = {
     networkId: string
   }> => ipcRenderer.invoke('get-node-status'),
   network: {
-    getInsights: () => ipcRenderer.invoke('network:getInsights')
+    getInsights: () => ipcRenderer.invoke('network:getInsights'),
+    getGenesisConfig: () => ipcRenderer.invoke('network:getGenesisConfig'),
+    setChainId: (chainId: number) => ipcRenderer.invoke('network:setChainId', chainId)
   },
   settings: {
     get: (key: string) => ipcRenderer.invoke('settings:get', key),

@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain, powerMonitor } from "electron";
 import { autoUpdater } from "electron-updater";
 import { join } from "path";
-import { existsSync } from "fs";
+import { existsSync, readFileSync, writeFileSync, rmSync } from "fs";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import { spawn, ChildProcess } from "child_process";
 import { config } from "dotenv";
@@ -32,7 +32,21 @@ const WINDOW_MIN_WIDTH = 900;
 const WINDOW_MIN_HEIGHT = 600;
 
 const DEFAULT_RPC_PORT = parseInt(process.env.GETH_HTTP_PORT || "8585", 10);
-const GETH_NETWORK_ID = "7012";
+let GETH_NETWORK_ID = "7012";
+
+function loadNetworkId() {
+  try {
+    const genesisPath = resolveGenesisSourcePath();
+    if (existsSync(genesisPath)) {
+      const genesis = JSON.parse(readFileSync(genesisPath, 'utf-8'));
+      if (genesis.config && genesis.config.chainId) {
+        GETH_NETWORK_ID = String(genesis.config.chainId);
+      }
+    }
+  } catch (err) {
+    console.error("Failed to load chain ID from genesis", err);
+  }
+}
 const GETH_DATA_DIR = join(process.cwd(), "data", "cointmu");
 const GETH_BOOTNODE_ENODE = process.env.GETH_BOOTNODE_ENODE || "";
 const GETH_LOG_VERBOSITY = process.env.GETH_LOG_VERBOSITY || "3";
@@ -437,18 +451,21 @@ class MiningController {
 
   /**
    * Toggles the mining state on or off. Dispatches miner_start or miner_stop.
+   * The etherbase is sourced exclusively from the persisted mining reward address
+   * (mining.poolAddress) and never from the active wallet tab, so the address
+   * that receives block rewards is owned solely by Mining Settings.
    * @param {boolean} enabled - Target mining state.
    * @returns {Promise<void>}
    */
   private async toggleMining(enabled: boolean): Promise<void> {
     this.store.set("mining.isMiningEnabled", enabled);
     if (enabled) {
-      const activeAddress = this.store.get("activeWalletAddress");
-      if (!activeAddress) {
-        throw new Error("No active wallet address found to set as etherbase.");
+      const rewardAddress = this.store.get("mining.poolAddress");
+      if (!rewardAddress) {
+        throw new Error("No mining reward address configured. Set one in Mining Settings.");
       }
 
-      await callGethRpc(this.rpcPort, "miner_setEtherbase", [activeAddress]);
+      await callGethRpc(this.rpcPort, "miner_setEtherbase", [rewardAddress]);
 
       const threads = this.store.get("mining.cpuThreads") || 4;
       await callGethRpc(this.rpcPort, "miner_start", [Math.floor(threads)]);
@@ -971,6 +988,51 @@ app.whenReady().then(async () => {
   registerCryptoHandlers();
   registerSystemHandlers();
 
+  ipcMain.handle("network:getGenesisConfig", () => {
+    try {
+      const genesisPath = resolveGenesisSourcePath();
+      return JSON.parse(readFileSync(genesisPath, "utf-8"));
+    } catch {
+      return null;
+    }
+  });
+
+  ipcMain.handle("network:setChainId", async (_, newId: number) => {
+    try {
+      const genesisPath = resolveGenesisSourcePath();
+      const genesis = JSON.parse(readFileSync(genesisPath, "utf-8"));
+      genesis.config.chainId = newId;
+      writeFileSync(genesisPath, JSON.stringify(genesis, null, 2), "utf-8");
+      
+      GETH_NETWORK_ID = String(newId);
+
+      if (gethProcess && !gethProcess.killed) {
+        gethProcess.kill("SIGINT");
+      }
+
+      const dataDir = GETH_DATA_DIR.startsWith(".")
+        ? join(app.getPath("userData"), GETH_DATA_DIR)
+        : GETH_DATA_DIR;
+      const chainDataPath = join(dataDir, "geth", "chaindata");
+      
+      if (existsSync(chainDataPath)) {
+        rmSync(chainDataPath, { recursive: true, force: true });
+      }
+
+      setTimeout(async () => {
+        try {
+          await initGethNode();
+        } catch (err) {}
+        spawnGethProcess(store);
+      }, 1000);
+
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  });
+
   ipcMain.on("network:restartNode", () => {
     console.log("[network] Restarting node with new configurations...");
     killGethProcess();
@@ -980,6 +1042,8 @@ app.whenReady().then(async () => {
   });
 
   resolvedRpcPort = await findAvailablePort();
+
+  loadNetworkId();
 
   try {
     await initGethNode();
