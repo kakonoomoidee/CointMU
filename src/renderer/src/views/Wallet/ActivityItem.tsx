@@ -11,6 +11,7 @@ export interface ActivityData {
   amount: string
   timestamp: number
   timestampStr: string
+  blockNumber?: number
   hash?: string
   from?: string
   to?: string

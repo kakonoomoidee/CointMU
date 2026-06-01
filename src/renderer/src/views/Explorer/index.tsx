@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, type JSX, type FormEvent } from 'react'
 import { useRecentBlocks, usePagination } from '@/hooks'
 import { useAppStore } from '@/store'
-import { call, fetchBalance, getNetworkInsights, type DerivedAccount } from '@/services'
+import { call, fetchBalance, getNetworkInsights, detectSearchType, type DerivedAccount } from '@/services'
 import { getTransactions } from '@/services/transactionService'
 import { formatBlockNumber, resolveHistoryAddresses } from '@/utils'
 import { type ActivityData } from '@/views/Wallet/ActivityItem'
@@ -12,6 +12,7 @@ import { ExplorerSearch } from './ExplorerSearch'
 import { ExplorerDataTabs, type TabState } from './ExplorerDataTabs'
 import { BlockDetail } from './BlockDetail'
 import { TransactionDetail } from './TransactionDetail'
+import { AddressDetail } from './AddressDetail'
 
 interface ExplorerProps {
   activeWalletAddress: string | null
@@ -20,7 +21,7 @@ interface ExplorerProps {
 
 const EXPLORER_TX_PAGE_SIZE = 10
 
-type ViewState = 'MAIN' | 'BLOCK_DETAIL' | 'TX_DETAIL'
+type ViewState = 'MAIN' | 'BLOCK_DETAIL' | 'TX_DETAIL' | 'ADDRESS_DETAIL'
 
 interface TopAccount {
   address: string
@@ -30,7 +31,6 @@ interface TopAccount {
 const EMPTY_STAT_LABEL = '--'
 const INSIGHTS_POLL_INTERVAL_MS = 3000
 const TICK_INTERVAL_MS = 5000
-const TX_HASH_LENGTH = 66
 
 /**
  * Explorer view orchestrator. It owns the network insights polling, search,
@@ -96,6 +96,7 @@ function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element
   const [currentView, setCurrentView] = useState<ViewState>('MAIN')
   const [selectedBlock, setSelectedBlock] = useState<any | null>(null)
   const [selectedTx, setSelectedTx] = useState<any | null>(null)
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<TabState>('blocks')
 
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -115,17 +116,37 @@ function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
+  const handleAddressSelect = (address: string): void => {
+    setSelectedAddress(address)
+    setCurrentView('ADDRESS_DETAIL')
+    setSearchValue('')
+  }
+
+  const handleTxHashSelect = async (hash: string): Promise<void> => {
+    const txData = await call('eth_getTransactionByHash', [hash])
+    if (txData) {
+      setSelectedTx(txData)
+      setCurrentView('TX_DETAIL')
+      setSearchValue('')
+    }
+  }
+
   const handleSearch = async (e: FormEvent): Promise<void> => {
     e.preventDefault()
-    if (!searchValue.trim()) return
-
     const val = searchValue.trim()
-    let result: any = null
+    const type = detectSearchType(val)
+    if (type === null) return
 
-    if (!isNaN(Number(val)) && val !== '') {
+    if (type === 'address') {
+      handleAddressSelect(val)
+      return
+    }
+
+    let result: any = null
+    if (type === 'block') {
       const hexValue = '0x' + Number(val).toString(16)
       result = await call('eth_getBlockByNumber', [hexValue, true])
-    } else if (val.startsWith('0x') && val.length === TX_HASH_LENGTH) {
+    } else if (type === 'hash') {
       result = await call('eth_getBlockByHash', [val, true])
       if (!result) {
         result = await call('eth_getTransactionByHash', [val])
@@ -230,6 +251,7 @@ function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element
               isLoadingAccounts={isLoadingAccounts}
               activeWalletAddress={activeWalletAddress}
               onBlockSelect={handleBlockSelect}
+              onAddressSelect={handleAddressSelect}
               transactions={txPagination.pageItems}
               txCurrentPage={txPagination.currentPage}
               txTotalPages={txPagination.totalPages}
@@ -245,12 +267,22 @@ function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element
             onBack={() => setCurrentView('MAIN')}
             onBlockSelect={handleBlockSelect}
             onTransactionSelect={handleTransactionSelect}
+            onAddressSelect={handleAddressSelect}
           />
         ) : currentView === 'TX_DETAIL' && selectedTx ? (
           <TransactionDetail
             tx={selectedTx}
             onBack={handleTransactionBack}
             onBlockSelect={handleBlockSelect}
+            onAddressSelect={handleAddressSelect}
+          />
+        ) : currentView === 'ADDRESS_DETAIL' && selectedAddress ? (
+          <AddressDetail
+            address={selectedAddress}
+            accounts={accounts}
+            onBack={() => setCurrentView('MAIN')}
+            onAddressSelect={handleAddressSelect}
+            onTxHashSelect={handleTxHashSelect}
           />
         ) : null}
       </main>

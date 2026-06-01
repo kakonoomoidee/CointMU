@@ -12,7 +12,7 @@ interface SparklineProps {
  * @param props - Data points and styling options.
  * @returns The rendered sparkline SVG.
  */
-function Sparkline({ data, className = '', color = 'currentColor', strokeWidth = 2 }: SparklineProps): JSX.Element {
+function Sparkline({ data, className = '', color = 'currentColor', strokeWidth = 1.5 }: SparklineProps): JSX.Element {
   const gradientId = useId()
 
   if (!data || data.length === 0) {
@@ -57,7 +57,7 @@ function Sparkline({ data, className = '', color = 'currentColor', strokeWidth =
     <svg className={className} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" fill="none">
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.4" />
+          <stop offset="0%" stopColor={color} stopOpacity="0.15" />
           <stop offset="100%" stopColor={color} stopOpacity="0.0" />
         </linearGradient>
       </defs>
@@ -73,6 +73,7 @@ function Sparkline({ data, className = '', color = 'currentColor', strokeWidth =
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
+        vectorEffect="non-scaling-stroke"
       />
     </svg>
   )

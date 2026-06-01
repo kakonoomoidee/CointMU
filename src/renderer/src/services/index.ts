@@ -46,3 +46,6 @@ export type { NetworkInsights, NetworkInsightBlock } from './networkService'
 export { checkForUpdates, quitAndInstall } from './updaterService'
 
 export { getCpuUsage } from './systemService'
+
+export { detectSearchType, getTransactionDetail, getAddressSummary } from './explorerService'
+export type { SearchType, TransactionDetailData, AddressSummary } from './explorerService'

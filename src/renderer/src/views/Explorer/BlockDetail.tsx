@@ -8,6 +8,7 @@ interface BlockDetailProps {
   onBack: () => void
   onBlockSelect: (blockNumber: number) => void
   onTransactionSelect: (tx: any) => void
+  onAddressSelect: (address: string) => void
 }
 
 /**
@@ -20,7 +21,8 @@ function BlockDetail({
   block,
   onBack,
   onBlockSelect,
-  onTransactionSelect
+  onTransactionSelect,
+  onAddressSelect
 }: BlockDetailProps): JSX.Element {
   const blockNumber = parseInt(block.number, 16)
 
@@ -72,8 +74,14 @@ function BlockDetail({
               </span>
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <span className="text-xs font-semibold text-slate-500 w-1/3">Merkle Root:</span>
+              <span className="text-sm font-mono text-slate-800 text-right break-all">
+                {block.transactionsRoot}
+              </span>
+            </div>
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <span className="text-xs font-semibold text-slate-500 w-1/3">Miner:</span>
-              <AddressBadge address={block.miner} />
+              <AddressBadge address={block.miner} onClick={onAddressSelect} />
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <span className="text-xs font-semibold text-slate-500 w-1/3">Nonce:</span>
@@ -126,7 +134,7 @@ function BlockDetail({
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
             <h3 className="text-sm font-bold text-slate-800 mb-2">Block Reward</h3>
             <p className="text-2xl font-bold text-emerald-600 font-mono tracking-tight">
-              +10.00 <span className="text-sm font-medium text-slate-400">CMU</span>
+              +2.00 <span className="text-sm font-medium text-slate-400">CMU</span>
             </p>
           </div>
 
@@ -212,10 +220,10 @@ function BlockDetail({
                     </div>
                   </td>
                   <td className="px-2 py-3.5">
-                    <AddressBadge address={tx.from} leftAligned />
+                    <AddressBadge address={tx.from} leftAligned onClick={onAddressSelect} />
                   </td>
                   <td className="px-2 py-3.5">
-                    <AddressBadge address={tx.to} leftAligned />
+                    <AddressBadge address={tx.to} leftAligned onClick={onAddressSelect} />
                   </td>
                   <td className="px-2 py-3.5 text-right">
                     <span className="text-xs font-bold text-slate-800">

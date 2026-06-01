@@ -23,6 +23,7 @@ interface ExplorerDataTabsProps {
   isLoadingAccounts: boolean
   activeWalletAddress: string | null
   onBlockSelect: (blockNumber: number) => void
+  onAddressSelect: (address: string) => void
   transactions: ActivityData[]
   txCurrentPage: number
   txTotalPages: number
@@ -58,6 +59,7 @@ function ExplorerDataTabs({
   topAccounts,
   isLoadingAccounts,
   onBlockSelect,
+  onAddressSelect,
   transactions,
   txCurrentPage,
   txTotalPages,
@@ -154,7 +156,10 @@ function ExplorerDataTabs({
                       </td>
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-2">
-                          <p className="text-xs font-mono text-slate-800">
+                          <p
+                            className="text-xs font-mono text-slate-800 cursor-pointer hover:text-blue-600 hover:underline"
+                            onClick={() => onAddressSelect(block.miner)}
+                          >
                             {block.miner.substring(0, 10)}...
                             {block.miner.substring(block.miner.length - 8)}
                           </p>
@@ -173,7 +178,7 @@ function ExplorerDataTabs({
                       </td>
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-1">
-                          <p className="text-xs font-bold text-slate-800">5.00</p>
+                          <p className="text-xs font-bold text-slate-800">2.00</p>
                           <span className="text-[9px] font-semibold text-slate-400">CMU</span>
                         </div>
                       </td>
@@ -301,7 +306,10 @@ function ExplorerDataTabs({
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-2">
                           <div className="w-5 h-5 rounded bg-slate-200 flex-shrink-0" />
-                          <p className="text-xs font-mono text-blue-600">
+                          <p
+                            className="text-xs font-mono text-blue-600 cursor-pointer hover:underline"
+                            onClick={() => onAddressSelect(acc.address)}
+                          >
                             {acc.address.substring(0, 10)}...
                             {acc.address.substring(acc.address.length - 8)}
                           </p>
