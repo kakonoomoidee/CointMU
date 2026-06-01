@@ -27,7 +27,15 @@ function App(): JSX.Element {
   const [accounts, setAccounts] = useState<DerivedAccount[]>([])
   const [isLoadingWallet, setIsLoadingWallet] = useState<boolean>(true)
   const [activeView, setActiveView] = useState<ActiveView>(NAV_ITEM_DASHBOARD)
+  const [settingsTab, setSettingsTab] = useState<string>('general')
   const updateState = useUpdateStatus()
+
+  const handleNavigate = (view: string, payload?: any) => {
+    setActiveView(view as ActiveView)
+    if (view === NAV_ITEM_SETTINGS && payload) {
+      setSettingsTab(payload)
+    }
+  }
 
   const accountsKey = accounts.map((a) => a.address).join(',')
 
@@ -86,7 +94,7 @@ function App(): JSX.Element {
         accounts={accounts}
         activeWalletAddress={activeWalletAddress}
         activeView={activeView}
-        setActiveView={(view) => setActiveView(view as ActiveView)}
+        setActiveView={(view) => handleNavigate(view as ActiveView)}
         onLogout={handleLogout}
         updateStatus={updateState.status}
       />
@@ -96,11 +104,15 @@ function App(): JSX.Element {
           <Dashboard
             activeWalletAddress={activeWalletAddress}
             accounts={accounts}
-            onNavigate={(view) => setActiveView(view as ActiveView)}
+            onNavigate={handleNavigate}
           />
         )}
         {activeView === NAV_ITEM_MINER && (
-          <Miner activeWalletAddress={activeWalletAddress} accounts={accounts} />
+          <Miner 
+            activeWalletAddress={activeWalletAddress} 
+            accounts={accounts} 
+            onNavigate={handleNavigate}
+          />
         )}
         {activeView === NAV_ITEM_WALLET && (
           <Wallet
@@ -113,7 +125,7 @@ function App(): JSX.Element {
         {activeView === NAV_ITEM_EXPLORER && (
           <Explorer activeWalletAddress={activeWalletAddress} accounts={accounts} />
         )}
-        {activeView === NAV_ITEM_SETTINGS && <Settings />}
+        {activeView === NAV_ITEM_SETTINGS && <Settings initialCategory={settingsTab as any} />}
       </main>
     </div>
   )

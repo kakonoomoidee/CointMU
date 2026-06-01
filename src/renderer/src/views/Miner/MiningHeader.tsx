@@ -5,6 +5,7 @@ import { IconSettings } from '@/assets/icons'
 interface MiningHeaderProps {
   isMining: boolean
   powerStatus: string
+  onNavigate: (view: string, payload?: string) => void
 }
 
 /**
@@ -13,7 +14,7 @@ interface MiningHeaderProps {
  * @param props - The current mining flag and node power status.
  * @returns The rendered mining header.
  */
-function MiningHeader({ isMining, powerStatus }: MiningHeaderProps): JSX.Element {
+function MiningHeader({ isMining, powerStatus, onNavigate }: MiningHeaderProps): JSX.Element {
   return (
     <header className="flex items-center justify-between px-8 py-4">
       <div className="flex items-center gap-2">
@@ -33,7 +34,11 @@ function MiningHeader({ isMining, powerStatus }: MiningHeaderProps): JSX.Element
           <StatusPill tone="neutral" label="Stopped" showDot={false} />
         )}
 
-        <Button variant="secondary" leftIcon={<IconSettings width={14} height={14} />}>
+        <Button 
+          variant="secondary" 
+          leftIcon={<IconSettings width={14} height={14} />}
+          onClick={() => onNavigate('settings', 'mining')}
+        >
           Preferences
         </Button>
       </div>

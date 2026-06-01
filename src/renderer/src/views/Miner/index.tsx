@@ -29,6 +29,7 @@ import { MiningActivity, ACTIVITY_TAB_FOUND } from './MiningActivity'
 interface MinerProps {
   activeWalletAddress: string | null
   accounts: DerivedAccount[]
+  onNavigate: (view: string, payload?: string) => void
 }
 
 const SHARES_WINDOW_SIZE = 60
@@ -42,7 +43,7 @@ const FOUND_BLOCKS_PAGE_SIZE = 8
  * @param props - The active wallet address.
  * @returns The complete mining view with header, hero, KPI grid, and panels.
  */
-function Miner({ activeWalletAddress, accounts }: MinerProps): JSX.Element {
+function Miner({ activeWalletAddress, accounts, onNavigate }: MinerProps): JSX.Element {
   const [maxCores] = useState<number>(getSafeConcurrency())
   const [activeTab, setActiveTab] = useState<string>(ACTIVITY_TAB_FOUND)
 
@@ -97,7 +98,7 @@ function Miner({ activeWalletAddress, accounts }: MinerProps): JSX.Element {
 
   return (
     <div className="flex flex-col h-full bg-slate-50/80">
-      <MiningHeader isMining={isMining} powerStatus={telemetry.powerStatus} />
+      <MiningHeader isMining={isMining} powerStatus={telemetry.powerStatus} onNavigate={onNavigate} />
 
       <main className="flex-1 overflow-y-auto px-8 pb-8 space-y-5">
         <MiningHeroCard

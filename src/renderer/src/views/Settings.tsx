@@ -121,14 +121,19 @@ export interface SettingsStore {
   }
 }
 
+interface SettingsProps {
+  initialCategory?: SettingsCategory
+}
+
 /**
  * Main Settings view orchestrating the split-pane layout for configuration.
  * Handles loading initial state from electron-store via IPC and provides an
  * updater function to sub-components to persist changes immediately.
+ * @param props - Settings configuration.
  * @returns The Settings interface with left navigation and right content area.
  */
-function Settings(): JSX.Element {
-  const [activeCategory, setActiveCategory] = useState<SettingsCategory>('general')
+function Settings({ initialCategory = 'general' }: SettingsProps = {}): JSX.Element {
+  const [activeCategory, setActiveCategory] = useState<SettingsCategory>(initialCategory)
   const [settings, setSettings] = useState<SettingsStore | null>(null)
 
   useEffect(() => {
