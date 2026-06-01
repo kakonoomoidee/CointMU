@@ -1,6 +1,7 @@
 import { useState, useEffect, type JSX } from 'react'
 import { useUpdateStatus } from '@/hooks'
 import { useAppStore } from '@/store'
+import { EXTERNAL_LINKS } from '@/constants'
 import { checkForUpdates, quitAndInstall } from '@/services'
 import { IconLayers } from '@/assets/icons'
 
@@ -155,7 +156,10 @@ export function AboutSettings(): JSX.Element {
             >
               {getUpdateButtonLabel(updateState.status)}
             </button>
-            <button className="px-4 py-1.5 bg-slate-100 text-slate-800 rounded-lg text-sm font-bold border border-slate-200 hover:bg-slate-200 transition-colors">
+            <button 
+              onClick={() => window.open(EXTERNAL_LINKS.RELEASE_NOTES, '_blank')}
+              className="px-4 py-1.5 bg-slate-100 text-slate-800 rounded-lg text-sm font-bold border border-slate-200 hover:bg-slate-200 transition-colors"
+            >
               Release notes
             </button>
           </div>
@@ -232,7 +236,10 @@ export function AboutSettings(): JSX.Element {
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Links</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
-            <button className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors group">
+            <button 
+              onClick={() => window.open(EXTERNAL_LINKS.DOCUMENTATION, '_blank')}
+              className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors group"
+            >
               <div className="text-left">
                 <p className="text-sm font-bold text-slate-800">Documentation</p>
                 <p className="text-xs text-slate-500 mt-0.5">Guides, API reference, RPC schema</p>
@@ -240,15 +247,21 @@ export function AboutSettings(): JSX.Element {
               <span className="text-sm font-bold text-slate-800 group-hover:text-blue-500 transition-colors">{'Open \u203A'}</span>
             </button>
             
-            <button className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors group">
+            <button 
+              onClick={() => window.open(EXTERNAL_LINKS.GITHUB_REPO, '_blank')}
+              className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors group"
+            >
               <div className="text-left">
                 <p className="text-sm font-bold text-slate-800">GitHub</p>
-                <p className="text-xs text-slate-500 mt-0.5">github.com/cointmu/node</p>
+                <p className="text-xs text-slate-500 mt-0.5">github.com/kakonoomoidee/CointMU</p>
               </div>
               <span className="text-sm font-bold text-slate-800 group-hover:text-blue-500 transition-colors">{'Open \u203A'}</span>
             </button>
             
-            <button className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors group">
+            <button 
+              onClick={() => window.open(EXTERNAL_LINKS.REPORT_ISSUE, '_blank')}
+              className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors group"
+            >
               <div className="text-left">
                 <p className="text-sm font-bold text-slate-800">Report an issue</p>
                 <p className="text-xs text-slate-500 mt-0.5">Send a bug report or feature request</p>
