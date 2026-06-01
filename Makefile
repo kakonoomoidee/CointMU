@@ -3,9 +3,9 @@
 # ==========================================
 
 VERSION = 1
-PATCHLEVEL = 5
-SUBLEVEL = 6
-EXTRAVERSION = Lynx
+PATCHLEVEL = 6
+SUBLEVEL = 0
+EXTRAVERSION = Athena
 
 .PHONY: help dev build\:win build\:linux build\:mac clean
 
