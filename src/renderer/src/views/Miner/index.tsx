@@ -4,16 +4,20 @@ import {
   useMiningStats,
   useMiningControls,
   useMiningActivity,
-  useTimer
+  useTimer,
+  usePagination
 } from '@/hooks'
 import { useMiningStore, useAppStore } from '@/store'
+import { type DerivedAccount } from '@/services'
 import {
   formatMhs,
   isWithinLastDay,
   getSafeConcurrency,
   computeSharesData,
   formatRewards,
-  formatDifficultyLabel
+  formatDifficultyLabel,
+  resolveHistoryAddresses,
+  filterFoundBlocks
 } from '@/utils'
 import { IconAlertCircle } from '@/assets/icons'
 import { MiningHeader } from './MiningHeader'
@@ -24,9 +28,11 @@ import { MiningActivity, ACTIVITY_TAB_FOUND } from './MiningActivity'
 
 interface MinerProps {
   activeWalletAddress: string | null
+  accounts: DerivedAccount[]
 }
 
 const SHARES_WINDOW_SIZE = 60
+const FOUND_BLOCKS_PAGE_SIZE = 8
 
 /**
  * Mining controller view orchestrator. All telemetry, control, timer, and
@@ -36,14 +42,19 @@ const SHARES_WINDOW_SIZE = 60
  * @param props - The active wallet address.
  * @returns The complete mining view with header, hero, KPI grid, and panels.
  */
-function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
+function Miner({ activeWalletAddress, accounts }: MinerProps): JSX.Element {
   const [maxCores] = useState<number>(getSafeConcurrency())
   const [activeTab, setActiveTab] = useState<string>(ACTIVITY_TAB_FOUND)
 
   const blockHeight = useAppStore((s) => s.blockHeight)
   const isConnected = useAppStore((s) => s.isConnected)
   const balance = useAppStore((s) => s.balance)
+  const historyFilter = useAppStore((s) => s.historyFilter)
+  const setHistoryFilter = useAppStore((s) => s.setHistoryFilter)
   const recentBlocks = useRecentBlocks(blockHeight, isConnected)
+
+  const ownedAddresses = accounts.map((account) => account.address)
+  const historyAddresses = resolveHistoryAddresses(historyFilter, accounts)
 
   const { config, toggling, error, toggle } = useMiningControls()
   const telemetry = useMiningStats(config.cpuThreads)
@@ -52,10 +63,10 @@ function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
   const isMining = telemetry.isMining
   const elapsedTime = useTimer(sessionStartTime, isMining)
 
-  const { logs } = useMiningActivity(
-    recentBlocks,
-    activeWalletAddress
-  )
+  const { logs } = useMiningActivity(recentBlocks, ownedAddresses)
+
+  const scopedFoundBlocks = filterFoundBlocks(foundBlocks, historyAddresses)
+  const foundBlocksPagination = usePagination(scopedFoundBlocks, FOUND_BLOCKS_PAGE_SIZE)
 
   useEffect(() => {
     if (isMining) startMining()
@@ -77,7 +88,7 @@ function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
   const rewardAddress = config.poolAddress || activeWalletAddress || ''
   const hashrateLabel = formatMhs(telemetry.hashrateMhs)
   const formattedRewards = formatRewards(balance)
-  const blocksFoundToday = foundBlocks.filter((block) => isWithinLastDay(block.timestamp)).length
+  const blocksFoundToday = scopedFoundBlocks.filter((block) => isWithinLastDay(block.timestamp)).length
   const difficultyLabel = formatDifficultyLabel(telemetry.difficulty)
 
   const sharesData = computeSharesData(recentBlocks, SHARES_WINDOW_SIZE, activeWalletAddress)
@@ -131,11 +142,17 @@ function Miner({ activeWalletAddress }: MinerProps): JSX.Element {
           <MiningActivity
             activeTab={activeTab}
             onTabChange={setActiveTab}
-            minedBlocks={foundBlocks}
+            minedBlocks={foundBlocksPagination.pageItems}
+            currentPage={foundBlocksPagination.currentPage}
+            totalPages={foundBlocksPagination.totalPages}
+            onPageChange={foundBlocksPagination.setPage}
             sharesData={sharesData}
             acceptedShares={acceptedShares}
             networkShares={networkShares}
             logs={logs}
+            accounts={accounts}
+            historyFilter={historyFilter}
+            onFilterChange={setHistoryFilter}
           />
         </div>
       </main>

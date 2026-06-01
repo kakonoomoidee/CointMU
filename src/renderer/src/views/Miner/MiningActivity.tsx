@@ -1,8 +1,9 @@
 import { type JSX } from 'react'
-import { Card } from '@/components'
+import { Card, WalletHistoryFilter, Pagination } from '@/components'
 import { IconCheck, IconCube } from '@/assets/icons'
 import { formatAge } from '@/utils'
-import { type FoundBlock } from '@/store'
+import { type FoundBlock, type HistoryFilter } from '@/store'
+import { type DerivedAccount } from '@/services'
 import { type LogEntry } from '@/hooks'
 
 const SELF_BLOCK_REWARD = '+2.00'
@@ -16,26 +17,41 @@ interface MiningActivityProps {
   activeTab: string
   onTabChange: (tab: string) => void
   minedBlocks: FoundBlock[]
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => void
   sharesData: Array<boolean | null>
   acceptedShares: number
   networkShares: number
   logs: LogEntry[]
+  accounts: DerivedAccount[]
+  historyFilter: HistoryFilter
+  onFilterChange: (filter: HistoryFilter) => void
 }
 
 /**
- * Mining activity card exposing three tabs: blocks the wallet has found, a grid
- * of recent accepted shares, and the raw node activity log.
- * @param props - The active tab, tab handler, and the data for each tab.
+ * Mining activity card exposing three tabs: blocks the selected wallets have
+ * found, a grid of recent accepted shares, and the raw node activity log. The
+ * found-block history aggregates across all owned wallets and is scoped by the
+ * global wallet history filter, with page controls over the result.
+ * @param props - The active tab, tab handler, pagination state, filter state,
+ *        owned wallets, and the data for each tab.
  * @returns The rendered mining activity card.
  */
 function MiningActivity({
   activeTab,
   onTabChange,
   minedBlocks,
+  currentPage,
+  totalPages,
+  onPageChange,
   sharesData,
   acceptedShares,
   networkShares,
-  logs
+  logs,
+  accounts,
+  historyFilter,
+  onFilterChange
 }: MiningActivityProps): JSX.Element {
   return (
     <Card>
@@ -63,46 +79,56 @@ function MiningActivity({
 
       <div className="mt-4">
         {activeTab === ACTIVITY_TAB_FOUND && (
-          <div className="h-[280px] overflow-y-auto pr-1">
-            {minedBlocks.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <IconCube className="text-slate-300 mb-3" width={32} height={32} />
-                <p className="text-sm font-medium text-slate-400">No blocks found yet</p>
-                <p className="text-xs text-slate-400 mt-1">Start mining to find blocks</p>
-              </div>
-            ) : (
-              <div className="divide-y divide-slate-100">
-                {minedBlocks.map((block) => (
-                  <div
-                    key={block.hash}
-                    className="flex items-center justify-between py-4 px-2 hover:bg-slate-50/50 rounded-lg transition-colors"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-500">
-                        <IconCheck width={16} height={16} />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold text-slate-800">
-                            #{block.number.toLocaleString()}
-                          </span>
-                          <span className="text-xs font-mono text-slate-400">
-                            {block.hash.substring(0, 6)}...{block.hash.substring(block.hash.length - 4)}
-                          </span>
+          <div>
+            <div className="flex items-center justify-end mb-2">
+              <WalletHistoryFilter
+                accounts={accounts}
+                value={historyFilter}
+                onChange={onFilterChange}
+              />
+            </div>
+            <div className="h-[280px] overflow-y-auto pr-1">
+              {minedBlocks.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <IconCube className="text-slate-300 mb-3" width={32} height={32} />
+                  <p className="text-sm font-medium text-slate-400">No blocks found yet</p>
+                  <p className="text-xs text-slate-400 mt-1">Start mining to find blocks</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-slate-100">
+                  {minedBlocks.map((block) => (
+                    <div
+                      key={block.hash}
+                      className="flex items-center justify-between py-4 px-2 hover:bg-slate-50/50 rounded-lg transition-colors"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-500">
+                          <IconCheck width={16} height={16} />
                         </div>
-                        <p className="text-xs text-slate-500 mt-0.5">{formatAge(block.timestamp)}</p>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-slate-800">
+                              #{block.number.toLocaleString()}
+                            </span>
+                            <span className="text-xs font-mono text-slate-400">
+                              {block.hash.substring(0, 6)}...{block.hash.substring(block.hash.length - 4)}
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-500 mt-0.5">{formatAge(block.timestamp)}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-bold text-emerald-500 tracking-tight">
+                          {SELF_BLOCK_REWARD}
+                        </span>
+                        <span className="text-xs font-medium text-emerald-500/70 ml-1">CMU</span>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <span className="font-bold text-emerald-500 tracking-tight">
-                        {SELF_BLOCK_REWARD}
-                      </span>
-                      <span className="text-xs font-medium text-emerald-500/70 ml-1">CMU</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </div>
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
           </div>
         )}
 

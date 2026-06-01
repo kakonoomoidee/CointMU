@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef, type JSX, type FormEvent } from 'react'
-import { useRecentBlocks } from '@/hooks'
+import { useRecentBlocks, usePagination } from '@/hooks'
 import { useAppStore } from '@/store'
-import { call, fetchBalance, getNetworkInsights } from '@/services'
-import { formatBlockNumber } from '@/utils'
+import { call, fetchBalance, getNetworkInsights, type DerivedAccount } from '@/services'
+import { getTransactions } from '@/services/transactionService'
+import { formatBlockNumber, resolveHistoryAddresses } from '@/utils'
+import { type ActivityData } from '@/views/Wallet/ActivityItem'
 import { Insights } from '@/components/explorer/Insights'
 import { ChainTimeline } from '@/components/explorer/ChainTimeline'
 import { ExplorerHeader } from './ExplorerHeader'
@@ -13,7 +15,10 @@ import { TransactionDetail } from './TransactionDetail'
 
 interface ExplorerProps {
   activeWalletAddress: string | null
+  accounts: DerivedAccount[]
 }
+
+const EXPLORER_TX_PAGE_SIZE = 10
 
 type ViewState = 'MAIN' | 'BLOCK_DETAIL' | 'TX_DETAIL'
 
@@ -34,9 +39,28 @@ const TX_HASH_LENGTH = 66
  * @param props - The active wallet address used to flag and seed account data.
  * @returns The complete explorer interface.
  */
-function Explorer({ activeWalletAddress }: ExplorerProps): JSX.Element {
+function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element {
   const blockHeight = useAppStore((s) => s.blockHeight)
   const isConnected = useAppStore((s) => s.isConnected)
+  const historyFilter = useAppStore((s) => s.historyFilter)
+  const setHistoryFilter = useAppStore((s) => s.setHistoryFilter)
+
+  const historyAddresses = resolveHistoryAddresses(historyFilter, accounts)
+  const historyKey = historyAddresses.join(',')
+
+  const [txActivity, setTxActivity] = useState<ActivityData[]>([])
+  useEffect(() => {
+    const addresses = historyKey.length > 0 ? historyKey.split(',') : []
+    if (!isConnected || addresses.length === 0) {
+      setTxActivity([])
+      return
+    }
+    getTransactions(addresses).then((items) =>
+      setTxActivity(items.filter((item) => item.type !== 'mining'))
+    )
+  }, [historyKey, isConnected])
+
+  const txPagination = usePagination(txActivity, EXPLORER_TX_PAGE_SIZE)
 
   const [insights, setInsights] = useState<any>(null)
 
@@ -206,6 +230,13 @@ function Explorer({ activeWalletAddress }: ExplorerProps): JSX.Element {
               isLoadingAccounts={isLoadingAccounts}
               activeWalletAddress={activeWalletAddress}
               onBlockSelect={handleBlockSelect}
+              transactions={txPagination.pageItems}
+              txCurrentPage={txPagination.currentPage}
+              txTotalPages={txPagination.totalPages}
+              onTxPageChange={txPagination.setPage}
+              accounts={accounts}
+              historyFilter={historyFilter}
+              onFilterChange={setHistoryFilter}
             />
           </div>
         ) : currentView === 'BLOCK_DETAIL' && selectedBlock ? (

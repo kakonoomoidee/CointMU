@@ -1,5 +1,7 @@
 export { Sidebar } from './Sidebar'
 export { Sparkline } from './Sparkline'
+export { WalletHistoryFilter } from './WalletHistoryFilter'
+export type { WalletHistoryFilterProps } from './WalletHistoryFilter'
 export * from './ui'
 export { IconEyeSlash } from '@/assets/icons'
 export type { IconProps } from '@/assets/icons'

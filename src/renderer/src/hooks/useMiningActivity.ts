@@ -21,15 +21,15 @@ interface MiningActivity {
 
 /**
  * Builds log entries for any blocks newer than the last processed height,
- * attributing self-mined blocks to the active wallet.
+ * attributing self-mined blocks to any of the owned wallets.
  * @param blocks - The candidate blocks to convert into log entries.
- * @param activeWalletAddress - The address used to flag self-mined blocks.
+ * @param owned - The set of lowercased owned addresses used to flag self-mined blocks.
  * @returns The derived log entries, newest first.
  */
-function buildLogEntries(blocks: BlockData[], activeWalletAddress: string | null): LogEntry[] {
+function buildLogEntries(blocks: BlockData[], owned: Set<string>): LogEntry[] {
   return blocks.map((block, index) => {
     const timestamp = format(new Date(), LOG_TIME_FORMAT)
-    const isMine = block.miner.toLowerCase() === activeWalletAddress?.toLowerCase()
+    const isMine = owned.has(block.miner.toLowerCase())
     return {
       id: `${block.hash}-${Date.now()}-${index}`,
       timestamp,
@@ -43,25 +43,29 @@ function buildLogEntries(blocks: BlockData[], activeWalletAddress: string | null
 }
 
 /**
- * Hook that derives the mining activity feed and a simulated nonce counter from
- * live chain data. New blocks are folded into a capped log, and the nonce
- * counter advances proportionally to the current hashrate while mining.
+ * Hook that derives the mining activity feed from live chain data. New blocks
+ * are folded into a capped log, and any block mined by one of the owned wallets
+ * is recorded to the global store so found-block history aggregates across all
+ * wallets and can be filtered at display time.
  * @param recentBlocks - The most recent blocks observed on the network.
- * @param activeWalletAddress - The address used to attribute self-mined blocks.
+ * @param ownedAddresses - Every wallet address owned by the user.
  * @returns The capped log entries.
  */
 function useMiningActivity(
   recentBlocks: BlockData[],
-  activeWalletAddress: string | null
+  ownedAddresses: string[]
 ): MiningActivity {
   const [logs, setLogs] = useState<LogEntry[]>([])
   const lastProcessedBlock = useRef<number | null>(null)
   const recordFoundBlocks = useMiningStore((state) => state.recordFoundBlocks)
+  const ownedKey = ownedAddresses.join(',')
 
   useEffect(() => {
     if (recentBlocks.length === 0) {
       return
     }
+
+    const owned = new Set(ownedKey.length > 0 ? ownedKey.split(',').map((addr) => addr.toLowerCase()) : [])
 
     const newBlocks =
       lastProcessedBlock.current === null
@@ -73,12 +77,10 @@ function useMiningActivity(
     }
 
     lastProcessedBlock.current = Math.max(...newBlocks.map((block) => block.number))
-    const entries = buildLogEntries(newBlocks, activeWalletAddress)
+    const entries = buildLogEntries(newBlocks, owned)
     setLogs((prev) => [...entries, ...prev].slice(0, MAX_LOG_ENTRIES))
 
-    const selfMined = newBlocks.filter(
-      (block) => block.miner.toLowerCase() === activeWalletAddress?.toLowerCase()
-    )
+    const selfMined = newBlocks.filter((block) => owned.has(block.miner.toLowerCase()))
     if (selfMined.length > 0) {
       recordFoundBlocks(
         selfMined.map((block) => ({
@@ -89,7 +91,7 @@ function useMiningActivity(
         }))
       )
     }
-  }, [recentBlocks, activeWalletAddress, recordFoundBlocks])
+  }, [recentBlocks, ownedKey, recordFoundBlocks])
 
   return { logs }
 }

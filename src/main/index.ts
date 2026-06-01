@@ -553,16 +553,19 @@ class MiningController {
       }
     });
 
-    ipcMain.handle("wallet:getActivity", async (_, address: string) => {
+    ipcMain.handle("wallet:getActivity", async (_, addresses: string[]) => {
       try {
+        if (!Array.isArray(addresses) || addresses.length === 0) return [];
+        const targets = new Set(addresses.map((addr) => addr.toLowerCase()));
+
         const latestBlockHex = await callGethRpc(this.rpcPort, "eth_blockNumber");
         if (!latestBlockHex) return [];
         const latest = parseInt(latestBlockHex, 16);
         const start = Math.max(0, latest - 500);
-        
+
         const activities: any[] = [];
         const now = Math.floor(Date.now() / 1000);
-        
+
         const timeAgo = (timestamp: number) => {
           const diff = now - timestamp;
           if (diff < 60) return `${Math.max(1, diff)}s ago`;
@@ -570,38 +573,40 @@ class MiningController {
           if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
           return `${Math.floor(diff/86400)}d ago`;
         };
-        
+
         for (let i = latest; i > start; i--) {
           const block = await callGethRpc(this.rpcPort, "eth_getBlockByNumber", ["0x" + i.toString(16), true]);
           if (!block) continue;
-          
+
           const blockNum = parseInt(block.number, 16);
           const timestamp = parseInt(block.timestamp, 16);
           const confs = latest - blockNum + 1;
           const tsStr = `${timeAgo(timestamp)} · ${confs} confs`;
-          
-          if (block.miner && block.miner.toLowerCase() === address.toLowerCase()) {
+
+          if (block.miner && targets.has(block.miner.toLowerCase())) {
             activities.push({
               id: `block-${block.number}`,
               type: 'mining',
               title: 'Mining reward',
               subtitle: `From mining pool · block #${blockNum}`,
               amount: '2.00',
-              timestampStr: tsStr
+              timestamp,
+              timestampStr: tsStr,
+              to: block.miner
             });
           }
-          
+
           if (block.transactions) {
             for (const tx of block.transactions) {
-              const isFrom = tx.from && tx.from.toLowerCase() === address.toLowerCase();
-              const isTo = tx.to && tx.to.toLowerCase() === address.toLowerCase();
+              const isFrom = tx.from && targets.has(tx.from.toLowerCase());
+              const isTo = tx.to && targets.has(tx.to.toLowerCase());
               if (!isFrom && !isTo) continue;
-              
+
               let valueFormat = '0.00';
               if (tx.value) {
                 valueFormat = (parseInt(tx.value, 16) / 1e18).toFixed(2);
               }
-              
+
               if (isFrom && !tx.to) {
                 activities.push({
                   id: tx.hash,
@@ -609,7 +614,11 @@ class MiningController {
                   title: 'Contract deployment',
                   subtitle: `Hash ${tx.hash.substring(0, 8)}...`,
                   amount: valueFormat,
-                  timestampStr: tsStr
+                  timestamp,
+                  timestampStr: tsStr,
+                  hash: tx.hash,
+                  from: tx.from,
+                  to: ''
                 });
               } else if (isFrom && tx.to && tx.input && tx.input !== '0x') {
                 activities.push({
@@ -618,7 +627,11 @@ class MiningController {
                   title: 'Contract call',
                   subtitle: `To ${tx.to.substring(0, 6)}...${tx.to.substring(tx.to.length - 4)}`,
                   amount: valueFormat,
-                  timestampStr: tsStr
+                  timestamp,
+                  timestampStr: tsStr,
+                  hash: tx.hash,
+                  from: tx.from,
+                  to: tx.to
                 });
               } else if (isFrom) {
                 activities.push({
@@ -627,7 +640,11 @@ class MiningController {
                   title: 'Sent CMU',
                   subtitle: `To ${tx.to.substring(0, 6)}...${tx.to.substring(tx.to.length - 4)}`,
                   amount: valueFormat,
-                  timestampStr: tsStr
+                  timestamp,
+                  timestampStr: tsStr,
+                  hash: tx.hash,
+                  from: tx.from,
+                  to: tx.to
                 });
               } else if (isTo) {
                 activities.push({
@@ -636,13 +653,18 @@ class MiningController {
                   title: 'Received CMU',
                   subtitle: `From ${tx.from.substring(0, 6)}...${tx.from.substring(tx.from.length - 4)}`,
                   amount: valueFormat,
-                  timestampStr: tsStr
+                  timestamp,
+                  timestampStr: tsStr,
+                  hash: tx.hash,
+                  from: tx.from,
+                  to: tx.to
                 });
               }
             }
           }
         }
-        
+
+        activities.sort((a, b) => b.timestamp - a.timestamp);
         return activities;
       } catch (err) {
         console.error("Failed to get activity:", err);

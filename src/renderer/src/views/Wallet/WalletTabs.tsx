@@ -33,7 +33,7 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
   
   useEffect(() => {
     if (activeTab === 'activity' && activeWalletAddress) {
-      getTransactions(activeWalletAddress).then(setTransactions)
+      getTransactions([activeWalletAddress]).then(setTransactions)
     } else if (activeTab === 'tokens' && activeWalletAddress) {
       const fetchTokens = async (): Promise<void> => {
         const balances: Record<string, string> = {}

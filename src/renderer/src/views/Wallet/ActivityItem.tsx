@@ -9,7 +9,11 @@ export interface ActivityData {
   title: string
   subtitle: string
   amount: string
+  timestamp: number
   timestampStr: string
+  hash?: string
+  from?: string
+  to?: string
 }
 
 interface ActivityItemProps {

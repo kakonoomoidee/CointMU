@@ -1,6 +1,9 @@
 import { type JSX } from 'react'
 import { type BlockData } from '@/hooks'
-import { useAppStore } from '@/store'
+import { useAppStore, type HistoryFilter } from '@/store'
+import { type DerivedAccount } from '@/services'
+import { type ActivityData } from '@/views/Wallet/ActivityItem'
+import { WalletHistoryFilter, Pagination } from '@/components'
 import { IconActivity } from '@/assets/icons'
 import { formatTxAge } from '@/utils'
 
@@ -20,10 +23,26 @@ interface ExplorerDataTabsProps {
   isLoadingAccounts: boolean
   activeWalletAddress: string | null
   onBlockSelect: (blockNumber: number) => void
+  transactions: ActivityData[]
+  txCurrentPage: number
+  txTotalPages: number
+  onTxPageChange: (page: number) => void
+  accounts: DerivedAccount[]
+  historyFilter: HistoryFilter
+  onFilterChange: (filter: HistoryFilter) => void
 }
 
-const TRANSACTIONS: never[] = []
 const MINER_DISTRIBUTION: never[] = []
+
+/**
+ * Abbreviates a hex address or hash for compact table display.
+ * @param value - The address or hash to shorten.
+ * @returns The shortened representation, or a dash when absent.
+ */
+function shortHex(value: string | undefined): string {
+  if (!value) return '--'
+  return `${value.substring(0, 8)}...${value.substring(value.length - 6)}`
+}
 
 /**
  * Explorer main data area combining the tab switcher, the live block,
@@ -38,7 +57,14 @@ function ExplorerDataTabs({
   recentBlocks,
   topAccounts,
   isLoadingAccounts,
-  onBlockSelect
+  onBlockSelect,
+  transactions,
+  txCurrentPage,
+  txTotalPages,
+  onTxPageChange,
+  accounts,
+  historyFilter,
+  onFilterChange
 }: ExplorerDataTabsProps): JSX.Element {
   const balances = useAppStore((s) => s.balances)
 
@@ -73,6 +99,9 @@ function ExplorerDataTabs({
             </button>
           </div>
           <div className="flex items-center gap-2">
+            {activeTab === 'transactions' && (
+              <WalletHistoryFilter accounts={accounts} value={historyFilter} onChange={onFilterChange} />
+            )}
             <span className="text-[10px] font-semibold text-slate-400">Auto-refresh</span>
             <div
               className={`flex items-center gap-1.5 px-2 py-1 rounded ${isConnected ? 'bg-emerald-50' : 'bg-slate-100'}`}
@@ -187,24 +216,51 @@ function ExplorerDataTabs({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {TRANSACTIONS.length > 0 ? (
-                  TRANSACTIONS.map((_, i) => (
-                    <tr key={i}>
-                      <td />
+                {transactions.length > 0 ? (
+                  transactions.map((tx) => (
+                    <tr key={tx.id} className="hover:bg-slate-50/50 transition-colors">
+                      <td className="px-5 py-3.5">
+                        <p className="text-xs font-mono text-blue-600">{shortHex(tx.hash || tx.id)}</p>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <p className="text-xs font-mono text-slate-700">{shortHex(tx.from)}</p>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <p className="text-xs font-mono text-slate-700">{shortHex(tx.to)}</p>
+                      </td>
+                      <td className="px-5 py-3.5 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <p className="text-xs font-bold text-slate-800">{tx.amount}</p>
+                          <span className="text-[9px] font-semibold text-slate-400">CMU</span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-3.5 text-right">
+                        <p className="text-[10px] text-slate-500">{tx.timestampStr}</p>
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
                     <td colSpan={5} className="px-5 py-12 text-center">
-                      <p className="text-sm font-medium text-slate-400">Awaiting network activity</p>
+                      <p className="text-sm font-medium text-slate-400">No transactions found</p>
                       <p className="text-xs text-slate-400 mt-1">
-                        Transaction data requires an indexer
+                        No sends, receives, or contract calls for the selected wallets yet
                       </p>
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
+          )}
+
+          {activeTab === 'transactions' && (
+            <div className="px-5 pb-3">
+              <Pagination
+                currentPage={txCurrentPage}
+                totalPages={txTotalPages}
+                onPageChange={onTxPageChange}
+              />
+            </div>
           )}
 
           {activeTab === 'accounts' && (

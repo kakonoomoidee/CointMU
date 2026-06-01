@@ -1,9 +1,18 @@
 import { useState, useEffect, type JSX } from 'react'
-import { useRecentBlocks, useMiningStats, useMiningControls } from '@/hooks'
+import { useRecentBlocks, useMiningStats, useMiningControls, usePagination } from '@/hooks'
 import { useAppStore, useMiningStore, useWalletUiStore } from '@/store'
 import { getTransactions } from '@/services/transactionService'
+import { type DerivedAccount } from '@/services'
 import { type ActivityData } from '@/views/Wallet/ActivityItem'
-import { formatBlockNumber, formatHashrate, formatDifficulty, formatMhs, isWithinLastDay } from '@/utils'
+import {
+  formatBlockNumber,
+  formatHashrate,
+  formatDifficulty,
+  formatMhs,
+  isWithinLastDay,
+  resolveHistoryAddresses,
+  filterFoundBlocks
+} from '@/utils'
 import { DashboardHeader } from './DashboardHeader'
 import { WalletOverviewCard } from './WalletOverviewCard'
 import { NetworkHealthPanel } from './NetworkHealthPanel'
@@ -12,9 +21,11 @@ import { LatestBlocks } from './LatestBlocks'
 import { ActivityFeed } from './ActivityFeed'
 
 const DASHBOARD_TICK_INTERVAL_MS = 5000
+const ACTIVITY_PAGE_SIZE = 10
 
 interface DashboardProps {
   activeWalletAddress: string | null
+  accounts: DerivedAccount[]
   onNavigate: (view: string) => void
 }
 
@@ -27,7 +38,7 @@ interface DashboardProps {
  * @param props - The active wallet address and the view navigation callback.
  * @returns The complete dashboard layout.
  */
-function Dashboard({ activeWalletAddress, onNavigate }: DashboardProps): JSX.Element {
+function Dashboard({ activeWalletAddress, accounts, onNavigate }: DashboardProps): JSX.Element {
   const blockHeight = useAppStore((s) => s.blockHeight)
   const peerCount = useAppStore((s) => s.peerCount)
   const gasPriceGwei = useAppStore((s) => s.gasPriceGwei)
@@ -41,15 +52,23 @@ function Dashboard({ activeWalletAddress, onNavigate }: DashboardProps): JSX.Ele
   const { config } = useMiningControls()
   const telemetry = useMiningStats(config.cpuThreads)
   const foundBlocks = useMiningStore((s) => s.foundBlocks)
+  const historyFilter = useAppStore((s) => s.historyFilter)
+  const setHistoryFilter = useAppStore((s) => s.setHistoryFilter)
+
+  const historyAddresses = resolveHistoryAddresses(historyFilter, accounts)
+  const historyKey = historyAddresses.join(',')
 
   const [activity, setActivity] = useState<ActivityData[]>([])
   useEffect(() => {
-    if (!activeWalletAddress) {
+    const addresses = historyKey.length > 0 ? historyKey.split(',') : []
+    if (addresses.length === 0) {
       setActivity([])
       return
     }
-    getTransactions(activeWalletAddress).then(setActivity)
-  }, [activeWalletAddress])
+    getTransactions(addresses).then(setActivity)
+  }, [historyKey])
+
+  const activityPagination = usePagination(activity, ACTIVITY_PAGE_SIZE)
 
   const [, setCurrentTime] = useState<number>(Date.now())
   useEffect(() => {
@@ -57,14 +76,15 @@ function Dashboard({ activeWalletAddress, onNavigate }: DashboardProps): JSX.Ele
     return () => clearInterval(tickInterval)
   }, [])
 
-  const minedBlocksCount = foundBlocks.filter((block) => isWithinLastDay(block.timestamp)).length
-  const blocksPastHour = foundBlocks.filter((block) => Date.now() - block.timestamp * 1000 <= 3600_000).length
+  const scopedFoundBlocks = filterFoundBlocks(foundBlocks, historyAddresses)
+  const minedBlocksCount = scopedFoundBlocks.filter((block) => isWithinLastDay(block.timestamp)).length
+  const blocksPastHour = scopedFoundBlocks.filter((block) => Date.now() - block.timestamp * 1000 <= 3600_000).length
   
   const sparklineData = Array(6).fill(0)
   if (isConnected) {
     const now = Date.now()
     const bucketSizeMs = 10 * 60 * 1000
-    foundBlocks.forEach((block) => {
+    scopedFoundBlocks.forEach((block) => {
       const ageMs = now - block.timestamp * 1000
       if (ageMs <= 60 * 60 * 1000) {
         const bucketIndex = 5 - Math.floor(ageMs / bucketSizeMs)
@@ -169,7 +189,17 @@ function Dashboard({ activeWalletAddress, onNavigate }: DashboardProps): JSX.Ele
             activeWalletAddress={activeWalletAddress}
             onViewAll={handleViewAllBlocks}
           />
-          <ActivityFeed isConnected={isConnected} activity={activity} abbrAddress={abbrAddress} />
+          <ActivityFeed
+            isConnected={isConnected}
+            activity={activity}
+            pageItems={activityPagination.pageItems}
+            currentPage={activityPagination.currentPage}
+            totalPages={activityPagination.totalPages}
+            onPageChange={activityPagination.setPage}
+            accounts={accounts}
+            historyFilter={historyFilter}
+            onFilterChange={setHistoryFilter}
+          />
         </div>
       </main>
     </div>

@@ -11,6 +11,10 @@ import {
 
 const DISCONNECTED_BALANCE = '0.00'
 
+const HISTORY_FILTER_ALL = 'ALL'
+
+type HistoryFilter = typeof HISTORY_FILTER_ALL | string
+
 interface AppState {
   blockHeight: number | null
   peerCount: number | null
@@ -23,7 +27,9 @@ interface AppState {
   activeAccount: string | null
   balance: string
   balances: Record<string, string>
+  historyFilter: HistoryFilter
   setActiveAccount: (address: string | null) => void
+  setHistoryFilter: (filter: HistoryFilter) => void
   fetchGlobalStats: (address: string | null, addresses: string[]) => Promise<void>
 }
 
@@ -61,7 +67,9 @@ export const useAppStore = create<AppState>((set) => ({
   activeAccount: null,
   balance: DISCONNECTED_BALANCE,
   balances: {},
+  historyFilter: HISTORY_FILTER_ALL,
   setActiveAccount: (address: string | null) => set({ activeAccount: address }),
+  setHistoryFilter: (filter: HistoryFilter) => set({ historyFilter: filter }),
   fetchGlobalStats: async (address: string | null, addresses: string[]) => {
     try {
       const blockResult = await fetchBlockNumber()
@@ -131,4 +139,5 @@ export const useAppStore = create<AppState>((set) => ({
   }
 }))
 
-export type { AppState }
+export { HISTORY_FILTER_ALL }
+export type { AppState, HistoryFilter }

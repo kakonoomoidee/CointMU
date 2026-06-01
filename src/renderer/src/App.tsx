@@ -95,11 +95,12 @@ function App(): JSX.Element {
         {activeView === NAV_ITEM_DASHBOARD && (
           <Dashboard
             activeWalletAddress={activeWalletAddress}
+            accounts={accounts}
             onNavigate={(view) => setActiveView(view as ActiveView)}
           />
         )}
         {activeView === NAV_ITEM_MINER && (
-          <Miner activeWalletAddress={activeWalletAddress} />
+          <Miner activeWalletAddress={activeWalletAddress} accounts={accounts} />
         )}
         {activeView === NAV_ITEM_WALLET && (
           <Wallet
@@ -109,7 +110,9 @@ function App(): JSX.Element {
             setActiveWalletAddress={setActiveWalletAddress}
           />
         )}
-        {activeView === NAV_ITEM_EXPLORER && <Explorer activeWalletAddress={activeWalletAddress} />}
+        {activeView === NAV_ITEM_EXPLORER && (
+          <Explorer activeWalletAddress={activeWalletAddress} accounts={accounts} />
+        )}
         {activeView === NAV_ITEM_SETTINGS && <Settings />}
       </main>
     </div>

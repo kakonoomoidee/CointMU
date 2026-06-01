@@ -22,6 +22,8 @@ export { formatRelativeAge, computeMinedBlocksCount } from './dashboard'
 
 export { formatTxAge, hexToAscii } from './explorer'
 
+export { resolveHistoryAddresses, filterFoundBlocks } from './history'
+
 export { cn } from './cn'
 
 export { downloadActivityCsv } from './csvExport'
