@@ -52,8 +52,9 @@ function SendModal({ gasEstFormatted, totalDeducted, onSend, onDone }: SendModal
               type="text"
               value={sendTo}
               onChange={(e) => setSendTo(e.target.value)}
+              disabled={sendLoading}
               placeholder="0x..."
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-mono text-sm"
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-mono text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
           <div>
@@ -63,9 +64,10 @@ function SendModal({ gasEstFormatted, totalDeducted, onSend, onDone }: SendModal
                 type="number"
                 value={sendAmount}
                 onChange={(e) => setSendAmount(e.target.value)}
+                disabled={sendLoading}
                 placeholder="0.00"
                 step="0.01"
-                className="w-full pl-4 pr-16 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-mono text-sm"
+                className="w-full pl-4 pr-16 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-mono text-sm disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <span className="absolute right-4 top-3.5 text-sm font-bold text-slate-400">CMU</span>
             </div>
@@ -96,7 +98,7 @@ function SendModal({ gasEstFormatted, totalDeducted, onSend, onDone }: SendModal
             disabled={sendLoading}
             className="w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl shadow-sm shadow-blue-200 hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
           >
-            {sendLoading ? 'Signing & Broadcasting...' : 'Review & Sign'}
+            {sendLoading ? 'Sending & Confirming...' : 'Review & Sign'}
           </button>
         </div>
       )}

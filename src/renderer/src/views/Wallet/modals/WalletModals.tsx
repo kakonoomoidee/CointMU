@@ -40,6 +40,7 @@ function WalletModals({
   onUnhideAccount
 }: WalletModalsProps): JSX.Element | null {
   const modalState = useWalletUiStore((s) => s.modalState)
+  const sendLoading = useWalletUiStore((s) => s.sendLoading)
 
   if (modalState === 'NONE') {
     return null
@@ -50,7 +51,8 @@ function WalletModals({
       <div className="bg-white rounded-3xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden relative">
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors"
+          disabled={sendLoading}
+          className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <IconX width={20} height={20} strokeWidth={2.5} />
         </button>

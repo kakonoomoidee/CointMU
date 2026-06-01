@@ -1,6 +1,5 @@
 export { Dashboard } from './Dashboard'
 export { Miner } from './Miner'
 export { Wallet } from './Wallet'
-export { Explorer } from './Explorer'
 export { Settings } from './Settings'
 export { Onboarding } from './Onboarding'

@@ -178,6 +178,19 @@ async function fetchDifficulty(): Promise<number | null> {
 }
 
 /**
+ * Formats a numeric CMU value into the canonical localized balance string used
+ * across the wallet UI (grouped thousands, fixed two decimal places).
+ * @param cmuValue - The balance value expressed in whole CMU.
+ * @returns The formatted CMU string (e.g. "1,284.67").
+ */
+function formatBalance(cmuValue: number): string {
+  return cmuValue.toLocaleString('en-US', {
+    minimumFractionDigits: BALANCE_DECIMAL_PLACES,
+    maximumFractionDigits: BALANCE_DECIMAL_PLACES
+  })
+}
+
+/**
  * Fetches the CMU balance for a given wallet address by calling eth_getBalance.
  * Converts the hexadecimal Wei result to CMU (divided by 1e18) and formats
  * the output to two decimal places.
@@ -189,10 +202,7 @@ async function fetchBalance(address: string): Promise<string | null> {
   if (result === null) return null
   const weiValue = parseInt(result, HEX_RADIX)
   const cmuValue = weiValue / WEI_PER_CMU
-  return cmuValue.toLocaleString('en-US', {
-    minimumFractionDigits: BALANCE_DECIMAL_PLACES,
-    maximumFractionDigits: BALANCE_DECIMAL_PLACES
-  })
+  return formatBalance(cmuValue)
 }
 
 /**
@@ -237,6 +247,69 @@ async function stopMiner(): Promise<void> {
   }
 }
 
+/**
+ * Resolves after the given number of milliseconds. Used to pace receipt polling.
+ * @param ms - The delay duration in milliseconds.
+ * @returns A promise that resolves once the delay elapses.
+ */
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+interface WaitForReceiptOptions {
+  confirmations?: number
+  timeoutMs?: number
+  pollIntervalMs?: number
+}
+
+const DEFAULT_CONFIRMATIONS = 1
+const DEFAULT_RECEIPT_TIMEOUT_MS = 120_000
+const DEFAULT_RECEIPT_POLL_INTERVAL_MS = 2_000
+const TX_STATUS_FAILED = '0x0'
+
+/**
+ * Polls eth_getTransactionReceipt until the transaction is mined and has reached
+ * the requested number of confirmations, mirroring ethers' tx.wait semantics for
+ * a flow that broadcasts over raw JSON-RPC. Rejects when the transaction reverts
+ * on-chain or when the timeout elapses before confirmation.
+ * @param txHash - The broadcast transaction hash to wait on.
+ * @param options - Optional confirmation count, timeout, and poll interval overrides.
+ * @returns The confirmed transaction receipt.
+ */
+async function waitForTransactionReceipt(
+  txHash: string,
+  options: WaitForReceiptOptions = {}
+): Promise<any> {
+  const confirmations = options.confirmations ?? DEFAULT_CONFIRMATIONS
+  const timeoutMs = options.timeoutMs ?? DEFAULT_RECEIPT_TIMEOUT_MS
+  const pollIntervalMs = options.pollIntervalMs ?? DEFAULT_RECEIPT_POLL_INTERVAL_MS
+  const deadline = Date.now() + timeoutMs
+
+  while (Date.now() < deadline) {
+    const receipt = await call('eth_getTransactionReceipt', [txHash])
+
+    if (receipt !== null && receipt.blockNumber !== undefined && receipt.blockNumber !== null) {
+      if (receipt.status === TX_STATUS_FAILED) {
+        throw new Error('Transaction reverted on-chain.')
+      }
+
+      if (confirmations <= DEFAULT_CONFIRMATIONS) {
+        return receipt
+      }
+
+      const receiptBlock = parseInt(receipt.blockNumber, HEX_RADIX)
+      const currentBlock = await fetchBlockNumber()
+      if (currentBlock !== null && currentBlock - receiptBlock + 1 >= confirmations) {
+        return receipt
+      }
+    }
+
+    await delay(pollIntervalMs)
+  }
+
+  throw new Error('Timed out waiting for confirmation.')
+}
+
 export {
   call,
   fetchBlockNumber,
@@ -246,6 +319,8 @@ export {
   fetchHashrate,
   fetchDifficulty,
   fetchBalance,
+  formatBalance,
+  waitForTransactionReceipt,
   setEtherbase,
   startMiner,
   stopMiner

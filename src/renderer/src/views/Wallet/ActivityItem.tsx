@@ -15,6 +15,7 @@ export interface ActivityData {
   hash?: string
   from?: string
   to?: string
+  pending?: boolean
 }
 
 interface ActivityItemProps {
@@ -67,12 +68,20 @@ function ActivityItem({ activity }: ActivityItemProps): JSX.Element {
           {Icon}
         </div>
         <div>
-          <h4 className="text-sm font-bold text-slate-800">{activity.title}</h4>
+          <div className="flex items-center gap-2">
+            <h4 className="text-sm font-bold text-slate-800">{activity.title}</h4>
+            {activity.pending && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-100 text-amber-600 text-[10px] font-bold uppercase tracking-wide">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                Pending
+              </span>
+            )}
+          </div>
           <p className="text-xs font-mono text-slate-400 mt-0.5">{activity.subtitle}</p>
         </div>
       </div>
       <div className="text-right">
-        <p className={`text-sm font-bold font-mono ${amountClass}`}>
+        <p className={`text-sm font-bold font-mono ${activity.pending ? 'text-slate-400' : amountClass}`}>
           {displayAmount} <span className="text-[10px] text-slate-400 font-sans ml-0.5">CMU</span>
         </p>
         <p className="text-xs text-slate-400 mt-0.5">{activity.timestampStr}</p>

@@ -7,6 +7,7 @@ export {
   fetchHashrate,
   fetchDifficulty,
   fetchBalance,
+  waitForTransactionReceipt,
   setEtherbase,
   startMiner,
   stopMiner

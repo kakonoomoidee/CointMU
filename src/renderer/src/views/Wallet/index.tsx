@@ -10,6 +10,7 @@ import {
   encryptSecret,
   decryptSecret,
   getSessionPassword,
+  waitForTransactionReceipt,
   type DerivedAccount
 } from '@/services'
 import { useWalletUiStore, useAppStore } from '@/store'
@@ -46,6 +47,9 @@ function Wallet({
 }: WalletProps): JSX.Element {
   const balance = useAppStore((s) => s.balance)
   const balances = useAppStore((s) => s.balances)
+  const addPendingTransaction = useAppStore((s) => s.addPendingTransaction)
+  const removePendingTransaction = useAppStore((s) => s.removePendingTransaction)
+  const fetchGlobalStats = useAppStore((s) => s.fetchGlobalStats)
   const [activeTab, setActiveTab] = useState<WalletTab>('activity')
 
   const copied = useWalletUiStore((s) => s.copied)
@@ -59,7 +63,6 @@ function Wallet({
   const setSendGasPrice = useWalletUiStore((s) => s.setSendGasPrice)
   const setSendLoading = useWalletUiStore((s) => s.setSendLoading)
   const setSendError = useWalletUiStore((s) => s.setSendError)
-  const setSendSuccess = useWalletUiStore((s) => s.setSendSuccess)
   const setAddAccountError = useWalletUiStore((s) => s.setAddAccountError)
   const resetSendForm = useWalletUiStore((s) => s.resetSendForm)
   const resetAddAccountForm = useWalletUiStore((s) => s.resetAddAccountForm)
@@ -116,10 +119,16 @@ function Wallet({
   }
 
   const handleSend = async (): Promise<void> => {
+    if (useWalletUiStore.getState().sendLoading) {
+      return
+    }
     if (!sendTo || !sendAmount) {
       setSendError('Please fill in all fields')
       return
     }
+
+    const addresses = accounts.map((a) => a.address)
+    const gasEstEth = ethers.formatEther(TX_GAS_LIMIT * BigInt(sendGasPrice || '0'))
 
     try {
       setSendError('')
@@ -164,11 +173,31 @@ function Wallet({
       const signedTx = await wallet.signTransaction(tx)
       const txHash = await call('eth_sendRawTransaction', [signedTx])
 
-      if (txHash && txHash.startsWith('0x')) {
-        setSendSuccess(txHash)
-      } else {
+      if (!txHash || !txHash.startsWith('0x')) {
         throw new Error('Transaction failed')
       }
+
+      addPendingTransaction({
+        hash: txHash,
+        from: activeAccount.address,
+        to: sendTo,
+        amount: parseFloat(sendAmount),
+        timestamp: Date.now(),
+        gas: parseFloat(gasEstEth)
+      })
+
+      setModalState('NONE')
+      void fetchGlobalStats(activeWalletAddress, addresses)
+
+      void waitForTransactionReceipt(txHash, { confirmations: 1 })
+        .then(() => {
+          removePendingTransaction(txHash)
+          return fetchGlobalStats(activeWalletAddress, addresses)
+        })
+        .catch(() => {
+          removePendingTransaction(txHash)
+          return fetchGlobalStats(activeWalletAddress, addresses)
+        })
     } catch (e) {
       setSendError(e instanceof Error ? e.message : 'Failed to send transaction')
     } finally {

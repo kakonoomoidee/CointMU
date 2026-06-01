@@ -1,8 +1,10 @@
 import { type JSX, useState, useEffect } from 'react'
+import { format } from 'date-fns'
 import { ActivityItem, type ActivityData } from './ActivityItem'
 import { getTransactions } from '@/services/transactionService'
 import { KNOWN_TOKENS, getTokenBalance } from '@/services/tokenService'
 import { fetchBalance } from '@/services/rpcClient'
+import { useAppStore, type PendingTransaction } from '@/store'
 import { IconBolt } from '@/assets/icons'
 
 type WalletTab = 'activity' | 'tokens' | 'nfts'
@@ -21,6 +23,37 @@ interface WalletTabsProps {
 }
 
 /**
+ * Shortens an Ethereum address for compact display in pending activity rows.
+ * @param address - The full 0x-prefixed address.
+ * @returns The truncated address (first six and last four characters).
+ */
+function shortenAddress(address: string): string {
+  return `${address.slice(0, 6)}...${address.slice(-4)}`
+}
+
+/**
+ * Maps an in-flight pending transaction from the global store into the
+ * ActivityData shape so it can render alongside confirmed history rows.
+ * @param tx - The pending transaction record.
+ * @returns The activity row representation flagged as pending.
+ */
+function mapPendingToActivity(tx: PendingTransaction): ActivityData {
+  return {
+    id: tx.hash,
+    type: 'send',
+    title: 'Sent CMU',
+    subtitle: `To ${shortenAddress(tx.to)}`,
+    amount: tx.amount.toLocaleString('en-US', { maximumFractionDigits: 4 }),
+    timestamp: tx.timestamp,
+    timestampStr: format(tx.timestamp, 'MMM d, yyyy, h:mm a'),
+    hash: tx.hash,
+    from: tx.from,
+    to: tx.to,
+    pending: true
+  }
+}
+
+/**
  * Tabbed content area for the wallet view, switching between transaction
  * activity, ERC-20 tokens, and NFTs. All sections currently render empty states
  * pending indexer integration.
@@ -30,7 +63,13 @@ interface WalletTabsProps {
 function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsProps): JSX.Element {
   const [transactions, setTransactions] = useState<ActivityData[]>([])
   const [tokenBalances, setTokenBalances] = useState<Record<string, string>>({})
-  
+  const pendingTransactions = useAppStore((s) => s.pendingTransactions)
+
+  const pendingActivities = pendingTransactions
+    .filter((tx) => tx.from === activeWalletAddress)
+    .map(mapPendingToActivity)
+  const activities = [...pendingActivities, ...transactions]
+
   useEffect(() => {
     if (activeTab === 'activity' && activeWalletAddress) {
       getTransactions([activeWalletAddress]).then(setTransactions)
@@ -72,8 +111,8 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
 
       {activeTab === 'activity' && (
         <div className="rounded-2xl bg-white border border-slate-200 divide-y divide-slate-100 overflow-hidden">
-          {transactions.length > 0 ? (
-            transactions.map((tx) => <ActivityItem key={tx.id} activity={tx} />)
+          {activities.length > 0 ? (
+            activities.map((tx) => <ActivityItem key={tx.id} activity={tx} />)
           ) : (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <IconBolt className="text-slate-300 mb-3" width={32} height={32} strokeWidth={1.5} />
