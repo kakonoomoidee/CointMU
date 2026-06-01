@@ -1,8 +1,21 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
 
-interface UpdateStatusPayload {
-  status: string
-  percent?: number
+interface UpdaterProgress {
+  percent: number
+  transferred: number
+  total: number
+  bytesPerSecond: number
+}
+
+interface UpdaterEventInfo {
+  version: string
+}
+
+interface UpdaterEvent {
+  status: 'checking' | 'available' | 'not-available' | 'downloading' | 'downloaded' | 'error'
+  info?: UpdaterEventInfo
+  progress?: UpdaterProgress
+  error?: string
 }
 
 interface CointmuAPI {
@@ -46,9 +59,10 @@ interface CointmuAPI {
     getActivity: (addresses: string[]) => Promise<{id: string, type: 'mining' | 'send' | 'receive' | 'contract', title: string, subtitle: string, amount: string, timestamp: number, timestampStr: string, blockNumber?: number, hash?: string, from?: string, to?: string}[]>
   }
   updater: {
-    checkForUpdates: () => Promise<void>
-    quitAndInstall: () => Promise<void>
-    onUpdateStatus: (callback: (payload: UpdateStatusPayload) => void) => () => void
+    check: () => Promise<void>
+    download: () => Promise<void>
+    install: () => Promise<void>
+    onStateChange: (callback: (state: UpdaterEvent) => void) => () => void
   }
   mining: {
     toggle: (enabled: boolean) => Promise<void>

@@ -1,7 +1,13 @@
 export { useRecentBlocks } from './useRecentBlocks'
 export type { BlockData } from './useRecentBlocks'
-export { useUpdateStatus } from './useUpdateStatus'
-export type { UpdateState, UpdateStatus } from './useUpdateStatus'
+export { useUpdater } from './useUpdater'
+export type {
+  Updater,
+  UpdaterState,
+  UpdaterStatus,
+  UpdaterProgress,
+  UpdaterInfo
+} from './useUpdater'
 export { useTimer } from './useTimer'
 export { useMiningStats } from './useMiningStats'
 export type { MiningTelemetry } from './useMiningStats'

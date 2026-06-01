@@ -2,7 +2,7 @@ import { useState, useEffect, Suspense, lazy, type JSX } from 'react'
 import ms from 'ms'
 import { Dashboard, Wallet, Onboarding } from '@/views'
 import { type DerivedAccount, getSetting } from '@/services'
-import { useUpdateStatus, useMiningLogStream } from '@/hooks'
+import { useUpdater, useMiningLogStream } from '@/hooks'
 import { useOnboardingStore, useAppStore } from '@/store'
 
 import { Sidebar } from '@/components'
@@ -33,7 +33,7 @@ function App(): JSX.Element {
   const [isLoadingWallet, setIsLoadingWallet] = useState<boolean>(true)
   const [activeView, setActiveView] = useState<ActiveView>(NAV_ITEM_DASHBOARD)
   const [settingsTab, setSettingsTab] = useState<string>('general')
-  const updateState = useUpdateStatus()
+  const updater = useUpdater()
   useMiningLogStream()
 
   const handleNavigate = (view: string, payload?: any) => {
@@ -102,7 +102,7 @@ function App(): JSX.Element {
         activeView={activeView}
         setActiveView={(view) => handleNavigate(view as ActiveView)}
         onLogout={handleLogout}
-        updateStatus={updateState.status}
+        updateStatus={updater.status}
       />
 
       <main className="flex-1 overflow-hidden">

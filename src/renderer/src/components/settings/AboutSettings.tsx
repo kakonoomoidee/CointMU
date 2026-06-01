@@ -1,9 +1,8 @@
 import { useState, useEffect, type JSX } from 'react'
 import ms from 'ms'
-import { useUpdateStatus } from '@/hooks'
+import { useUpdater } from '@/hooks'
 import { useAppStore } from '@/store'
 import { EXTERNAL_LINKS } from '@/constants'
-import { checkForUpdates, quitAndInstall } from '@/services'
 import { IconLayers } from '@/assets/icons'
 
 const UPTIME_REFRESH_MS = ms('1m')
@@ -26,17 +25,16 @@ const formatUptime = (seconds: number): string => {
 }
 
 /**
- * Returns the appropriate label text for the update button based on the
- * current update lifecycle status.
- * @param {string} status - The current update status identifier.
- * @returns {string} The human-readable button label.
+ * Formats a byte count into a compact human-readable size string.
+ * @param {number} bytes - The number of bytes to format.
+ * @returns {string} The formatted size (for example '12.3 MB').
  */
-const getUpdateButtonLabel = (status: string): string => {
-  if (status === 'checking') return 'Checking...'
-  if (status === 'available') return 'Downloading update...'
-  if (status === 'downloading') return 'Downloading...'
-  if (status === 'ready') return 'Restart to install'
-  return 'Check for updates'
+const formatBytes = (bytes: number): string => {
+  if (!bytes || bytes <= 0) return '0 B'
+  const units = ['B', 'KB', 'MB', 'GB']
+  const exponent = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1)
+  const value = bytes / Math.pow(1024, exponent)
+  return `${value.toFixed(exponent === 0 ? 0 : 1)} ${units[exponent]}`
 }
 
 /**
@@ -53,7 +51,7 @@ export function AboutSettings(): JSX.Element {
   const [isSavingChain, setIsSavingChain] = useState<boolean>(false)
 
   const peerCount = useAppStore((s) => s.peerCount)
-  const updateState = useUpdateStatus()
+  const updater = useUpdater()
 
   const sysInfo = window.systemInfo || {
     version: '0.0.1',
@@ -114,25 +112,6 @@ export function AboutSettings(): JSX.Element {
     }
   }
 
-  /**
-   * Dispatches the appropriate update action based on the current lifecycle
-   * status through the Electron IPC bridge.
-   * @returns {void}
-   */
-  const handleUpdateAction = (): void => {
-    if (updateState.status === 'ready') {
-      quitAndInstall()
-      return
-    }
-    if (updateState.status === 'idle') {
-      checkForUpdates()
-    }
-  }
-
-  const isButtonDisabled = updateState.status === 'checking'
-    || updateState.status === 'available'
-    || updateState.status === 'downloading'
-
   return (
     <div>
       <div className="flex items-start gap-6 mb-12">
@@ -147,19 +126,6 @@ export function AboutSettings(): JSX.Element {
           <p className="text-sm font-medium text-slate-400 mt-1">{'\u00A9'} 2026 CointMU Foundation {'\u2022'} MIT License</p>
           <div className="flex gap-3 mt-4">
             <button
-              onClick={handleUpdateAction}
-              disabled={isButtonDisabled}
-              className={`px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm transition-colors ${
-                updateState.status === 'ready'
-                  ? 'bg-emerald-500 text-white hover:bg-emerald-600'
-                  : isButtonDisabled
-                    ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
-                    : 'bg-blue-500 text-white hover:bg-blue-600'
-              }`}
-            >
-              {getUpdateButtonLabel(updateState.status)}
-            </button>
-            <button 
               onClick={() => window.open(EXTERNAL_LINKS.RELEASE_NOTES, '_blank')}
               className="px-4 py-1.5 bg-slate-100 text-slate-800 rounded-lg text-sm font-bold border border-slate-200 hover:bg-slate-200 transition-colors"
             >
@@ -170,6 +136,101 @@ export function AboutSettings(): JSX.Element {
       </div>
 
       <div className="space-y-8">
+        <section>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Updates</h3>
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-4">
+            {updater.status === 'checking' && (
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-bold text-slate-800">Checking for updates</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Contacting the update server...</p>
+                </div>
+                <button
+                  disabled
+                  className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-slate-300 text-slate-500 cursor-not-allowed"
+                >
+                  Checking...
+                </button>
+              </div>
+            )}
+
+            {updater.status === 'available' && (
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-bold text-slate-800">Update available</p>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Version {updater.info?.version ?? 'unknown'} is ready to download.
+                  </p>
+                </div>
+                <button
+                  onClick={() => updater.download()}
+                  className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+                >
+                  Download Update
+                </button>
+              </div>
+            )}
+
+            {updater.status === 'downloading' && (
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-sm font-bold text-slate-800">Downloading update</p>
+                  <span className="text-sm font-medium font-mono text-slate-600">
+                    {Math.round(updater.progress?.percent ?? 0)}%
+                  </span>
+                </div>
+                <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-blue-500 transition-all duration-300 ease-out"
+                    style={{ width: `${updater.progress?.percent ?? 0}%` }}
+                  />
+                </div>
+                <p className="text-xs text-slate-500 mt-2">
+                  {formatBytes(updater.progress?.transferred ?? 0)} / {formatBytes(updater.progress?.total ?? 0)}
+                </p>
+              </div>
+            )}
+
+            {updater.status === 'downloaded' && (
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-bold text-slate-800">Update ready to install</p>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Version {updater.info?.version ?? 'unknown'} has been downloaded.
+                  </p>
+                </div>
+                <button
+                  onClick={() => updater.install()}
+                  className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-emerald-500 text-white hover:bg-emerald-600 transition-colors"
+                >
+                  Restart & Install
+                </button>
+              </div>
+            )}
+
+            {(updater.status === 'idle' || updater.status === 'not-available' || updater.status === 'error') && (
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-bold text-slate-800">Software updates</p>
+                  {updater.status === 'error' ? (
+                    <p className="text-xs text-red-500 mt-0.5">{updater.error ?? 'Failed to check for updates.'}</p>
+                  ) : updater.status === 'not-available' ? (
+                    <p className="text-xs text-slate-500 mt-0.5">You are on the latest version.</p>
+                  ) : (
+                    <p className="text-xs text-slate-500 mt-0.5">Check whether a newer version is available.</p>
+                  )}
+                </div>
+                <button
+                  onClick={() => updater.check()}
+                  className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+                >
+                  Check for Updates
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">System</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">

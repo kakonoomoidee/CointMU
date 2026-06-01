@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, type JSX } from 'react'
 import { type DerivedAccount } from '@/services'
-import { type UpdateStatus } from '@/hooks'
+import { type UpdaterStatus } from '@/hooks'
 import { useAppStore } from '@/store'
 import {
   IconBolt,
@@ -18,7 +18,7 @@ interface SidebarProps {
   activeView: string
   setActiveView: (view: string) => void
   onLogout: () => void
-  updateStatus: UpdateStatus
+  updateStatus: UpdaterStatus
 }
 
 const APP_NETWORK = 'testnet'
@@ -144,7 +144,7 @@ export function Sidebar({
         >
           <IconSettings width={18} height={18} />
           Settings
-          {(updateStatus === 'available' || updateStatus === 'downloading' || updateStatus === 'ready') && (
+          {(updateStatus === 'available' || updateStatus === 'downloading' || updateStatus === 'downloaded') && (
             <span className="ml-auto w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
           )}
         </button>

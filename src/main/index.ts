@@ -1,5 +1,4 @@
 import { app, shell, BrowserWindow, ipcMain, powerMonitor } from "electron";
-import { autoUpdater } from "electron-updater";
 import { join } from "path";
 import { existsSync, readFileSync, writeFileSync, rmSync } from "fs";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
@@ -8,6 +7,7 @@ import { config } from "dotenv";
 import detectPort from "detect-port";
 import { registerCryptoHandlers } from "./crypto";
 import { registerSystemHandlers } from "./system";
+import { initUpdater } from './updater';
 import { parseGethLogChunk } from "./gethLogParser";
 import ms from "ms";
 
@@ -363,65 +363,6 @@ function createWindow(): BrowserWindow {
   }
 
   return mainWindow;
-}
-
-/**
- * Configures the electron-updater auto-update lifecycle and binds IPC
- * event forwarding to the renderer process for real-time UI synchronization.
- * @param {BrowserWindow} win - The main BrowserWindow instance to send events to.
- * @returns {void}
- */
-function setupAutoUpdater(win: BrowserWindow): void {
-  autoUpdater.autoDownload = true;
-  autoUpdater.logger = console;
-
-  autoUpdater.on("checking-for-update", () => {
-    win.webContents.send("update-status", { status: "checking" });
-  });
-
-  autoUpdater.on("update-available", () => {
-    win.webContents.send("update-status", { status: "available" });
-  });
-
-  autoUpdater.on("update-not-available", () => {
-    win.webContents.send("update-status", { status: "idle" });
-  });
-
-  autoUpdater.on("download-progress", (progress) => {
-    win.webContents.send("update-status", {
-      status: "downloading",
-      percent: progress.percent,
-    });
-  });
-
-  autoUpdater.on("update-downloaded", () => {
-    win.webContents.send("update-status", { status: "ready" });
-  });
-
-  autoUpdater.on("error", () => {
-    win.webContents.send("update-status", { status: "idle" });
-  });
-
-  ipcMain.handle("check-for-updates", async () => {
-    if (!app.isPackaged) {
-      console.warn("[updater] Skipping update check in development mode.");
-      win.webContents.send("update-status", { status: "idle" });
-      return;
-    }
-    try {
-      await autoUpdater.checkForUpdatesAndNotify();
-    } catch (err) {
-      console.warn(
-        "[updater] Failed to check for updates:",
-        (err as Error).message,
-      );
-      win.webContents.send("update-status", { status: "idle" });
-    }
-  });
-
-  ipcMain.handle("quit-and-install", () => {
-    autoUpdater.quitAndInstall();
-  });
 }
 
 /**
@@ -1089,7 +1030,7 @@ app.whenReady().then(async () => {
   const miningController = new MiningController(resolvedRpcPort, store);
 
   const win = createWindow();
-  setupAutoUpdater(win);
+  initUpdater(win);
   miningController.setWindow(win);
 
   app.on("activate", function () {

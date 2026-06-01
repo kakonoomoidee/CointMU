@@ -32,6 +32,27 @@ const systemInfo = {
   getUptime: () => process.uptime()
 }
 
+/**
+ * Per-file download progress forwarded from the main-process auto-updater.
+ */
+interface UpdaterProgress {
+  percent: number
+  transferred: number
+  total: number
+  bytesPerSecond: number
+}
+
+/**
+ * Structured update lifecycle event emitted on the 'updater:state' channel.
+ * Only the fields relevant to the current status are populated.
+ */
+interface UpdaterEvent {
+  status: 'checking' | 'available' | 'not-available' | 'downloading' | 'downloaded' | 'error'
+  info?: { version: string }
+  progress?: UpdaterProgress
+  error?: string
+}
+
 const api = {
   getRpcPort: (): Promise<number> => ipcRenderer.invoke('get-rpc-port'),
   getCpuUsage: (): Promise<number> => ipcRenderer.invoke('get-cpu-usage'),
@@ -62,14 +83,15 @@ const api = {
       ipcRenderer.invoke('wallet:getActivity', addresses)
   },
   updater: {
-    checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
-    quitAndInstall: () => ipcRenderer.invoke('quit-and-install'),
-    onUpdateStatus: (callback: (payload: { status: string; percent?: number }) => void) => {
-      const handler = (_: any, payload: { status: string; percent?: number }): void => {
-        callback(payload)
+    check: (): Promise<void> => ipcRenderer.invoke('updater:check'),
+    download: (): Promise<void> => ipcRenderer.invoke('updater:download'),
+    install: (): Promise<void> => ipcRenderer.invoke('updater:install'),
+    onStateChange: (callback: (state: UpdaterEvent) => void) => {
+      const handler = (_: any, state: UpdaterEvent): void => {
+        callback(state)
       }
-      ipcRenderer.on('update-status', handler)
-      return () => ipcRenderer.removeListener('update-status', handler)
+      ipcRenderer.on('updater:state', handler)
+      return () => ipcRenderer.removeListener('updater:state', handler)
     }
   },
   mining: {
