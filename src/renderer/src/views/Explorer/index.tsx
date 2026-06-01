@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef, type JSX, type FormEvent } from 'react'
+import { useState, useEffect, useRef, useMemo, type JSX, type FormEvent } from 'react'
 import { useRecentBlocks, usePagination } from '@/hooks'
 import { useAppStore } from '@/store'
 import { call, fetchBalance, getNetworkInsights, detectSearchType, type DerivedAccount } from '@/services'
-import { getTransactions } from '@/services/transactionService'
-import { formatBlockNumber, resolveHistoryAddresses } from '@/utils'
+import { formatBlockNumber } from '@/utils'
 import { type ActivityData } from '@/views/Wallet/ActivityItem'
 import { Insights } from '@/components/explorer/Insights'
 import { ChainTimeline } from '@/components/explorer/ChainTimeline'
@@ -26,6 +25,7 @@ type ViewState = 'MAIN' | 'BLOCK_DETAIL' | 'TX_DETAIL' | 'ADDRESS_DETAIL'
 interface TopAccount {
   address: string
   balance: number
+  percentage: number
 }
 
 const EMPTY_STAT_LABEL = '--'
@@ -42,25 +42,43 @@ const TICK_INTERVAL_MS = 5000
 function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element {
   const blockHeight = useAppStore((s) => s.blockHeight)
   const isConnected = useAppStore((s) => s.isConnected)
-  const historyFilter = useAppStore((s) => s.historyFilter)
-  const setHistoryFilter = useAppStore((s) => s.setHistoryFilter)
 
-  const historyAddresses = resolveHistoryAddresses(historyFilter, accounts)
-  const historyKey = historyAddresses.join(',')
+  const recentBlocks = useRecentBlocks(blockHeight, isConnected)
 
-  const [txActivity, setTxActivity] = useState<ActivityData[]>([])
-  useEffect(() => {
-    const addresses = historyKey.length > 0 ? historyKey.split(',') : []
-    if (!isConnected || addresses.length === 0) {
-      setTxActivity([])
-      return
-    }
-    getTransactions(addresses).then((items) =>
-      setTxActivity(items.filter((item) => item.type !== 'mining'))
-    )
-  }, [historyKey, isConnected])
+  const globalTransactions = useMemo(() => {
+    const txs: ActivityData[] = []
+    recentBlocks.forEach((block) => {
+      if (block.transactions && Array.isArray(block.transactions)) {
+        block.transactions.forEach((tx) => {
+          if (!tx || typeof tx !== 'object') return
+          const amountCmu = (parseInt(tx.value, 16) / 1e18).toFixed(4)
+          txs.push({
+            id: tx.hash,
+            type: tx.to ? 'send' : 'contract',
+            title: tx.to ? 'Transaction' : 'Contract Creation',
+            subtitle: '',
+            amount: amountCmu,
+            timestamp: block.timestamp,
+            timestampStr: new Date(block.timestamp * 1000).toLocaleString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true
+            }),
+            blockNumber: block.number,
+            hash: tx.hash,
+            from: tx.from,
+            to: tx.to
+          })
+        })
+      }
+    })
+    return txs.sort((a, b) => b.timestamp - a.timestamp)
+  }, [recentBlocks])
 
-  const txPagination = usePagination(txActivity, EXPLORER_TX_PAGE_SIZE)
+  const txPagination = usePagination(globalTransactions, EXPLORER_TX_PAGE_SIZE)
 
   const [insights, setInsights] = useState<any>(null)
 
@@ -85,7 +103,6 @@ function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element
     }
   }, [isConnected])
 
-  const recentBlocks = useRecentBlocks(blockHeight, isConnected)
   const [, setCurrentTime] = useState<number>(Date.now())
 
   useEffect(() => {
@@ -188,11 +205,19 @@ function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element
 
   useEffect(() => {
     async function loadAccounts(): Promise<void> {
-      if (!isConnected) return
+      if (!isConnected || blockHeight === null) return
       setIsLoadingAccounts(true)
       const addresses = new Set<string>()
-      if (activeWalletAddress) addresses.add(activeWalletAddress.toLowerCase())
-      recentBlocks.forEach((b) => addresses.add(b.miner.toLowerCase()))
+      
+      recentBlocks.forEach((b) => {
+        if (b.miner) addresses.add(b.miner.toLowerCase())
+        if (b.transactions && Array.isArray(b.transactions)) {
+          b.transactions.forEach((tx) => {
+            if (tx.from) addresses.add(tx.from.toLowerCase())
+            if (tx.to) addresses.add(tx.to.toLowerCase())
+          })
+        }
+      })
 
       const uniqueAddresses = Array.from(addresses)
       if (uniqueAddresses.length === 0) {
@@ -209,14 +234,21 @@ function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element
       )
 
       balances.sort((a, b) => b.balance - a.balance)
-      setTopAccounts(balances)
+      
+      const totalSupply = blockHeight * 2
+      const accountsWithPercentage = balances.map(b => ({
+        ...b,
+        percentage: totalSupply > 0 ? (b.balance / totalSupply) * 100 : 0
+      }))
+
+      setTopAccounts(accountsWithPercentage)
       setIsLoadingAccounts(false)
     }
 
     if (activeTab === 'accounts') {
       loadAccounts()
     }
-  }, [activeTab, recentBlocks, activeWalletAddress, isConnected])
+  }, [activeTab, recentBlocks, isConnected, blockHeight])
 
   const networkHeight = isConnected ? formatBlockNumber(blockHeight) : EMPTY_STAT_LABEL
 
@@ -252,13 +284,11 @@ function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element
               activeWalletAddress={activeWalletAddress}
               onBlockSelect={handleBlockSelect}
               onAddressSelect={handleAddressSelect}
+              onTxHashSelect={handleTxHashSelect}
               transactions={txPagination.pageItems}
               txCurrentPage={txPagination.currentPage}
               txTotalPages={txPagination.totalPages}
               onTxPageChange={txPagination.setPage}
-              accounts={accounts}
-              historyFilter={historyFilter}
-              onFilterChange={setHistoryFilter}
             />
           </div>
         ) : currentView === 'BLOCK_DETAIL' && selectedBlock ? (

@@ -7,6 +7,7 @@ export interface BlockData {
   miner: string
   timestamp: number
   txCount: number
+  transactions?: any[]
 }
 
 /**
@@ -40,7 +41,7 @@ export function useRecentBlocks(blockNumber: number | null, isConnected: boolean
 
         for (let i = start; i >= end; i--) {
           promises.push(
-            call('eth_getBlockByNumber', ['0x' + i.toString(16), false])
+            call('eth_getBlockByNumber', ['0x' + i.toString(16), true])
           )
         }
 
@@ -55,7 +56,8 @@ export function useRecentBlocks(blockNumber: number | null, isConnected: boolean
             hash: res.hash,
             miner: res.miner,
             timestamp: parseInt(res.timestamp, 16),
-            txCount: Array.isArray(res.transactions) ? res.transactions.length : 0
+            txCount: Array.isArray(res.transactions) ? res.transactions.length : 0,
+            transactions: res.transactions || []
           }))
 
         setRecentBlocks(blocks)

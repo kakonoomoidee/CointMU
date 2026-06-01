@@ -1,9 +1,8 @@
 import { type JSX } from 'react'
 import { type BlockData } from '@/hooks'
-import { useAppStore, type HistoryFilter } from '@/store'
-import { type DerivedAccount } from '@/services'
+import { useAppStore } from '@/store'
 import { type ActivityData } from '@/views/Wallet/ActivityItem'
-import { WalletHistoryFilter, Pagination } from '@/components'
+import { Pagination } from '@/components'
 import { IconActivity } from '@/assets/icons'
 import { formatTxAge } from '@/utils'
 
@@ -12,6 +11,7 @@ type TabState = 'blocks' | 'transactions' | 'accounts'
 interface TopAccount {
   address: string
   balance: number
+  percentage: number
 }
 
 interface ExplorerDataTabsProps {
@@ -24,13 +24,11 @@ interface ExplorerDataTabsProps {
   activeWalletAddress: string | null
   onBlockSelect: (blockNumber: number) => void
   onAddressSelect: (address: string) => void
+  onTxHashSelect: (hash: string) => void
   transactions: ActivityData[]
   txCurrentPage: number
   txTotalPages: number
   onTxPageChange: (page: number) => void
-  accounts: DerivedAccount[]
-  historyFilter: HistoryFilter
-  onFilterChange: (filter: HistoryFilter) => void
 }
 
 const MINER_DISTRIBUTION: never[] = []
@@ -60,13 +58,11 @@ function ExplorerDataTabs({
   isLoadingAccounts,
   onBlockSelect,
   onAddressSelect,
+  onTxHashSelect,
   transactions,
   txCurrentPage,
   txTotalPages,
-  onTxPageChange,
-  accounts,
-  historyFilter,
-  onFilterChange
+  onTxPageChange
 }: ExplorerDataTabsProps): JSX.Element {
   const balances = useAppStore((s) => s.balances)
 
@@ -101,9 +97,6 @@ function ExplorerDataTabs({
             </button>
           </div>
           <div className="flex items-center gap-2">
-            {activeTab === 'transactions' && (
-              <WalletHistoryFilter accounts={accounts} value={historyFilter} onChange={onFilterChange} />
-            )}
             <span className="text-[10px] font-semibold text-slate-400">Auto-refresh</span>
             <div
               className={`flex items-center gap-1.5 px-2 py-1 rounded ${isConnected ? 'bg-emerald-50' : 'bg-slate-100'}`}
@@ -224,23 +217,41 @@ function ExplorerDataTabs({
                 {transactions.length > 0 ? (
                   transactions.map((tx) => (
                     <tr key={tx.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="px-5 py-3.5">
-                        <p className="text-xs font-mono text-blue-600">{shortHex(tx.hash || tx.id)}</p>
+                      <td className="px-5 py-2.5">
+                        <p 
+                          className="text-xs font-mono text-blue-600 cursor-pointer hover:underline"
+                          onClick={() => tx.hash && onTxHashSelect(tx.hash as string)}
+                        >
+                          {shortHex(tx.hash || tx.id)}
+                        </p>
                       </td>
-                      <td className="px-5 py-3.5">
-                        <p className="text-xs font-mono text-slate-700">{shortHex(tx.from)}</p>
+                      <td className="px-5 py-2.5">
+                        <p 
+                          className="text-xs font-mono text-slate-700 cursor-pointer hover:text-blue-600 hover:underline"
+                          onClick={() => tx.from && onAddressSelect(tx.from)}
+                        >
+                          {shortHex(tx.from)}
+                        </p>
                       </td>
-                      <td className="px-5 py-3.5">
-                        <p className="text-xs font-mono text-slate-700">{shortHex(tx.to)}</p>
+                      <td className="px-5 py-2.5">
+                        <p 
+                          className="text-xs font-mono text-slate-700 cursor-pointer hover:text-blue-600 hover:underline"
+                          onClick={() => tx.to && onAddressSelect(tx.to)}
+                        >
+                          {shortHex(tx.to)}
+                        </p>
                       </td>
-                      <td className="px-5 py-3.5 text-right">
+                      <td className="px-5 py-2.5 text-right">
                         <div className="flex items-center justify-end gap-1">
                           <p className="text-xs font-bold text-slate-800">{tx.amount}</p>
                           <span className="text-[9px] font-semibold text-slate-400">CMU</span>
                         </div>
                       </td>
-                      <td className="px-5 py-3.5 text-right">
-                        <p className="text-[10px] text-slate-500">{tx.timestampStr}</p>
+                      <td className="px-5 py-2.5 text-right">
+                        <div className="flex flex-col items-end whitespace-nowrap">
+                          <p className="text-[10px] text-slate-700 font-medium">{formatTxAge(tx.timestamp)}</p>
+                          <p className="text-[9px] text-slate-500 mt-0.5">{tx.timestampStr}</p>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -249,7 +260,7 @@ function ExplorerDataTabs({
                     <td colSpan={5} className="px-5 py-12 text-center">
                       <p className="text-sm font-medium text-slate-400">No transactions found</p>
                       <p className="text-xs text-slate-400 mt-1">
-                        No sends, receives, or contract calls for the selected wallets yet
+                        No transactions have occurred on the network yet
                       </p>
                     </td>
                   </tr>
@@ -337,7 +348,7 @@ function ExplorerDataTabs({
                         </div>
                       </td>
                       <td className="px-5 py-3.5 text-right">
-                        <p className="text-[10px] text-slate-500">-- %</p>
+                        <p className="text-[10px] text-slate-500">{acc.percentage.toFixed(2)} %</p>
                       </td>
                     </tr>
                   ))

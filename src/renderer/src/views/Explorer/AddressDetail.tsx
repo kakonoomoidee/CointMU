@@ -236,7 +236,7 @@ function AddressDetail({
               <tbody className="divide-y divide-slate-100">
                 {pagination.pageItems.map((tx) => (
                   <tr key={tx.id} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-2 py-3.5">
+                    <td className="px-2 py-2.5">
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 rounded bg-blue-50 flex items-center justify-center text-blue-500 flex-shrink-0">
                           <IconFile width={10} height={10} />
@@ -253,20 +253,23 @@ function AddressDetail({
                         )}
                       </div>
                     </td>
-                    <td className="px-2 py-3.5">
+                    <td className="px-2 py-2.5">
                       <AddressBadge address={tx.from ?? null} leftAligned onClick={onAddressSelect} />
                     </td>
-                    <td className="px-2 py-3.5">
+                    <td className="px-2 py-2.5">
                       <div className="flex items-center gap-1">
                         <IconChevronRight className="text-slate-300 flex-shrink-0" width={12} height={12} />
                         <AddressBadge address={tx.to ?? null} leftAligned onClick={onAddressSelect} />
                       </div>
                     </td>
-                    <td className="px-2 py-3.5 text-right">
+                    <td className="px-2 py-2.5 text-right">
                       <span className="text-xs font-bold text-slate-800">{tx.amount} CMU</span>
                     </td>
-                    <td className="px-2 py-3.5 text-right">
-                      <span className="text-[10px] text-slate-500">{formatTxAge(tx.timestamp)}</span>
+                    <td className="px-2 py-2.5 text-right">
+                      <div className="flex flex-col items-end whitespace-nowrap">
+                        <span className="text-[10px] text-slate-700 font-medium">{formatTxAge(tx.timestamp)}</span>
+                        <span className="text-[9px] text-slate-500 mt-0.5">{tx.timestampStr}</span>
+                      </div>
                     </td>
                   </tr>
                 ))}
