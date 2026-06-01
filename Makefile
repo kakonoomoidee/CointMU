@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 5
-SUBLEVEL = 4
-EXTRAVERSION = BlackSpruce
+SUBLEVEL = 5
+EXTRAVERSION = WhiteSpruce
 
 .PHONY: help dev build\:win build\:linux build\:mac clean
 
