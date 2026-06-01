@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 5
-SUBLEVEL = 5
-EXTRAVERSION = WhiteSpruce
+SUBLEVEL = 6
+EXTRAVERSION = Lynx
 
 .PHONY: help dev build\:win build\:linux build\:mac clean
 
