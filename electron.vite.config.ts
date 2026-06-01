@@ -14,6 +14,17 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()]
   },
   renderer: {
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'vendor-react': ['react', 'react-dom', 'qrcode.react'],
+            'vendor-ethers': ['ethers'],
+            'vendor-utils': ['zustand', 'date-fns']
+          }
+        }
+      }
+    },
     define: {
       __APP_VERSION__: JSON.stringify(pkg.version)
     },

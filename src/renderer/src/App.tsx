@@ -1,10 +1,14 @@
-import { useState, useEffect, type JSX } from 'react'
-import { Dashboard, Miner, Wallet, Explorer, Settings, Onboarding } from '@/views'
+import { useState, useEffect, Suspense, lazy, type JSX } from 'react'
+import { Dashboard, Wallet, Onboarding } from '@/views'
 import { type DerivedAccount, getSetting } from '@/services'
 import { useUpdateStatus } from '@/hooks'
 import { useOnboardingStore, useAppStore } from '@/store'
 
 import { Sidebar } from '@/components'
+
+const Miner = lazy(() => import('@/views/Miner').then((m) => ({ default: m.Miner })))
+const Explorer = lazy(() => import('@/views/Explorer').then((m) => ({ default: m.Explorer })))
+const Settings = lazy(() => import('@/views/Settings').then((m) => ({ default: m.Settings })))
 
 const NAV_ITEM_DASHBOARD = 'dashboard'
 const NAV_ITEM_MINER = 'miner'
@@ -100,32 +104,38 @@ function App(): JSX.Element {
       />
 
       <main className="flex-1 overflow-hidden">
-        {activeView === NAV_ITEM_DASHBOARD && (
-          <Dashboard
-            activeWalletAddress={activeWalletAddress}
-            accounts={accounts}
-            onNavigate={handleNavigate}
-          />
-        )}
-        {activeView === NAV_ITEM_MINER && (
-          <Miner 
-            activeWalletAddress={activeWalletAddress} 
-            accounts={accounts} 
-            onNavigate={handleNavigate}
-          />
-        )}
-        {activeView === NAV_ITEM_WALLET && (
-          <Wallet
-            accounts={accounts}
-            setAccounts={setAccounts}
-            activeWalletAddress={activeWalletAddress}
-            setActiveWalletAddress={setActiveWalletAddress}
-          />
-        )}
-        {activeView === NAV_ITEM_EXPLORER && (
-          <Explorer activeWalletAddress={activeWalletAddress} accounts={accounts} />
-        )}
-        {activeView === NAV_ITEM_SETTINGS && <Settings initialCategory={settingsTab as any} />}
+        <Suspense fallback={
+          <div className="flex items-center justify-center h-full w-full">
+            <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          </div>
+        }>
+          {activeView === NAV_ITEM_DASHBOARD && (
+            <Dashboard
+              activeWalletAddress={activeWalletAddress}
+              accounts={accounts}
+              onNavigate={handleNavigate}
+            />
+          )}
+          {activeView === NAV_ITEM_MINER && (
+            <Miner 
+              activeWalletAddress={activeWalletAddress} 
+              accounts={accounts} 
+              onNavigate={handleNavigate}
+            />
+          )}
+          {activeView === NAV_ITEM_WALLET && (
+            <Wallet
+              accounts={accounts}
+              setAccounts={setAccounts}
+              activeWalletAddress={activeWalletAddress}
+              setActiveWalletAddress={setActiveWalletAddress}
+            />
+          )}
+          {activeView === NAV_ITEM_EXPLORER && (
+            <Explorer activeWalletAddress={activeWalletAddress} accounts={accounts} />
+          )}
+          {activeView === NAV_ITEM_SETTINGS && <Settings initialCategory={settingsTab as any} />}
+        </Suspense>
       </main>
     </div>
   )
