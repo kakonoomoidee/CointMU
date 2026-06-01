@@ -35,7 +35,8 @@ export {
   setPoolAddress,
   fetchMiningStats,
   subscribeMiningStatus,
-  subscribeDagProgress
+  subscribeDagProgress,
+  subscribeMiningLog
 } from './miningService'
 export type { MiningStats, MiningConfig } from './miningService'
 

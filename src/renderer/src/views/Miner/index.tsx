@@ -64,7 +64,7 @@ function Miner({ activeWalletAddress, accounts, onNavigate }: MinerProps): JSX.E
   const isMining = telemetry.isMining
   const elapsedTime = useTimer(sessionStartTime, isMining)
 
-  const { logs } = useMiningActivity(recentBlocks, ownedAddresses)
+  useMiningActivity(recentBlocks, ownedAddresses)
 
   const scopedFoundBlocks = filterFoundBlocks(foundBlocks, historyAddresses)
   const foundBlocksPagination = usePagination(scopedFoundBlocks, FOUND_BLOCKS_PAGE_SIZE)
@@ -150,7 +150,6 @@ function Miner({ activeWalletAddress, accounts, onNavigate }: MinerProps): JSX.E
             sharesData={sharesData}
             acceptedShares={acceptedShares}
             networkShares={networkShares}
-            logs={logs}
             accounts={accounts}
             historyFilter={historyFilter}
             onFilterChange={setHistoryFilter}

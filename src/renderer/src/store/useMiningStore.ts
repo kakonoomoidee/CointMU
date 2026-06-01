@@ -2,12 +2,20 @@ import { create } from 'zustand'
 
 const MAX_FOUND_BLOCKS = 500
 const MAX_HASHRATE_HISTORY = 60
+const MAX_MINING_LOGS = 200
 
 interface FoundBlock {
   number: number
   hash: string
   miner: string
   timestamp: number
+}
+
+interface MiningLog {
+  id: string
+  timestamp: string
+  level: 'INFO' | 'OK' | 'WARN' | 'ERROR'
+  message: string
 }
 
 interface MiningStore {
@@ -17,11 +25,13 @@ interface MiningStore {
   candidate: number | null
   hashrateMhs: number
   hashrateHistory: number[]
+  miningLogs: MiningLog[]
   startMining: () => void
   stopMining: () => void
   recordFoundBlocks: (blocks: FoundBlock[]) => void
   updateTelemetry: (nonce: number, candidate: number | null) => void
   setHashrate: (hashrateMhs: number) => void
+  addMiningLog: (log: MiningLog) => void
 }
 
 /**
@@ -38,6 +48,7 @@ export const useMiningStore = create<MiningStore>((set, get) => ({
   candidate: null,
   hashrateMhs: 0,
   hashrateHistory: [],
+  miningLogs: [],
   startMining: () => {
     if (get().sessionStartTime !== null) return
     set({ sessionStartTime: Date.now() })
@@ -65,7 +76,11 @@ export const useMiningStore = create<MiningStore>((set, get) => ({
     set((state) => ({
       hashrateMhs,
       hashrateHistory: [...state.hashrateHistory, hashrateMhs].slice(-MAX_HASHRATE_HISTORY)
+    })),
+  addMiningLog: (log: MiningLog) =>
+    set((state) => ({
+      miningLogs: [log, ...state.miningLogs].slice(0, MAX_MINING_LOGS)
     }))
 }))
 
-export type { FoundBlock }
+export type { FoundBlock, MiningLog }

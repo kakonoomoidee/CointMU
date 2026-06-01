@@ -2,7 +2,7 @@ export { useAppStore, HISTORY_FILTER_ALL } from './useAppStore'
 export type { AppState, HistoryFilter } from './useAppStore'
 
 export { useMiningStore } from './useMiningStore'
-export type { FoundBlock } from './useMiningStore'
+export type { FoundBlock, MiningLog } from './useMiningStore'
 
 export { useWalletUiStore } from './useWalletUiStore'
 export type { WalletModalState, AddAccountType } from './useWalletUiStore'

@@ -90,6 +90,13 @@ const api = {
       }
       ipcRenderer.on('mining:status-changed', handler)
       return () => ipcRenderer.removeListener('mining:status-changed', handler)
+    },
+    onMiningLog: (callback: (log: unknown) => void) => {
+      const handler = (_event: any, log: unknown): void => {
+        callback(log)
+      }
+      ipcRenderer.on('mining:log-event', handler)
+      return () => ipcRenderer.removeListener('mining:log-event', handler)
     }
   }
 }

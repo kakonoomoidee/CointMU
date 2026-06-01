@@ -1,4 +1,5 @@
 import { getAllSettings, setSetting } from './settingsService'
+import { type MiningLog } from '@/store'
 
 interface MiningStats {
   isMining: boolean
@@ -105,6 +106,15 @@ function subscribeDagProgress(callback: (progress: number) => void): Unsubscribe
   return window.api.mining.onDagProgress(callback)
 }
 
+/**
+ * Subscribes to parsed Geth mining log events pushed from the main process.
+ * @param callback - Invoked with each normalized mining log entry.
+ * @returns An unsubscribe function that detaches the listener.
+ */
+function subscribeMiningLog(callback: (log: MiningLog) => void): Unsubscribe {
+  return window.api.mining.onMiningLog(callback)
+}
+
 export {
   getMiningConfig,
   setMiningEnabled,
@@ -113,6 +123,7 @@ export {
   setPoolAddress,
   fetchMiningStats,
   subscribeMiningStatus,
-  subscribeDagProgress
+  subscribeDagProgress,
+  subscribeMiningLog
 }
 export type { MiningStats, MiningConfig }

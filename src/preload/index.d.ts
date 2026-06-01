@@ -57,6 +57,14 @@ interface CointmuAPI {
     getStats: () => Promise<{isMining: boolean; hashrate: number; difficulty: number; blockNumber: number}>
     onDagProgress: (callback: (progress: number) => void) => () => void
     onMiningStatusChanged: (callback: (status: string) => void) => () => void
+    onMiningLog: (
+      callback: (log: {
+        id: string
+        timestamp: string
+        level: 'INFO' | 'OK' | 'WARN' | 'ERROR'
+        message: string
+      }) => void
+    ) => () => void
   }
 }
 

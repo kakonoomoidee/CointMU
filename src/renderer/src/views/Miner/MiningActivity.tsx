@@ -4,7 +4,7 @@ import { IconCheck, IconCube } from '@/assets/icons'
 import { formatAge } from '@/utils'
 import { type FoundBlock, type HistoryFilter } from '@/store'
 import { type DerivedAccount } from '@/services'
-import { type LogEntry } from '@/hooks'
+import { MiningActivityLogs } from './MiningActivityLogs'
 
 const SELF_BLOCK_REWARD = '+2.00'
 
@@ -23,7 +23,6 @@ interface MiningActivityProps {
   sharesData: Array<boolean | null>
   acceptedShares: number
   networkShares: number
-  logs: LogEntry[]
   accounts: DerivedAccount[]
   historyFilter: HistoryFilter
   onFilterChange: (filter: HistoryFilter) => void
@@ -48,7 +47,6 @@ function MiningActivity({
   sharesData,
   acceptedShares,
   networkShares,
-  logs,
   accounts,
   historyFilter,
   onFilterChange
@@ -163,26 +161,7 @@ function MiningActivity({
           </div>
         )}
 
-        {activeTab === ACTIVITY_TAB_LOG && (
-          <div className="h-[280px] bg-slate-900 rounded-xl p-4 overflow-y-auto font-mono text-[11px] shadow-inner">
-            <div className="space-y-1.5">
-              {logs.length > 0 ? (
-                logs.map((log) => (
-                  <div
-                    key={log.id}
-                    className="flex items-start gap-4 hover:bg-slate-800/50 px-2 py-0.5 rounded transition-colors"
-                  >
-                    <span className="text-slate-500 w-16 flex-shrink-0">{log.timestamp}</span>
-                    <span className={`${log.color} w-8 flex-shrink-0 font-bold`}>{log.level}</span>
-                    <span className="text-slate-300 flex-1 whitespace-pre-wrap">{log.message}</span>
-                  </div>
-                ))
-              ) : (
-                <div className="text-slate-500 text-center py-8">Awaiting network activity...</div>
-              )}
-            </div>
-          </div>
-        )}
+        {activeTab === ACTIVITY_TAB_LOG && <MiningActivityLogs />}
       </div>
     </Card>
   )

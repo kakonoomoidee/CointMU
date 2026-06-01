@@ -8,6 +8,7 @@ import { config } from "dotenv";
 import detectPort from "detect-port";
 import { registerCryptoHandlers } from "./crypto";
 import { registerSystemHandlers } from "./system";
+import { parseGethLogChunk } from "./gethLogParser";
 
 config({ path: join(app.getAppPath(), ".env") });
 
@@ -219,12 +220,47 @@ function spawnGethProcess(store: any): void {
       detached: false,
     });
 
+    /**
+     * Broadcasts a parsed mining log object to every renderer window.
+     * @param {object} log - The normalized mining log entry.
+     * @returns {void}
+     */
+    const broadcastMiningLog = (log: ReturnType<typeof parseGethLogChunk>[number]): void => {
+      BrowserWindow.getAllWindows().forEach((win) => {
+        win.webContents.send("mining:log-event", log);
+      });
+    };
+
+    let stdoutBuffer = "";
+    let stderrBuffer = "";
+
+    /**
+     * Accumulates a raw output chunk, parses only the complete lines into mining
+     * log events, and retains any trailing partial line so a regex match is never
+     * broken across chunk boundaries.
+     * @param {string} buffer - The current residual buffer for the stream.
+     * @param {Buffer} data - The newly received raw output chunk.
+     * @returns {string} The updated residual buffer after parsing complete lines.
+     */
+    const consumeStream = (buffer: string, data: Buffer): string => {
+      const combined = buffer + data.toString();
+      const newlineIndex = combined.lastIndexOf("\n");
+      if (newlineIndex === -1) {
+        return combined;
+      }
+      const complete = combined.slice(0, newlineIndex);
+      parseGethLogChunk(complete).forEach(broadcastMiningLog);
+      return combined.slice(newlineIndex + 1);
+    };
+
     gethProcess.stdout?.on("data", (data: Buffer) => {
       console.log("[Geth Log]", data.toString());
+      stdoutBuffer = consumeStream(stdoutBuffer, data);
     });
 
     /**
-     * Parses Geth standard error output to stream DAG generation progress.
+     * Parses Geth standard error output to stream DAG generation progress and
+     * mining log events to the renderer.
      * @param {Buffer} data - The raw output chunk from the Geth process.
      * @returns {void}
      */
@@ -237,6 +273,7 @@ function spawnGethProcess(store: any): void {
           win.webContents.send('mining:dagProgress', parseInt(dagMatch[1], 10));
         });
       }
+      stderrBuffer = consumeStream(stderrBuffer, data);
     };
 
     gethProcess.stderr?.on("data", handleGethStderr);
