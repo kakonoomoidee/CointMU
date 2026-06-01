@@ -1,4 +1,5 @@
 import { Wallet, HDNodeWallet } from 'ethers'
+import { getSetting } from './settingsService'
 
 export interface DerivedAccount {
   index: number
@@ -97,6 +98,40 @@ export function decryptSecret(payload: string, password: string): Promise<string
  */
 export function verifyPassword(payload: string, password: string): Promise<boolean> {
   return window.api.wallet.verify(payload, password)
+}
+
+/**
+ * Resolves the raw hex private key for a given account by decrypting the
+ * relevant secret with the supplied password and deriving at the account's
+ * BIP44 index when the secret is a mnemonic. Imported accounts carry their own
+ * encryptedKey; mnemonic-derived accounts decrypt the shared wallet payload.
+ * Rejects with 'Incorrect password.' when decryption fails, and with 'Wallet is
+ * not unlocked' when no wallet payload is present.
+ * @param account - The account whose private key should be revealed.
+ * @param password - The password used to decrypt the wallet secret.
+ * @returns The 0x-prefixed private key hex string.
+ */
+export async function revealPrivateKey(
+  account: DerivedAccount,
+  password: string
+): Promise<string> {
+  let secret: string
+  if (account.encryptedKey) {
+    secret = await decryptSecret(account.encryptedKey, password)
+  } else {
+    const encryptedPayload = await getSetting<string | null>('encryptedPayload')
+    if (!encryptedPayload) {
+      throw new Error('Wallet is not unlocked')
+    }
+    secret = await decryptSecret(encryptedPayload, password)
+  }
+
+  const wallet =
+    secret.split(' ').length === 12
+      ? HDNodeWallet.fromPhrase(secret, undefined, `m/44'/60'/0'/0/${account.index}`)
+      : new Wallet(secret)
+
+  return wallet.privateKey
 }
 
 /**

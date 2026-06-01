@@ -19,7 +19,8 @@ export {
   generateIdenticonGradient,
   encryptSecret,
   decryptSecret,
-  verifyPassword
+  verifyPassword,
+  revealPrivateKey
 } from './walletService'
 export type { DerivedAccount } from './walletService'
 

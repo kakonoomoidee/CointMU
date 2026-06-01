@@ -1,5 +1,6 @@
-import type { JSX } from 'react'
+import { useState, type JSX } from 'react'
 import type { SettingsStore } from '@/views/Settings'
+import { RevealPrivateKeyModal } from './RevealPrivateKeyModal'
 
 interface SecuritySettingsProps {
   config: SettingsStore['security']
@@ -13,6 +14,8 @@ interface SecuritySettingsProps {
  * @returns The Security Settings form component.
  */
 export function SecuritySettings({ config, onUpdate }: SecuritySettingsProps): JSX.Element {
+  const [showReveal, setShowReveal] = useState(false)
+
   return (
     <div>
       <h2 className="text-sm font-semibold text-slate-700 mb-6">Wallet security, backups, and hardware keys</h2>
@@ -71,6 +74,19 @@ export function SecuritySettings({ config, onUpdate }: SecuritySettingsProps): J
                 Export
               </button>
             </div>
+
+            <div className="flex items-center justify-between p-4">
+              <div>
+                <p className="text-sm font-bold text-slate-800">Reveal private key</p>
+                <p className="text-xs text-slate-500 mt-0.5">Decrypt and display the raw private key for an account</p>
+              </div>
+              <button
+                onClick={() => setShowReveal(true)}
+                className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-colors"
+              >
+                Reveal...
+              </button>
+            </div>
           </div>
         </section>
 
@@ -109,6 +125,8 @@ export function SecuritySettings({ config, onUpdate }: SecuritySettingsProps): J
           </div>
         </section>
       </div>
+
+      {showReveal && <RevealPrivateKeyModal onClose={() => setShowReveal(false)} />}
     </div>
   )
 }
