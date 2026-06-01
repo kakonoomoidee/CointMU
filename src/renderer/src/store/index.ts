@@ -9,3 +9,10 @@ export type { WalletModalState, AddAccountType } from './useWalletUiStore'
 
 export { useOnboardingStore } from './useOnboardingStore'
 export type { OnboardingStep, ImportMethod } from './useOnboardingStore'
+
+export { useNotificationStore } from './useNotificationStore'
+export type {
+  NotificationItem,
+  NotificationSettings,
+  NotificationType
+} from './useNotificationStore'

@@ -50,36 +50,6 @@ export function GeneralSettings({ config, onUpdate }: GeneralSettingsProps): JSX
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Notifications</h3>
-          <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800">Push notifications</p>
-                <p className="text-xs text-slate-500 mt-0.5">Mining rewards, incoming transactions, chain alerts</p>
-              </div>
-              <button
-                onClick={() => onUpdate('pushNotifications', !config.pushNotifications)}
-                className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${config.pushNotifications ? 'bg-emerald-500' : 'bg-slate-200'}`}
-              >
-                <div className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${config.pushNotifications ? 'translate-x-5' : 'translate-x-0'}`} />
-              </button>
-            </div>
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800">Notification sound</p>
-                <p className="text-xs text-slate-500 mt-0.5">Play a short tone when a block you mined is sealed</p>
-              </div>
-              <button
-                onClick={() => onUpdate('notificationSound', !config.notificationSound)}
-                className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${config.notificationSound ? 'bg-emerald-500' : 'bg-slate-200'}`}
-              >
-                <div className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${config.notificationSound ? 'translate-x-5' : 'translate-x-0'}`} />
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Display</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <div className="flex items-center justify-between p-4">

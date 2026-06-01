@@ -3,9 +3,9 @@ import ms from 'ms'
 import { Dashboard, Wallet, Onboarding } from '@/views'
 import { type DerivedAccount, getSetting } from '@/services'
 import { useUpdater, useMiningLogStream } from '@/hooks'
-import { useOnboardingStore, useAppStore } from '@/store'
+import { useOnboardingStore, useAppStore, useNotificationStore } from '@/store'
 
-import { Sidebar } from '@/components'
+import { Sidebar, ToastViewport } from '@/components'
 
 const Miner = lazy(() => import('@/views/Miner').then((m) => ({ default: m.Miner })))
 const Explorer = lazy(() => import('@/views/Explorer').then((m) => ({ default: m.Explorer })))
@@ -35,6 +35,10 @@ function App(): JSX.Element {
   const [settingsTab, setSettingsTab] = useState<string>('general')
   const updater = useUpdater()
   useMiningLogStream()
+
+  useEffect(() => {
+    void useNotificationStore.getState().hydrate()
+  }, [])
 
   const handleNavigate = (view: string, payload?: any) => {
     setActiveView(view as ActiveView)
@@ -96,6 +100,7 @@ function App(): JSX.Element {
 
   return (
     <div className="flex h-full bg-slate-50">
+      <ToastViewport />
       <Sidebar
         accounts={accounts}
         activeWalletAddress={activeWalletAddress}

@@ -51,3 +51,5 @@ export { getCpuUsage } from './systemService'
 
 export { detectSearchType, getTransactionDetail, getAddressSummary } from './explorerService'
 export type { SearchType, TransactionDetailData, AddressSummary } from './explorerService'
+
+export { dispatchNotification } from './notificationService'

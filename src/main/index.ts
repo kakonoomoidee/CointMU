@@ -952,6 +952,15 @@ app.whenReady().then(async () => {
         logLevel: "Info",
         sendAnalytics: false,
       },
+      notifications: {
+        global: true,
+        transactions: true,
+        mining: true,
+        security: true,
+        desktopOs: true,
+        sound: false,
+      },
+      notificationHistory: [],
     },
   });
 

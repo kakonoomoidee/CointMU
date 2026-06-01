@@ -6,6 +6,7 @@ import { MiningSettings } from '@/components/settings/MiningSettings'
 import { SecuritySettings } from '@/components/settings/SecuritySettings'
 import { AdvancedSettings } from '@/components/settings/AdvancedSettings'
 import { AboutSettings } from '@/components/settings/AboutSettings'
+import { NotificationSettings } from '@/components/settings/NotificationSettings'
 import { getAllSettings, setSetting } from '@/services'
 import {
   IconSun,
@@ -14,10 +15,11 @@ import {
   IconLayers,
   IconLock,
   IconSettings,
-  IconBox
+  IconBox,
+  IconBell
 } from '@/assets/icons'
 
-export type SettingsCategory = 'general' | 'appearance' | 'network' | 'mining' | 'security' | 'advanced' | 'about'
+export type SettingsCategory = 'general' | 'appearance' | 'notifications' | 'network' | 'mining' | 'security' | 'advanced' | 'about'
 
 const CATEGORIES: { id: SettingsCategory; label: string; icon: JSX.Element }[] = [
   {
@@ -32,6 +34,13 @@ const CATEGORIES: { id: SettingsCategory; label: string; icon: JSX.Element }[] =
     label: 'Appearance',
     icon: (
       <IconImage width={16} height={16} />
+    )
+  },
+  {
+    id: 'notifications',
+    label: 'Notifications',
+    icon: (
+      <IconBell width={16} height={16} />
     )
   },
   {
@@ -224,6 +233,9 @@ function Settings({ initialCategory = 'general' }: SettingsProps = {}): JSX.Elem
             )}
             {activeCategory === 'appearance' && (
               <AppearanceSettings config={settings.appearance} onUpdate={(k, v) => updateSetting('appearance', k, v)} />
+            )}
+            {activeCategory === 'notifications' && (
+              <NotificationSettings />
             )}
             {activeCategory === 'network' && (
               <NetworkSettings config={settings.network} onUpdate={(k, v) => updateSetting('network', k, v)} />

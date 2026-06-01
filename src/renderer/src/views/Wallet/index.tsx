@@ -11,6 +11,7 @@ import {
   decryptSecret,
   getSessionPassword,
   waitForTransactionReceipt,
+  dispatchNotification,
   type DerivedAccount
 } from '@/services'
 import { useWalletUiStore, useAppStore } from '@/store'
@@ -189,13 +190,27 @@ function Wallet({
       setModalState('NONE')
       void fetchGlobalStats(activeWalletAddress, addresses)
 
+      const shortTo = `${sendTo.slice(0, 6)}...${sendTo.slice(-4)}`
+
       void waitForTransactionReceipt(txHash, { confirmations: 1 })
         .then(() => {
           removePendingTransaction(txHash)
+          dispatchNotification(
+            'transaction',
+            'Transaction confirmed',
+            `Sent ${sendAmount} CMU to ${shortTo}`,
+            { hash: txHash }
+          )
           return fetchGlobalStats(activeWalletAddress, addresses)
         })
         .catch(() => {
           removePendingTransaction(txHash)
+          dispatchNotification(
+            'transaction',
+            'Transaction failed',
+            `Your transfer of ${sendAmount} CMU to ${shortTo} could not be confirmed`,
+            { hash: txHash }
+          )
           return fetchGlobalStats(activeWalletAddress, addresses)
         })
     } catch (e) {

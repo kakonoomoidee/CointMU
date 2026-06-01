@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { format } from 'date-fns'
 import { useMiningStore } from '@/store'
+import { dispatchNotification } from '@/services'
 import { type BlockData } from './useRecentBlocks'
 
 const MAX_LOG_ENTRIES = 50
@@ -90,6 +91,14 @@ function useMiningActivity(
           timestamp: block.timestamp
         }))
       )
+      selfMined.forEach((block) => {
+        dispatchNotification(
+          'mining',
+          'Block mined',
+          `You sealed block #${block.number}`,
+          { hash: block.hash, number: block.number }
+        )
+      })
     }
   }, [recentBlocks, ownedKey, recordFoundBlocks])
 

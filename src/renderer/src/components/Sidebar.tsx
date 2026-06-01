@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, type JSX } from 'react'
 import { type DerivedAccount } from '@/services'
 import { type UpdaterStatus } from '@/hooks'
 import { useAppStore } from '@/store'
+import { NotificationCenter } from './notifications/NotificationCenter'
 import {
   IconBolt,
   IconGrid,
@@ -59,14 +60,17 @@ export function Sidebar({
 
   return (
     <aside className="w-56 flex flex-col border-r border-slate-200 bg-white">
-      <div className="flex items-center gap-3 px-5 py-5">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-sm shadow-blue-200">
-          <IconBolt color="white" width={16} height={16} strokeWidth={2.5} />
+      <div className="flex items-center justify-between px-5 py-5">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-sm shadow-blue-200">
+            <IconBolt color="white" width={16} height={16} strokeWidth={2.5} />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-slate-800">CointMU</p>
+            <p className="text-[10px] text-slate-400 tracking-wide">v{window.systemInfo?.version || '0.0.1'} - {APP_NETWORK}</p>
+          </div>
         </div>
-        <div>
-          <p className="text-sm font-bold text-slate-800">CointMU</p>
-          <p className="text-[10px] text-slate-400 tracking-wide">v{window.systemInfo?.version || '0.0.1'} - {APP_NETWORK}</p>
-        </div>
+        <NotificationCenter />
       </div>
 
       <div className="px-4 py-2">

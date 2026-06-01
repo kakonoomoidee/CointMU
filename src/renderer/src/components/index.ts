@@ -1,4 +1,6 @@
 export { Sidebar } from './Sidebar'
+export { NotificationCenter } from './notifications/NotificationCenter'
+export { ToastViewport } from './notifications/ToastViewport'
 export { Sparkline } from './Sparkline'
 export { WalletHistoryFilter } from './WalletHistoryFilter'
 export type { WalletHistoryFilterProps } from './WalletHistoryFilter'
