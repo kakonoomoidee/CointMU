@@ -1,4 +1,6 @@
 export { Sidebar } from './Sidebar'
+export { ImportKeystoreModal } from './ImportKeystoreModal'
+export type { ImportKeystoreResult } from './ImportKeystoreModal'
 export { NotificationCenter } from './notifications/NotificationCenter'
 export { ToastViewport } from './notifications/ToastViewport'
 export { Sparkline } from './Sparkline'

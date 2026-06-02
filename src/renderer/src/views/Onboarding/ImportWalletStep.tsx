@@ -1,10 +1,11 @@
 import { type JSX } from 'react'
 import { useOnboardingStore } from '@/store'
-import { IconFileText, IconChevronRight, IconKey } from '@/assets/icons'
+import { IconFileText, IconChevronRight, IconKey, IconDownload } from '@/assets/icons'
 
 interface ImportWalletStepProps {
   mode: 'method' | 'input'
   onSelectMethod: (method: 'seed' | 'privateKey') => void
+  onSelectKeystore?: () => void
   onContinue: () => void
   onBackToInitial: () => void
   onBackToMethod: () => void
@@ -21,6 +22,7 @@ interface ImportWalletStepProps {
 function ImportWalletStep({
   mode,
   onSelectMethod,
+  onSelectKeystore,
   onContinue,
   onBackToInitial,
   onBackToMethod
@@ -63,6 +65,24 @@ function ImportWalletStep({
           </div>
           <IconChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
         </button>
+
+        {onSelectKeystore && (
+          <button
+            onClick={onSelectKeystore}
+            className="w-full flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-500 hover:shadow-sm transition-all group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                <IconDownload width={20} height={20} />
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-bold text-slate-800">Import from Keystore JSON</p>
+                <p className="text-[10px] text-slate-500">Encrypted Web3 keystore file</p>
+              </div>
+            </div>
+            <IconChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
+          </button>
+        )}
 
         <button
           onClick={onBackToInitial}

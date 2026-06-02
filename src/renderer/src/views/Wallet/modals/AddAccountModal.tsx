@@ -1,9 +1,10 @@
 import { type JSX } from 'react'
 import { useWalletUiStore } from '@/store'
-import { IconDownload, IconLock } from '@/assets/icons'
+import { IconDownload, IconLock, IconFileText } from '@/assets/icons'
 
 interface AddAccountModalProps {
   onImport: () => void
+  onImportKeystore: () => void
 }
 
 /**
@@ -13,7 +14,7 @@ interface AddAccountModalProps {
  * @param props - The import handler invoked to derive and persist the account.
  * @returns The rendered add account modal body.
  */
-function AddAccountModal({ onImport }: AddAccountModalProps): JSX.Element {
+function AddAccountModal({ onImport, onImportKeystore }: AddAccountModalProps): JSX.Element {
   const addAccountType = useWalletUiStore((s) => s.addAccountType)
   const importInput = useWalletUiStore((s) => s.importInput)
   const addAccountError = useWalletUiStore((s) => s.addAccountError)
@@ -49,6 +50,18 @@ function AddAccountModal({ onImport }: AddAccountModalProps): JSX.Element {
             <div>
               <p className="text-sm font-bold text-slate-800">Import Private Key</p>
               <p className="text-xs text-slate-500">Import a standalone hex private key.</p>
+            </div>
+          </button>
+          <button
+            onClick={onImportKeystore}
+            className="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all text-left"
+          >
+            <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center flex-shrink-0">
+              <IconFileText width={20} height={20} strokeWidth={2.5} />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-slate-800">Import Account (JSON)</p>
+              <p className="text-xs text-slate-500">Import an encrypted Web3 keystore file.</p>
             </div>
           </button>
         </div>

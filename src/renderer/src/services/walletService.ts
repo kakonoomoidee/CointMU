@@ -155,6 +155,23 @@ export async function revealRecoveryPhrase(password: string): Promise<string> {
 }
 
 /**
+ * Decrypts a standard Web3 Secret Storage keystore JSON using its password. This
+ * runs the keystore key-derivation function (scrypt) and is therefore an
+ * intentionally async, CPU-intensive operation. Rejects when the password is
+ * incorrect or the JSON is malformed.
+ * @param keystoreJson - The encrypted keystore JSON string.
+ * @param password - The password that protects the keystore.
+ * @returns The decrypted account's private key and address.
+ */
+export async function importKeystore(
+  keystoreJson: string,
+  password: string
+): Promise<{ privateKey: string; address: string }> {
+  const wallet = await Wallet.fromEncryptedJson(keystoreJson, password)
+  return { privateKey: wallet.privateKey, address: wallet.address }
+}
+
+/**
  * Produces a standard Web3 Secret Storage keystore JSON for the given account by
  * decrypting its private key and re-encrypting it under the supplied password.
  * The result is interoperable with other ethers-based wallets.

@@ -23,7 +23,8 @@ export {
   verifyPassword,
   revealPrivateKey,
   revealRecoveryPhrase,
-  generateKeystore
+  generateKeystore,
+  importKeystore
 } from './walletService'
 export type { DerivedAccount } from './walletService'
 

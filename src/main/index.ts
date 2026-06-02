@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain, powerMonitor, dialog } from "electron";
 import { join } from "path";
 import { existsSync, readFileSync, writeFileSync, rmSync } from "fs";
-import { readdir, stat } from "fs/promises";
+import { readdir, stat, readFile } from "fs/promises";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import { spawn, ChildProcess } from "child_process";
 import { config } from "dotenv";
@@ -1051,6 +1051,23 @@ app.whenReady().then(async () => {
   });
 
   ipcMain.handle('app:openDataFolder', () => shell.openPath(resolveDataDir()));
+
+  ipcMain.handle('app:openKeystore', async () => {
+    const result = await dialog.showOpenDialog({
+      title: 'Import Keystore',
+      properties: ['openFile'],
+      filters: [{ name: 'JSON', extensions: ['json'] }],
+    });
+    if (result.canceled || result.filePaths.length === 0) {
+      return { success: false, canceled: true };
+    }
+    try {
+      const data = await readFile(result.filePaths[0], 'utf8');
+      return { success: true, data };
+    } catch (err) {
+      return { success: false, error: (err as Error).message };
+    }
+  });
 
   registerCryptoHandlers();
   registerSystemHandlers();

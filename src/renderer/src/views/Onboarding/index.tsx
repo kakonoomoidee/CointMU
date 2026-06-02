@@ -1,4 +1,4 @@
-import { useEffect, type JSX } from 'react'
+import { useEffect, useState, type JSX } from 'react'
 import ms from 'ms'
 import {
   generateMnemonic,
@@ -11,6 +11,7 @@ import {
   unlockSession
 } from '@/services'
 import { useOnboardingStore } from '@/store'
+import { ImportKeystoreModal, type ImportKeystoreResult } from '@/components'
 import { OnboardingShell } from './OnboardingShell'
 import { WelcomeStep } from './WelcomeStep'
 import { LoginStep } from './LoginStep'
@@ -53,6 +54,8 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
   const setConfirmPassword = useOnboardingStore((s) => s.setConfirmPassword)
   const setError = useOnboardingStore((s) => s.setError)
 
+  const [keystoreJson, setKeystoreJson] = useState<string | null>(null)
+
   useEffect(() => {
     async function checkExisting(): Promise<void> {
       const encrypted = await getSetting<string | null>('encryptedPayload')
@@ -80,6 +83,21 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
 
   const handleStartImport = (): void => {
     setStep('import-method')
+  }
+
+  const handleSelectKeystore = async (): Promise<void> => {
+    setError(null)
+    const result = await window.api.openKeystoreFile()
+    if (!result.success || !result.data) return
+    setKeystoreJson(result.data)
+  }
+
+  const handleKeystoreImported = ({ privateKey }: ImportKeystoreResult): void => {
+    setImportMethod('privateKey')
+    setInputValue(privateKey)
+    setKeystoreJson(null)
+    resetPasswordFields()
+    setStep('import-password')
   }
 
   const handleLogin = async (): Promise<void> => {
@@ -155,6 +173,7 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
   }
 
   return (
+    <>
     <OnboardingShell step={step} importMethod={importMethod}>
       {step === 'initial' && (
         <WelcomeStep
@@ -192,6 +211,7 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
             setImportMethod(method)
             setStep('import-input')
           }}
+          onSelectKeystore={handleSelectKeystore}
           onContinue={() => setStep('import-input')}
           onBackToInitial={() => setStep('initial')}
           onBackToMethod={() => setStep('import-method')}
@@ -224,5 +244,14 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
         />
       )}
     </OnboardingShell>
+
+    {keystoreJson && (
+      <ImportKeystoreModal
+        keystoreJson={keystoreJson}
+        onClose={() => setKeystoreJson(null)}
+        onImported={handleKeystoreImported}
+      />
+    )}
+    </>
   )
 }

@@ -82,6 +82,8 @@ const api = {
   getDatadir: (): Promise<string> => ipcRenderer.invoke('app:getDatadir'),
   getChainDbSize: (): Promise<number> => ipcRenderer.invoke('app:getChainDbSize'),
   openDataFolder: (): Promise<string> => ipcRenderer.invoke('app:openDataFolder'),
+  openKeystoreFile: (): Promise<{ success: boolean; data?: string; canceled?: boolean; error?: string }> =>
+    ipcRenderer.invoke('app:openKeystore'),
   wallet: {
     encrypt: (secret: string, password: string): Promise<string> =>
       ipcRenderer.invoke('wallet:encrypt', secret, password),

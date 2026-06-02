@@ -21,6 +21,7 @@ import { AccountSidebar } from './AccountSidebar'
 import { AccountHeroCard } from './AccountHeroCard'
 import { WalletTabs, type WalletTab } from './WalletTabs'
 import { WalletModals } from './modals/WalletModals'
+import { ImportKeystoreModal, type ImportKeystoreResult } from '@/components/ImportKeystoreModal'
 
 const TX_GAS_LIMIT = 21000n
 const COPY_FEEDBACK_MS = ms('2s')
@@ -52,6 +53,7 @@ function Wallet({
   const removePendingTransaction = useAppStore((s) => s.removePendingTransaction)
   const fetchGlobalStats = useAppStore((s) => s.fetchGlobalStats)
   const [activeTab, setActiveTab] = useState<WalletTab>('activity')
+  const [keystoreJson, setKeystoreJson] = useState<string | null>(null)
 
   const copied = useWalletUiStore((s) => s.copied)
   const sendTo = useWalletUiStore((s) => s.sendTo)
@@ -279,6 +281,36 @@ function Wallet({
     }
   }
 
+  const handleImportKeystoreFile = async (): Promise<void> => {
+    setModalState('NONE')
+    const result = await window.api.openKeystoreFile()
+    if (!result.success || !result.data) return
+    setKeystoreJson(result.data)
+  }
+
+  const handleKeystoreImported = async ({
+    privateKey,
+    address
+  }: ImportKeystoreResult): Promise<void> => {
+    setKeystoreJson(null)
+    const password = getSessionPassword()
+    if (!password) return
+
+    const existing = accounts.find((a) => a.address.toLowerCase() === address.toLowerCase())
+    if (existing) {
+      await handleAccountSwitch(existing.address)
+      return
+    }
+
+    const newAccount = deriveAccountFromPrivateKey(privateKey, 'Imported Account')
+    newAccount.encryptedKey = await encryptSecret(privateKey, password)
+
+    const updatedAccounts = [...accounts, newAccount]
+    await setSetting('accounts', updatedAccounts)
+    setAccounts(updatedAccounts)
+    await handleAccountSwitch(newAccount.address)
+  }
+
   const gasEstEth = TX_GAS_LIMIT * BigInt(sendGasPrice || '0')
   const gasEstFormatted = ethers.formatEther(gasEstEth)
   const totalDeducted =
@@ -336,8 +368,17 @@ function Wallet({
         onCopy={handleCopy}
         onSend={handleSend}
         onImportAccount={handleCreateOrImportAccount}
+        onImportKeystore={handleImportKeystoreFile}
         onUnhideAccount={handleUnhideAccount}
       />
+
+      {keystoreJson && (
+        <ImportKeystoreModal
+          keystoreJson={keystoreJson}
+          onClose={() => setKeystoreJson(null)}
+          onImported={handleKeystoreImported}
+        />
+      )}
     </div>
   )
 }

@@ -17,6 +17,7 @@ interface WalletModalsProps {
   onCopy: () => void
   onSend: () => void
   onImportAccount: () => void
+  onImportKeystore: () => void
   onUnhideAccount: (address: string) => void
 }
 
@@ -37,6 +38,7 @@ function WalletModals({
   onCopy,
   onSend,
   onImportAccount,
+  onImportKeystore,
   onUnhideAccount
 }: WalletModalsProps): JSX.Element | null {
   const modalState = useWalletUiStore((s) => s.modalState)
@@ -70,7 +72,9 @@ function WalletModals({
           />
         )}
 
-        {modalState === 'ADD_ACCOUNT' && <AddAccountModal onImport={onImportAccount} />}
+        {modalState === 'ADD_ACCOUNT' && (
+          <AddAccountModal onImport={onImportAccount} onImportKeystore={onImportKeystore} />
+        )}
 
         {modalState === 'MANAGE_HIDDEN' && (
           <ManageHiddenModal accounts={accounts} onUnhideAccount={onUnhideAccount} />
