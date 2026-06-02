@@ -57,6 +57,9 @@ interface CointmuAPI {
     filename: string
   ) => Promise<{ success: boolean; path?: string; canceled?: boolean; error?: string }>
   clearAllData: () => Promise<{ success: boolean; error?: string }>
+  getDatadir: () => Promise<string>
+  getChainDbSize: () => Promise<number>
+  openDataFolder: () => Promise<string>
   wallet: {
     encrypt: (secret: string, password: string) => Promise<string>
     decrypt: (payload: string, password: string) => Promise<string>

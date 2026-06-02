@@ -3,7 +3,13 @@ import ms from 'ms'
 import { Dashboard, Wallet, Onboarding } from '@/views'
 import { type DerivedAccount, getSetting } from '@/services'
 import { useUpdater, useMiningLogStream } from '@/hooks'
-import { useOnboardingStore, useAppStore, useNotificationStore, useSecurityStore } from '@/store'
+import {
+  useOnboardingStore,
+  useAppStore,
+  useNotificationStore,
+  useSecurityStore,
+  useAdvancedStore
+} from '@/store'
 
 import { Sidebar, ToastViewport } from '@/components'
 
@@ -39,6 +45,7 @@ function App(): JSX.Element {
   useEffect(() => {
     void useNotificationStore.getState().hydrate()
     void useSecurityStore.getState().hydrate()
+    void useAdvancedStore.getState().hydrate()
   }, [])
 
   const handleNavigate = (view: string, payload?: any) => {

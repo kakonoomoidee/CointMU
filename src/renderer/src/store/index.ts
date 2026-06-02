@@ -19,3 +19,6 @@ export type {
 
 export { useSecurityStore } from './useSecurityStore'
 export type { SecuritySettings } from './useSecurityStore'
+
+export { useAdvancedStore } from './useAdvancedStore'
+export type { AdvancedSettings, StorageInfo } from './useAdvancedStore'

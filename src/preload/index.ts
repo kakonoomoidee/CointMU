@@ -79,6 +79,9 @@ const api = {
     ipcRenderer.invoke('dialog:saveKeystore', keystoreJson, filename),
   clearAllData: (): Promise<{ success: boolean; error?: string }> =>
     ipcRenderer.invoke('wallet:clearAllData'),
+  getDatadir: (): Promise<string> => ipcRenderer.invoke('app:getDatadir'),
+  getChainDbSize: (): Promise<number> => ipcRenderer.invoke('app:getChainDbSize'),
+  openDataFolder: (): Promise<string> => ipcRenderer.invoke('app:openDataFolder'),
   wallet: {
     encrypt: (secret: string, password: string): Promise<string> =>
       ipcRenderer.invoke('wallet:encrypt', secret, password),

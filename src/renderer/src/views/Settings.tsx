@@ -122,11 +122,11 @@ export interface SettingsStore {
     requireBiometrics: boolean
   }
   advanced: {
-    enableJsonRpc: boolean
-    enableWsRpc: boolean
+    httpRpc: boolean
+    wsRpc: boolean
     corsOrigins: string
     logLevel: string
-    sendAnalytics: boolean
+    analytics: boolean
   }
 }
 
@@ -247,7 +247,7 @@ function Settings({ initialCategory = 'general' }: SettingsProps = {}): JSX.Elem
               <SecuritySettings />
             )}
             {activeCategory === 'advanced' && (
-              <AdvancedSettings config={settings.advanced} onUpdate={(k, v) => updateSetting('advanced', k, v)} />
+              <AdvancedSettings />
             )}
             {activeCategory === 'about' && (
               <AboutSettings />

@@ -1,6 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain, powerMonitor, dialog } from "electron";
 import { join } from "path";
 import { existsSync, readFileSync, writeFileSync, rmSync } from "fs";
+import { readdir, stat } from "fs/promises";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import { spawn, ChildProcess } from "child_process";
 import { config } from "dotenv";
@@ -41,6 +42,45 @@ function loadNetworkId() {
 }
 const GETH_DATA_DIR = join(process.cwd(), "data", "cointmu");
 const GETH_BOOTNODE_ENODE = process.env.GETH_BOOTNODE_ENODE || "";
+
+/**
+ * Resolves the absolute geth data directory. A relative GETH_DATA_DIR is anchored
+ * under the Electron userData path; an absolute one is returned as-is.
+ * @returns {string} The absolute data directory path.
+ */
+function resolveDataDir(): string {
+  return GETH_DATA_DIR.startsWith(".")
+    ? join(app.getPath("userData"), GETH_DATA_DIR)
+    : GETH_DATA_DIR;
+}
+
+/**
+ * Recursively sums the byte size of every file under a directory. Returns 0 when
+ * the directory is missing or unreadable so callers can render a safe default.
+ * @param {string} dir - The directory to measure.
+ * @returns {Promise<number>} The total size in bytes.
+ */
+async function getDirectorySize(dir: string): Promise<number> {
+  let total = 0;
+  try {
+    const entries = await readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const entryPath = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        total += await getDirectorySize(entryPath);
+      } else if (entry.isFile()) {
+        try {
+          total += (await stat(entryPath)).size;
+        } catch {
+          total += 0;
+        }
+      }
+    }
+  } catch {
+    return 0;
+  }
+  return total;
+}
 const GETH_LOG_VERBOSITY = process.env.GETH_LOG_VERBOSITY || "3";
 
 let resolvedRpcPort: number = DEFAULT_RPC_PORT;
@@ -169,7 +209,7 @@ function spawnGethProcess(store: any): void {
     return;
   }
 
-  const isRpcEnabled = store.get("advanced.enableJsonRpc") ?? true;
+  const isRpcEnabled = store.get("advanced.httpRpc") ?? true;
   const listenPort = store.get("network.listenPort") || 30303;
 
   const args = [
@@ -946,11 +986,11 @@ app.whenReady().then(async () => {
         requireBiometrics: false,
       },
       advanced: {
-        enableJsonRpc: true,
-        enableWsRpc: false,
+        httpRpc: true,
+        wsRpc: false,
         corsOrigins: "https://*.cointmu.net",
         logLevel: "Info",
-        sendAnalytics: false,
+        analytics: false,
       },
       notifications: {
         global: true,
@@ -999,6 +1039,18 @@ app.whenReady().then(async () => {
       return { success: false, error: (err as Error).message };
     }
   });
+
+  ipcMain.handle('app:getDatadir', () => resolveDataDir());
+
+  ipcMain.handle('app:getChainDbSize', async () => {
+    try {
+      return await getDirectorySize(join(resolveDataDir(), 'geth', 'chaindata'));
+    } catch {
+      return 0;
+    }
+  });
+
+  ipcMain.handle('app:openDataFolder', () => shell.openPath(resolveDataDir()));
 
   registerCryptoHandlers();
   registerSystemHandlers();
