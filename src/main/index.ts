@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, powerMonitor } from "electron";
+import { app, shell, BrowserWindow, ipcMain, powerMonitor, dialog } from "electron";
 import { join } from "path";
 import { existsSync, readFileSync, writeFileSync, rmSync } from "fs";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
@@ -942,8 +942,8 @@ app.whenReady().then(async () => {
         poolAddress: "",
       },
       security: {
-        autoLockWallet: true,
-        requireTouchId: true,
+        autoLock: true,
+        requireBiometrics: false,
       },
       advanced: {
         enableJsonRpc: true,
@@ -967,6 +967,38 @@ app.whenReady().then(async () => {
   ipcMain.handle("settings:get", (_, key) => store.get(key));
   ipcMain.handle("settings:set", (_, key, value) => store.set(key, value));
   ipcMain.handle("settings:getAll", () => store.store);
+
+  ipcMain.handle(
+    'dialog:saveKeystore',
+    async (_, keystoreJson: string, filename: string) => {
+      const result = await dialog.showSaveDialog({
+        title: 'Export Keystore',
+        defaultPath: filename,
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+      });
+      if (result.canceled || !result.filePath) {
+        return { success: false, canceled: true };
+      }
+      try {
+        writeFileSync(result.filePath, keystoreJson, 'utf8');
+        return { success: true, path: result.filePath };
+      } catch (err) {
+        return { success: false, error: (err as Error).message };
+      }
+    },
+  );
+
+  ipcMain.handle('wallet:clearAllData', () => {
+    try {
+      store.set('encryptedPayload', null);
+      store.set('mnemonic', null);
+      store.set('activeWalletAddress', null);
+      store.set('accounts', []);
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: (err as Error).message };
+    }
+  });
 
   registerCryptoHandlers();
   registerSystemHandlers();

@@ -72,6 +72,13 @@ const api = {
     set: (key: string, value: any) => ipcRenderer.invoke('settings:set', key, value),
     getAll: () => ipcRenderer.invoke('settings:getAll')
   },
+  saveKeystore: (
+    keystoreJson: string,
+    filename: string
+  ): Promise<{ success: boolean; path?: string; canceled?: boolean; error?: string }> =>
+    ipcRenderer.invoke('dialog:saveKeystore', keystoreJson, filename),
+  clearAllData: (): Promise<{ success: boolean; error?: string }> =>
+    ipcRenderer.invoke('wallet:clearAllData'),
   wallet: {
     encrypt: (secret: string, password: string): Promise<string> =>
       ipcRenderer.invoke('wallet:encrypt', secret, password),

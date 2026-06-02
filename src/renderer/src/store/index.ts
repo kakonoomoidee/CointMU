@@ -16,3 +16,6 @@ export type {
   NotificationSettings,
   NotificationType
 } from './useNotificationStore'
+
+export { useSecurityStore } from './useSecurityStore'
+export type { SecuritySettings } from './useSecurityStore'

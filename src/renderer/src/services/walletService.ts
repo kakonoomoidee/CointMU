@@ -135,6 +135,43 @@ export async function revealPrivateKey(
 }
 
 /**
+ * Decrypts and returns the wallet's 12-word BIP39 recovery phrase. Rejects with
+ * 'Incorrect password.' on a wrong password, 'Wallet is not unlocked' when no
+ * vault is present, and 'This wallet has no recovery phrase.' for wallets that
+ * were imported from a raw private key rather than a mnemonic.
+ * @param password - The password used to decrypt the wallet vault.
+ * @returns The space-separated 12-word recovery phrase.
+ */
+export async function revealRecoveryPhrase(password: string): Promise<string> {
+  const encryptedPayload = await getSetting<string | null>('encryptedPayload')
+  if (!encryptedPayload) {
+    throw new Error('Wallet is not unlocked')
+  }
+  const secret = await decryptSecret(encryptedPayload, password)
+  if (secret.split(' ').length !== 12) {
+    throw new Error('This wallet has no recovery phrase.')
+  }
+  return secret
+}
+
+/**
+ * Produces a standard Web3 Secret Storage keystore JSON for the given account by
+ * decrypting its private key and re-encrypting it under the supplied password.
+ * The result is interoperable with other ethers-based wallets.
+ * @param account - The account whose private key should be exported.
+ * @param password - The password used to decrypt and re-encrypt the key.
+ * @returns The serialized keystore JSON string.
+ */
+export async function generateKeystore(
+  account: DerivedAccount,
+  password: string
+): Promise<string> {
+  const privateKey = await revealPrivateKey(account, password)
+  const wallet = new Wallet(privateKey)
+  return wallet.encrypt(password)
+}
+
+/**
  * Deterministically generates a Tailwind gradient class string based on an Ethereum address.
  * @param address - The Ethereum address.
  * @returns A Tailwind gradient class string.

@@ -118,8 +118,8 @@ export interface SettingsStore {
     poolAddress: string
   }
   security: {
-    autoLockWallet: boolean
-    requireTouchId: boolean
+    autoLock: boolean
+    requireBiometrics: boolean
   }
   advanced: {
     enableJsonRpc: boolean
@@ -244,7 +244,7 @@ function Settings({ initialCategory = 'general' }: SettingsProps = {}): JSX.Elem
               <MiningSettings config={settings.mining} accounts={settings.accounts} onUpdate={(k, v) => updateSetting('mining', k, v)} />
             )}
             {activeCategory === 'security' && (
-              <SecuritySettings config={settings.security} onUpdate={(k, v) => updateSetting('security', k, v)} />
+              <SecuritySettings />
             )}
             {activeCategory === 'advanced' && (
               <AdvancedSettings config={settings.advanced} onUpdate={(k, v) => updateSetting('advanced', k, v)} />

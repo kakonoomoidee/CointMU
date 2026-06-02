@@ -21,7 +21,9 @@ export {
   encryptSecret,
   decryptSecret,
   verifyPassword,
-  revealPrivateKey
+  revealPrivateKey,
+  revealRecoveryPhrase,
+  generateKeystore
 } from './walletService'
 export type { DerivedAccount } from './walletService'
 

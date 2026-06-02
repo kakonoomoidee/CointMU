@@ -52,6 +52,11 @@ interface CointmuAPI {
     set: (key: string, value: any) => Promise<void>
     getAll: () => Promise<any>
   }
+  saveKeystore: (
+    keystoreJson: string,
+    filename: string
+  ) => Promise<{ success: boolean; path?: string; canceled?: boolean; error?: string }>
+  clearAllData: () => Promise<{ success: boolean; error?: string }>
   wallet: {
     encrypt: (secret: string, password: string) => Promise<string>
     decrypt: (payload: string, password: string) => Promise<string>
