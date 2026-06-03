@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 6
-SUBLEVEL = 0
-EXTRAVERSION = Athena
+SUBLEVEL = 1
+EXTRAVERSION = artemis
 
 .PHONY: help dev build\:win build\:linux build\:mac clean
 

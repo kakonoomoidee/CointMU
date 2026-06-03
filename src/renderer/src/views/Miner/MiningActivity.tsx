@@ -3,7 +3,8 @@ import { Card, WalletHistoryFilter, Pagination } from '@/components'
 import { IconCheck, IconCube } from '@/assets/icons'
 import { formatAge } from '@/utils'
 import { type FoundBlock, type HistoryFilter } from '@/store'
-import { type DerivedAccount } from '@/services'
+import { type DerivedAccount, getYearlyActivity } from '@/services'
+import { ActivityHeatmap } from '@/components/profile/ActivityHeatmap'
 import { MiningActivityLogs } from './MiningActivityLogs'
 
 const SELF_BLOCK_REWARD = '+2.00'
@@ -11,12 +12,19 @@ const SELF_BLOCK_REWARD = '+2.00'
 const ACTIVITY_TAB_FOUND = 'Found'
 const ACTIVITY_TAB_SHARES = 'Shares'
 const ACTIVITY_TAB_LOG = 'Log'
-const ACTIVITY_TABS = [ACTIVITY_TAB_FOUND, ACTIVITY_TAB_SHARES, ACTIVITY_TAB_LOG] as const
+const ACTIVITY_TAB_ACTIVITY = 'Activity'
+const ACTIVITY_TABS = [
+  ACTIVITY_TAB_FOUND,
+  ACTIVITY_TAB_SHARES,
+  ACTIVITY_TAB_LOG,
+  ACTIVITY_TAB_ACTIVITY
+] as const
 
 interface MiningActivityProps {
   activeTab: string
   onTabChange: (tab: string) => void
   minedBlocks: FoundBlock[]
+  scopedFoundBlocks: FoundBlock[]
   currentPage: number
   totalPages: number
   onPageChange: (page: number) => void
@@ -41,6 +49,7 @@ function MiningActivity({
   activeTab,
   onTabChange,
   minedBlocks,
+  scopedFoundBlocks,
   currentPage,
   totalPages,
   onPageChange,
@@ -51,6 +60,8 @@ function MiningActivity({
   historyFilter,
   onFilterChange
 }: MiningActivityProps): JSX.Element {
+  const yearlyActivity = getYearlyActivity(scopedFoundBlocks)
+
   return (
     <Card>
       <div className="flex items-center justify-between mb-1">
@@ -162,6 +173,13 @@ function MiningActivity({
         )}
 
         {activeTab === ACTIVITY_TAB_LOG && <MiningActivityLogs />}
+
+        {activeTab === ACTIVITY_TAB_ACTIVITY && (
+          <div className="py-2">
+            <p className="text-[11px] font-semibold text-slate-500 mb-3">Last 365 days</p>
+            <ActivityHeatmap contributions={yearlyActivity} />
+          </div>
+        )}
       </div>
     </Card>
   )

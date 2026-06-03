@@ -144,6 +144,7 @@ function Miner({ activeWalletAddress, accounts, onNavigate }: MinerProps): JSX.E
             activeTab={activeTab}
             onTabChange={setActiveTab}
             minedBlocks={foundBlocksPagination.pageItems}
+            scopedFoundBlocks={scopedFoundBlocks}
             currentPage={foundBlocksPagination.currentPage}
             totalPages={foundBlocksPagination.totalPages}
             onPageChange={foundBlocksPagination.setPage}
