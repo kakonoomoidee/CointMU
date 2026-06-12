@@ -1,21 +1,28 @@
 import { app, shell, BrowserWindow, ipcMain, powerMonitor, dialog } from "electron";
 import { join } from "path";
-import { existsSync, readFileSync, writeFileSync, rmSync } from "fs";
-import { readdir, stat, readFile } from "fs/promises";
+import { existsSync, writeFileSync, rmSync } from "fs";
+import { readdir, stat, readFile, writeFile, rm, mkdir } from "fs/promises";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import { spawn, ChildProcess } from "child_process";
+import { lookup } from 'node:dns/promises';
+import { isIP } from 'node:net';
 import { config } from "dotenv";
 import detectPort from "detect-port";
 import { registerCryptoHandlers } from "./crypto";
 import { registerSystemHandlers } from "./system";
 import { initUpdater } from './updater';
 import { parseGethLogChunk } from "./gethLogParser";
+import { GENESIS_BLOCK, type GenesisBlock } from './genesis';
 import ms from "ms";
 
 config({ path: join(app.getAppPath(), ".env") });
 
 const SESSION_DURATION_MS = ms("7d");
 const NODE_RESTART_DELAY_MS = ms("1s");
+const GETH_RESTART_DELAY_MS = ms('2s');
+const BOOTNODE_DNS_RETRY_MS = ms('30s');
+const MINER_RESUME_RETRY_MS = ms('2s');
+const MINER_RESUME_MAX_ATTEMPTS = 30;
 
 const MAX_PORT_SCAN_ATTEMPTS = 50;
 
@@ -25,23 +32,46 @@ const WINDOW_MIN_WIDTH = 900;
 const WINDOW_MIN_HEIGHT = 600;
 
 const DEFAULT_RPC_PORT = parseInt(process.env.GETH_HTTP_PORT || "8585", 10);
-let GETH_NETWORK_ID = "7012";
+let GETH_NETWORK_ID = process.env.GETH_NETWORK_ID || String(GENESIS_BLOCK.config.chainId);
 
-function loadNetworkId() {
-  try {
-    const genesisPath = resolveGenesisSourcePath();
-    if (existsSync(genesisPath)) {
-      const genesis = JSON.parse(readFileSync(genesisPath, 'utf-8'));
-      if (genesis.config && genesis.config.chainId) {
-        GETH_NETWORK_ID = String(genesis.config.chainId);
-      }
-    }
-  } catch (err) {
-    console.error("Failed to load chain ID from genesis", err);
-  }
+/**
+ * Resolves the active chain id and records it as the authoritative network id
+ * used for both genesis init and the geth spawn. Resolution order is: a persisted
+ * override (set by the chain-id editor), then the GETH_NETWORK_ID environment
+ * value, then the inlined genesis default.
+ * @param {any} store - The electron-store instance holding the optional override.
+ * @returns {void}
+ */
+function loadNetworkId(store: any): void {
+  const override = Number(store.get('network.chainId'));
+  const envNetworkId = Number(process.env.GETH_NETWORK_ID);
+  GETH_NETWORK_ID = String(
+    Number.isFinite(override) && override > 0
+      ? override
+      : Number.isFinite(envNetworkId) && envNetworkId > 0
+        ? envNetworkId
+        : GENESIS_BLOCK.config.chainId,
+  );
+}
+
+/**
+ * Builds the effective genesis block by applying the active chain id override to
+ * the inlined canonical genesis constant.
+ * @returns {GenesisBlock} The genesis block to initialize the chain with.
+ */
+function buildGenesis(): GenesisBlock {
+  return {
+    ...GENESIS_BLOCK,
+    config: { ...GENESIS_BLOCK.config, chainId: Number(GETH_NETWORK_ID) },
+  };
 }
 const GETH_DATA_DIR = join(process.cwd(), "data", "cointmu");
 const GETH_BOOTNODE_ENODE = process.env.GETH_BOOTNODE_ENODE || "";
+
+let intentionalGethShutdown = false;
+let gethRestartTimer: NodeJS.Timeout | null = null;
+let bootnodeWatcher: NodeJS.Timeout | null = null;
+let pendingBootnodeEnode: string | null = null;
 
 /**
  * Resolves the absolute geth data directory. A relative GETH_DATA_DIR is anchored
@@ -103,17 +133,6 @@ function resolveGethBinaryPath(): string {
 }
 
 /**
- * Resolves the absolute path to the bundled static genesis.json template.
- * @returns {string} The absolute filesystem path to the genesis config.
- */
-function resolveGenesisSourcePath(): string {
-  if (app.isPackaged) {
-    return join(process.resourcesPath, 'genesis.json');
-  }
-  return join(app.getAppPath(), 'resources', 'genesis.json');
-}
-
-/**
  * Scans for the first available TCP port starting from the configured default.
  * Uses detect-port to avoid binding conflicts with other local services.
  * @returns A promise resolving to the first available port number.
@@ -140,67 +159,217 @@ async function findAvailablePort(): Promise<number> {
 }
 
 /**
- * Initializes the Geth node with the bundled genesis block if it hasn't been initialized yet.
- * @returns {Promise<void>} A promise that resolves when initialization is complete.
+ * Initializes the geth chain database from the inlined genesis block on a fresh
+ * installation only. It detects an existing database by stat-ing the chaindata
+ * directory and skips when present. On a fresh datadir it writes the effective
+ * genesis to a temporary file, runs 'geth --datadir <dir> init <temp>', and
+ * removes the temporary file afterward. The whole flow is invisible to the user.
+ * @param {string} datadir - The absolute geth data directory.
+ * @returns {Promise<void>} Resolves once the chain is initialized or already present.
  */
-function initGethNode(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    // Determine the datadir. Use userData if GETH_DATA_DIR is missing or relative.
-    const dataDir = GETH_DATA_DIR.startsWith(".")
-      ? join(app.getPath("userData"), GETH_DATA_DIR)
-      : GETH_DATA_DIR;
-    const chainDataPath = join(dataDir, "geth", "chaindata");
+async function initGethIfNeeded(datadir: string): Promise<void> {
+  const chainDataPath = join(datadir, 'geth', 'chaindata');
+  try {
+    await stat(chainDataPath);
+    console.log('[geth:init] Chain data already exists, skipping genesis initialization.');
+    return;
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code !== 'ENOENT') {
+      throw err;
+    }
+  }
 
-    if (existsSync(chainDataPath)) {
-      console.log(
-        "[geth:init] Chain data already exists, skipping genesis initialization.",
-      );
-      resolve();
+  const binaryPath = resolveGethBinaryPath();
+  if (!existsSync(binaryPath)) {
+    console.warn(
+      `[geth:init] Warning: Geth binary not found at ${binaryPath}. Skipping node init.`,
+    );
+    return;
+  }
+
+  console.log('[geth:init] Initializing chain with genesis block...');
+  await mkdir(datadir, { recursive: true });
+  const tempGenesisPath = join(datadir, 'genesis-temp.json');
+  await writeFile(tempGenesisPath, JSON.stringify(buildGenesis(), null, 2), 'utf8');
+
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const initProcess = spawn(binaryPath, ['--datadir', datadir, 'init', tempGenesisPath], {
+        stdio: 'ignore',
+      });
+      initProcess.on('exit', (code) => {
+        if (code === 0) {
+          console.log('[geth:init] Genesis initialization successful.');
+          resolve();
+        } else {
+          reject(new Error(`Geth init failed with code ${code}`));
+        }
+      });
+      initProcess.on('error', reject);
+    });
+  } finally {
+    await rm(tempGenesisPath, { force: true });
+  }
+}
+
+/**
+ * Resolves after the given number of milliseconds.
+ * @param {number} durationMs - The delay duration in milliseconds.
+ * @returns {Promise<void>} A promise that resolves once the delay elapses.
+ */
+function delay(durationMs: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, durationMs));
+}
+
+interface ParsedEnode {
+  host: string;
+  isIp: boolean;
+}
+
+/**
+ * Extracts the host portion of an enode URL and reports whether it is already a
+ * literal IP address rather than a hostname that would require DNS resolution.
+ * @param {string} enode - The enode URL (enode://pubkey@host:port).
+ * @returns {ParsedEnode | null} The parsed host info, or null when unparseable.
+ */
+function parseEnode(enode: string): ParsedEnode | null {
+  const atIndex = enode.lastIndexOf('@');
+  if (atIndex === -1) {
+    return null;
+  }
+  const authority = enode.slice(atIndex + 1).split('?')[0];
+  const colonIndex = authority.lastIndexOf(':');
+  const host = colonIndex === -1 ? authority : authority.slice(0, colonIndex);
+  if (!host) {
+    return null;
+  }
+  return { host, isIp: isIP(host) !== 0 };
+}
+
+/**
+ * Resolves an enode's hostname to an IP so geth never depends on its own DNS
+ * resolution. IP-based enodes are returned unchanged. Returns null when the
+ * hostname cannot currently be resolved, signaling a DNS outage.
+ * @param {string} enode - The configured bootnode enode URL.
+ * @returns {Promise<string | null>} The IP-rewritten enode, or null on failure.
+ */
+async function resolveBootnodeEnode(enode: string): Promise<string | null> {
+  const parsed = parseEnode(enode);
+  if (!parsed) {
+    return null;
+  }
+  if (parsed.isIp) {
+    return enode;
+  }
+  try {
+    const { address } = await lookup(parsed.host);
+    return enode.replace(`@${parsed.host}`, `@${address}`);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Stops the bootnode DNS-recovery watcher if it is running.
+ * @returns {void}
+ */
+function stopBootnodeWatcher(): void {
+  if (bootnodeWatcher) {
+    clearInterval(bootnodeWatcher);
+    bootnodeWatcher = null;
+  }
+}
+
+/**
+ * Starts a periodic watcher that re-resolves a bootnode whose DNS was down at
+ * spawn time. Once the hostname resolves again, the peer is added back to the
+ * running node via admin_addPeer so it resumes discovery and propagates locally
+ * mined blocks without a manual restart.
+ * @returns {void}
+ */
+function startBootnodeWatcher(): void {
+  if (bootnodeWatcher) {
+    return;
+  }
+  bootnodeWatcher = setInterval(async () => {
+    if (!pendingBootnodeEnode) {
+      stopBootnodeWatcher();
       return;
     }
-
-    console.log("[geth:init] Initializing chain with genesis block...");
-
-    const binaryPath = resolveGethBinaryPath();
-    if (!existsSync(binaryPath)) {
-      console.warn(
-        `[geth:init] Warning: Geth binary not found at ${binaryPath}. Skipping node init.`,
-      );
-      resolve();
+    const resolved = await resolveBootnodeEnode(pendingBootnodeEnode);
+    if (!resolved) {
       return;
     }
+    const added = await callGethRpc(resolvedRpcPort, 'admin_addPeer', [resolved]);
+    if (added !== null) {
+      console.log('[geth] Bootnode reachable again; re-added peer');
+      pendingBootnodeEnode = null;
+      stopBootnodeWatcher();
+    }
+  }, BOOTNODE_DNS_RETRY_MS);
+}
 
-    const args = ["--datadir", dataDir, "init", resolveGenesisSourcePath()];
+/**
+ * Schedules a single delayed geth respawn after an unexpected exit. Repeated
+ * calls while a restart is already pending are ignored to avoid restart storms.
+ * @param {any} store - The electron-store instance containing user preferences.
+ * @returns {void}
+ */
+function scheduleGethRestart(store: any): void {
+  if (gethRestartTimer) {
+    return;
+  }
+  console.warn('[geth] Unexpected exit; scheduling automatic restart');
+  gethRestartTimer = setTimeout(() => {
+    gethRestartTimer = null;
+    void spawnGethProcess(store);
+  }, GETH_RESTART_DELAY_MS);
+}
 
-    const initProcess = spawn(binaryPath, args, { stdio: "ignore" });
+/**
+ * Re-applies the persisted mining state after a geth (re)spawn. When mining was
+ * enabled it polls until the RPC server is reachable, then restores the etherbase
+ * and restarts the miner, so a node restart never requires a manual miner restart.
+ * @param {any} store - The electron-store instance containing user preferences.
+ * @returns {Promise<void>}
+ */
+async function resumeMiningIfEnabled(store: any): Promise<void> {
+  if (!store.get('mining.isMiningEnabled')) {
+    return;
+  }
+  const rewardAddress = store.get('mining.poolAddress');
+  if (!rewardAddress) {
+    return;
+  }
+  const threads = Math.floor(store.get('mining.cpuThreads') || 4);
 
-    initProcess.on("close", (code) => {
-      if (code === 0) {
-        console.log("[geth:init] Genesis initialization successful.");
-        resolve();
-      } else {
-        console.error(`[geth:init] Initialization failed with code ${code}`);
-        reject(new Error(`Geth init failed with code ${code}`));
-      }
-    });
-
-    initProcess.on("error", (err) => {
-      console.error(
-        `[geth:init] Failed to start geth init process: ${err.message}`,
-      );
-      reject(err);
-    });
-  });
+  for (let attempt = 0; attempt < MINER_RESUME_MAX_ATTEMPTS; attempt++) {
+    const mining = await callGethRpc(resolvedRpcPort, 'eth_mining');
+    if (mining === null) {
+      await delay(MINER_RESUME_RETRY_MS);
+      continue;
+    }
+    if (mining === true) {
+      return;
+    }
+    await callGethRpc(resolvedRpcPort, 'miner_setEtherbase', [rewardAddress]);
+    await callGethRpc(resolvedRpcPort, 'miner_start', [threads]);
+    console.log('[geth] Mining auto-resumed after node (re)start');
+    return;
+  }
 }
 
 /**
  * Spawns the Core-geth binary as a managed child process with environment-driven
- * configuration for networking, RPC, and data storage.
- * @param {number} rpcPort - The dynamically resolved RPC port to bind the HTTP server to.
+ * configuration for networking, RPC, and data storage. The configured bootnode
+ * is pre-resolved so a DNS outage cannot fatally abort startup: when it cannot be
+ * resolved the node launches without bootnodes in an isolated local state and a
+ * watcher re-attaches the peer once DNS recovers. Unexpected exits trigger an
+ * automatic restart and mining is auto-resumed when previously enabled.
  * @param {any} store - The electron-store instance containing user preferences.
- * @returns {void}
+ * @returns {Promise<void>}
  */
-function spawnGethProcess(store: any): void {
+async function spawnGethProcess(store: any): Promise<void> {
   const binaryPath = resolveGethBinaryPath();
   if (!existsSync(binaryPath)) {
     console.warn(
@@ -233,7 +402,7 @@ function spawnGethProcess(store: any): void {
       "--http.port",
       String(resolvedRpcPort),
       "--http.api",
-      "eth,net,web3,miner,personal",
+      "eth,net,web3,miner,personal,admin",
       "--http.corsdomain",
       "*",
       "--http.vhosts",
@@ -243,9 +412,22 @@ function spawnGethProcess(store: any): void {
 
   const hardcodedUbuntuEnode =
     "enode://ec322d10efbf7a7ffd8baafa97855aa33c7bf412b92fd4b9656868216d14064609d4d0a2c1fed048150bbe38f202d1cd0ab3779a771afbadd5fc85b85a08a849@10.64.24.248:30303";
-  args.push("--bootnodes", GETH_BOOTNODE_ENODE || hardcodedUbuntuEnode);
+  const configuredEnode = GETH_BOOTNODE_ENODE || hardcodedUbuntuEnode;
+  const resolvedEnode = await resolveBootnodeEnode(configuredEnode);
+  if (resolvedEnode) {
+    args.push("--bootnodes", resolvedEnode);
+    pendingBootnodeEnode = null;
+    stopBootnodeWatcher();
+  } else {
+    console.warn(
+      "[geth:spawn] Bootnode DNS unresolved; starting without bootnodes in isolated local state",
+    );
+    pendingBootnodeEnode = configuredEnode;
+    startBootnodeWatcher();
+  }
 
   try {
+    intentionalGethShutdown = false;
     gethProcess = spawn(binaryPath, args, {
       stdio: ["ignore", "pipe", "pipe"],
       detached: false,
@@ -314,12 +496,24 @@ function spawnGethProcess(store: any): void {
         `[geth:error] Failed to start geth process: ${err.message}`,
       );
       gethProcess = null;
+      if (intentionalGethShutdown) {
+        intentionalGethShutdown = false;
+        return;
+      }
+      scheduleGethRestart(store);
     });
 
     gethProcess.on("close", (code: number | null) => {
       console.log(`[geth:close] Process exited with code ${code}`);
       gethProcess = null;
+      if (intentionalGethShutdown) {
+        intentionalGethShutdown = false;
+        return;
+      }
+      scheduleGethRestart(store);
     });
+
+    void resumeMiningIfEnabled(store);
   } catch (err) {
     console.error(
       `[geth:spawn] Unable to spawn geth binary at path: ${binaryPath}`,
@@ -333,6 +527,14 @@ function spawnGethProcess(store: any): void {
  * Falls back to SIGKILL if the process does not exit within the allowed window.
  */
 function killGethProcess(): void {
+  intentionalGethShutdown = true;
+  if (gethRestartTimer) {
+    clearTimeout(gethRestartTimer);
+    gethRestartTimer = null;
+  }
+  stopBootnodeWatcher();
+  pendingBootnodeEnode = null;
+
   if (!gethProcess) {
     return;
   }
@@ -1073,41 +1275,29 @@ app.whenReady().then(async () => {
   registerSystemHandlers();
 
   ipcMain.handle("network:getGenesisConfig", () => {
-    try {
-      const genesisPath = resolveGenesisSourcePath();
-      return JSON.parse(readFileSync(genesisPath, "utf-8"));
-    } catch {
-      return null;
-    }
+    return buildGenesis();
   });
 
   ipcMain.handle("network:setChainId", async (_, newId: number) => {
     try {
-      const genesisPath = resolveGenesisSourcePath();
-      const genesis = JSON.parse(readFileSync(genesisPath, "utf-8"));
-      genesis.config.chainId = newId;
-      writeFileSync(genesisPath, JSON.stringify(genesis, null, 2), "utf-8");
-      
       GETH_NETWORK_ID = String(newId);
+      store.set('network.chainId', newId);
 
-      if (gethProcess && !gethProcess.killed) {
-        gethProcess.kill("SIGINT");
-      }
+      killGethProcess();
 
-      const dataDir = GETH_DATA_DIR.startsWith(".")
-        ? join(app.getPath("userData"), GETH_DATA_DIR)
-        : GETH_DATA_DIR;
-      const chainDataPath = join(dataDir, "geth", "chaindata");
-      
+      const dataDir = resolveDataDir();
+      const chainDataPath = join(dataDir, 'geth', 'chaindata');
       if (existsSync(chainDataPath)) {
         rmSync(chainDataPath, { recursive: true, force: true });
       }
 
       setTimeout(async () => {
         try {
-          await initGethNode();
-        } catch (err) {}
-        spawnGethProcess(store);
+          await initGethIfNeeded(dataDir);
+        } catch (err) {
+          console.error('[network:setChainId] Genesis re-initialization failed', err);
+        }
+        void spawnGethProcess(store);
       }, NODE_RESTART_DELAY_MS);
 
       return true;
@@ -1121,21 +1311,21 @@ app.whenReady().then(async () => {
     console.log("[network] Restarting node with new configurations...");
     killGethProcess();
     setTimeout(() => {
-      spawnGethProcess(store);
+      void spawnGethProcess(store);
     }, NODE_RESTART_DELAY_MS);
   });
 
   resolvedRpcPort = await findAvailablePort();
 
-  loadNetworkId();
+  loadNetworkId(store);
 
   try {
-    await initGethNode();
+    await initGethIfNeeded(resolveDataDir());
   } catch (err) {
     console.error("[geth:init] Fatal error during genesis init:", err);
   }
 
-  spawnGethProcess(store);
+  await spawnGethProcess(store);
 
   const miningController = new MiningController(resolvedRpcPort, store);
 
