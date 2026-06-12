@@ -33,7 +33,7 @@ export function NetworkSettings({ config, onUpdate }: NetworkSettingsProps): JSX
                   onChange={(e) => onUpdate('network', e.target.value)}
                   className="appearance-none bg-white border border-slate-200 rounded-lg pl-4 pr-10 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
                 >
-                  <option>CointMU Mainnet · chain ID 7012</option>
+                  <option>CointMU Mainnet · chain ID 1912</option>
                   <option>CointMU Testnet · chain ID 7013</option>
                   <option>Localhost 8545</option>
                 </select>
@@ -63,7 +63,7 @@ export function NetworkSettings({ config, onUpdate }: NetworkSettingsProps): JSX
                 <p className="text-sm font-bold text-slate-800">Chain ID</p>
                 <p className="text-xs text-slate-500 mt-0.5">Used for transaction signing</p>
               </div>
-              <span className="text-sm font-bold font-mono text-slate-700">7012</span>
+              <span className="text-sm font-bold font-mono text-slate-700">1912</span>
             </div>
 
             <div className="flex items-center justify-between p-4 bg-slate-50/50">
