@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 6
-SUBLEVEL = 1
-EXTRAVERSION = artemis
+SUBLEVEL = 2
+EXTRAVERSION = nyx
 
 .PHONY: help dev build\:win build\:linux build\:mac clean
 
