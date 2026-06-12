@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain, powerMonitor, dialog } from "electron";
 import { join } from "path";
 import { existsSync, writeFileSync, rmSync } from "fs";
-import { readdir, stat, readFile, writeFile, rm, mkdir } from "fs/promises";
+import { readdir, stat, readFile, writeFile, rm, mkdir, copyFile, chmod } from 'fs/promises';
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import { spawn, ChildProcess } from "child_process";
 import { lookup } from 'node:dns/promises';
@@ -118,18 +118,36 @@ let gethProcess: ChildProcess | null = null;
 let sessionStartTimestamp: number = Date.now();
 
 /**
- * Resolves the absolute path to the bundled Core-geth binary based on the
- * current operating system. Uses platform-specific subdirectories to avoid
- * bundling binaries for the wrong OS.
- * @returns {string} The absolute filesystem path to the geth executable.
+ * Resolves an executable path to the bundled Core-geth binary. In a packaged
+ * build the binary lives inside a read-only image that does not preserve the
+ * executable bit, so it is copied once into a writable location under the user
+ * data directory and granted execute permission. In development the binary in
+ * the project resources directory is already executable and is returned as-is.
+ * @returns {Promise<string>} The absolute path to an executable geth binary.
  */
-function resolveGethBinaryPath(): string {
-  const platformDir = process.platform === 'win32' ? 'win' : process.platform === 'darwin' ? 'mac' : 'linux'
-  const binaryName = process.platform === 'win32' ? 'geth.exe' : 'geth'
-  if (app.isPackaged) {
-    return join(process.resourcesPath, "bin", platformDir, binaryName);
+async function resolveGethBinaryPath(): Promise<string> {
+  const platformDir = process.platform === 'win32' ? 'win' : process.platform === 'darwin' ? 'mac' : 'linux';
+  const binaryName = process.platform === 'win32' ? 'geth.exe' : 'geth';
+
+  if (!app.isPackaged) {
+    return join(app.getAppPath(), 'resources', 'bin', platformDir, binaryName);
   }
-  return join(app.getAppPath(), "resources", "bin", platformDir, binaryName);
+
+  const bundledPath = join(process.resourcesPath, 'bin', platformDir, binaryName);
+  if (!existsSync(bundledPath)) {
+    return bundledPath;
+  }
+
+  const writableDir = join(app.getPath('userData'), 'bin');
+  const writablePath = join(writableDir, binaryName);
+  if (existsSync(writablePath)) {
+    return writablePath;
+  }
+
+  await mkdir(writableDir, { recursive: true });
+  await copyFile(bundledPath, writablePath);
+  await chmod(writablePath, 0o755);
+  return writablePath;
 }
 
 /**
@@ -179,7 +197,7 @@ async function initGethIfNeeded(datadir: string): Promise<void> {
     }
   }
 
-  const binaryPath = resolveGethBinaryPath();
+  const binaryPath = await resolveGethBinaryPath();
   if (!existsSync(binaryPath)) {
     console.warn(
       `[geth:init] Warning: Geth binary not found at ${binaryPath}. Skipping node init.`,
@@ -370,7 +388,7 @@ async function resumeMiningIfEnabled(store: any): Promise<void> {
  * @returns {Promise<void>}
  */
 async function spawnGethProcess(store: any): Promise<void> {
-  const binaryPath = resolveGethBinaryPath();
+  const binaryPath = await resolveGethBinaryPath();
   if (!existsSync(binaryPath)) {
     console.warn(
       `[geth:spawn] Warning: Geth binary not found at ${binaryPath}. Skipping node spawn.`,
