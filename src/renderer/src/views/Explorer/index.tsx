@@ -14,6 +14,9 @@ import { BlockDetail } from './BlockDetail'
 import { TransactionDetail } from './TransactionDetail'
 import { AddressDetail } from './AddressDetail'
 
+const WEI_PER_CMU = BigInt('1000000000000000000')
+const BLOCK_REWARD_CMU = 2
+
 interface ExplorerProps {
   activeWalletAddress: string | null
   accounts: DerivedAccount[]
@@ -32,6 +35,23 @@ interface TopAccount {
 const EMPTY_STAT_LABEL = '--'
 const INSIGHTS_POLL_INTERVAL_MS = ms('3s')
 const TICK_INTERVAL_MS = ms('5s')
+
+/**
+ * Sums all genesis alloc balances (in Wei) and converts the total to a
+ * floating-point CMU value. Uses BigInt to avoid precision loss on large
+ * Wei strings that exceed Number.MAX_SAFE_INTEGER.
+ * @param alloc - The genesis alloc map keyed by address.
+ * @returns The total pre-mined supply expressed in CMU.
+ */
+function sumGenesisAllocCmu(alloc: Record<string, { balance: string }>): number {
+  let totalWei = BigInt(0)
+  for (const entry of Object.values(alloc)) {
+    totalWei += BigInt(entry.balance)
+  }
+  const wholePart = totalWei / WEI_PER_CMU
+  const fractionalWei = totalWei % WEI_PER_CMU
+  return Number(wholePart) + Number(fractionalWei) / Number(WEI_PER_CMU)
+}
 
 /**
  * Explorer view orchestrator. It owns the network insights polling, search,
@@ -122,6 +142,22 @@ function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element
 
   const [topAccounts, setTopAccounts] = useState<TopAccount[]>([])
   const [isLoadingAccounts, setIsLoadingAccounts] = useState(false)
+  const [genesisAllocCmu, setGenesisAllocCmu] = useState<number>(0)
+
+  useEffect(() => {
+    let mounted = true
+    async function loadGenesisAlloc(): Promise<void> {
+      try {
+        const genesis = await window.api.network.getGenesisConfig()
+        if (!mounted || !genesis || !genesis.alloc) return
+        setGenesisAllocCmu(sumGenesisAllocCmu(genesis.alloc))
+      } catch (err) {
+        console.warn('Failed to fetch genesis alloc:', err)
+      }
+    }
+    loadGenesisAlloc()
+    return () => { mounted = false }
+  }, [])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
@@ -235,11 +271,14 @@ function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element
       )
 
       balances.sort((a, b) => b.balance - a.balance)
-      
-      const totalSupply = blockHeight * 2
+
+      const minedSupply = (blockHeight ?? 0) * BLOCK_REWARD_CMU
+      const totalSupply = genesisAllocCmu + minedSupply
       const accountsWithPercentage = balances.map(b => ({
         ...b,
-        percentage: totalSupply > 0 ? (b.balance / totalSupply) * 100 : 0
+        percentage: totalSupply > 0
+          ? Math.min((b.balance / totalSupply) * 100, 100)
+          : 0
       }))
 
       setTopAccounts(accountsWithPercentage)
@@ -249,7 +288,7 @@ function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element
     if (activeTab === 'accounts') {
       loadAccounts()
     }
-  }, [activeTab, recentBlocks, isConnected, blockHeight])
+  }, [activeTab, recentBlocks, isConnected, blockHeight, genesisAllocCmu])
 
   const networkHeight = isConnected ? formatBlockNumber(blockHeight) : EMPTY_STAT_LABEL
 

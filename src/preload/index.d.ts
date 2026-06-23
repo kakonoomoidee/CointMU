@@ -44,7 +44,10 @@ interface CointmuAPI {
       }[]
       coinbase: string
     }>
-    getGenesisConfig: () => Promise<{ config?: { chainId?: number } } | null>
+    getGenesisConfig: () => Promise<{
+      config?: { chainId?: number }
+      alloc?: Record<string, { balance: string }>
+    } | null>
     setChainId: (chainId: number) => Promise<boolean>
   }
   settings: {
