@@ -17,12 +17,12 @@ import ms from "ms";
 
 config({ path: join(app.getAppPath(), ".env") });
 
-const SESSION_DURATION_MS = ms("7d");
-const NODE_RESTART_DELAY_MS = ms("1s");
+const SESSION_DURATION_MS = ms('7d');
+const NODE_RESTART_DELAY_MS = ms('1s');
 const GETH_RESTART_DELAY_MS = ms('2s');
 const BOOTNODE_DNS_RETRY_MS = ms('30s');
-const MINER_RESUME_RETRY_MS = ms('2s');
-const MINER_RESUME_MAX_ATTEMPTS = 30;
+
+const GETH_GRACEFUL_TIMEOUT_MS = ms('10s');
 
 const MAX_PORT_SCAN_ATTEMPTS = 50;
 
@@ -69,6 +69,7 @@ const GETH_DATA_DIR = join(process.cwd(), "data", "cointmu");
 const GETH_BOOTNODE_ENODE = process.env.GETH_BOOTNODE_ENODE || "";
 
 let intentionalGethShutdown = false;
+let isAppQuitting = false;
 let gethRestartTimer: NodeJS.Timeout | null = null;
 let bootnodeWatcher: NodeJS.Timeout | null = null;
 let pendingBootnodeEnode: string | null = null;
@@ -212,15 +213,6 @@ async function initGethIfNeeded(datadir: string): Promise<void> {
   }
 }
 
-/**
- * Resolves after the given number of milliseconds.
- * @param {number} durationMs - The delay duration in milliseconds.
- * @returns {Promise<void>} A promise that resolves once the delay elapses.
- */
-function delay(durationMs: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, durationMs));
-}
-
 interface ParsedEnode {
   host: string;
   isIp: boolean;
@@ -326,38 +318,7 @@ function scheduleGethRestart(store: any): void {
   }, GETH_RESTART_DELAY_MS);
 }
 
-/**
- * Re-applies the persisted mining state after a geth (re)spawn. When mining was
- * enabled it polls until the RPC server is reachable, then restores the etherbase
- * and restarts the miner, so a node restart never requires a manual miner restart.
- * @param {any} store - The electron-store instance containing user preferences.
- * @returns {Promise<void>}
- */
-async function resumeMiningIfEnabled(store: any): Promise<void> {
-  if (!store.get('mining.isMiningEnabled')) {
-    return;
-  }
-  const rewardAddress = store.get('mining.poolAddress');
-  if (!rewardAddress) {
-    return;
-  }
-  const threads = Math.floor(store.get('mining.cpuThreads') || 4);
 
-  for (let attempt = 0; attempt < MINER_RESUME_MAX_ATTEMPTS; attempt++) {
-    const mining = await callGethRpc(resolvedRpcPort, 'eth_mining');
-    if (mining === null) {
-      await delay(MINER_RESUME_RETRY_MS);
-      continue;
-    }
-    if (mining === true) {
-      return;
-    }
-    await callGethRpc(resolvedRpcPort, 'miner_setEtherbase', [rewardAddress]);
-    await callGethRpc(resolvedRpcPort, 'miner_start', [threads]);
-    console.log('[geth] Mining auto-resumed after node (re)start');
-    return;
-  }
-}
 
 /**
  * Spawns the Core-geth binary as a managed child process with environment-driven
@@ -513,7 +474,7 @@ async function spawnGethProcess(store: any): Promise<void> {
       scheduleGethRestart(store);
     });
 
-    void resumeMiningIfEnabled(store);
+
   } catch (err) {
     console.error(
       `[geth:spawn] Unable to spawn geth binary at path: ${binaryPath}`,
@@ -523,10 +484,13 @@ async function spawnGethProcess(store: any): Promise<void> {
 }
 
 /**
- * Terminates the geth child process gracefully using SIGTERM.
- * Falls back to SIGKILL if the process does not exit within the allowed window.
+ * Sends SIGINT to the geth child process and returns a promise that resolves
+ * once the process has fully terminated. A hard SIGKILL is dispatched if the
+ * process does not exit within GETH_GRACEFUL_TIMEOUT_MS. When no geth process
+ * is running the returned promise resolves immediately.
+ * @returns {Promise<void>} Resolves after the geth process has exited.
  */
-function killGethProcess(): void {
+function killGethProcess(): Promise<void> {
   intentionalGethShutdown = true;
   if (gethRestartTimer) {
     clearTimeout(gethRestartTimer);
@@ -536,20 +500,40 @@ function killGethProcess(): void {
   pendingBootnodeEnode = null;
 
   if (!gethProcess) {
-    return;
+    return Promise.resolve();
   }
 
-  try {
-    gethProcess.kill("SIGTERM");
-  } catch {
-    try {
-      gethProcess.kill("SIGKILL");
-    } catch {
-      /* Process already exited */
-    }
-  }
-
+  const proc = gethProcess;
   gethProcess = null;
+
+  return new Promise<void>((resolve) => {
+    let settled = false;
+
+    const onExit = (): void => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(killTimer);
+      resolve();
+    };
+
+    const killTimer = setTimeout(() => {
+      if (settled) return;
+      try {
+        proc.kill('SIGKILL');
+      } catch {
+      }
+      onExit();
+    }, GETH_GRACEFUL_TIMEOUT_MS);
+
+    proc.once('close', onExit);
+    proc.once('exit', onExit);
+
+    try {
+      proc.kill('SIGINT');
+    } catch {
+      onExit();
+    }
+  });
 }
 
 /**
@@ -1283,7 +1267,7 @@ app.whenReady().then(async () => {
       GETH_NETWORK_ID = String(newId);
       store.set('network.chainId', newId);
 
-      killGethProcess();
+      await killGethProcess();
 
       const dataDir = resolveDataDir();
       const chainDataPath = join(dataDir, 'geth', 'chaindata');
@@ -1307,12 +1291,13 @@ app.whenReady().then(async () => {
     }
   });
 
-  ipcMain.on("network:restartNode", () => {
-    console.log("[network] Restarting node with new configurations...");
-    killGethProcess();
-    setTimeout(() => {
-      void spawnGethProcess(store);
-    }, NODE_RESTART_DELAY_MS);
+  ipcMain.on('network:restartNode', () => {
+    console.log('[network] Restarting node with new configurations...');
+    killGethProcess().then(() => {
+      setTimeout(() => {
+        void spawnGethProcess(store);
+      }, NODE_RESTART_DELAY_MS);
+    });
   });
 
   resolvedRpcPort = await findAvailablePort();
@@ -1340,13 +1325,39 @@ app.whenReady().then(async () => {
   });
 });
 
-app.on("before-quit", () => {
-  killGethProcess();
+/**
+ * Intercepts the quit sequence so the app does not terminate until the geth
+ * child process has been given a chance to persist its chain state to disk.
+ */
+app.on('before-quit', (e) => {
+  if (isAppQuitting) {
+    return;
+  }
+  e.preventDefault();
+  isAppQuitting = true;
+  killGethProcess().then(() => {
+    app.exit();
+  });
 });
 
-app.on("window-all-closed", () => {
-  killGethProcess();
-  if (process.platform !== "darwin") {
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
     app.quit();
   }
+});
+
+process.on('SIGINT', () => {
+  if (isAppQuitting) return;
+  isAppQuitting = true;
+  killGethProcess().then(() => {
+    app.exit();
+  });
+});
+
+process.on('SIGTERM', () => {
+  if (isAppQuitting) return;
+  isAppQuitting = true;
+  killGethProcess().then(() => {
+    app.exit();
+  });
 });

@@ -55,7 +55,7 @@ export function AboutSettings(): JSX.Element {
 
   const sysInfo = window.systemInfo || {
     version: '0.0.1',
-    build: 0,
+    build: '00000000',
     platform: 'Unknown',
     nodeVersion: 'Unknown',
     getUptime: () => 0
@@ -121,7 +121,7 @@ export function AboutSettings(): JSX.Element {
         <div>
           <h1 className="text-2xl font-bold text-slate-900">CointMU</h1>
           <p className="text-sm font-medium text-slate-600 mt-1">
-            Version {window.systemInfo?.version || '0.0.1'} (build {window.systemInfo?.build || 0}) {'\u2022'} {window.systemInfo?.platform || 'Unknown'}
+            Version {window.systemInfo?.version || '0.0.1'} (build {window.systemInfo?.build || '00000000'}) {'\u2022'} {window.systemInfo?.platform || 'Unknown'}
           </p>
           <p className="text-sm font-medium text-slate-400 mt-1">{'\u00A9'} 2026 CointMU Foundation {'\u2022'} MIT License</p>
           <div className="flex gap-3 mt-4">

@@ -97,7 +97,7 @@ declare global {
     api: CointmuAPI
     systemInfo?: {
       version: string
-      build: number
+      build: string
       platform: string
       nodeVersion: string
       getUptime: () => number

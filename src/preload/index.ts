@@ -14,19 +14,19 @@ if (process.platform === 'darwin') {
   platformStr = `Linux ${process.arch}`
 }
 
-let buildNum = 0
+let buildId = '00000000'
 try {
   const buildData = JSON.parse(readFileSync(join(__dirname, '../../build-info.json'), 'utf-8'))
-  if (typeof buildData.build === 'number') {
-    buildNum = buildData.build
+  if (typeof buildData.build === 'string') {
+    buildId = buildData.build
   }
 } catch (e) {
-  buildNum = 0
+  buildId = '00000000'
 }
 
 const systemInfo = {
   version: pkg.version,
-  build: buildNum,
+  build: buildId,
   platform: platformStr,
   nodeVersion: process.versions.node,
   getUptime: () => process.uptime()
