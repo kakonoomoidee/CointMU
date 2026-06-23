@@ -1,5 +1,5 @@
 import { type JSX } from 'react'
-import { generateIdenticonGradient } from '@/services'
+import { AccountIcon } from '@/components'
 import { IconCopy } from '@/assets/icons'
 
 interface AddressBadgeProps {
@@ -34,9 +34,9 @@ function AddressBadge({ address, leftAligned = false, onClick }: AddressBadgePro
 
   return (
     <div className={`flex items-center gap-1.5 ${leftAligned ? 'justify-start' : 'justify-end'}`}>
-      <div
-        className={`w-4 h-4 rounded-full flex-shrink-0 bg-gradient-to-br ${generateIdenticonGradient(address)}`}
-      />
+      <div className="flex-shrink-0 rounded-full overflow-hidden">
+        <AccountIcon address={address} size={20} />
+      </div>
       <span
         className="text-sm font-mono text-blue-600 cursor-pointer hover:underline"
         title={address}

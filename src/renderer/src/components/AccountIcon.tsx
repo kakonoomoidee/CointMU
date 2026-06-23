@@ -17,11 +17,13 @@ interface AccountIconProps {
  * @returns The generated SVG avatar element.
  */
 function AccountIcon({ address, size = 20 }: AccountIconProps): JSX.Element {
+  const seed = address ? address.toLowerCase() : '0x0'
   return (
     <Avatar
       size={size}
-      name={address}
-      variant='bauhaus'
+      name={seed}
+      // you can use: beam, bauhaus, marble, moon, pixel, ring
+      variant='beam'
       colors={AVATAR_PALETTE}
     />
   )

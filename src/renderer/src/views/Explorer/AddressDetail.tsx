@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo, type JSX } from 'react'
 import ms from 'ms'
-import { getAddressSummary, generateIdenticonGradient, type DerivedAccount } from '@/services'
+import { getAddressSummary, type DerivedAccount } from '@/services'
 import { getTransactions } from '@/services/transactionService'
 import { usePagination } from '@/hooks'
 import { formatTxAge } from '@/utils'
-import { Sparkline, Pagination } from '@/components'
+import { Sparkline, Pagination, AccountIcon } from '@/components'
 import { IconChevronLeft, IconFile, IconChevronRight } from '@/assets/icons'
 import { AddressBadge } from './AddressBadge'
 import { type ActivityData } from '@/views/Wallet/ActivityItem'
@@ -149,9 +149,9 @@ function AddressDetail({
       <div className="grid grid-cols-[1.2fr_1fr] gap-6">
         <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
           <div className="flex items-center gap-3 mb-6">
-            <div
-              className={`w-10 h-10 rounded-full flex-shrink-0 bg-gradient-to-br ${generateIdenticonGradient(address)}`}
-            />
+            <div className="flex-shrink-0 rounded-full overflow-hidden">
+              <AccountIcon address={address} size={40} />
+            </div>
             <div className="min-w-0">
               <p className="text-sm font-mono text-slate-700 truncate" title={address}>
                 {address}

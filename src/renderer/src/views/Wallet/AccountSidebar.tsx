@@ -1,18 +1,19 @@
-import { type JSX, type MouseEvent } from 'react'
-import { generateIdenticonGradient, type DerivedAccount } from '@/services'
-import { IconPlus, IconEyeSlash } from '@/assets/icons'
+import { type JSX, type MouseEvent } from "react";
+import { type DerivedAccount } from "@/services";
+import { AccountIcon } from "@/components";
+import { IconPlus, IconEyeSlash } from "@/assets/icons";
 
-const WATCH_LIST: never[] = []
+const WATCH_LIST: never[] = [];
 
 interface AccountSidebarProps {
-  accounts: DerivedAccount[]
-  activeWalletAddress: string | null
-  balances: Record<string, string>
-  onAccountSwitch: (address: string) => void
-  onHideAccount: (event: MouseEvent, address: string) => void
-  onDeriveAccount: () => void
-  onImportWallet: () => void
-  onManageHidden: () => void
+  accounts: DerivedAccount[];
+  activeWalletAddress: string | null;
+  balances: Record<string, string>;
+  onAccountSwitch: (address: string) => void;
+  onHideAccount: (event: MouseEvent, address: string) => void;
+  onDeriveAccount: () => void;
+  onImportWallet: () => void;
+  onManageHidden: () => void;
 }
 
 /**
@@ -30,7 +31,7 @@ function AccountSidebar({
   onHideAccount,
   onDeriveAccount,
   onImportWallet,
-  onManageHidden
+  onManageHidden,
 }: AccountSidebarProps): JSX.Element {
   return (
     <div className="w-64 flex-shrink-0 space-y-5">
@@ -51,9 +52,8 @@ function AccountSidebar({
           {accounts
             .filter((a) => !a.isHidden)
             .map((acc, i) => {
-              const gradient = generateIdenticonGradient(acc.address)
-              const abbrAddress = `${acc.address.substring(0, 6)}...${acc.address.substring(acc.address.length - 4)}`
-              const isSelected = acc.address === activeWalletAddress
+              const abbrAddress = `${acc.address.substring(0, 6)}...${acc.address.substring(acc.address.length - 4)}`;
+              const isSelected = acc.address === activeWalletAddress;
 
               return (
                 <button
@@ -61,18 +61,20 @@ function AccountSidebar({
                   onClick={() => onAccountSwitch(acc.address)}
                   className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150 relative ${
                     isSelected
-                      ? 'bg-white border border-slate-200 shadow-sm'
-                      : 'hover:bg-white/60 border border-transparent'
+                      ? "bg-white border border-slate-200 shadow-sm"
+                      : "hover:bg-white/60 border border-transparent"
                   }`}
                 >
-                  <div
-                    className={`w-8 h-8 rounded-full bg-gradient-to-br ${gradient} flex-shrink-0`}
-                  />
+                  <div className="flex-shrink-0 rounded-full overflow-hidden w-8 h-8">
+                    <AccountIcon address={acc.address} size={32} />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <p className="text-xs font-semibold text-slate-700 truncate">{acc.label}</p>
+                      <p className="text-xs font-semibold text-slate-700 truncate">
+                        {acc.label}
+                      </p>
                       <p className="text-xs font-bold text-slate-800 ml-2 group-hover:opacity-0 transition-opacity">
-                        {balances[acc.address] || '0.00'}
+                        {balances[acc.address] || "0.00"}
                       </p>
                     </div>
                     <div className="flex items-center justify-between mt-0.5">
@@ -98,7 +100,7 @@ function AccountSidebar({
                     </div>
                   )}
                 </button>
-              )
+              );
             })}
         </div>
       </div>
@@ -111,7 +113,9 @@ function AccountSidebar({
           {WATCH_LIST.length > 0 ? (
             WATCH_LIST.map((_, i) => <div key={i} />)
           ) : (
-            <p className="text-xs text-slate-400 px-3 py-2">No watched addresses</p>
+            <p className="text-xs text-slate-400 px-3 py-2">
+              No watched addresses
+            </p>
           )}
         </div>
       </div>
@@ -129,8 +133,8 @@ function AccountSidebar({
         Manage hidden accounts
       </button>
     </div>
-  )
+  );
 }
 
-export { AccountSidebar }
-export type { AccountSidebarProps }
+export { AccountSidebar };
+export type { AccountSidebarProps };

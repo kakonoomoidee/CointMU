@@ -1,6 +1,7 @@
 import { type JSX } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import { type DerivedAccount } from '@/services'
+import { AccountIcon } from '@/components'
 import { IconArrowUp, IconArrowDown, IconRefresh, IconCheck, IconCopy } from '@/assets/icons'
 
 interface AccountHeroCardProps {
@@ -21,7 +22,6 @@ interface AccountHeroCardProps {
  */
 function AccountHeroCard({
   activeAccount,
-  activeGradient,
   balance,
   copied,
   onReceive,
@@ -35,7 +35,9 @@ function AccountHeroCard({
       <div className="relative z-10">
         <div className="flex items-start justify-between mb-5">
           <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${activeGradient}`} />
+            <div className="flex-shrink-0 rounded-full overflow-hidden w-16 h-16">
+              <AccountIcon address={activeAccount?.address || ''} size={64} />
+            </div>
             <div>
               <div className="flex items-center gap-2">
                 <p className="text-sm font-semibold text-white">{activeAccount?.label}</p>
