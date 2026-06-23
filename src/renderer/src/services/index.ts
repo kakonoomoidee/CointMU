@@ -6,6 +6,7 @@ export {
   fetchMiningStatus,
   fetchHashrate,
   fetchDifficulty,
+  fetchSyncingStatus,
   fetchBalance,
   waitForTransactionReceipt,
   setEtherbase,

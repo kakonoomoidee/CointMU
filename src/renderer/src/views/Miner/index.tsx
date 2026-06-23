@@ -111,6 +111,7 @@ function Miner({ activeWalletAddress, accounts, onNavigate }: MinerProps): JSX.E
           formattedRewards={formattedRewards}
           difficultyLabel={difficultyLabel}
           toggling={toggling}
+          isSyncing={telemetry.isSyncing}
           onToggle={handleToggle}
         />
 

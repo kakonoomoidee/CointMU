@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import ms from 'ms'
 import { fetchMiningStats, subscribeDagProgress, subscribeMiningStatus, getCpuUsage } from '@/services'
-import { fetchHashrate } from '@/services/rpcClient'
+import { fetchHashrate, fetchSyncingStatus } from '@/services/rpcClient'
 import { useMiningStore } from '@/store'
 
 const STATS_POLL_INTERVAL_MS = ms('2s')
@@ -19,6 +19,7 @@ interface MiningTelemetry {
   dagProgress: number
   isGeneratingDag: boolean
   powerStatus: string
+  isSyncing: boolean
 }
 
 type PolledTelemetry = Omit<MiningTelemetry, 'hashrateMhs'>
@@ -29,7 +30,8 @@ const INITIAL_TELEMETRY: PolledTelemetry = {
   blockNumber: 0,
   dagProgress: 0,
   isGeneratingDag: false,
-  powerStatus: ''
+  powerStatus: '',
+  isSyncing: false
 }
 
 /**
@@ -58,11 +60,15 @@ function useMiningStats(cpuThreads: number = 0): MiningTelemetry {
         return
       }
 
+      const isSyncingRaw = await fetchSyncingStatus()
+      const isSyncing = isSyncingRaw !== null && isSyncingRaw !== false
+
       setTelemetry((prev) => ({
         ...prev,
         isMining: stats.isMining,
         difficulty: stats.difficulty || 0,
-        blockNumber: stats.blockNumber || prev.blockNumber
+        blockNumber: stats.blockNumber || prev.blockNumber,
+        isSyncing
       }))
     }
 

@@ -15,6 +15,7 @@ interface MiningHeroCardProps {
   formattedRewards: string
   difficultyLabel: string
   toggling: boolean
+  isSyncing: boolean
   onToggle: (enabled: boolean) => void
 }
 
@@ -35,6 +36,7 @@ function MiningHeroCard({
   formattedRewards,
   difficultyLabel,
   toggling,
+  isSyncing,
   onToggle
 }: MiningHeroCardProps): JSX.Element {
   if (isMining) {
@@ -160,10 +162,14 @@ function MiningHeroCard({
             </div>
             <p className="text-sm text-white/50 mt-2">
               {isConnected ? (
-                <>
-                  Press Start to join consensus. Earn{' '}
-                  <span className="font-semibold text-white/70">2 CMU</span> per block found.
-                </>
+                isSyncing ? (
+                  <span className="text-yellow-400">Syncing from network...</span>
+                ) : (
+                  <>
+                    Press Start to join consensus. Earn{' '}
+                    <span className="font-semibold text-white/70">2 CMU</span> per block found.
+                  </>
+                )
               ) : (
                 <>Waiting for node connection...</>
               )}
@@ -185,8 +191,8 @@ function MiningHeroCard({
               variant="success"
               size="lg"
               onClick={() => onToggle(true)}
-              disabled={toggling || !isConnected}
-              title={!isConnected ? 'Waiting for node connection' : ''}
+              disabled={toggling || !isConnected || isSyncing}
+              title={!isConnected ? 'Waiting for node connection' : (isSyncing ? 'Node is syncing blocks' : '')}
               leftIcon={<IconPlay width={14} height={14} />}
             >
               {toggling ? 'Starting...' : 'Start mining'}

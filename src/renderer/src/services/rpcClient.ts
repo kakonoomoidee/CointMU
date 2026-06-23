@@ -178,6 +178,14 @@ async function fetchDifficulty(): Promise<number | null> {
 }
 
 /**
+ * Queries the node to check whether it is currently synchronizing with the network.
+ * @returns An object if syncing, false if fully synced, or null on failure.
+ */
+async function fetchSyncingStatus(): Promise<any | boolean | null> {
+  return await call('eth_syncing')
+}
+
+/**
  * Formats a numeric CMU value into the canonical localized balance string used
  * across the wallet UI (grouped thousands, fixed two decimal places).
  * @param cmuValue - The balance value expressed in whole CMU.
@@ -318,6 +326,7 @@ export {
   fetchMiningStatus,
   fetchHashrate,
   fetchDifficulty,
+  fetchSyncingStatus,
   fetchBalance,
   formatBalance,
   waitForTransactionReceipt,
