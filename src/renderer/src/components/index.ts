@@ -1,3 +1,4 @@
+export { AccountIcon } from './AccountIcon'
 export { Sidebar } from './Sidebar'
 export { ImportKeystoreModal } from './ImportKeystoreModal'
 export type { ImportKeystoreResult } from './ImportKeystoreModal'

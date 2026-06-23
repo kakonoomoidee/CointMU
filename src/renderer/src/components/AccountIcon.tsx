@@ -1,0 +1,30 @@
+import { type JSX } from 'react'
+import Avatar from 'boring-avatars'
+
+const AVATAR_PALETTE = ['#171921', '#5B61FE', '#D3D4FA', '#9C9EFE', '#232635']
+
+interface AccountIconProps {
+  address: string
+  size?: number
+}
+
+/**
+ * Renders a deterministic geometric avatar derived from an Ethereum-style
+ * hex address. The Bauhaus variant produces an abstract, Mondrian-like
+ * composition that is unique per address and stable across renders.
+ * @param props.address - The full hex address used to seed the avatar.
+ * @param props.size - The rendered pixel dimensions (defaults to 20).
+ * @returns The generated SVG avatar element.
+ */
+function AccountIcon({ address, size = 20 }: AccountIconProps): JSX.Element {
+  return (
+    <Avatar
+      size={size}
+      name={address}
+      variant='bauhaus'
+      colors={AVATAR_PALETTE}
+    />
+  )
+}
+
+export { AccountIcon }

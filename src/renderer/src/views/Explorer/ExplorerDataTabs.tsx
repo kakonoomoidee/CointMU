@@ -3,6 +3,7 @@ import { type BlockData } from '@/hooks'
 import { useAppStore } from '@/store'
 import { type ActivityData } from '@/views/Wallet/ActivityItem'
 import { Pagination } from '@/components'
+import { AccountIcon } from '@/components'
 import { IconActivity } from '@/assets/icons'
 import { formatTxAge } from '@/utils'
 
@@ -148,23 +149,28 @@ function ExplorerDataTabs({
                         </p>
                       </td>
                       <td className="px-5 py-3.5">
-                        <div className="flex items-center gap-2">
-                          <p
-                            className="text-xs font-mono text-slate-800 cursor-pointer hover:text-blue-600 hover:underline"
-                            onClick={() => onAddressSelect(block.miner)}
-                          >
-                            {block.miner.substring(0, 10)}...
-                            {block.miner.substring(block.miner.length - 8)}
-                          </p>
+                        <div className="flex items-center gap-2.5">
+                          <div className="flex-shrink-0 rounded-full overflow-hidden">
+                            <AccountIcon address={block.miner} size={24} />
+                          </div>
+                          <div>
+                            <p
+                              className="text-xs font-mono text-slate-800 cursor-pointer hover:text-blue-600 hover:underline"
+                              onClick={() => onAddressSelect(block.miner)}
+                            >
+                              {block.miner.substring(0, 10)}...
+                              {block.miner.substring(block.miner.length - 8)}
+                            </p>
+                            <p className="text-[10px] text-slate-400 mt-0.5">
+                              Hash: {block.hash.substring(0, 14)}...
+                            </p>
+                          </div>
                           {checkIfMinedByMe(block.miner, balances) && (
                             <span className="px-1.5 py-0.5 rounded bg-blue-50 text-[9px] font-bold text-blue-600 uppercase tracking-wider">
                               You
                             </span>
                           )}
                         </div>
-                        <p className="text-[10px] text-slate-400 mt-0.5">
-                          Hash: {block.hash.substring(0, 14)}...
-                        </p>
                       </td>
                       <td className="px-5 py-3.5">
                         <p className="text-xs font-semibold text-slate-700">{block.txCount}</p>
@@ -226,20 +232,30 @@ function ExplorerDataTabs({
                         </p>
                       </td>
                       <td className="px-5 py-2.5">
-                        <p 
-                          className="text-xs font-mono text-slate-700 cursor-pointer hover:text-blue-600 hover:underline"
-                          onClick={() => tx.from && onAddressSelect(tx.from)}
-                        >
-                          {shortHex(tx.from)}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <div className="flex-shrink-0 rounded-full overflow-hidden">
+                            <AccountIcon address={tx.from || ''} size={20} />
+                          </div>
+                          <p
+                            className="text-xs font-mono text-slate-700 cursor-pointer hover:text-blue-600 hover:underline"
+                            onClick={() => tx.from && onAddressSelect(tx.from)}
+                          >
+                            {shortHex(tx.from)}
+                          </p>
+                        </div>
                       </td>
                       <td className="px-5 py-2.5">
-                        <p 
-                          className="text-xs font-mono text-slate-700 cursor-pointer hover:text-blue-600 hover:underline"
-                          onClick={() => tx.to && onAddressSelect(tx.to)}
-                        >
-                          {shortHex(tx.to)}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <div className="flex-shrink-0 rounded-full overflow-hidden">
+                            <AccountIcon address={tx.to || ''} size={20} />
+                          </div>
+                          <p
+                            className="text-xs font-mono text-slate-700 cursor-pointer hover:text-blue-600 hover:underline"
+                            onClick={() => tx.to && onAddressSelect(tx.to)}
+                          >
+                            {shortHex(tx.to)}
+                          </p>
+                        </div>
                       </td>
                       <td className="px-5 py-2.5 text-right">
                         <div className="flex items-center justify-end gap-1">
@@ -315,8 +331,10 @@ function ExplorerDataTabs({
                         <p className="text-xs font-bold text-slate-500">{i + 1}</p>
                       </td>
                       <td className="px-5 py-3.5">
-                        <div className="flex items-center gap-2">
-                          <div className="w-5 h-5 rounded bg-slate-200 flex-shrink-0" />
+                        <div className="flex items-center gap-2.5">
+                          <div className="flex-shrink-0 rounded-full overflow-hidden">
+                            <AccountIcon address={acc.address} size={24} />
+                          </div>
                           <p
                             className="text-xs font-mono text-blue-600 cursor-pointer hover:underline"
                             onClick={() => onAddressSelect(acc.address)}
