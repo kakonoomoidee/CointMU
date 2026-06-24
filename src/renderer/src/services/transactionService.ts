@@ -13,7 +13,8 @@ import { format } from 'date-fns'
 export async function getTransactions(addresses: string[]): Promise<ActivityData[]> {
   if (!addresses || addresses.length === 0) return []
   try {
-    return await window.api.wallet.getActivity(addresses)
+    const activities = await window.api.wallet.getActivity(addresses)
+    return activities.slice(0, 50)
   } catch (error) {
     console.error('Failed to get transactions from IPC:', error)
     return []

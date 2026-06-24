@@ -29,3 +29,6 @@ export { cn } from './cn'
 export { downloadActivityCsv } from './csvExport'
 
 export { getTokenGradient, getTokenInitials } from './tokenIcon'
+
+export { fetchMinerDistribution } from './minerDistribution'
+export type { MinerEntry } from './minerDistribution'

@@ -94,6 +94,7 @@ function MiningActivity({
                 accounts={accounts}
                 value={historyFilter}
                 onChange={onFilterChange}
+                className='w-48'
               />
             </div>
             <div className="h-[280px] overflow-y-auto pr-1">

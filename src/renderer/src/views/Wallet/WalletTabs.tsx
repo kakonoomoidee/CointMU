@@ -3,7 +3,8 @@ import { format } from 'date-fns'
 import { ActivityItem, type ActivityData } from './ActivityItem'
 import { getTransactions } from '@/services/transactionService'
 import { TokenService, getTokenBalance, type TokenInfo } from '@/services/tokenService'
-import { AddTokenModal, TokenIcon, SkeletonList, SkeletonTable } from '@/components'
+import { CacheService } from '@/services/cacheService'
+import { AddTokenModal, TokenIcon, SkeletonList, SkeletonTable, Pagination } from '@/components'
 import { IconBolt, IconPlus } from '@/assets/icons'
 import { useAppStore, type PendingTransaction } from '@/store'
 
@@ -91,19 +92,33 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
   const [isFetchingActivity, setIsFetchingActivity] = useState(true)
   const [isFetchingTokens, setIsFetchingTokens] = useState(true)
   const [isAddTokenModalOpen, setIsAddTokenModalOpen] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
   const pendingTransactions = useAppStore((s) => s.pendingTransactions)
 
   const pendingActivities = pendingTransactions
     .filter((tx) => tx.from === activeWalletAddress)
     .map(mapPendingToActivity)
   const activities = [...pendingActivities, ...transactions]
+  
+  const itemsPerPage = 10
+  const totalPages = Math.max(1, Math.ceil(activities.length / itemsPerPage))
+  const paginatedActivities = activities.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
   useEffect(() => {
-    setTransactions([])
     if (!activeWalletAddress) return
-    setIsFetchingActivity(true)
+    const cached = CacheService.getActivity(activeWalletAddress)
+    if (cached) {
+      setTransactions(cached)
+      setIsFetchingActivity(false)
+    } else {
+      setTransactions([])
+      setIsFetchingActivity(true)
+    }
+
     getTransactions([activeWalletAddress]).then((results) => {
-      setTransactions(filterActivitiesForAddress(results, activeWalletAddress))
+      const filtered = filterActivitiesForAddress(results, activeWalletAddress)
+      setTransactions(filtered)
+      CacheService.setActivity(activeWalletAddress, filtered)
       setIsFetchingActivity(false)
     })
   }, [activeWalletAddress])
@@ -111,7 +126,14 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
   useEffect(() => {
     if (activeTab === 'tokens' && activeWalletAddress) {
       const fetchTokens = async (): Promise<void> => {
-        setIsFetchingTokens(true)
+        const cached = CacheService.getTokenBalances(activeWalletAddress)
+        if (cached) {
+          setTokenBalances(cached)
+          setIsFetchingTokens(false)
+        } else {
+          setIsFetchingTokens(true)
+        }
+
         const tokens = TokenService.getTokens()
         setKnownTokens(tokens)
         const balances: Record<string, string> = {}
@@ -119,6 +141,7 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
           balances[token.symbol] = await getTokenBalance(activeWalletAddress, token.address)
         }
         setTokenBalances(balances)
+        CacheService.setTokenBalances(activeWalletAddress, balances)
         setIsFetchingTokens(false)
       }
       fetchTokens()
@@ -161,18 +184,29 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
       </div>
 
       {activeTab === 'activity' && (
-        <div className='rounded-2xl bg-white border border-slate-200 divide-y divide-slate-100 overflow-hidden'>
-          {isFetchingActivity ? (
-            <SkeletonList itemCount={5} />
-          ) : activities.length > 0 ? (
-            activities.map((tx) => <ActivityItem key={tx.id} activity={tx} />)
-          ) : (
-            <div className='flex flex-col items-center justify-center py-16 text-center'>
-              <IconBolt className='text-slate-300 mb-3' width={32} height={32} strokeWidth={1.5} />
-              <p className='text-sm font-medium text-slate-400'>No activity yet</p>
-              <p className='text-xs text-slate-400 mt-1'>
-                Transactions will appear here once you send or receive CMU
-              </p>
+        <div className='flex flex-col gap-4'>
+          <div className='rounded-2xl bg-white border border-slate-200 divide-y divide-slate-100 overflow-hidden'>
+            {isFetchingActivity ? (
+              <SkeletonList itemCount={5} />
+            ) : paginatedActivities.length > 0 ? (
+              paginatedActivities.map((tx) => <ActivityItem key={tx.id} activity={tx} />)
+            ) : (
+              <div className='flex flex-col items-center justify-center py-16 text-center'>
+                <IconBolt className='text-slate-300 mb-3' width={32} height={32} strokeWidth={1.5} />
+                <p className='text-sm font-medium text-slate-400'>No activity yet</p>
+                <p className='text-xs text-slate-400 mt-1'>
+                  Transactions will appear here once you send or receive CMU
+                </p>
+              </div>
+            )}
+          </div>
+          {totalPages > 1 && (
+            <div className='px-1'>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
             </div>
           )}
         </div>

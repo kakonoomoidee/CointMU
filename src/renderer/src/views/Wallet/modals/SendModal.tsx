@@ -17,8 +17,8 @@ import {
   waitForTransactionReceipt,
   dispatchNotification
 } from '@/services'
-import { IconCheck, IconAlertCircle, IconChevronDown } from '@/assets/icons'
-import { TokenIcon } from '@/components'
+import { IconCheck, IconAlertCircle } from '@/assets/icons'
+import { TokenIcon, CustomDropdown } from '@/components'
 import type { DerivedAccount } from '@/services'
 
 const GAS_ESTIMATION_DEBOUNCE_MS = 600
@@ -103,7 +103,6 @@ function SendModal({
   const [nativeBalance, setNativeBalance] = useState<string>('0')
   const [gasLimit, setGasLimit] = useState<bigint | null>(null)
   const [estimationStatus, setEstimationStatus] = useState<EstimationStatus>('idle')
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const isNative = sendSelectedTokenAddress === 'native'
   const gasFeeFormatted = gasLimit && sendGasPrice
@@ -193,7 +192,6 @@ function SendModal({
     setSendAmount('')
     setGasLimit(null)
     setEstimationStatus('idle')
-    setIsDropdownOpen(false)
   }
 
   const handleAmountChange = (value: string): void => {
@@ -381,44 +379,30 @@ function SendModal({
         <div>
           <label className='block text-xs font-bold text-slate-700 mb-2'>Asset</label>
           <div className='relative'>
-            <button
-              type='button'
-              onClick={() => setIsDropdownOpen((v) => !v)}
+            <CustomDropdown<TokenInfo>
+              options={tokens}
+              selected={selectedToken}
+              onSelect={handleTokenSelect}
               disabled={sendLoading}
-              className='w-full flex items-center justify-between px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 hover:bg-white hover:border-slate-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
-            >
-              <div className='flex items-center gap-2'>
-                <TokenIcon
-                  address={selectedToken?.address ?? 'native'}
-                  symbol={selectedToken?.symbol ?? ''}
-                  size='sm'
-                />
-                <span>{selectedToken?.name ?? 'Select token'}</span>
-                <span className='text-slate-400 font-normal'>({selectedToken?.symbol})</span>
-              </div>
-              <IconChevronDown
-                width={16}
-                height={16}
-                className={`text-slate-400 transition-transform duration-150 ${isDropdownOpen ? 'rotate-180' : ''}`}
-              />
-            </button>
-
-            {isDropdownOpen && (
-              <div className='absolute z-10 top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden'>
-                {tokens.map((token) => (
-                  <button
-                    type='button'
-                    key={token.address}
-                    onClick={() => handleTokenSelect(token)}
-                    className='w-full flex items-center gap-2 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors'
-                  >
-                    <TokenIcon address={token.address} symbol={token.symbol} size='sm' />
-                    <span>{token.name}</span>
-                    <span className='text-slate-400 font-normal ml-1'>({token.symbol})</span>
-                  </button>
-                ))}
-              </div>
-            )}
+              renderSelected={(selected) => (
+                <>
+                  <TokenIcon
+                    address={selected?.address ?? 'native'}
+                    symbol={selected?.symbol ?? ''}
+                    size='sm'
+                  />
+                  <span>{selected?.name ?? 'Select token'}</span>
+                  <span className='text-slate-400 font-normal'>({selected?.symbol})</span>
+                </>
+              )}
+              renderOption={(option) => (
+                <>
+                  <TokenIcon address={option.address} symbol={option.symbol} size='sm' />
+                  <span>{option.name}</span>
+                  <span className='text-slate-400 font-normal ml-1'>({option.symbol})</span>
+                </>
+              )}
+            />
           </div>
 
           <div className='flex items-center justify-between mt-1.5 px-1'>

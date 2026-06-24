@@ -49,6 +49,8 @@ export type { MiningStats, MiningConfig } from './miningService'
 export { getNetworkInsights } from './networkService'
 export type { NetworkInsights, NetworkInsightBlock } from './networkService'
 
+export { CacheService } from './cacheService'
+
 export { checkForUpdates, downloadUpdate, installUpdate } from './updaterService'
 
 export { getCpuUsage } from './systemService'

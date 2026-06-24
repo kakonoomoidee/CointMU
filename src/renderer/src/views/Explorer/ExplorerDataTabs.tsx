@@ -4,7 +4,7 @@ import { useAppStore } from '@/store'
 import { type ActivityData } from '@/views/Wallet/ActivityItem'
 import { Pagination } from '@/components'
 import { AccountIcon, SkeletonTable } from '@/components'
-import { IconActivity } from '@/assets/icons'
+import { MinerDistribution } from '@/components/explorer/MinerDistribution'
 import { formatTxAge } from '@/utils'
 
 type TabState = 'blocks' | 'transactions' | 'accounts'
@@ -32,7 +32,7 @@ interface ExplorerDataTabsProps {
   onTxPageChange: (page: number) => void
 }
 
-const MINER_DISTRIBUTION: never[] = []
+
 
 /**
  * Abbreviates a hex address or hash for compact table display.
@@ -63,7 +63,8 @@ function ExplorerDataTabs({
   transactions,
   txCurrentPage,
   txTotalPages,
-  onTxPageChange
+  onTxPageChange,
+  activeWalletAddress
 }: ExplorerDataTabsProps): JSX.Element {
   const balances = useAppStore((s) => s.balances)
 
@@ -397,32 +398,10 @@ function ExplorerDataTabs({
         </div>
       </div>
 
-      <div className="flex-1 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-        <h3 className="text-sm font-bold text-slate-800">Miner distribution</h3>
-        <p className="text-[10px] text-slate-400 mt-0.5 mb-5">
-          Share of blocks mined - past 24 hours
-        </p>
-
-        <div className="space-y-4">
-          {MINER_DISTRIBUTION.length > 0 ? (
-            MINER_DISTRIBUTION.map((_, i) => <div key={i} />)
-          ) : (
-            <div className="py-8 flex flex-col items-center justify-center text-center">
-              <IconActivity className="text-slate-300 mb-2" width={28} height={28} strokeWidth={1.5} />
-              <p className="text-sm font-medium text-slate-400">Awaiting network activity</p>
-              <p className="text-xs text-slate-400 mt-0.5">Distribution requires an indexer</p>
-            </div>
-          )}
-        </div>
-
-        <div className="mt-5 h-2 flex rounded-full overflow-hidden gap-0.5">
-          {MINER_DISTRIBUTION.length > 0 ? (
-            MINER_DISTRIBUTION.map((_, i) => <div key={i} className="h-full bg-slate-200" />)
-          ) : (
-            <div className="h-full w-full bg-slate-100" />
-          )}
-        </div>
-      </div>
+      <MinerDistribution
+        activeWalletAddress={activeWalletAddress}
+        isConnected={isConnected}
+      />
     </div>
   )
 }

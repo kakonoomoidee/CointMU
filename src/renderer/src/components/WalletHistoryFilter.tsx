@@ -1,5 +1,5 @@
 import { type JSX } from 'react'
-import { Select, type SelectOption } from './ui'
+import { CustomDropdown } from './CustomDropdown'
 import { HISTORY_FILTER_ALL, type HistoryFilter } from '@/store'
 
 interface WalletHistoryFilterOption {
@@ -38,7 +38,7 @@ function WalletHistoryFilter({
   onChange,
   className
 }: WalletHistoryFilterProps): JSX.Element {
-  const options: SelectOption[] = [
+  const options = [
     { value: HISTORY_FILTER_ALL, label: ALL_WALLETS_LABEL },
     ...accounts.map((account) => ({
       value: account.address,
@@ -46,12 +46,15 @@ function WalletHistoryFilter({
     }))
   ]
 
+  const selected = options.find((opt) => opt.value === value) ?? options[0]
+
   return (
-    <Select
-      ariaLabel="Filter history by wallet"
-      value={value}
+    <CustomDropdown<{ value: HistoryFilter; label: string }>
       options={options}
-      onChange={onChange}
+      selected={selected}
+      onSelect={(opt) => onChange(opt.value)}
+      renderSelected={(opt) => <span>{opt?.label}</span>}
+      renderOption={(opt) => <span>{opt.label}</span>}
       className={className}
     />
   )
