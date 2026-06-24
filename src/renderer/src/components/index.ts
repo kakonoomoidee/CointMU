@@ -1,4 +1,7 @@
 export { AccountIcon } from './AccountIcon'
+export { AddTokenForm } from './AddTokenForm'
+export { AddTokenModal } from './AddTokenModal'
+export type { AddTokenModalProps } from './AddTokenModal'
 export { Sidebar } from './Sidebar'
 export { ImportKeystoreModal } from './ImportKeystoreModal'
 export type { ImportKeystoreResult } from './ImportKeystoreModal'

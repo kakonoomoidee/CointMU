@@ -1,4 +1,3 @@
-import { call } from '@/services'
 import { ethers } from 'ethers'
 
 export interface TokenInfo {
@@ -11,24 +10,102 @@ export interface TokenInfo {
   colorClass: string
 }
 
-export const KNOWN_TOKENS: TokenInfo[] = [
+const LOCAL_STORAGE_KEY = 'cmu_wallet_tokens'
+
+const DEFAULT_TOKENS: TokenInfo[] = [
   {
     symbol: 'CMU',
     name: 'CointMU',
-    address: 'native', // Special case for native coin
-    price: '0.42', // Note: USD prices are no longer rendered in the UI
-    change: '+2.4%',
+    address: 'native',
+    price: 'N/A',
+    change: '',
     decimals: 18,
     colorClass: 'bg-blue-500'
   }
 ]
 
-const ERC20_ABI = [
-  { constant: true, inputs: [{ name: '_owner', type: 'address' }], name: 'balanceOf', outputs: [{ name: 'balance', type: 'uint256' }], type: 'function' },
-  { constant: true, inputs: [], name: 'decimals', outputs: [{ name: '', type: 'uint8' }], type: 'function' }
-]
+export class TokenService {
+  /**
+   * Retrieves the saved list of tokens from localStorage. Falls back to default CMU
+   * native token if none are found.
+   * @returns An array of TokenInfo objects.
+   */
+  static getTokens(): TokenInfo[] {
+    try {
+      const stored = localStorage.getItem(LOCAL_STORAGE_KEY)
+      if (stored) {
+        const parsed = JSON.parse(stored) as TokenInfo[]
+        const withoutNative = parsed.filter((t) => t.address !== 'native')
+        return [DEFAULT_TOKENS[0], ...withoutNative]
+      }
+    } catch {
+      // Ignored
+    }
+    return DEFAULT_TOKENS
+  }
 
-const iface = new ethers.Interface(ERC20_ABI)
+  /**
+   * Appends a new token to the persisted token list.
+   * @param token - The new token info object.
+   */
+  static addToken(token: TokenInfo): void {
+    const tokens = this.getTokens()
+    if (!tokens.some((t) => t.address.toLowerCase() === token.address.toLowerCase())) {
+      const withoutNative = tokens.filter((t) => t.address !== 'native')
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...withoutNative, token]))
+    }
+  }
+
+  /**
+   * Removes a token from the persisted list by contract address.
+   * @param address - The ERC-20 contract address to remove.
+   */
+  static removeToken(address: string): void {
+    const tokens = this.getTokens()
+    const withoutNative = tokens.filter(
+      (t) => t.address !== 'native' && t.address.toLowerCase() !== address.toLowerCase()
+    )
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(withoutNative))
+  }
+
+  /**
+   * Queries the ERC-20 contract for its name, symbol, and decimals.
+   * @param address - The smart contract address.
+   * @returns A promise resolving to a partial TokenInfo or null if invalid.
+   */
+  static async fetchTokenDetails(address: string): Promise<Partial<TokenInfo> | null> {
+    try {
+      const provider = new ethers.JsonRpcProvider('http://127.0.0.1:8585')
+      const contract = new ethers.Contract(address, MINIMAL_ERC20_ABI, provider)
+
+      const [name, symbol, decimals] = await Promise.all([
+        contract.name(),
+        contract.symbol(),
+        contract.decimals().catch(() => 18)
+      ])
+
+      return {
+        name,
+        symbol,
+        decimals: Number(decimals),
+        address,
+        price: 'N/A',
+        change: '',
+        colorClass: 'bg-slate-500'
+      }
+    } catch (error) {
+      console.error(`Failed to fetch details for token at ${address}`, error)
+      return null
+    }
+  }
+}
+
+const MINIMAL_ERC20_ABI = [
+  'function balanceOf(address owner) view returns (uint256)',
+  'function decimals() view returns (uint8)',
+  'function symbol() view returns (string)',
+  'function name() view returns (string)'
+]
 
 /**
  * Retrieves the ERC-20 token balance for a specific wallet address.
@@ -38,38 +115,26 @@ const iface = new ethers.Interface(ERC20_ABI)
  */
 export async function getTokenBalance(walletAddress: string, tokenContractAddress: string): Promise<string> {
   if (!walletAddress || !tokenContractAddress) return '0.00'
-  
+
   try {
-    const data = iface.encodeFunctionData('balanceOf', [walletAddress])
-    const result = await call('eth_call', [{
-      to: tokenContractAddress,
-      data: data
-    }, 'latest'])
-    
-    if (result && result !== '0x') {
-      const decoded = iface.decodeFunctionResult('balanceOf', result)
-      const balanceBigInt = decoded[0]
-      
-      let decimals = 18
-      try {
-        const decimalsData = iface.encodeFunctionData('decimals', [])
-        const decimalsResult = await call('eth_call', [{
-          to: tokenContractAddress,
-          data: decimalsData
-        }, 'latest'])
-        
-        if (decimalsResult && decimalsResult !== '0x') {
-          decimals = Number(iface.decodeFunctionResult('decimals', decimalsResult)[0])
-        }
-      } catch (err) {
-        console.warn(`Failed to fetch decimals for ${tokenContractAddress}, defaulting to 18`, err)
-      }
-      
-      return parseFloat(ethers.formatUnits(balanceBigInt, decimals)).toFixed(2)
+    const provider = new ethers.JsonRpcProvider('http://127.0.0.1:8585')
+
+    if (tokenContractAddress === 'native') {
+      const balanceBigInt = await provider.getBalance(walletAddress)
+      return parseFloat(ethers.formatEther(balanceBigInt)).toFixed(2)
     }
-    return '0.00'
+
+    const contract = new ethers.Contract(tokenContractAddress, MINIMAL_ERC20_ABI, provider)
+
+    const [balanceBigInt, decimals] = await Promise.all([
+      contract.balanceOf(walletAddress),
+      contract.decimals().catch(() => 18)
+    ])
+
+    return parseFloat(ethers.formatUnits(balanceBigInt, decimals)).toFixed(2)
   } catch (error) {
-    console.error(`Failed to fetch ERC20 balance for ${tokenContractAddress}`, error)
+    console.error(`Failed to fetch balance for ${tokenContractAddress}`, error)
     return '0.00'
   }
 }
+

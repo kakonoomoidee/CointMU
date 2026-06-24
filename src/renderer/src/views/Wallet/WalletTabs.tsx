@@ -2,10 +2,10 @@ import { type JSX, useState, useEffect } from 'react'
 import { format } from 'date-fns'
 import { ActivityItem, type ActivityData } from './ActivityItem'
 import { getTransactions } from '@/services/transactionService'
-import { KNOWN_TOKENS, getTokenBalance } from '@/services/tokenService'
-import { fetchBalance } from '@/services/rpcClient'
+import { TokenService, getTokenBalance, type TokenInfo } from '@/services/tokenService'
+import { AddTokenModal } from '@/components'
+import { IconBolt, IconPlus } from '@/assets/icons'
 import { useAppStore, type PendingTransaction } from '@/store'
-import { IconBolt } from '@/assets/icons'
 
 type WalletTab = 'activity' | 'tokens' | 'nfts'
 
@@ -14,7 +14,6 @@ const WALLET_TABS: Array<{ id: WalletTab; label: string }> = [
   { id: 'tokens', label: 'Tokens' },
   { id: 'nfts', label: 'NFTs' }
 ]
-
 
 interface WalletTabsProps {
   activeWalletAddress: string | null
@@ -55,14 +54,18 @@ function mapPendingToActivity(tx: PendingTransaction): ActivityData {
 
 /**
  * Tabbed content area for the wallet view, switching between transaction
- * activity, ERC-20 tokens, and NFTs. All sections currently render empty states
- * pending indexer integration.
- * @param props - The active tab and the tab change handler.
+ * activity, ERC-20 tokens, and NFTs. Includes a modal-gated flow for adding
+ * custom ERC-20 tokens. The native CMU coin is always shown first and its
+ * balance is fetched via the native provider method, not an ERC-20 contract.
+ * @param props - The active wallet address, active tab, and tab change handler.
  * @returns The rendered tabbed content area.
  */
 function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsProps): JSX.Element {
   const [transactions, setTransactions] = useState<ActivityData[]>([])
+  const [knownTokens, setKnownTokens] = useState<TokenInfo[]>([])
   const [tokenBalances, setTokenBalances] = useState<Record<string, string>>({})
+  const [tokensRefreshKey, setTokensRefreshKey] = useState(0)
+  const [isAddTokenModalOpen, setIsAddTokenModalOpen] = useState(false)
   const pendingTransactions = useAppStore((s) => s.pendingTransactions)
 
   const pendingActivities = pendingTransactions
@@ -75,24 +78,26 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
       getTransactions([activeWalletAddress]).then(setTransactions)
     } else if (activeTab === 'tokens' && activeWalletAddress) {
       const fetchTokens = async (): Promise<void> => {
+        const tokens = TokenService.getTokens()
+        setKnownTokens(tokens)
         const balances: Record<string, string> = {}
-        for (const token of KNOWN_TOKENS) {
-          if (token.address === 'native') {
-            const bal = await fetchBalance(activeWalletAddress)
-            balances[token.symbol] = bal || '0.00'
-          } else {
-            balances[token.symbol] = await getTokenBalance(activeWalletAddress, token.address)
-          }
+        for (const token of tokens) {
+          balances[token.symbol] = await getTokenBalance(activeWalletAddress, token.address)
         }
         setTokenBalances(balances)
       }
       fetchTokens()
     }
-  }, [activeTab, activeWalletAddress])
+  }, [activeTab, activeWalletAddress, tokensRefreshKey])
+
+  const handleTokenAdded = (): void => {
+    setTokensRefreshKey((k) => k + 1)
+  }
+
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center rounded-lg border border-slate-200 overflow-hidden bg-slate-100/50">
+      <div className='flex items-center justify-between mb-4'>
+        <div className='flex items-center rounded-lg border border-slate-200 overflow-hidden bg-slate-100/50'>
           {WALLET_TABS.map((tab) => (
             <button
               key={tab.id}
@@ -107,17 +112,28 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
             </button>
           ))}
         </div>
+
+        {activeTab === 'tokens' && (
+          <button
+            type='button'
+            onClick={() => setIsAddTokenModalOpen(true)}
+            className='flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all duration-150 shadow-sm'
+          >
+            <IconPlus width={12} height={12} strokeWidth={2.5} />
+            Add Token
+          </button>
+        )}
       </div>
 
       {activeTab === 'activity' && (
-        <div className="rounded-2xl bg-white border border-slate-200 divide-y divide-slate-100 overflow-hidden">
+        <div className='rounded-2xl bg-white border border-slate-200 divide-y divide-slate-100 overflow-hidden'>
           {activities.length > 0 ? (
             activities.map((tx) => <ActivityItem key={tx.id} activity={tx} />)
           ) : (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <IconBolt className="text-slate-300 mb-3" width={32} height={32} strokeWidth={1.5} />
-              <p className="text-sm font-medium text-slate-400">No activity yet</p>
-              <p className="text-xs text-slate-400 mt-1">
+            <div className='flex flex-col items-center justify-center py-16 text-center'>
+              <IconBolt className='text-slate-300 mb-3' width={32} height={32} strokeWidth={1.5} />
+              <p className='text-sm font-medium text-slate-400'>No activity yet</p>
+              <p className='text-xs text-slate-400 mt-1'>
                 Transactions will appear here once you send or receive CMU
               </p>
             </div>
@@ -126,64 +142,71 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
       )}
 
       {activeTab === 'tokens' && (
-        <div className="rounded-2xl bg-white border border-slate-200 overflow-hidden">
-          <table className="w-full">
+        <div className='rounded-2xl bg-white border border-slate-200 overflow-hidden'>
+          <table className='w-full'>
             <thead>
-              <tr className="border-b border-slate-100">
-                <th className="text-left px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400">
+              <tr className='border-b border-slate-100'>
+                <th className='text-left px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400'>
                   Token
                 </th>
-                <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400">
+                <th className='text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400'>
                   Price
                 </th>
-                <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400">
+                <th className='text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400'>
                   Balance
                 </th>
-                <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400">
+                <th className='text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400'>
                   Value
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
-              {KNOWN_TOKENS.filter((token) => Number(tokenBalances[token.symbol]) > 0).map((token) => {
-                return (
-                  <tr key={token.symbol} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-[10px] font-bold ${token.colorClass}`}>
-                          {token.symbol.substring(0, 3)}
-                        </div>
-                        <div>
-                          <p className="text-sm font-bold text-slate-800">{token.name}</p>
-                          <p className="text-xs font-semibold text-slate-400">{token.symbol}</p>
-                        </div>
+            <tbody className='divide-y divide-slate-100'>
+              {knownTokens.map((token) => (
+                <tr key={token.symbol} className='hover:bg-slate-50/50 transition-colors'>
+                  <td className='px-5 py-4'>
+                    <div className='flex items-center gap-3'>
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-[10px] font-bold ${token.colorClass}`}
+                      >
+                        {token.symbol.substring(0, 3)}
                       </div>
-                    </td>
-                    <td className="px-5 py-4 text-right">
-                      <p className="text-sm font-semibold text-slate-700 font-mono">N/A</p>
-                    </td>
-                    <td className="px-5 py-4 text-right">
-                      <p className="text-sm font-semibold text-slate-700 font-mono">
-                        {tokenBalances[token.symbol]}
-                      </p>
-                    </td>
-                    <td className="px-5 py-4 text-right">
-                      <p className="text-sm font-bold text-slate-800 font-mono">N/A</p>
-                    </td>
-                  </tr>
-                )
-              })}
+                      <div>
+                        <p className='text-sm font-bold text-slate-800'>{token.name}</p>
+                        <p className='text-xs font-semibold text-slate-400'>{token.symbol}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className='px-5 py-4 text-right'>
+                    <p className='text-sm font-semibold text-slate-700 font-mono'>N/A</p>
+                  </td>
+                  <td className='px-5 py-4 text-right'>
+                    <p className='text-sm font-semibold text-slate-700 font-mono'>
+                      {tokenBalances[token.symbol] ?? '...'}
+                    </p>
+                  </td>
+                  <td className='px-5 py-4 text-right'>
+                    <p className='text-sm font-bold text-slate-800 font-mono'>N/A</p>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       )}
 
       {activeTab === 'nfts' && (
-        <div className="rounded-2xl bg-white border border-slate-200">
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <p className="text-sm font-medium text-slate-400">No NFTs found</p>
+        <div className='rounded-2xl bg-white border border-slate-200'>
+          <div className='flex flex-col items-center justify-center py-16 text-center'>
+            <p className='text-sm font-medium text-slate-400'>No NFTs found</p>
           </div>
         </div>
+      )}
+
+      {isAddTokenModalOpen && (
+        <AddTokenModal
+          onClose={() => setIsAddTokenModalOpen(false)}
+          onTokenAdded={handleTokenAdded}
+        />
       )}
     </div>
   )
