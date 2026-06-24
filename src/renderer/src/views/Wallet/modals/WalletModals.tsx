@@ -10,12 +10,10 @@ import { ManageHiddenModal } from './ManageHiddenModal'
 interface WalletModalsProps {
   accounts: DerivedAccount[]
   activeAccount: DerivedAccount | undefined
+  activeWalletAddress: string | null
   copied: boolean
-  gasEstFormatted: string
-  totalDeducted: string
   onClose: () => void
   onCopy: () => void
-  onSend: () => void
   onImportAccount: () => void
   onImportKeystore: () => void
   onUnhideAccount: (address: string) => void
@@ -24,19 +22,17 @@ interface WalletModalsProps {
 /**
  * Modal host for the wallet view. It renders the shared overlay and close
  * control, then dispatches to the active modal body based on the wallet UI store
- * modal state.
- * @param props - Account data, derived fee strings, and the modal action handlers.
+ * modal state. Gas estimation and transfer logic are now fully owned by SendModal.
+ * @param props - Account data and the modal action handlers.
  * @returns The rendered modal overlay, or null when no modal is open.
  */
 function WalletModals({
   accounts,
   activeAccount,
+  activeWalletAddress,
   copied,
-  gasEstFormatted,
-  totalDeducted,
   onClose,
   onCopy,
-  onSend,
   onImportAccount,
   onImportKeystore,
   onUnhideAccount
@@ -49,12 +45,12 @@ function WalletModals({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden relative">
+    <div className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm'>
+      <div className='bg-white rounded-3xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden relative'>
         <button
           onClick={onClose}
           disabled={sendLoading}
-          className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className='absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed'
         >
           <IconX width={20} height={20} strokeWidth={2.5} />
         </button>
@@ -65,9 +61,9 @@ function WalletModals({
 
         {modalState === 'SEND' && (
           <SendModal
-            gasEstFormatted={gasEstFormatted}
-            totalDeducted={totalDeducted}
-            onSend={onSend}
+            activeAccount={activeAccount}
+            activeWalletAddress={activeWalletAddress}
+            accounts={accounts}
             onDone={onClose}
           />
         )}

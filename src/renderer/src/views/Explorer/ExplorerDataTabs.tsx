@@ -3,7 +3,7 @@ import { type BlockData } from '@/hooks'
 import { useAppStore } from '@/store'
 import { type ActivityData } from '@/views/Wallet/ActivityItem'
 import { Pagination } from '@/components'
-import { AccountIcon } from '@/components'
+import { AccountIcon, SkeletonTable } from '@/components'
 import { IconActivity } from '@/assets/icons'
 import { formatTxAge } from '@/utils'
 
@@ -186,6 +186,12 @@ function ExplorerDataTabs({
                       </td>
                     </tr>
                   ))
+                ) : isConnected ? (
+                  <tr>
+                    <td colSpan={5} className="p-0">
+                      <SkeletonTable columns={5} rowCount={5} />
+                    </td>
+                  </tr>
                 ) : (
                   <tr>
                     <td colSpan={5} className="px-5 py-12 text-center">
@@ -271,6 +277,12 @@ function ExplorerDataTabs({
                       </td>
                     </tr>
                   ))
+                ) : isConnected ? (
+                  <tr>
+                    <td colSpan={5} className="p-0">
+                      <SkeletonTable columns={5} rowCount={5} />
+                    </td>
+                  </tr>
                 ) : (
                   <tr>
                     <td colSpan={5} className="px-5 py-12 text-center">
@@ -319,9 +331,8 @@ function ExplorerDataTabs({
               <tbody className="divide-y divide-slate-100">
                 {isLoadingAccounts ? (
                   <tr>
-                    <td colSpan={5} className="px-5 py-12 text-center">
-                      <div className="w-6 h-6 rounded-full border-2 border-slate-200 border-t-blue-500 animate-spin mx-auto mb-3" />
-                      <p className="text-sm font-medium text-slate-400">Loading accounts...</p>
+                    <td colSpan={5} className="p-0">
+                      <SkeletonTable columns={5} rowCount={5} />
                     </td>
                   </tr>
                 ) : topAccounts.length > 0 ? (

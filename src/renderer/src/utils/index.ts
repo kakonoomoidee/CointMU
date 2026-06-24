@@ -27,3 +27,5 @@ export { resolveHistoryAddresses, filterFoundBlocks } from './history'
 export { cn } from './cn'
 
 export { downloadActivityCsv } from './csvExport'
+
+export { getTokenGradient, getTokenInitials } from './tokenIcon'

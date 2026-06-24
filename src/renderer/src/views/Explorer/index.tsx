@@ -7,6 +7,7 @@ import { formatBlockNumber } from '@/utils'
 import { type ActivityData } from '@/views/Wallet/ActivityItem'
 import { Insights } from '@/components/explorer/Insights'
 import { ChainTimeline } from '@/components/explorer/ChainTimeline'
+import { Skeleton, SkeletonCard } from '@/components'
 import { ExplorerHeader } from './ExplorerHeader'
 import { ExplorerSearch } from './ExplorerSearch'
 import { ExplorerDataTabs, type TabState } from './ExplorerDataTabs'
@@ -306,13 +307,28 @@ function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element
               onSubmit={handleSearch}
             />
 
-            <Insights insights={insights} />
-            <ChainTimeline
-              blocks={insights?.blocks || []}
-              coinbase={activeWalletAddress || insights?.coinbase || ''}
-              isOnline={insights?.isOnline ?? false}
-              onBlockClick={handleBlockSelect}
-            />
+            {!insights && isConnected ? (
+              <>
+                <div className="grid grid-cols-5 gap-4">
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                </div>
+                <Skeleton className="w-full h-32 rounded-2xl bg-white border border-slate-200" />
+              </>
+            ) : (
+              <>
+                <Insights insights={insights} />
+                <ChainTimeline
+                  blocks={insights?.blocks || []}
+                  coinbase={activeWalletAddress || insights?.coinbase || ''}
+                  isOnline={insights?.isOnline ?? false}
+                  onBlockClick={handleBlockSelect}
+                />
+              </>
+            )}
 
             <ExplorerDataTabs
               activeTab={activeTab}

@@ -25,6 +25,7 @@ import { MiningHeroCard } from './MiningHeroCard'
 import { MiningStatsGrid } from './MiningStatsGrid'
 import { WorkerConfiguration } from './WorkerConfiguration'
 import { MiningActivity, ACTIVITY_TAB_FOUND } from './MiningActivity'
+import { SkeletonCard, SkeletonList, Skeleton } from '@/components'
 
 interface MinerProps {
   activeWalletAddress: string | null
@@ -45,10 +46,12 @@ const FOUND_BLOCKS_PAGE_SIZE = 8
  */
 function Miner({ activeWalletAddress, accounts, onNavigate }: MinerProps): JSX.Element {
   const [maxCores] = useState<number>(getSafeConcurrency())
-  const [activeTab, setActiveTab] = useState<string>(ACTIVITY_TAB_FOUND)
+  const activeTab = useState<string>(ACTIVITY_TAB_FOUND)[0]
+  const setActiveTab = useState<string>(ACTIVITY_TAB_FOUND)[1]
 
   const blockHeight = useAppStore((s) => s.blockHeight)
   const isConnected = useAppStore((s) => s.isConnected)
+  const loading = useAppStore((s) => s.loading)
   const balance = useAppStore((s) => s.balance)
   const historyFilter = useAppStore((s) => s.historyFilter)
   const setHistoryFilter = useAppStore((s) => s.setHistoryFilter)
@@ -95,6 +98,38 @@ function Miner({ activeWalletAddress, accounts, onNavigate }: MinerProps): JSX.E
   const sharesData = computeSharesData(recentBlocks, SHARES_WINDOW_SIZE, activeWalletAddress)
   const acceptedShares = sharesData.filter((share) => share === true).length
   const networkShares = sharesData.filter((share) => share === false).length
+
+  if (loading) {
+    return (
+      <div className="flex flex-col h-full bg-slate-50/80">
+        <MiningHeader isMining={false} powerStatus='offline' onNavigate={onNavigate} />
+        <main className="flex-1 overflow-y-auto px-8 pb-8 space-y-5">
+          <Skeleton className="rounded-3xl bg-white border border-slate-200 h-64 w-full" />
+          <div className="grid grid-cols-4 gap-5">
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </div>
+          <div className="grid grid-cols-[1fr_1.2fr] gap-5">
+            <div className="rounded-2xl bg-white border border-slate-200 p-5">
+              <Skeleton className="w-48 h-6 mb-6" />
+              <Skeleton className="w-full h-12 mb-4" />
+              <Skeleton className="w-full h-12 mb-4" />
+              <Skeleton className="w-full h-12" />
+            </div>
+            <div className="rounded-2xl bg-white border border-slate-200 overflow-hidden">
+              <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-4">
+                <Skeleton className="w-24 h-8 rounded-lg" />
+                <Skeleton className="w-24 h-8 rounded-lg" />
+              </div>
+              <SkeletonList itemCount={5} />
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col h-full bg-slate-50/80">

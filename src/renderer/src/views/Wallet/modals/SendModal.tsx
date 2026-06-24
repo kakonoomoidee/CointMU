@@ -1,107 +1,533 @@
-import { type JSX } from 'react'
+import { type JSX, useState, useEffect, useCallback } from 'react'
+import { ethers } from 'ethers'
 import { useWalletUiStore } from '@/store'
-import { IconCheck } from '@/assets/icons'
+import { useAppStore, type PendingTransaction } from '@/store'
+import { TokenService, getTokenBalance, type TokenInfo } from '@/services/tokenService'
+import {
+  resolveWallet,
+  estimateNativeTransferGas,
+  estimateErc20TransferGas,
+  executeNativeTransfer,
+  executeErc20Transfer,
+  requireSessionPassword,
+  parseTransferError
+} from '@/services/transferService'
+import {
+  call,
+  waitForTransactionReceipt,
+  dispatchNotification
+} from '@/services'
+import { IconCheck, IconAlertCircle, IconChevronDown } from '@/assets/icons'
+import { TokenIcon } from '@/components'
+import type { DerivedAccount } from '@/services'
+
+const GAS_ESTIMATION_DEBOUNCE_MS = 600
+const GAS_BUFFER_MULTIPLIER = 120n
+const GAS_BUFFER_DIVISOR = 100n
 
 interface SendModalProps {
-  gasEstFormatted: string
-  totalDeducted: string
-  onSend: () => void
+  activeAccount: DerivedAccount | undefined
+  activeWalletAddress: string | null
+  accounts: DerivedAccount[]
   onDone: () => void
 }
 
+/** @internal */
+type EstimationStatus = 'idle' | 'estimating' | 'ready' | 'error'
+
 /**
- * Send modal for transferring CMU to another address. Reads and writes the send
- * form fields directly from the wallet UI store, and surfaces a success state
- * with the broadcast transaction hash once a transfer completes.
- * @param props - Derived fee strings, the send handler, and the done handler.
+ * Formats a gas fee bigint (in wei) to a human-readable CMU string.
+ * @param gasLimit - The estimated gas limit.
+ * @param gasPriceHex - The current gas price as a hex string.
+ * @returns A formatted string like '0.000042 CMU'.
+ */
+function formatGasFee(gasLimit: bigint, gasPriceHex: string): string {
+  const feeWei = gasLimit * BigInt(gasPriceHex)
+  return parseFloat(ethers.formatEther(feeWei)).toFixed(8)
+}
+
+/**
+ * Applies a 20% buffer to a gas estimate to reduce the risk of out-of-gas errors.
+ * @param estimate - The raw gas estimate from the provider.
+ * @returns The buffered gas limit as a bigint.
+ */
+function applyGasBuffer(estimate: bigint): bigint {
+  return (estimate * GAS_BUFFER_MULTIPLIER) / GAS_BUFFER_DIVISOR
+}
+
+/**
+ * Parses and validates a numeric input string for token amounts.
+ * @param value - The raw string from the input element.
+ * @returns True when the value is a valid non-negative number string.
+ */
+function isValidAmountInput(value: string): boolean {
+  if (value === '' || value === '.') return true
+  return /^\d*\.?\d*$/.test(value) && !isNaN(parseFloat(value)) && parseFloat(value) >= 0
+}
+
+/**
+ * Full-featured send modal supporting native CMU and ERC-20 token transfers.
+ * Manages its own gas estimation state via a debounced side-effect and performs
+ * strict balance and fee validation before signing. The lifecycle phases are:
+ * idle → estimating → ready → pending confirmation → success / error.
+ * @param props - The active account, wallet address, account list, and done handler.
  * @returns The rendered send modal body.
  */
-function SendModal({ gasEstFormatted, totalDeducted, onSend, onDone }: SendModalProps): JSX.Element {
+function SendModal({
+  activeAccount,
+  activeWalletAddress,
+  accounts,
+  onDone
+}: SendModalProps): JSX.Element {
   const sendTo = useWalletUiStore((s) => s.sendTo)
   const sendAmount = useWalletUiStore((s) => s.sendAmount)
+  const sendGasPrice = useWalletUiStore((s) => s.sendGasPrice)
+  const sendSelectedTokenAddress = useWalletUiStore((s) => s.sendSelectedTokenAddress)
   const sendLoading = useWalletUiStore((s) => s.sendLoading)
   const sendError = useWalletUiStore((s) => s.sendError)
   const sendSuccess = useWalletUiStore((s) => s.sendSuccess)
   const setSendTo = useWalletUiStore((s) => s.setSendTo)
   const setSendAmount = useWalletUiStore((s) => s.setSendAmount)
+  const setSendSelectedTokenAddress = useWalletUiStore((s) => s.setSendSelectedTokenAddress)
+  const setSendLoading = useWalletUiStore((s) => s.setSendLoading)
+  const setSendError = useWalletUiStore((s) => s.setSendError)
+  const setSendSuccess = useWalletUiStore((s) => s.setSendSuccess)
+  const resetSendForm = useWalletUiStore((s) => s.resetSendForm)
+  const addPendingTransaction = useAppStore((s) => s.addPendingTransaction)
+  const removePendingTransaction = useAppStore((s) => s.removePendingTransaction)
+  const fetchGlobalStats = useAppStore((s) => s.fetchGlobalStats)
 
-  return (
-    <div className="p-8">
-      <h3 className="text-xl font-bold text-slate-800 mb-2">Send CMU</h3>
-      <p className="text-sm text-slate-500 mb-8">Transfer funds to another address.</p>
+  const [tokens, setTokens] = useState<TokenInfo[]>([])
+  const [selectedToken, setSelectedToken] = useState<TokenInfo | null>(null)
+  const [tokenBalance, setTokenBalance] = useState<string>('...')
+  const [nativeBalance, setNativeBalance] = useState<string>('0')
+  const [gasLimit, setGasLimit] = useState<bigint | null>(null)
+  const [estimationStatus, setEstimationStatus] = useState<EstimationStatus>('idle')
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
-      {sendSuccess ? (
-        <div className="text-center py-6">
-          <div className="w-16 h-16 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+  const isNative = sendSelectedTokenAddress === 'native'
+  const gasFeeFormatted = gasLimit && sendGasPrice
+    ? formatGasFee(gasLimit, sendGasPrice)
+    : null
+
+  useEffect(() => {
+    const loaded = TokenService.getTokens()
+    setTokens(loaded)
+    const initial = loaded.find((t) => t.address === sendSelectedTokenAddress) ?? loaded[0]
+    setSelectedToken(initial)
+  }, [])
+
+  useEffect(() => {
+    if (!activeWalletAddress || !selectedToken) return
+
+    setTokenBalance('...')
+
+    getTokenBalance(activeWalletAddress, selectedToken.address).then((bal) => {
+      setTokenBalance(bal)
+    })
+
+    if (!isNative && activeWalletAddress) {
+      getTokenBalance(activeWalletAddress, 'native').then((bal) => {
+        setNativeBalance(bal)
+      })
+    }
+  }, [selectedToken, activeWalletAddress, isNative])
+
+  const runEstimation = useCallback(async () => {
+    if (!sendTo || !sendAmount || !activeWalletAddress || !selectedToken) {
+      setGasLimit(null)
+      setEstimationStatus('idle')
+      return
+    }
+
+    if (!ethers.isAddress(sendTo)) {
+      setGasLimit(null)
+      setEstimationStatus('idle')
+      return
+    }
+
+    const parsedAmount = parseFloat(sendAmount)
+    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+      setGasLimit(null)
+      setEstimationStatus('idle')
+      return
+    }
+
+    setEstimationStatus('estimating')
+
+    try {
+      let raw: bigint
+
+      if (isNative) {
+        raw = await estimateNativeTransferGas(
+          activeWalletAddress,
+          sendTo,
+          ethers.parseEther(sendAmount)
+        )
+      } else {
+        raw = await estimateErc20TransferGas(
+          selectedToken.address,
+          activeWalletAddress,
+          sendTo,
+          sendAmount,
+          selectedToken.decimals
+        )
+      }
+
+      setGasLimit(applyGasBuffer(raw))
+      setEstimationStatus('ready')
+    } catch {
+      setGasLimit(null)
+      setEstimationStatus('error')
+    }
+  }, [sendTo, sendAmount, activeWalletAddress, selectedToken, isNative])
+
+  useEffect(() => {
+    const timer = setTimeout(runEstimation, GAS_ESTIMATION_DEBOUNCE_MS)
+    return () => clearTimeout(timer)
+  }, [runEstimation])
+
+  const handleTokenSelect = (token: TokenInfo): void => {
+    setSelectedToken(token)
+    setSendSelectedTokenAddress(token.address)
+    setSendAmount('')
+    setGasLimit(null)
+    setEstimationStatus('idle')
+    setIsDropdownOpen(false)
+  }
+
+  const handleAmountChange = (value: string): void => {
+    if (!isValidAmountInput(value)) return
+    setSendAmount(value)
+  }
+
+  const handleMaxAmount = (): void => {
+    if (isNative && gasLimit && sendGasPrice) {
+      const gasFeeWei = gasLimit * BigInt(sendGasPrice)
+      const balanceWei = ethers.parseEther(tokenBalance.replace(/,/g, ''))
+      const maxWei = balanceWei > gasFeeWei ? balanceWei - gasFeeWei : 0n
+      setSendAmount(parseFloat(ethers.formatEther(maxWei)).toFixed(6))
+    } else {
+      setSendAmount(tokenBalance.replace(/,/g, ''))
+    }
+  }
+
+  const validateBeforeSend = (): string | null => {
+    if (!sendTo) return 'Recipient address is required.'
+    if (!ethers.isAddress(sendTo)) return 'Invalid recipient address format.'
+    if (!sendAmount || parseFloat(sendAmount) <= 0) return 'Enter a valid amount greater than zero.'
+    if (!gasLimit || !sendGasPrice) return 'Gas estimation is still pending. Please wait.'
+
+    const amountNum = parseFloat(sendAmount)
+    const balanceNum = parseFloat(tokenBalance.replace(/,/g, ''))
+
+    if (amountNum > balanceNum) {
+      return `Insufficient ${selectedToken?.symbol ?? ''} balance.`
+    }
+
+    const gasFeeEth = parseFloat(gasFeeFormatted ?? '0')
+
+    if (isNative) {
+      const totalRequired = amountNum + gasFeeEth
+      if (totalRequired > balanceNum) {
+        return `Insufficient balance to cover amount (${sendAmount}) and network fee (${gasFeeFormatted} CMU).`
+      }
+    } else {
+      const nativeBalanceNum = parseFloat(nativeBalance.replace(/,/g, ''))
+      if (gasFeeEth > nativeBalanceNum) {
+        return `Insufficient CMU to pay the network fee (${gasFeeFormatted} CMU). Top up your CMU balance.`
+      }
+    }
+
+    return null
+  }
+
+  const handleSend = async (): Promise<void> => {
+    if (sendLoading || !activeAccount || !activeWalletAddress || !selectedToken) return
+
+    const validationError = validateBeforeSend()
+    if (validationError) {
+      setSendError(validationError)
+      return
+    }
+
+    setSendError('')
+    setSendLoading(true)
+
+    try {
+      const password = requireSessionPassword()
+      const wallet = await resolveWallet(activeAccount, password)
+
+      const nonceHex = await call('eth_getTransactionCount', [activeWalletAddress, 'latest'])
+      const chainIdHex = await call('eth_chainId', [])
+      const nonce = parseInt(nonceHex, 16)
+      const chainId = parseInt(chainIdHex, 16)
+      const gasPriceToUse = sendGasPrice || '0'
+
+      let txHash: string
+      let pendingEntry: PendingTransaction
+
+      if (isNative) {
+        txHash = await executeNativeTransfer(
+          wallet,
+          sendTo,
+          sendAmount,
+          gasLimit!,
+          gasPriceToUse,
+          nonce,
+          chainId
+        )
+        pendingEntry = {
+          hash: txHash,
+          from: activeWalletAddress,
+          to: sendTo,
+          amount: parseFloat(sendAmount),
+          timestamp: Date.now(),
+          gas: parseFloat(gasFeeFormatted ?? '0')
+        }
+      } else {
+        txHash = await executeErc20Transfer(
+          wallet,
+          selectedToken.address,
+          sendTo,
+          sendAmount,
+          selectedToken.decimals,
+          gasLimit!,
+          gasPriceToUse,
+          nonce,
+          chainId
+        )
+        pendingEntry = {
+          hash: txHash,
+          from: activeWalletAddress,
+          to: sendTo,
+          amount: 0,
+          timestamp: Date.now(),
+          gas: parseFloat(gasFeeFormatted ?? '0')
+        }
+      }
+
+      addPendingTransaction(pendingEntry)
+      setSendSuccess(txHash)
+
+      const addresses = accounts.map((a) => a.address)
+      void fetchGlobalStats(activeWalletAddress, addresses)
+
+      const shortTo = `${sendTo.slice(0, 6)}...${sendTo.slice(-4)}`
+      const assetLabel = isNative ? `${sendAmount} CMU` : `${sendAmount} ${selectedToken.symbol}`
+
+      void waitForTransactionReceipt(txHash, { confirmations: 1 })
+        .then(() => {
+          removePendingTransaction(txHash)
+          dispatchNotification(
+            'transaction',
+            'Transaction confirmed',
+            `Sent ${assetLabel} to ${shortTo}`,
+            { hash: txHash }
+          )
+          return fetchGlobalStats(activeWalletAddress, addresses)
+        })
+        .catch(() => {
+          removePendingTransaction(txHash)
+          dispatchNotification(
+            'transaction',
+            'Transaction failed',
+            `Transfer of ${assetLabel} to ${shortTo} could not be confirmed`,
+            { hash: txHash }
+          )
+          return fetchGlobalStats(activeWalletAddress, addresses)
+        })
+    } catch (e) {
+      setSendError(parseTransferError(e))
+    } finally {
+      setSendLoading(false)
+    }
+  }
+
+  const handleDone = (): void => {
+    resetSendForm()
+    onDone()
+  }
+
+  if (sendSuccess) {
+    return (
+      <div className='p-8'>
+        <div className='text-center py-6'>
+          <div className='w-16 h-16 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4'>
             <IconCheck width={32} height={32} strokeWidth={3} />
           </div>
-          <p className="text-lg font-bold text-slate-800 mb-2">Transaction Sent!</p>
-          <p className="text-sm text-slate-500 mb-4 break-all font-mono">Hash: {sendSuccess}</p>
+          <p className='text-lg font-bold text-slate-800 mb-2'>Transaction Sent</p>
+          <p className='text-xs text-slate-500 mb-1'>Transaction hash</p>
+          <p className='text-xs font-mono text-slate-700 break-all bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 mb-6'>
+            {sendSuccess}
+          </p>
           <button
-            onClick={onDone}
-            className="w-full py-3.5 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors"
+            onClick={handleDone}
+            className='w-full py-3.5 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors'
           >
             Done
           </button>
         </div>
-      ) : (
-        <div className="space-y-5">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-2">To Address</label>
-            <input
-              type="text"
-              value={sendTo}
-              onChange={(e) => setSendTo(e.target.value)}
+      </div>
+    )
+  }
+
+  return (
+    <div className='p-8'>
+      <h3 className='text-xl font-bold text-slate-800 mb-1'>Send</h3>
+      <p className='text-sm text-slate-500 mb-6'>Transfer assets to another address.</p>
+
+      <div className='space-y-5'>
+        <div>
+          <label className='block text-xs font-bold text-slate-700 mb-2'>Asset</label>
+          <div className='relative'>
+            <button
+              type='button'
+              onClick={() => setIsDropdownOpen((v) => !v)}
               disabled={sendLoading}
-              placeholder="0x..."
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-mono text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-2">Amount</label>
-            <div className="relative">
-              <input
-                type="number"
-                value={sendAmount}
-                onChange={(e) => setSendAmount(e.target.value)}
-                disabled={sendLoading}
-                placeholder="0.00"
-                step="0.01"
-                className="w-full pl-4 pr-16 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-mono text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className='w-full flex items-center justify-between px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 hover:bg-white hover:border-slate-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+            >
+              <div className='flex items-center gap-2'>
+                <TokenIcon
+                  address={selectedToken?.address ?? 'native'}
+                  symbol={selectedToken?.symbol ?? ''}
+                  size='sm'
+                />
+                <span>{selectedToken?.name ?? 'Select token'}</span>
+                <span className='text-slate-400 font-normal'>({selectedToken?.symbol})</span>
+              </div>
+              <IconChevronDown
+                width={16}
+                height={16}
+                className={`text-slate-400 transition-transform duration-150 ${isDropdownOpen ? 'rotate-180' : ''}`}
               />
-              <span className="absolute right-4 top-3.5 text-sm font-bold text-slate-400">CMU</span>
-            </div>
+            </button>
+
+            {isDropdownOpen && (
+              <div className='absolute z-10 top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden'>
+                {tokens.map((token) => (
+                  <button
+                    type='button'
+                    key={token.address}
+                    onClick={() => handleTokenSelect(token)}
+                    className='w-full flex items-center gap-2 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors'
+                  >
+                    <TokenIcon address={token.address} symbol={token.symbol} size='sm' />
+                    <span>{token.name}</span>
+                    <span className='text-slate-400 font-normal ml-1'>({token.symbol})</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-xs font-semibold text-slate-500">Network Fee (Est.)</span>
-              <span className="text-xs font-mono font-bold text-slate-700">
-                {gasEstFormatted} CMU
-              </span>
-            </div>
-            <div className="h-px bg-slate-200" />
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-bold text-slate-800">Total Deducted</span>
-              <span className="text-sm font-mono font-bold text-slate-800">{totalDeducted} CMU</span>
-            </div>
+          <div className='flex items-center justify-between mt-1.5 px-1'>
+            <span className='text-xs text-slate-400'>Available balance</span>
+            <span className='text-xs font-mono font-semibold text-slate-600'>
+              {tokenBalance} {selectedToken?.symbol}
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <label className='block text-xs font-bold text-slate-700 mb-2'>Recipient Address</label>
+          <input
+            type='text'
+            value={sendTo}
+            onChange={(e) => setSendTo(e.target.value)}
+            disabled={sendLoading}
+            placeholder='0x...'
+            className='w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-mono text-sm disabled:opacity-50 disabled:cursor-not-allowed'
+          />
+        </div>
+
+        <div>
+          <div className='flex items-center justify-between mb-2'>
+            <label className='text-xs font-bold text-slate-700'>Amount</label>
+            <button
+              type='button'
+              onClick={handleMaxAmount}
+              disabled={sendLoading || tokenBalance === '...'}
+              className='text-xs font-bold text-blue-500 hover:text-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors'
+            >
+              Max
+            </button>
+          </div>
+          <div className='relative'>
+            <input
+              type='text'
+              inputMode='decimal'
+              value={sendAmount}
+              onChange={(e) => handleAmountChange(e.target.value)}
+              disabled={sendLoading}
+              placeholder='0.00'
+              className='w-full pl-4 pr-20 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-mono text-sm disabled:opacity-50 disabled:cursor-not-allowed'
+            />
+            <span className='absolute right-4 top-3.5 text-sm font-bold text-slate-400'>
+              {selectedToken?.symbol ?? 'CMU'}
+            </span>
+          </div>
+        </div>
+
+        <div className='bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-3'>
+          <div className='flex justify-between items-center'>
+            <span className='text-xs font-semibold text-slate-500'>Network Fee (Est.)</span>
+            <span className='text-xs font-mono font-bold text-slate-700'>
+              {estimationStatus === 'estimating' && (
+                <span className='text-slate-400 animate-pulse'>Estimating...</span>
+              )}
+              {estimationStatus === 'ready' && gasFeeFormatted && (
+                <span>{gasFeeFormatted} CMU</span>
+              )}
+              {estimationStatus === 'error' && (
+                <span className='text-amber-500'>Could not estimate</span>
+              )}
+              {estimationStatus === 'idle' && (
+                <span className='text-slate-400'>—</span>
+              )}
+            </span>
           </div>
 
-          {sendError && (
-            <p className="text-xs font-semibold text-red-500 bg-red-50 p-3 rounded-xl border border-red-100">
-              {sendError}
-            </p>
+          {!isNative && (
+            <>
+              <div className='h-px bg-slate-200' />
+              <div className='flex justify-between items-center'>
+                <span className='text-xs font-semibold text-slate-500'>CMU Gas Balance</span>
+                <span className='text-xs font-mono font-bold text-slate-700'>
+                  {nativeBalance} CMU
+                </span>
+              </div>
+            </>
           )}
 
-          <button
-            onClick={onSend}
-            disabled={sendLoading}
-            className="w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl shadow-sm shadow-blue-200 hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
-          >
-            {sendLoading ? 'Sending & Confirming...' : 'Review & Sign'}
-          </button>
+          {isNative && sendAmount && gasFeeFormatted && estimationStatus === 'ready' && (
+            <>
+              <div className='h-px bg-slate-200' />
+              <div className='flex justify-between items-center'>
+                <span className='text-sm font-bold text-slate-800'>Total Deducted</span>
+                <span className='text-sm font-mono font-bold text-slate-800'>
+                  {(parseFloat(sendAmount) + parseFloat(gasFeeFormatted)).toFixed(6)} CMU
+                </span>
+              </div>
+            </>
+          )}
         </div>
-      )}
+
+        {sendError && (
+          <div className='flex items-start gap-2 text-red-600 bg-red-50 px-3 py-2.5 rounded-xl border border-red-100'>
+            <IconAlertCircle width={14} height={14} className='flex-shrink-0 mt-0.5' />
+            <p className='text-xs font-medium leading-relaxed'>{sendError}</p>
+          </div>
+        )}
+
+        <button
+          onClick={handleSend}
+          disabled={sendLoading || estimationStatus === 'estimating'}
+          className='w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl shadow-sm shadow-blue-200 hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4'
+        >
+          {sendLoading ? 'Pending Confirmation...' : 'Review & Sign'}
+        </button>
+      </div>
     </div>
   )
 }

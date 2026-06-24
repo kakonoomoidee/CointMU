@@ -7,7 +7,6 @@ export interface TokenInfo {
   price: string
   change: string
   decimals: number
-  colorClass: string
 }
 
 const LOCAL_STORAGE_KEY = 'cmu_wallet_tokens'
@@ -19,8 +18,7 @@ const DEFAULT_TOKENS: TokenInfo[] = [
     address: 'native',
     price: 'N/A',
     change: '',
-    decimals: 18,
-    colorClass: 'bg-blue-500'
+    decimals: 18
   }
 ]
 
@@ -76,7 +74,7 @@ export class TokenService {
   static async fetchTokenDetails(address: string): Promise<Partial<TokenInfo> | null> {
     try {
       const provider = new ethers.JsonRpcProvider('http://127.0.0.1:8585')
-      const contract = new ethers.Contract(address, MINIMAL_ERC20_ABI, provider)
+      const contract = new ethers.Contract(address, STANDARD_ERC20_ABI, provider)
 
       const [name, symbol, decimals] = await Promise.all([
         contract.name(),
@@ -90,8 +88,7 @@ export class TokenService {
         decimals: Number(decimals),
         address,
         price: 'N/A',
-        change: '',
-        colorClass: 'bg-slate-500'
+        change: ''
       }
     } catch (error) {
       console.error(`Failed to fetch details for token at ${address}`, error)
@@ -100,11 +97,22 @@ export class TokenService {
   }
 }
 
-const MINIMAL_ERC20_ABI = [
+/**
+ * Comprehensive standard ERC-20 ABI covering all canonical read and write
+ * functions defined in EIP-20.
+ */
+export const STANDARD_ERC20_ABI = [
+  'function transfer(address to, uint256 amount) returns (bool)',
+  'function approve(address spender, uint256 amount) returns (bool)',
+  'function transferFrom(address from, address to, uint256 amount) returns (bool)',
+  'function allowance(address owner, address spender) view returns (uint256)',
   'function balanceOf(address owner) view returns (uint256)',
-  'function decimals() view returns (uint8)',
+  'function totalSupply() view returns (uint256)',
+  'function name() view returns (string)',
   'function symbol() view returns (string)',
-  'function name() view returns (string)'
+  'function decimals() view returns (uint8)',
+  'event Transfer(address indexed from, address indexed to, uint256 value)',
+  'event Approval(address indexed owner, address indexed spender, uint256 value)'
 ]
 
 /**
@@ -124,7 +132,7 @@ export async function getTokenBalance(walletAddress: string, tokenContractAddres
       return parseFloat(ethers.formatEther(balanceBigInt)).toFixed(2)
     }
 
-    const contract = new ethers.Contract(tokenContractAddress, MINIMAL_ERC20_ABI, provider)
+    const contract = new ethers.Contract(tokenContractAddress, STANDARD_ERC20_ABI, provider)
 
     const [balanceBigInt, decimals] = await Promise.all([
       contract.balanceOf(walletAddress),

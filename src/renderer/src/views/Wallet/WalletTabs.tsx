@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 import { ActivityItem, type ActivityData } from './ActivityItem'
 import { getTransactions } from '@/services/transactionService'
 import { TokenService, getTokenBalance, type TokenInfo } from '@/services/tokenService'
-import { AddTokenModal } from '@/components'
+import { AddTokenModal, TokenIcon, SkeletonList, SkeletonTable } from '@/components'
 import { IconBolt, IconPlus } from '@/assets/icons'
 import { useAppStore, type PendingTransaction } from '@/store'
 
@@ -53,6 +53,29 @@ function mapPendingToActivity(tx: PendingTransaction): ActivityData {
 }
 
 /**
+ * Filters a raw list of activity records so that only entries belonging to the
+ * given wallet address are retained. Standard transactions are kept when either
+ * the sender or recipient matches. Mining rewards are kept when the `to` field
+ * (set to `block.miner` by the IPC handler) matches. All comparisons are
+ * case-insensitive.
+ * @param activities - The raw activity array returned by the IPC handler.
+ * @param walletAddress - The active wallet address to filter against.
+ * @returns A new array containing only activities that belong to the address.
+ */
+function filterActivitiesForAddress(activities: ActivityData[], walletAddress: string): ActivityData[] {
+  const target = walletAddress.toLowerCase()
+  return activities.filter((activity) => {
+    if (activity.type === 'mining') {
+      return activity.to?.toLowerCase() === target
+    }
+    return (
+      activity.from?.toLowerCase() === target ||
+      activity.to?.toLowerCase() === target
+    )
+  })
+}
+
+/**
  * Tabbed content area for the wallet view, switching between transaction
  * activity, ERC-20 tokens, and NFTs. Includes a modal-gated flow for adding
  * custom ERC-20 tokens. The native CMU coin is always shown first and its
@@ -65,6 +88,8 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
   const [knownTokens, setKnownTokens] = useState<TokenInfo[]>([])
   const [tokenBalances, setTokenBalances] = useState<Record<string, string>>({})
   const [tokensRefreshKey, setTokensRefreshKey] = useState(0)
+  const [isFetchingActivity, setIsFetchingActivity] = useState(true)
+  const [isFetchingTokens, setIsFetchingTokens] = useState(true)
   const [isAddTokenModalOpen, setIsAddTokenModalOpen] = useState(false)
   const pendingTransactions = useAppStore((s) => s.pendingTransactions)
 
@@ -74,10 +99,19 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
   const activities = [...pendingActivities, ...transactions]
 
   useEffect(() => {
-    if (activeTab === 'activity' && activeWalletAddress) {
-      getTransactions([activeWalletAddress]).then(setTransactions)
-    } else if (activeTab === 'tokens' && activeWalletAddress) {
+    setTransactions([])
+    if (!activeWalletAddress) return
+    setIsFetchingActivity(true)
+    getTransactions([activeWalletAddress]).then((results) => {
+      setTransactions(filterActivitiesForAddress(results, activeWalletAddress))
+      setIsFetchingActivity(false)
+    })
+  }, [activeWalletAddress])
+
+  useEffect(() => {
+    if (activeTab === 'tokens' && activeWalletAddress) {
       const fetchTokens = async (): Promise<void> => {
+        setIsFetchingTokens(true)
         const tokens = TokenService.getTokens()
         setKnownTokens(tokens)
         const balances: Record<string, string> = {}
@@ -85,6 +119,7 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
           balances[token.symbol] = await getTokenBalance(activeWalletAddress, token.address)
         }
         setTokenBalances(balances)
+        setIsFetchingTokens(false)
       }
       fetchTokens()
     }
@@ -127,7 +162,9 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
 
       {activeTab === 'activity' && (
         <div className='rounded-2xl bg-white border border-slate-200 divide-y divide-slate-100 overflow-hidden'>
-          {activities.length > 0 ? (
+          {isFetchingActivity ? (
+            <SkeletonList itemCount={5} />
+          ) : activities.length > 0 ? (
             activities.map((tx) => <ActivityItem key={tx.id} activity={tx} />)
           ) : (
             <div className='flex flex-col items-center justify-center py-16 text-center'>
@@ -161,15 +198,18 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
               </tr>
             </thead>
             <tbody className='divide-y divide-slate-100'>
-              {knownTokens.map((token) => (
-                <tr key={token.symbol} className='hover:bg-slate-50/50 transition-colors'>
+              {isFetchingTokens ? (
+                <tr>
+                  <td colSpan={4} className="p-0">
+                    <SkeletonTable columns={4} rowCount={3} />
+                  </td>
+                </tr>
+              ) : (
+                knownTokens.map((token) => (
+                  <tr key={token.symbol} className='hover:bg-slate-50/50 transition-colors'>
                   <td className='px-5 py-4'>
                     <div className='flex items-center gap-3'>
-                      <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-[10px] font-bold ${token.colorClass}`}
-                      >
-                        {token.symbol.substring(0, 3)}
-                      </div>
+                      <TokenIcon address={token.address} symbol={token.symbol} />
                       <div>
                         <p className='text-sm font-bold text-slate-800'>{token.name}</p>
                         <p className='text-xs font-semibold text-slate-400'>{token.symbol}</p>
@@ -187,8 +227,9 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
                   <td className='px-5 py-4 text-right'>
                     <p className='text-sm font-bold text-slate-800 font-mono'>N/A</p>
                   </td>
-                </tr>
-              ))}
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
