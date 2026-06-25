@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 6
-SUBLEVEL = 2
-EXTRAVERSION = nyx
+SUBLEVEL = 3
+EXTRAVERSION = selene
 
 .PHONY: help dev build\:win build\:linux build\:mac clean
 

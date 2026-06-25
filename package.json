@@ -1,7 +1,7 @@
 {
   "name": "cointmu-desktop",
   "productName": "CointMU",
-  "version": "1.6.2-nyx",
+  "version": "1.6.3-selene",
   "description": "CointMU Desktop Client - Proof of Work Blockchain Node Manager",
   "main": "./out/main/index.js",
   "author": "CointMU",
