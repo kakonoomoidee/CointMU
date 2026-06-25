@@ -7,6 +7,7 @@ interface DashboardStatsGridProps {
   miningUptimeLabel: string
   minedBlocksCount: number
   hashrateDisplay: string
+  smartContractsCount: number
   onNavigate: (view: string) => void
 }
 
@@ -22,6 +23,7 @@ function DashboardStatsGrid({
   miningUptimeLabel,
   minedBlocksCount,
   hashrateDisplay,
+  smartContractsCount,
   onNavigate
 }: DashboardStatsGridProps): JSX.Element {
   return (
@@ -79,8 +81,12 @@ function DashboardStatsGrid({
           </div>
           <span className="text-xs font-medium text-slate-500">Smart contracts</span>
         </div>
-        <p className="text-2xl font-bold text-slate-800 tracking-tight">0</p>
-        <p className="text-xs text-slate-400 mt-1">{isConnected ? '0 deployed by you' : '--'}</p>
+        <p className="text-2xl font-bold text-slate-800 tracking-tight">
+          {isConnected ? smartContractsCount : '0'}
+        </p>
+        <p className="text-xs text-slate-400 mt-1">
+          {isConnected ? `${smartContractsCount} deployed by you` : '--'}
+        </p>
       </div>
     </div>
   )

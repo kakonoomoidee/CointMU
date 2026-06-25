@@ -12,6 +12,7 @@ interface WalletHistoryFilterProps {
   value: HistoryFilter
   onChange: (filter: HistoryFilter) => void
   className?: string
+  compact?: boolean
 }
 
 const ALL_WALLETS_LABEL = 'All Wallets'
@@ -36,7 +37,8 @@ function WalletHistoryFilter({
   accounts,
   value,
   onChange,
-  className
+  className,
+  compact
 }: WalletHistoryFilterProps): JSX.Element {
   const options = [
     { value: HISTORY_FILTER_ALL, label: ALL_WALLETS_LABEL },
@@ -56,6 +58,7 @@ function WalletHistoryFilter({
       renderSelected={(opt) => <span>{opt?.label}</span>}
       renderOption={(opt) => <span>{opt.label}</span>}
       className={className}
+      compact={compact}
     />
   )
 }

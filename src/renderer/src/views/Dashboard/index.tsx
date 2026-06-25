@@ -3,6 +3,7 @@ import ms from 'ms'
 import { useRecentBlocks, useMiningStats, useMiningControls, usePagination } from '@/hooks'
 import { useAppStore, useMiningStore, useWalletUiStore } from '@/store'
 import { getTransactions } from '@/services/transactionService'
+import { CacheService } from '@/services/cacheService'
 import { type DerivedAccount } from '@/services'
 import { type ActivityData } from '@/views/Wallet/ActivityItem'
 import {
@@ -24,6 +25,7 @@ import { SkeletonCard, SkeletonList, Skeleton } from '@/components'
 
 const DASHBOARD_TICK_INTERVAL_MS = ms('5s')
 const ACTIVITY_PAGE_SIZE = 10
+const ACTIVITY_POLL_INTERVAL_MS = ms('30s')
 const PAST_HOUR_MS = ms('1h')
 const SPARKLINE_BUCKET_MS = ms('10m')
 const SPARKLINE_WINDOW_MS = ms('1h')
@@ -70,7 +72,21 @@ function Dashboard({ activeWalletAddress, accounts, onNavigate }: DashboardProps
       setActivity([])
       return
     }
-    getTransactions(addresses).then(setActivity)
+
+    const combinedKey = addresses.join(',')
+    const cached = CacheService.getActivity(combinedKey)
+    if (cached) {
+      setActivity(cached)
+    }
+
+    const fetcher = (): Promise<ActivityData[]> => getTransactions(addresses)
+    const onData = (data: ActivityData[]): void => setActivity(data)
+
+    CacheService.startActivityPolling(combinedKey, fetcher, onData, ACTIVITY_POLL_INTERVAL_MS)
+
+    return () => {
+      CacheService.stopActivityPolling(combinedKey)
+    }
   }, [historyKey])
 
   const activityPagination = usePagination(activity, ACTIVITY_PAGE_SIZE)
@@ -110,8 +126,11 @@ function Dashboard({ activeWalletAddress, accounts, onNavigate }: DashboardProps
 
   const localHashrateLabel = isConnected ? `${formatMhs(telemetry.hashrateMhs)} MH/s` : '0.00 MH/s'
   
-  const effectiveNetworkHashrate = (hashrate !== null && hashrate > 0) ? hashrate : telemetry.hashrateMhs * 1_000_000
-  const networkHashrateDisplay = isConnected ? formatHashrate(effectiveNetworkHashrate) : '0.00 H/s'
+  const TARGET_BLOCK_TIME_SECONDS = 30
+  const networkHashrateRaw = isConnected && difficulty !== null && difficulty > 0
+    ? difficulty / TARGET_BLOCK_TIME_SECONDS
+    : null
+  const networkHashrateDisplay = isConnected ? formatHashrate(networkHashrateRaw) : '0.00 H/s'
   
   const miningUptimeLabel = isConnected && telemetry.isMining ? 'Actively mining' : 'Miner idle'
 
@@ -119,6 +138,14 @@ function Dashboard({ activeWalletAddress, accounts, onNavigate }: DashboardProps
   const gasDisplay = isConnected && gasPriceGwei !== null ? gasPriceGwei : '0'
   const blockDisplay = isConnected ? formatBlockNumber(blockHeight) : '--'
   const peerDisplay = isConnected && peerCount !== null ? String(peerCount) : '--'
+
+  const smartContractsCount = activeWalletAddress
+    ? activity.filter(
+        (tx) =>
+          tx.from?.toLowerCase() === activeWalletAddress.toLowerCase() &&
+          !tx.to
+      ).length
+    : 0
 
   const abbrAddress = activeWalletAddress
     ? `${activeWalletAddress.substring(0, 6)}...${activeWalletAddress.substring(activeWalletAddress.length - 4)}`
@@ -211,6 +238,7 @@ function Dashboard({ activeWalletAddress, accounts, onNavigate }: DashboardProps
           miningUptimeLabel={miningUptimeLabel}
           minedBlocksCount={minedBlocksCount}
           hashrateDisplay={networkHashrateDisplay}
+          smartContractsCount={smartContractsCount}
           onNavigate={onNavigate}
         />
 

@@ -1,6 +1,7 @@
-import { type JSX, useState, useEffect, useCallback } from 'react'
+import { type JSX, useState, useEffect } from 'react'
 import { AccountIcon } from '@/components/AccountIcon'
 import { fetchMinerDistribution, type MinerEntry } from '@/utils/minerDistribution'
+import { CacheService } from '@/services/cacheService'
 import { IconActivity } from '@/assets/icons'
 
 const BAR_COLORS = [
@@ -89,12 +90,14 @@ function MinerRow({
   )
 }
 
+const MINER_POLL_INTERVAL_MS = 60_000
+
 /**
  * Card component that displays the share of blocks mined by different
- * addresses over the past 24-hour UTC window. Fetches and calculates
- * distribution data on mount and whenever the connection state changes.
- * The top 5 miners are displayed individually and the remainder is
- * grouped into an 'Others' row.
+ * addresses over the past 24-hour UTC window. Serves cached data immediately
+ * on mount to prevent layout shifts, then polls for fresh data every 60 seconds
+ * in the background. The polling interval is cleared on unmount to prevent
+ * memory leaks.
  * @param props - The active wallet address and network connection state.
  * @returns The rendered miner distribution card.
  */
@@ -102,26 +105,27 @@ export function MinerDistribution({
   activeWalletAddress,
   isConnected
 }: MinerDistributionProps): JSX.Element {
-  const [entries, setEntries] = useState<MinerEntry[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const cached = CacheService.getMinerDistribution()
+  const [entries, setEntries] = useState<MinerEntry[]>(cached ?? [])
+  const [isLoading, setIsLoading] = useState(cached === undefined)
 
-  const loadData = useCallback(async (): Promise<void> => {
+  useEffect(() => {
     if (!isConnected) {
       setIsLoading(false)
       return
     }
-    setIsLoading(true)
-    try {
-      const data = await fetchMinerDistribution()
+
+    const onData = (data: MinerEntry[]): void => {
       setEntries(data)
-    } finally {
       setIsLoading(false)
     }
-  }, [isConnected])
 
-  useEffect(() => {
-    void loadData()
-  }, [loadData])
+    CacheService.startMinerDistributionPolling(fetchMinerDistribution, onData, MINER_POLL_INTERVAL_MS)
+
+    return () => {
+      CacheService.stopMinerDistributionPolling()
+    }
+  }, [isConnected])
 
   const isEmpty = !isLoading && entries.length === 0
 

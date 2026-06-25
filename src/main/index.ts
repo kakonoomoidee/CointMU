@@ -320,6 +320,54 @@ function scheduleGethRestart(store: any): void {
 
 
 
+let isRecoveringFromCorruption = false;
+
+/**
+ * Handles automatic recovery from a corrupted Geth LevelDB ('chaindata').
+ * Immediately kills the corrupted process, purges the damaged state directory,
+ * re-initializes the genesis block, and natively respawns the node.
+ * Uses a global lock to prevent concurrent or infinite recovery loops.
+ * @param {any} store - The electron-store instance.
+ * @returns {Promise<void>}
+ */
+async function handleGethCorruption(store: any): Promise<void> {
+  if (isRecoveringFromCorruption) return;
+  isRecoveringFromCorruption = true;
+
+  console.warn('[geth:recovery] Corruption detected. Initiating self-healing protocol...');
+
+  BrowserWindow.getAllWindows().forEach((win) => {
+    win.webContents.send('node:recovery-started', 'Data recovery is in progress...');
+  });
+
+  if (gethRestartTimer) {
+    clearTimeout(gethRestartTimer);
+    gethRestartTimer = null;
+  }
+  intentionalGethShutdown = true;
+
+  if (gethProcess) {
+    gethProcess.kill('SIGKILL');
+    gethProcess = null;
+  }
+
+  try {
+    const chainDataPath = join(GETH_DATA_DIR, 'geth', 'chaindata');
+    if (existsSync(chainDataPath)) {
+      console.log(`[geth:recovery] Deleting corrupted chaindata at ${chainDataPath}`);
+      rmSync(chainDataPath, { recursive: true, force: true });
+    }
+    
+    await initGethIfNeeded(GETH_DATA_DIR);
+  } catch (error) {
+    console.error('[geth:recovery] Failed during recovery process:', error);
+  } finally {
+    isRecoveringFromCorruption = false;
+    intentionalGethShutdown = false;
+    void spawnGethProcess(store);
+  }
+}
+
 /**
  * Spawns the Core-geth binary as a managed child process with environment-driven
  * configuration for networking, RPC, and data storage. The configured bootnode
@@ -409,6 +457,24 @@ async function spawnGethProcess(store: any): Promise<void> {
     let stderrBuffer = "";
 
     /**
+     * Scans incoming log chunks for known LevelDB corruption signatures and
+     * asynchronously triggers the self-healing routine if detected.
+     * @param {string} output - The raw log chunk to scan.
+     * @returns {void}
+     */
+    const checkCorruption = (output: string): void => {
+      const lower = output.toLowerCase();
+      if (
+        lower.includes('corrupt') ||
+        lower.includes('missing or corrupted snapshot') ||
+        lower.includes('leveldb: not found') ||
+        lower.includes('fatal')
+      ) {
+        void handleGethCorruption(store);
+      }
+    };
+
+    /**
      * Accumulates a raw output chunk, parses only the complete lines into mining
      * log events, and retains any trailing partial line so a regex match is never
      * broken across chunk boundaries.
@@ -428,7 +494,9 @@ async function spawnGethProcess(store: any): Promise<void> {
     };
 
     gethProcess.stdout?.on("data", (data: Buffer) => {
-      console.log("[Geth Log]", data.toString());
+      const output = data.toString();
+      console.log("[Geth Log]", output);
+      checkCorruption(output);
       stdoutBuffer = consumeStream(stdoutBuffer, data);
     });
 
@@ -441,6 +509,7 @@ async function spawnGethProcess(store: any): Promise<void> {
     const handleGethStderr = (data: Buffer): void => {
       const output = data.toString();
       console.log("[Geth Log]", output);
+      checkCorruption(output);
       const dagMatch = output.match(/percentage=(\d+)/);
       if (dagMatch && dagMatch[1]) {
         BrowserWindow.getAllWindows().forEach((win) => {

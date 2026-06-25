@@ -63,7 +63,7 @@ function ActivityFeed({
 
       <div className="flex items-center justify-between mb-4">
         <p className="text-[10px] text-slate-400 font-mono">Aggregated transaction history</p>
-        <WalletHistoryFilter accounts={accounts} value={historyFilter} onChange={onFilterChange} />
+        <WalletHistoryFilter accounts={accounts} value={historyFilter} onChange={onFilterChange} className='w-32' compact />
       </div>
 
       <div className="space-y-0">
