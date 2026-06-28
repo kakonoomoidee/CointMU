@@ -1,12 +1,15 @@
 import { type ActivityData } from '@/views/Wallet/ActivityItem'
 import { type MinerEntry } from '@/utils/minerDistribution'
+import { type FoundBlock } from '@/store'
 
 const activityCache = new Map<string, ActivityData[]>()
 const tokenBalanceCache = new Map<string, Record<string, string>>()
 let minerDistributionCache: MinerEntry[] | undefined
+let foundBlocksCache: FoundBlock[] | undefined
 
 const activityPollingIntervals = new Map<string, ReturnType<typeof setInterval>>()
 let minerDistributionPollingInterval: ReturnType<typeof setInterval> | null = null
+let foundBlocksPollingInterval: ReturnType<typeof setInterval> | null = null
 
 /**
  * A lightweight, module-scoped in-memory cache service for wallet data and
@@ -154,6 +157,64 @@ export const CacheService = {
     if (minerDistributionPollingInterval !== null) {
       clearInterval(minerDistributionPollingInterval)
       minerDistributionPollingInterval = null
+    }
+  },
+
+  /**
+   * Retrieves the cached found blocks list.
+   * @returns The cached array of FoundBlock, or undefined if not yet populated.
+   */
+  getFoundBlocks: (): FoundBlock[] | undefined => {
+    return foundBlocksCache
+  },
+
+  /**
+   * Caches the found blocks list globally.
+   * @param data - The array of FoundBlock to cache.
+   * @returns void
+   */
+  setFoundBlocks: (data: FoundBlock[]): void => {
+    foundBlocksCache = data
+  },
+
+  /**
+   * Starts a single global background polling interval to refresh the found
+   * blocks dataset from the node. The fetcher is invoked immediately and then
+   * every `intervalMs` milliseconds. A second call while a poll is already
+   * running is a no-op to prevent duplicate intervals.
+   * @param fetcher - An async function that fetches and returns the latest found blocks.
+   * @param onData - A callback invoked with fresh data after each successful fetch.
+   * @param intervalMs - The polling cadence in milliseconds.
+   * @returns void
+   */
+  startFoundBlocksPolling: (
+    fetcher: () => Promise<FoundBlock[]>,
+    onData: (data: FoundBlock[]) => void,
+    intervalMs: number
+  ): void => {
+    if (foundBlocksPollingInterval !== null) return
+    const tick = async (): Promise<void> => {
+      try {
+        const data = await fetcher()
+        CacheService.setFoundBlocks(data)
+        onData(data)
+      } catch {
+        // Silently ignore polling errors to avoid disrupting the UI.
+      }
+    }
+    void tick()
+    foundBlocksPollingInterval = setInterval(() => { void tick() }, intervalMs)
+  },
+
+  /**
+   * Stops the global found blocks polling interval and clears the interval
+   * reference.
+   * @returns void
+   */
+  stopFoundBlocksPolling: (): void => {
+    if (foundBlocksPollingInterval !== null) {
+      clearInterval(foundBlocksPollingInterval)
+      foundBlocksPollingInterval = null
     }
   }
 }

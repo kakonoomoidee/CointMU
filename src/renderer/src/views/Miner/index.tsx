@@ -13,7 +13,6 @@ import {
   formatMhs,
   isWithinLastDay,
   getSafeConcurrency,
-  computeSharesData,
   formatRewards,
   formatDifficultyLabel,
   resolveHistoryAddresses,
@@ -33,7 +32,6 @@ interface MinerProps {
   onNavigate: (view: string, payload?: string) => void
 }
 
-const SHARES_WINDOW_SIZE = 60
 const FOUND_BLOCKS_PAGE_SIZE = 8
 
 /**
@@ -44,10 +42,9 @@ const FOUND_BLOCKS_PAGE_SIZE = 8
  * @param props - The active wallet address.
  * @returns The complete mining view with header, hero, KPI grid, and panels.
  */
-function Miner({ activeWalletAddress, accounts, onNavigate }: MinerProps): JSX.Element {
+function Miner({ accounts, onNavigate }: MinerProps): JSX.Element {
   const [maxCores] = useState<number>(getSafeConcurrency())
-  const activeTab = useState<string>(ACTIVITY_TAB_FOUND)[0]
-  const setActiveTab = useState<string>(ACTIVITY_TAB_FOUND)[1]
+  const [activeTab, setActiveTab] = useState<string>(ACTIVITY_TAB_FOUND)
 
   const blockHeight = useAppStore((s) => s.blockHeight)
   const isConnected = useAppStore((s) => s.isConnected)
@@ -94,10 +91,6 @@ function Miner({ activeWalletAddress, accounts, onNavigate }: MinerProps): JSX.E
   const formattedRewards = formatRewards(balance)
   const blocksFoundToday = scopedFoundBlocks.filter((block) => isWithinLastDay(block.timestamp)).length
   const difficultyLabel = formatDifficultyLabel(telemetry.difficulty)
-
-  const sharesData = computeSharesData(recentBlocks, SHARES_WINDOW_SIZE, activeWalletAddress)
-  const acceptedShares = sharesData.filter((share) => share === true).length
-  const networkShares = sharesData.filter((share) => share === false).length
 
   if (loading) {
     return (
@@ -184,9 +177,6 @@ function Miner({ activeWalletAddress, accounts, onNavigate }: MinerProps): JSX.E
             currentPage={foundBlocksPagination.currentPage}
             totalPages={foundBlocksPagination.totalPages}
             onPageChange={foundBlocksPagination.setPage}
-            sharesData={sharesData}
-            acceptedShares={acceptedShares}
-            networkShares={networkShares}
             accounts={accounts}
             historyFilter={historyFilter}
             onFilterChange={setHistoryFilter}

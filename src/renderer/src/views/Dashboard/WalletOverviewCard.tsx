@@ -5,6 +5,7 @@ interface WalletOverviewCardProps {
   balance: string
   abbrAddress: string
   activeWalletAddress: string | null
+  walletLabel: string
 }
 
 /**
@@ -16,7 +17,8 @@ interface WalletOverviewCardProps {
 function WalletOverviewCard({
   balance,
   abbrAddress,
-  activeWalletAddress
+  activeWalletAddress,
+  walletLabel
 }: WalletOverviewCardProps): JSX.Element {
   return (
     <div className="rounded-2xl bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 p-7 text-white relative overflow-hidden">
@@ -30,7 +32,7 @@ function WalletOverviewCard({
               <IconWallet className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-white/90">Main wallet</p>
+              <p className="text-sm font-semibold text-white/90">{walletLabel}</p>
               <p
                 className="text-xs text-white/60 font-mono"
                 title={activeWalletAddress || undefined}

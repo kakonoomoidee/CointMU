@@ -179,6 +179,11 @@ function Dashboard({
     ? `${activeWalletAddress.substring(0, 6)}...${activeWalletAddress.substring(activeWalletAddress.length - 4)}`
     : "--";
 
+  const activeAccount = accounts.find(
+    (account) => account.address.toLowerCase() === (activeWalletAddress ?? '').toLowerCase()
+  )
+  const walletLabel = activeAccount?.label ?? 'Wallet'
+
   /**
    * Opens the wallet receive flow by priming the wallet modal state and routing
    * the user to the wallet view.
@@ -256,6 +261,7 @@ function Dashboard({
             balance={balance}
             abbrAddress={abbrAddress}
             activeWalletAddress={activeWalletAddress}
+            walletLabel={walletLabel}
           />
           <NetworkHealthPanel
             isConnected={isConnected}
