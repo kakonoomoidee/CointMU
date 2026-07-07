@@ -4,9 +4,10 @@ import { ActivityItem, type ActivityData } from './ActivityItem'
 import { getTransactions } from '@/services/transactionService'
 import { TokenService, getTokenBalance, type TokenInfo } from '@/services/tokenService'
 import { CacheService } from '@/services/cacheService'
-import { AddTokenModal, TokenIcon, SkeletonList, SkeletonTable, Pagination } from '@/components'
+import { AddTokenModal, TokenIcon, SkeletonList, SkeletonTable, Pagination, NFTGrid } from '@/components'
 import { IconBolt, IconPlus } from '@/assets/icons'
 import { useAppStore, type PendingTransaction } from '@/store'
+import { useNFTFetcher } from '@/hooks/useNFTFetcher'
 
 type WalletTab = 'activity' | 'tokens' | 'nfts'
 
@@ -94,12 +95,13 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
   const [isAddTokenModalOpen, setIsAddTokenModalOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const pendingTransactions = useAppStore((s) => s.pendingTransactions)
+  const nftFetcher = useNFTFetcher(activeTab === 'nfts' ? activeWalletAddress : null)
 
   const pendingActivities = pendingTransactions
     .filter((tx) => tx.from === activeWalletAddress)
     .map(mapPendingToActivity)
   const activities = [...pendingActivities, ...transactions]
-  
+
   const itemsPerPage = 10
   const totalPages = Math.max(1, Math.ceil(activities.length / itemsPerPage))
   const paginatedActivities = activities.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
@@ -122,6 +124,7 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
       setIsFetchingActivity(false)
     })
   }, [activeWalletAddress])
+
 
   useEffect(() => {
     if (activeTab === 'tokens' && activeWalletAddress) {
@@ -179,6 +182,15 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
           >
             <IconPlus width={12} height={12} strokeWidth={2.5} />
             Add Token
+          </button>
+        )}
+        {activeTab === 'nfts' && (
+          <button
+            type='button'
+            onClick={nftFetcher.refresh}
+            className='flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all duration-150 shadow-sm'
+          >
+            Refresh
           </button>
         )}
       </div>
@@ -270,10 +282,25 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
       )}
 
       {activeTab === 'nfts' && (
-        <div className='rounded-2xl bg-white border border-slate-200'>
-          <div className='flex flex-col items-center justify-center py-16 text-center'>
-            <p className='text-sm font-medium text-slate-400'>No NFTs found</p>
-          </div>
+        <div>
+          {nftFetcher.isFetching ? (
+            <div className='rounded-2xl bg-white border border-slate-200'>
+              <div className='flex flex-col items-center justify-center py-16 text-center'>
+                <p className='text-sm font-medium text-slate-400'>Scanning blockchain for NFTs...</p>
+              </div>
+            </div>
+          ) : nftFetcher.nfts.length > 0 ? (
+            <NFTGrid nfts={nftFetcher.nfts} />
+          ) : (
+            <div className='rounded-2xl bg-white border border-slate-200'>
+              <div className='flex flex-col items-center justify-center py-16 text-center'>
+                <p className='text-sm font-medium text-slate-400'>No NFTs found</p>
+                {nftFetcher.error && (
+                  <p className='text-xs text-red-400 mt-1'>{nftFetcher.error}</p>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

@@ -10,6 +10,7 @@ import {
   formatBalance
 } from '@/services/rpcClient'
 
+
 const DISCONNECTED_BALANCE = '0.00'
 
 const HISTORY_FILTER_ALL = 'ALL'
@@ -50,8 +51,8 @@ interface AppState {
  * Builds the balances map for a set of addresses, mapping every address to the
  * disconnected placeholder. Used to keep the balances map shape stable while the
  * node is unreachable.
- * @param addresses - The wallet addresses currently tracked by the application.
- * @returns A record mapping each address to the disconnected balance string.
+ * @param {string[]} addresses - The wallet addresses currently tracked by the application.
+ * @returns {Record<string, string>} A record mapping each address to the disconnected balance string.
  */
 function buildEmptyBalances(addresses: string[]): Record<string, string> {
   return addresses.reduce<Record<string, string>>((acc, addr) => {
