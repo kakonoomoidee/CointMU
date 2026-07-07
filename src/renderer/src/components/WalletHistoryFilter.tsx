@@ -1,10 +1,11 @@
-import { type JSX } from 'react'
+import { useEffect, type JSX } from 'react'
 import { CustomDropdown } from './CustomDropdown'
 import { HISTORY_FILTER_ALL, type HistoryFilter } from '@/store'
 
 interface WalletHistoryFilterOption {
   address: string
   label?: string
+  isHidden?: boolean
 }
 
 interface WalletHistoryFilterProps {
@@ -19,8 +20,8 @@ const ALL_WALLETS_LABEL = 'All Wallets'
 
 /**
  * Abbreviates a wallet address for compact display in the filter dropdown.
- * @param address - The full wallet address.
- * @returns The shortened address label.
+ * @param {string} address - The full wallet address.
+ * @returns {string} The shortened address label.
  */
 function abbreviate(address: string): string {
   return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
@@ -28,10 +29,9 @@ function abbreviate(address: string): string {
 
 /**
  * Dropdown that drives the global history filter. It always offers an
- * aggregate 'All Wallets' option followed by one entry per owned wallet, so any
- * history surface can scope its data to all wallets or a single wallet.
- * @param props - The owned wallets, the current filter value, and the change handler.
- * @returns The rendered wallet history filter control.
+ * aggregate 'All Wallets' option followed by one entry per visible owned wallet.
+ * @param {WalletHistoryFilterProps} props - The owned wallets, the current filter value, and the change handler.
+ * @returns {JSX.Element} The rendered wallet history filter control.
  */
 function WalletHistoryFilter({
   accounts,
@@ -40,9 +40,20 @@ function WalletHistoryFilter({
   className,
   compact
 }: WalletHistoryFilterProps): JSX.Element {
+  useEffect(() => {
+    if (value !== HISTORY_FILTER_ALL) {
+      const activeAccount = accounts.find((acc) => acc.address === value)
+      if (!activeAccount || activeAccount.isHidden) {
+        onChange(HISTORY_FILTER_ALL)
+      }
+    }
+  }, [value, accounts, onChange])
+
+  const visibleAccounts = accounts.filter((account) => !account.isHidden)
+
   const options = [
     { value: HISTORY_FILTER_ALL, label: ALL_WALLETS_LABEL },
-    ...accounts.map((account) => ({
+    ...visibleAccounts.map((account) => ({
       value: account.address,
       label: account.label || abbreviate(account.address)
     }))

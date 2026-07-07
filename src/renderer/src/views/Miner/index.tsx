@@ -1,4 +1,4 @@
-import { useState, useEffect, type JSX } from 'react'
+import { useState, useMemo, type JSX } from 'react'
 import {
   useRecentBlocks,
   useMiningStats,
@@ -54,8 +54,15 @@ function Miner({ accounts, onNavigate }: MinerProps): JSX.Element {
   const setHistoryFilter = useAppStore((s) => s.setHistoryFilter)
   const recentBlocks = useRecentBlocks(blockHeight, isConnected)
 
-  const ownedAddresses = accounts.map((account) => account.address)
-  const historyAddresses = resolveHistoryAddresses(historyFilter, accounts)
+  const ownedAddresses = useMemo(
+    () => accounts.map((account) => account.address),
+    [accounts]
+  )
+
+  const historyAddresses = useMemo(
+    () => resolveHistoryAddresses(historyFilter, accounts),
+    [historyFilter, accounts]
+  )
 
   const { config, toggling, error, toggle } = useMiningControls()
   const telemetry = useMiningStats(config.cpuThreads)
@@ -69,9 +76,6 @@ function Miner({ accounts, onNavigate }: MinerProps): JSX.Element {
   const scopedFoundBlocks = filterFoundBlocks(foundBlocks, historyAddresses)
   const foundBlocksPagination = usePagination(scopedFoundBlocks, FOUND_BLOCKS_PAGE_SIZE)
 
-  useEffect(() => {
-    if (isMining) startMining()
-  }, [isMining, startMining])
 
   /**
    * Toggles the node miner while making the user's explicit start/stop the
@@ -89,7 +93,10 @@ function Miner({ accounts, onNavigate }: MinerProps): JSX.Element {
   const rewardAddress = config.poolAddress || ''
   const hashrateLabel = formatMhs(telemetry.hashrateMhs)
   const formattedRewards = formatRewards(balance)
-  const blocksFoundToday = scopedFoundBlocks.filter((block) => isWithinLastDay(block.timestamp)).length
+  const blocksFoundToday = useMemo(
+    () => scopedFoundBlocks.filter((block) => isWithinLastDay(block.timestamp)).length,
+    [scopedFoundBlocks]
+  )
   const difficultyLabel = formatDifficultyLabel(telemetry.difficulty)
 
   if (loading) {

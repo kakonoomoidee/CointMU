@@ -14,16 +14,22 @@ interface UpdaterStatePayload {
 }
 
 /**
- * Initializes the Electron auto-updater in manual-download mode and wires its
- * lifecycle events and renderer-facing IPC handlers. autoDownload is disabled so
- * the user explicitly triggers the download after an update has been found.
- * @param mainWindow - The main BrowserWindow used to forward update events.
+ * Initializes the Electron auto-updater with automatic download enabled and
+ * wires its lifecycle events and renderer-facing IPC handlers. When an update
+ * is downloaded it is installed immediately via quitAndInstall, restarting the
+ * application on the new version.
+ * @param {BrowserWindow} mainWindow - The main BrowserWindow used to forward update events.
  * @returns {void}
  */
 function initUpdater(mainWindow: BrowserWindow): void {
-  autoUpdater.autoDownload = false
+  autoUpdater.autoDownload = true
   autoUpdater.logger = console
 
+  /**
+   * Sends a structured updater state payload to the renderer process.
+   * @param {UpdaterStatePayload} payload - The update lifecycle payload to send.
+   * @returns {void}
+   */
   const send = (payload: UpdaterStatePayload): void => {
     if (!mainWindow.isDestroyed()) {
       mainWindow.webContents.send('updater:state', payload)
@@ -31,18 +37,24 @@ function initUpdater(mainWindow: BrowserWindow): void {
   }
 
   autoUpdater.on('checking-for-update', () => {
+    console.log('[updater] Checking for update...')
     send({ status: 'checking' })
   })
 
   autoUpdater.on('update-available', (info: UpdateInfo) => {
+    console.log(`[updater] Update available: ${info.version}`)
     send({ status: 'available', info: { version: info.version } })
   })
 
-  autoUpdater.on('update-not-available', () => {
+  autoUpdater.on('update-not-available', (info: UpdateInfo) => {
+    console.log(`[updater] Update not available. Current version: ${info.version}`)
     send({ status: 'not-available' })
   })
 
   autoUpdater.on('download-progress', (progress: ProgressInfo) => {
+    console.log(
+      `[updater] Download progress: ${progress.percent.toFixed(1)}% at ${progress.bytesPerSecond} B/s`
+    )
     send({
       status: 'downloading',
       progress: {
@@ -55,11 +67,15 @@ function initUpdater(mainWindow: BrowserWindow): void {
   })
 
   autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
+    console.log(`[updater] Update downloaded: ${info.version}. Restarting to apply update.`)
     send({ status: 'downloaded', info: { version: info.version } })
+    autoUpdater.quitAndInstall()
   })
 
   autoUpdater.on('error', (err: Error) => {
-    send({ status: 'error', error: err == null ? 'Update failed' : err.message })
+    const message = err == null ? 'Unknown update error' : err.message
+    console.error(`[updater] Error: ${message}`)
+    send({ status: 'error', error: message })
   })
 
   ipcMain.handle('updater:check', async () => {
@@ -86,6 +102,14 @@ function initUpdater(mainWindow: BrowserWindow): void {
   ipcMain.handle('updater:install', () => {
     autoUpdater.quitAndInstall()
   })
+
+  if (app.isPackaged) {
+    autoUpdater.checkForUpdatesAndNotify().catch((err: Error) => {
+      console.error('[updater] Initial update check failed:', err.message)
+    })
+  } else {
+    console.warn('[updater] Development mode: automatic update check skipped.')
+  }
 }
 
 export { initUpdater }
