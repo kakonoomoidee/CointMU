@@ -127,7 +127,8 @@
       "backgroundDesc": "Minimiert starten, damit Mining ohne Fenster laufen kann",
       "display": "Anzeige",
       "currencyTitle": "Standardwährung",
-      "currencyDesc": "Wird überall verwendet, wo Beträge angezeigt werden"
+      "currencyDesc": "Wird überall verwendet, wo Beträge angezeigt werden",
+      "title": "Allgemein"
     },
     "appearance": {
       "subtitle": "Passen Sie an, wie CointMU aussieht",
@@ -142,7 +143,8 @@
       "showSidebarColorsTitle": "Sidebar-Symbole farbig anzeigen",
       "showSidebarColorsDesc": "Netzwerkelemente in der Sidebar farblich hervorheben",
       "animatedTransitionsTitle": "Animierte Übergänge",
-      "animatedTransitionsDesc": "Reibungslose Seitenwechsel und Bewegungen"
+      "animatedTransitionsDesc": "Reibungslose Seitenwechsel und Bewegungen",
+      "title": "Erscheinungsbild"
     },
     "notifications": {
       "subtitle": "Warnungen, Lieferkanäle und Ereigniskategorien",
@@ -159,10 +161,15 @@
       "miningTitle": "Mining-Ereignisse",
       "miningDesc": "Gefundene Blöcke und Mining-Meilensteine",
       "securityTitle": "Sicherheitsereignisse",
-      "securityDesc": "Wallet-Sperre, Schlüsselanzeige und andere sensible Aktionen"
+      "securityDesc": "Wallet-Sperre, Schlüsselanzeige und andere sensible Aktionen",
+      "title": "Benachrichtigungen"
     },
-    "network": "Netzwerk",
-    "mining": "Mining",
+    "network": {
+      "title": "Netzwerk"
+    },
+    "mining": {
+      "title": "Mining"
+    },
     "security": {
       "subtitle": "Wallet-Sicherheit, Backups und Hardware-Schlüssel",
       "lock": "Sperren",
@@ -189,7 +196,8 @@
       "connect": "Verbinden",
       "resetTitle": "Wallet zurücksetzen",
       "resetDesc": "Entfernt alle Konten und Schlüssel von diesem Gerät. Kann nicht rückgängig gemacht werden.",
-      "resetBtn": "Zurücksetzen..."
+      "resetBtn": "Zurücksetzen...",
+      "title": "Sicherheit"
     },
     "connectedSites": {
       "title": "Verbundene Seiten",
@@ -197,7 +205,9 @@
       "noConnectedSitesTitle": "Keine verbundenen Seiten",
       "noConnectedSitesDesc": "Derzeit sind keine externen Anwendungen mit Ihrem CointMU-Wallet verbunden.",
       "readOnlyAccess": "Lesezugriff gewährt",
-      "revokeBtn": "Widerrufen"
+      "revokeBtn": "Widerrufen",
+      "emptyTitle": "Keine verbundenen Seiten",
+      "emptyDesc": "Derzeit sind keine externen Anwendungen mit Ihrem CointMU-Wallet verbunden."
     },
     "externalSources": {
       "title": "Externe Quellen",
@@ -205,7 +215,10 @@
       "companionTitle": "Companion-Browser-Erweiterung",
       "companionDesc": "Diese eigenständige Erweiterung überbrückt externe dApps zu Ihrem Desktop-Knoten. Laden Sie die mitgelieferte ZIP-Datei herunter und laden Sie sie entpackt in Ihren Browser, um Web3-Konnektivität zu aktivieren.",
       "downloadBtn": "ZIP herunterladen",
-      "savingBtn": "Speichern..."
+      "savingBtn": "Speichern...",
+      "extensionTitle": "Companion-Browser-Erweiterung",
+      "extensionDesc": "Diese eigenständige Erweiterung überbrückt externe dApps zu Ihrem Desktop-Knoten. Laden Sie die mitgelieferte ZIP-Datei herunter und laden Sie sie entpackt in Ihren Browser, um Web3-Konnektivität zu aktivieren.",
+      "download": "ZIP herunterladen"
     },
     "advanced": {
       "subtitle": "Entwickler-APIs, lokaler Speicher und Diagnose",
@@ -229,7 +242,10 @@
       "logLevelTitle": "Log-Level",
       "logLevelDesc": "Ausführlichkeit des Knotenprotokolls",
       "analyticsTitle": "Anonyme Analysedaten senden",
-      "analyticsDesc": "Helfen Sie, CointMU mit Fehlerberichten und Nutzungsdaten zu verbessern"
+      "analyticsDesc": "Helfen Sie, CointMU mit Fehlerberichten und Nutzungsdaten zu verbessern",
+      "title": "Erweitert",
+      "openDataTitle": "Datenordner öffnen",
+      "openDataDesc": "Das Datenverzeichnis im Datei-Explorer anzeigen"
     },
     "about": {
       "versionLine": "Version {{version}} (Build {{build}}) · {{platform}}",
@@ -271,7 +287,18 @@
       "chainWarning": "WARNUNG: Das Ändern der Ketten-ID wird Ihre bestehenden lokalen Blockchain-Daten dauerhaft LÖSCHEN und den Knoten neu starten. Sind Sie sich absolut sicher, dass Sie fortfahren möchten?",
       "chainSuccess": "Ketten-ID erfolgreich aktualisiert. Der Knoten startet mit einer frischen Blockchain neu.",
       "chainFailure": "Ketten-ID konnte nicht aktualisiert werden.",
-      "chainError": "Beim Festlegen der Ketten-ID ist ein Fehler aufgetreten."
+      "chainError": "Beim Festlegen der Ketten-ID ist ein Fehler aufgetreten.",
+      "title": "Über",
+      "checkUpdatesDesc": "Prüfen Sie, ob eine neuere Version verfügbar ist.",
+      "nodeVersion": "Knoten-Version",
+      "chainId": "Ketten-ID",
+      "edit": "Bearbeiten",
+      "connectedPeers": "Verbundene Peers",
+      "uptime": "Betriebszeit",
+      "documentationTitle": "Dokumentation",
+      "documentationDesc": "Leitfäden, API-Referenz, RPC-Schema",
+      "openLink": "Öffnen ›",
+      "reportIssueTitle": "Ein Problem melden"
     },
     "resetToDefaults": "Auf Standard zurücksetzen",
     "system": "System",
@@ -325,6 +352,23 @@
       "customAddress": "Benutzerdefinierte Adresse...",
       "selectWallet": "Wallet auswählen...",
       "customAddressPlaceholder": "0x..."
+    },
+    "securitySettings": {
+      "autoLockTitle": "Wallet automatisch sperren",
+      "autoLockDesc": "Schlüssel nach 5 Minuten Inaktivität sperren",
+      "seedPhraseTitle": "Wiederherstellungsphrase",
+      "seedPhraseDesc": "12-Wörter-Seed zur Wiederherstellung Ihres Wallets",
+      "reveal": "Anzeigen...",
+      "exportTitle": "Keystore exportieren",
+      "exportDesc": "Verschlüsselter JSON-Keystore für das Backup",
+      "export": "Exportieren",
+      "privateKeyTitle": "Privaten Schlüssel anzeigen",
+      "privateKeyDesc": "Entschlüsseln und den rohen privaten Schlüssel für ein Konto anzeigen",
+      "hardwareDesc": "Ledger-Gerät über USB verbinden",
+      "noUsb": "Kein USB erkannt",
+      "resetWalletTitle": "Wallet zurücksetzen",
+      "resetWalletDesc": "Entfernt alle Konten und Schlüssel von diesem Gerät. Kann nicht rückgängig gemacht werden.",
+      "resetWalletBtn": "Zurücksetzen..."
     }
   },
   "dashboard": {

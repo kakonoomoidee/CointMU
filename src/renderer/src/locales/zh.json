@@ -127,7 +127,8 @@
       "backgroundDesc": "以最小化状态启动，以便挖矿可以在没有窗口的情况下运行",
       "display": "显示",
       "currencyTitle": "默认货币",
-      "currencyDesc": "在所有显示金额的地方使用"
+      "currencyDesc": "在所有显示金额的地方使用",
+      "title": "常规"
     },
     "appearance": {
       "subtitle": "自定义 CointMU 外观",
@@ -142,7 +143,8 @@
       "showSidebarColorsTitle": "在侧边栏图标中显示颜色",
       "showSidebarColorsDesc": "用颜色强调侧边栏中的网络项目",
       "animatedTransitionsTitle": "动画过渡",
-      "animatedTransitionsDesc": "平滑的页面切换和运动"
+      "animatedTransitionsDesc": "平滑的页面切换和运动",
+      "title": "外观"
     },
     "notifications": {
       "subtitle": "警报、发送渠道和事件类别",
@@ -159,10 +161,15 @@
       "miningTitle": "挖矿事件",
       "miningDesc": "您封存的区块和挖矿里程碑",
       "securityTitle": "安全事件",
-      "securityDesc": "钱包锁定、密钥显示和其他敏感操作"
+      "securityDesc": "钱包锁定、密钥显示和其他敏感操作",
+      "title": "通知"
     },
-    "network": "网络",
-    "mining": "挖矿",
+    "network": {
+      "title": "网络"
+    },
+    "mining": {
+      "title": "挖矿"
+    },
     "security": {
       "subtitle": "钱包安全、备份和硬件密钥",
       "lock": "锁定",
@@ -189,7 +196,8 @@
       "connect": "连接",
       "resetTitle": "重置钱包",
       "resetDesc": "从该设备删除所有帐户和密钥。无法撤销。",
-      "resetBtn": "重置..."
+      "resetBtn": "重置...",
+      "title": "安全"
     },
     "connectedSites": {
       "title": "已连接的网站",
@@ -197,7 +205,9 @@
       "noConnectedSitesTitle": "没有连接的站点",
       "noConnectedSitesDesc": "目前没有任何外部应用程序连接到您的 CointMU 钱包。",
       "readOnlyAccess": "已授予只读权限",
-      "revokeBtn": "撤销"
+      "revokeBtn": "撤销",
+      "emptyTitle": "没有连接的站点",
+      "emptyDesc": "目前没有任何外部应用程序连接到您的 CointMU 钱包。"
     },
     "externalSources": {
       "title": "外部来源",
@@ -205,7 +215,10 @@
       "companionTitle": "伴侣浏览器扩展",
       "companionDesc": "此独立扩展可将外部 dApp 桥接到您的桌面节点。下载附带的 ZIP 文件并将其未打包地加载到您的浏览器中以启用 Web3 连接。",
       "downloadBtn": "下载 ZIP",
-      "savingBtn": "保存中..."
+      "savingBtn": "保存中...",
+      "extensionTitle": "伴侣浏览器扩展",
+      "extensionDesc": "此独立扩展可将外部 dApp 桥接到您的桌面节点。下载附带的 ZIP 文件并将其未打包地加载到您的浏览器中以启用 Web3 连接。",
+      "download": "下载 ZIP"
     },
     "advanced": {
       "subtitle": "开发人员 API、本地存储和诊断",
@@ -229,7 +242,10 @@
       "logLevelTitle": "日志级别",
       "logLevelDesc": "节点日志的详细程度",
       "analyticsTitle": "发送匿名分析",
-      "analyticsDesc": "通过崩溃报告和使用数据帮助改进 CointMU"
+      "analyticsDesc": "通过崩溃报告和使用数据帮助改进 CointMU",
+      "title": "高级",
+      "openDataTitle": "打开数据文件夹",
+      "openDataDesc": "在文件浏览器中显示数据目录"
     },
     "about": {
       "versionLine": "版本 {{version}} (build {{build}}) · {{platform}}",
@@ -271,7 +287,18 @@
       "chainWarning": "警告：更改链 ID 将永久擦除您现有的本地区块链数据并重启节点。您绝对确定要继续吗？",
       "chainSuccess": "链 ID 已成功更新。节点正在用全新的区块链重启。",
       "chainFailure": "未能更新链 ID。",
-      "chainError": "设置链 ID 时发生错误。"
+      "chainError": "设置链 ID 时发生错误。",
+      "title": "关于",
+      "checkUpdatesDesc": "检查是否有更新版本可用。",
+      "nodeVersion": "节点版本",
+      "chainId": "链 ID",
+      "edit": "编辑",
+      "connectedPeers": "已连接节点",
+      "uptime": "正常运行时间",
+      "documentationTitle": "文档",
+      "documentationDesc": "指南，API 参考，RPC 架构",
+      "openLink": "打开 ›",
+      "reportIssueTitle": "报告问题"
     },
     "resetToDefaults": "恢复默认值",
     "system": "系统",
@@ -325,6 +352,23 @@
       "customAddress": "自定义地址...",
       "selectWallet": "选择一个钱包...",
       "customAddressPlaceholder": "0x..."
+    },
+    "securitySettings": {
+      "autoLockTitle": "自动锁定钱包",
+      "autoLockDesc": "闲置 5 分钟后锁定密钥",
+      "seedPhraseTitle": "恢复短语",
+      "seedPhraseDesc": "用于恢复您的钱包的 12 词助记词",
+      "reveal": "显示...",
+      "exportTitle": "导出密钥库",
+      "exportDesc": "加密的 JSON 密钥库用于备份",
+      "export": "导出",
+      "privateKeyTitle": "显示私钥",
+      "privateKeyDesc": "解密并显示账户的原始私钥",
+      "hardwareDesc": "通过 USB 连接 Ledger 设备",
+      "noUsb": "未检测到 USB",
+      "resetWalletTitle": "重置钱包",
+      "resetWalletDesc": "从该设备删除所有帐户和密钥。无法撤销。",
+      "resetWalletBtn": "重置..."
     }
   },
   "dashboard": {

@@ -127,7 +127,8 @@
       "backgroundDesc": "Запускать свернутым, чтобы майнинг работал без окна",
       "display": "Отображение",
       "currencyTitle": "Валюта по умолчанию",
-      "currencyDesc": "Используется везде, где отображаются суммы"
+      "currencyDesc": "Используется везде, где отображаются суммы",
+      "title": "Общие"
     },
     "appearance": {
       "subtitle": "Настройте внешний вид CointMU",
@@ -142,7 +143,8 @@
       "showSidebarColorsTitle": "Показывать цветные значки в боковой панели",
       "showSidebarColorsDesc": "Выделять цветом элементы сети",
       "animatedTransitionsTitle": "Анимированные переходы",
-      "animatedTransitionsDesc": "Плавное переключение страниц"
+      "animatedTransitionsDesc": "Плавное переключение страниц",
+      "title": "Внешний вид"
     },
     "notifications": {
       "subtitle": "Оповещения, каналы доставки и категории событий",
@@ -159,10 +161,15 @@
       "miningTitle": "События майнинга",
       "miningDesc": "Найденные блоки и вехи майнинга",
       "securityTitle": "События безопасности",
-      "securityDesc": "Блокировка, показ ключа и другие действия"
+      "securityDesc": "Блокировка, показ ключа и другие действия",
+      "title": "Уведомления"
     },
-    "network": "Сеть",
-    "mining": "Майнинг",
+    "network": {
+      "title": "Сеть"
+    },
+    "mining": {
+      "title": "Майнинг"
+    },
     "security": {
       "subtitle": "Безопасность кошелька, резервные копии и аппаратные ключи",
       "lock": "Блокировка",
@@ -189,7 +196,8 @@
       "connect": "Подключить",
       "resetTitle": "Сбросить кошелек",
       "resetDesc": "Удаляет все аккаунты с этого устройства. Безвозвратно.",
-      "resetBtn": "Сбросить..."
+      "resetBtn": "Сбросить...",
+      "title": "Безопасность"
     },
     "connectedSites": {
       "title": "Подключенные сайты",
@@ -197,7 +205,9 @@
       "noConnectedSitesTitle": "Нет подключенных сайтов",
       "noConnectedSitesDesc": "Нет внешних приложений, подключенных к вашему кошельку.",
       "readOnlyAccess": "Доступ на чтение",
-      "revokeBtn": "Отозвать"
+      "revokeBtn": "Отозвать",
+      "emptyTitle": "Нет подключенных сайтов",
+      "emptyDesc": "Нет внешних приложений, подключенных к вашему кошельку."
     },
     "externalSources": {
       "title": "Внешние источники",
@@ -205,7 +215,10 @@
       "companionTitle": "Расширение для браузера",
       "companionDesc": "Мост для внешних dApp к вашему узлу. Скачайте ZIP-архив и загрузите распакованным.",
       "downloadBtn": "Скачать ZIP",
-      "savingBtn": "Сохранение..."
+      "savingBtn": "Сохранение...",
+      "extensionTitle": "Расширение для браузера",
+      "extensionDesc": "Мост для внешних dApp к вашему узлу. Скачайте ZIP-архив и загрузите распакованным.",
+      "download": "Скачать ZIP"
     },
     "advanced": {
       "subtitle": "API разработчика, хранилище и диагностика",
@@ -229,7 +242,10 @@
       "logLevelTitle": "Уровень логирования",
       "logLevelDesc": "Детальность журнала узла",
       "analyticsTitle": "Отправлять аналитику",
-      "analyticsDesc": "Помогите улучшить CointMU"
+      "analyticsDesc": "Помогите улучшить CointMU",
+      "title": "Дополнительно",
+      "openDataTitle": "Открыть папку данных",
+      "openDataDesc": "Показать в проводнике"
     },
     "about": {
       "versionLine": "Версия {{version}} (сборка {{build}}) · {{platform}}",
@@ -271,7 +287,18 @@
       "chainWarning": "ВНИМАНИЕ: Изменение ID цепи НАВСЕГДА удалит локальные данные блокчейна. Вы уверены?",
       "chainSuccess": "ID цепи успешно обновлен.",
       "chainFailure": "Не удалось обновить ID цепи.",
-      "chainError": "Произошла ошибка при установке ID цепи."
+      "chainError": "Произошла ошибка при установке ID цепи.",
+      "title": "О программе",
+      "checkUpdatesDesc": "Проверить наличие новой версии.",
+      "nodeVersion": "Версия узла",
+      "chainId": "ID цепи",
+      "edit": "Изменить",
+      "connectedPeers": "Подключенные узлы",
+      "uptime": "Время работы",
+      "documentationTitle": "Документация",
+      "documentationDesc": "Руководства, API, схема RPC",
+      "openLink": "Открыть ›",
+      "reportIssueTitle": "Сообщить о проблеме"
     },
     "resetToDefaults": "Сбросить настройки",
     "system": "Система",
@@ -325,6 +352,23 @@
       "customAddress": "Пользовательский адрес...",
       "selectWallet": "Выберите кошелек...",
       "customAddressPlaceholder": "0x..."
+    },
+    "securitySettings": {
+      "autoLockTitle": "Автоблокировка кошелька",
+      "autoLockDesc": "Блокировать ключи после 5 минут бездействия",
+      "seedPhraseTitle": "Фраза восстановления",
+      "seedPhraseDesc": "12 слов для восстановления кошелька",
+      "reveal": "Показать...",
+      "exportTitle": "Экспорт keystore",
+      "exportDesc": "Зашифрованный JSON keystore",
+      "export": "Экспорт",
+      "privateKeyTitle": "Показать приватный ключ",
+      "privateKeyDesc": "Расшифровать и показать сырой ключ",
+      "hardwareDesc": "Подключить устройство Ledger по USB",
+      "noUsb": "USB не обнаружен",
+      "resetWalletTitle": "Сбросить кошелек",
+      "resetWalletDesc": "Удаляет все аккаунты с этого устройства. Безвозвратно.",
+      "resetWalletBtn": "Сбросить..."
     }
   },
   "dashboard": {

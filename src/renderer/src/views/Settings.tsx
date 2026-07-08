@@ -240,7 +240,7 @@ function Settings({ initialCategory = 'general' }: SettingsProps = {}): JSX.Elem
               <div className={`${activeCategory === cat.id ? 'text-blue-500' : 'text-slate-400'}`}>
                 {cat.icon}
               </div>
-              {t(`settings.${cat.id}`)}
+              {t(`settings.${cat.id}.title`)}
             </button>
           ))}
         </div>

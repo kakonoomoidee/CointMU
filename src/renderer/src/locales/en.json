@@ -127,7 +127,8 @@
       "backgroundDesc": "Start minimized so mining can run without a window",
       "display": "Display",
       "currencyTitle": "Default currency",
-      "currencyDesc": "Used everywhere amounts are shown"
+      "currencyDesc": "Used everywhere amounts are shown",
+      "title": "General"
     },
     "appearance": {
       "subtitle": "Customize how CointMU looks",
@@ -142,7 +143,8 @@
       "showSidebarColorsTitle": "Show sidebar icons in color",
       "showSidebarColorsDesc": "Accent network items by color in the sidebar",
       "animatedTransitionsTitle": "Animated transitions",
-      "animatedTransitionsDesc": "Smooth page changes and motion"
+      "animatedTransitionsDesc": "Smooth page changes and motion",
+      "title": "Appearance"
     },
     "notifications": {
       "subtitle": "Alerts, delivery channels, and event categories",
@@ -159,10 +161,15 @@
       "miningTitle": "Mining events",
       "miningDesc": "Blocks you seal and mining milestones",
       "securityTitle": "Security events",
-      "securityDesc": "Wallet lock, key reveal, and other sensitive actions"
+      "securityDesc": "Wallet lock, key reveal, and other sensitive actions",
+      "title": "Notifications"
     },
-    "network": "Network",
-    "mining": "Mining",
+    "network": {
+      "title": "Network"
+    },
+    "mining": {
+      "title": "Mining"
+    },
     "security": {
       "subtitle": "Wallet security, backups, and hardware keys",
       "lock": "Lock",
@@ -189,7 +196,8 @@
       "connect": "Connect",
       "resetTitle": "Reset wallet",
       "resetDesc": "Removes all accounts and keys from this device. Cannot be undone.",
-      "resetBtn": "Reset..."
+      "resetBtn": "Reset...",
+      "title": "Security"
     },
     "connectedSites": {
       "title": "Connected Sites",
@@ -197,7 +205,9 @@
       "noConnectedSitesTitle": "No connected sites",
       "noConnectedSitesDesc": "No external applications are currently connected to your CointMU wallet.",
       "readOnlyAccess": "Read-only access granted",
-      "revokeBtn": "Revoke"
+      "revokeBtn": "Revoke",
+      "emptyTitle": "No connected sites",
+      "emptyDesc": "No external applications are currently connected to your CointMU wallet."
     },
     "externalSources": {
       "title": "External Sources",
@@ -205,7 +215,10 @@
       "companionTitle": "Companion Browser Extension",
       "companionDesc": "This standalone extension bridges external dApps to your desktop node. Download the bundled ZIP file and load it unpacked into your browser to enable Web3 connectivity.",
       "downloadBtn": "Download ZIP",
-      "savingBtn": "Saving..."
+      "savingBtn": "Saving...",
+      "extensionTitle": "Companion Browser Extension",
+      "extensionDesc": "This standalone extension bridges external dApps to your desktop node. Download the bundled ZIP file and load it unpacked into your browser to enable Web3 connectivity.",
+      "download": "Download ZIP"
     },
     "advanced": {
       "subtitle": "Developer APIs, local storage, and diagnostics",
@@ -229,7 +242,10 @@
       "logLevelTitle": "Log level",
       "logLevelDesc": "Verbosity of the node log",
       "analyticsTitle": "Send anonymous analytics",
-      "analyticsDesc": "Help improve CointMU with crash reports and usage data"
+      "analyticsDesc": "Help improve CointMU with crash reports and usage data",
+      "title": "Advanced",
+      "openDataTitle": "Open data folder",
+      "openDataDesc": "Reveal the datadir in your file explorer"
     },
     "about": {
       "versionLine": "Version {{version}} (build {{build}}) · {{platform}}",
@@ -271,7 +287,18 @@
       "chainWarning": "WARNING: Changing the Chain ID will permanently WIPE your existing local blockchain data and restart the node. Are you absolutely sure you want to proceed?",
       "chainSuccess": "Chain ID updated successfully. The node is restarting with a fresh blockchain.",
       "chainFailure": "Failed to update the Chain ID.",
-      "chainError": "An error occurred while setting the Chain ID."
+      "chainError": "An error occurred while setting the Chain ID.",
+      "title": "About",
+      "checkUpdatesDesc": "Check whether a newer version is available.",
+      "nodeVersion": "Node version",
+      "chainId": "Chain ID",
+      "edit": "Edit",
+      "connectedPeers": "Connected peers",
+      "uptime": "Uptime",
+      "documentationTitle": "Documentation",
+      "documentationDesc": "Guides, API reference, RPC schema",
+      "openLink": "Open ›",
+      "reportIssueTitle": "Report an issue"
     },
     "resetToDefaults": "Reset to defaults",
     "system": "System",
@@ -325,6 +352,23 @@
       "customAddress": "Custom address...",
       "selectWallet": "Select a wallet...",
       "customAddressPlaceholder": "0x..."
+    },
+    "securitySettings": {
+      "autoLockTitle": "Auto-lock wallet",
+      "autoLockDesc": "Lock keys after 5 minutes of inactivity",
+      "seedPhraseTitle": "Recovery phrase",
+      "seedPhraseDesc": "12-word seed used to restore your wallet",
+      "reveal": "Reveal...",
+      "exportTitle": "Export keystore",
+      "exportDesc": "Encrypted JSON keystore for backup",
+      "export": "Export",
+      "privateKeyTitle": "Reveal private key",
+      "privateKeyDesc": "Decrypt and display the raw private key for an account",
+      "hardwareDesc": "Connect a Ledger device via USB",
+      "noUsb": "No USB detected",
+      "resetWalletTitle": "Reset wallet",
+      "resetWalletDesc": "Removes all accounts and keys from this device. Cannot be undone.",
+      "resetWalletBtn": "Reset..."
     }
   },
   "dashboard": {
