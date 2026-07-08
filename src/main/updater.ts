@@ -24,6 +24,8 @@ interface UpdaterStatePayload {
 function initUpdater(mainWindow: BrowserWindow): void {
   autoUpdater.autoDownload = true
   autoUpdater.logger = console
+  autoUpdater.allowPrerelease = true
+  autoUpdater.allowDowngrade = false
 
   /**
    * Sends a structured updater state payload to the renderer process.
