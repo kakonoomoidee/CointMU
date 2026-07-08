@@ -18,6 +18,14 @@ interface UpdaterEvent {
   error?: string
 }
 
+interface DappRequest {
+  id: number
+  method: string
+  params: unknown[]
+  tabId: number
+  origin: string
+}
+
 interface CointmuAPI {
   getRpcPort: () => Promise<number>
   getCpuUsage: () => Promise<number>
@@ -91,6 +99,10 @@ interface CointmuAPI {
         message: string
       }) => void
     ) => () => void
+  }
+  dapp: {
+    onDappRequest: (callback: (payload: DappRequest) => void) => () => void
+    sendDappResponse: (payload: { id: number; tabId: number; approved: boolean; result?: unknown }) => void
   }
 }
 

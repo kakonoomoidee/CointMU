@@ -1,0 +1,73 @@
+import { type JSX } from 'react'
+import { useConnectedSitesStore } from '@/store'
+import { IconGlobe, IconLink } from '@/assets/icons'
+
+/**
+ * Settings view panel that displays the list of whitelisted dApp origins.
+ * Allows the user to view currently connected sites and manually revoke
+ * their access. Revoking a site removes it from the connectedSites store,
+ * meaning any future JSON-RPC requests from that origin will either prompt
+ * the approval modal (for connection requests) or be automatically rejected
+ * as unauthorized.
+ * @returns {JSX.Element} The rendered settings panel component.
+ */
+function ConnectedSitesSettings(): JSX.Element {
+  const connectedSites = useConnectedSitesStore((s) => s.connectedSites)
+  const removeConnectedSite = useConnectedSitesStore((s) => s.removeConnectedSite)
+
+  return (
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <div>
+        <h2 className="text-xl font-bold text-slate-800">Connected Sites</h2>
+        <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+          These third-party applications have been granted read-only access to your 
+          active wallet address, network state, and chain data. They can interact 
+          with your wallet without triggering the approval modal for standard reads.
+        </p>
+      </div>
+
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+        {connectedSites.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
+            <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-100">
+              <IconLink width={24} height={24} className="text-slate-300" />
+            </div>
+            <h3 className="text-sm font-semibold text-slate-700">No connected sites</h3>
+            <p className="text-xs text-slate-500 mt-1 max-w-[250px]">
+              No external applications are currently connected to your CointMU wallet.
+            </p>
+          </div>
+        ) : (
+          <ul className="divide-y divide-slate-100">
+            {connectedSites.map((origin) => (
+              <li key={origin} className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0">
+                    <IconGlobe width={20} height={20} className="text-blue-500" />
+                  </div>
+                  <div className="overflow-hidden">
+                    <p className="text-sm font-semibold text-slate-800 truncate" title={origin}>
+                      {origin}
+                    </p>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      Read-only access granted
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeConnectedSite(origin)}
+                  className="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 hover:border-red-200 rounded-lg transition-colors ml-4 flex-shrink-0"
+                >
+                  Revoke
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export { ConnectedSitesSettings }

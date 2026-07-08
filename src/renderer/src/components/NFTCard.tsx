@@ -1,12 +1,12 @@
-import { type JSX } from 'react'
-import Avatar from 'boring-avatars'
+import { type JSX } from "react";
+import Avatar from "boring-avatars";
 
 export interface NFTCardProps {
-  name: string
-  subtitle: string
-  imageUrl: string
-  standard: 'ERC-721' | 'ERC-1155'
-  tokenHash: string
+  name: string;
+  subtitle: string;
+  imageUrl: string;
+  standard: "ERC-721" | "ERC-1155";
+  tokenHash: string;
 }
 
 /**
@@ -19,36 +19,39 @@ export interface NFTCardProps {
  * @param {NFTCardProps} props - The NFT metadata and unique token hash to display.
  * @returns {JSX.Element} The rendered NFT card component.
  */
-function NFTCard({ name, subtitle, imageUrl, standard, tokenHash }: NFTCardProps): JSX.Element {
+function NFTCard({
+  name,
+  subtitle,
+  imageUrl,
+  standard,
+  tokenHash,
+}: NFTCardProps): JSX.Element {
   return (
-    <div className='flex flex-col rounded-xl overflow-hidden bg-white shadow-sm border border-gray-100'>
-      <div className='relative w-full h-48'>
+    <div className="flex flex-col rounded-xl overflow-hidden bg-white shadow-sm border border-gray-100">
+      <div className="relative w-full h-48 overflow-hidden">
         {imageUrl ? (
-          <img src={imageUrl} alt={name} className='h-full w-full object-cover' />
+          <img
+            src={imageUrl}
+            alt={name}
+            className="h-full w-full object-cover"
+          />
         ) : (
-          <div className='h-full w-full overflow-hidden'>
-            <Avatar
-              size='100%'
-              name={tokenHash}
-              variant='marble'
-              square
-            />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Avatar size={500} name={tokenHash} variant="marble" square />
           </div>
         )}
-        <div className='absolute top-3 right-3 bg-black/40 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded-md'>
+        <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded-md">
           {standard}
         </div>
       </div>
-      <div className='p-4 bg-white flex flex-col gap-1'>
-        <span className='text-black font-bold text-base truncate'>
-          {name}
-        </span>
-        <span className='text-gray-500 text-sm font-medium truncate'>
+      <div className="px-4 pt-2 pb-2 bg-white flex flex-col">
+        <span className="text-black font-bold text-base truncate">{name}</span>
+        <span className="text-gray-500 text-sm font-medium truncate">
           {subtitle}
         </span>
       </div>
     </div>
-  )
+  );
 }
 
-export { NFTCard }
+export { NFTCard };

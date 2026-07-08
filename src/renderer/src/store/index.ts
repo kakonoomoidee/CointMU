@@ -22,3 +22,9 @@ export type { SecuritySettings } from './useSecurityStore'
 
 export { useAdvancedStore } from './useAdvancedStore'
 export type { AdvancedSettings, StorageInfo } from './useAdvancedStore'
+
+export { useDappStore } from './useDappStore'
+export type { DappRequest } from './useDappStore'
+
+export { useConnectedSitesStore } from './useConnectedSitesStore'
+

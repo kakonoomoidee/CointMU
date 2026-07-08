@@ -11,7 +11,8 @@ import {
   useAdvancedStore
 } from '@/store'
 
-import { Sidebar, ToastViewport } from '@/components'
+import { Sidebar, ToastViewport, DappApprovalModal } from '@/components'
+import { useDappRequestHandler } from '@/hooks'
 
 const Miner = lazy(() => import('@/views/Miner').then((m) => ({ default: m.Miner })))
 const Explorer = lazy(() => import('@/views/Explorer').then((m) => ({ default: m.Explorer })))
@@ -47,6 +48,8 @@ function App(): JSX.Element {
     void useSecurityStore.getState().hydrate()
     void useAdvancedStore.getState().hydrate()
   }, [])
+
+  useDappRequestHandler()
 
   const handleNavigate = (view: string, payload?: any) => {
     setActiveView(view as ActiveView)
@@ -108,6 +111,7 @@ function App(): JSX.Element {
 
   return (
     <div className="flex h-full bg-slate-50">
+      <DappApprovalModal />
       <ToastViewport />
       <Sidebar
         accounts={accounts}

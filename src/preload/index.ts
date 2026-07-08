@@ -132,6 +132,18 @@ const api = {
       ipcRenderer.on('mining:log-event', handler)
       return () => ipcRenderer.removeListener('mining:log-event', handler)
     }
+  },
+  dapp: {
+    onDappRequest: (callback: (payload: { id: number; method: string; params: unknown[]; tabId: number; origin: string }) => void) => {
+      const handler = (_: any, payload: { id: number; method: string; params: unknown[]; tabId: number; origin: string }): void => {
+        callback(payload)
+      }
+      ipcRenderer.on('dapp:request', handler)
+      return () => ipcRenderer.removeListener('dapp:request', handler)
+    },
+    sendDappResponse: (payload: { id: number; tabId: number; approved: boolean; result?: unknown }) => {
+      ipcRenderer.send('dapp:response', payload)
+    }
   }
 }
 

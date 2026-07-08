@@ -16,6 +16,7 @@ import { GENESIS_BLOCK, type GenesisBlock } from './genesis';
 import ms from "ms";
 import { callGethRpc } from './rpcUtils';
 import { scanWalletActivity, fetchNetworkInsights } from './activityScanner';
+import { startDappWsServer } from './dappWsServer';
 
 config({ path: join(app.getAppPath(), ".env") });
 
@@ -1030,10 +1031,16 @@ app.whenReady().then(async () => {
   initUpdater(win);
   miningController.setWindow(win);
 
+  const dappServer = startDappWsServer(win);
+
   app.on("activate", function () {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
+  });
+
+  app.on('before-quit', () => {
+    dappServer.close();
   });
 });
 

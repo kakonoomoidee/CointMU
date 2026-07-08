@@ -4,6 +4,7 @@ import { AppearanceSettings } from '@/components/settings/AppearanceSettings'
 import { NetworkSettings } from '@/components/settings/NetworkSettings'
 import { MiningSettings } from '@/components/settings/MiningSettings'
 import { SecuritySettings } from '@/components/settings/SecuritySettings'
+import { ConnectedSitesSettings } from '@/components/settings/ConnectedSitesSettings'
 import { AdvancedSettings } from '@/components/settings/AdvancedSettings'
 import { AboutSettings } from '@/components/settings/AboutSettings'
 import { NotificationSettings } from '@/components/settings/NotificationSettings'
@@ -16,10 +17,11 @@ import {
   IconLock,
   IconSettings,
   IconBox,
-  IconBell
+  IconBell,
+  IconGlobe
 } from '@/assets/icons'
 
-export type SettingsCategory = 'general' | 'appearance' | 'notifications' | 'network' | 'mining' | 'security' | 'advanced' | 'about'
+export type SettingsCategory = 'general' | 'appearance' | 'notifications' | 'network' | 'mining' | 'security' | 'connectedSites' | 'advanced' | 'about'
 
 const CATEGORIES: { id: SettingsCategory; label: string; icon: JSX.Element }[] = [
   {
@@ -62,6 +64,13 @@ const CATEGORIES: { id: SettingsCategory; label: string; icon: JSX.Element }[] =
     label: 'Security',
     icon: (
       <IconLock width={16} height={16} />
+    )
+  },
+  {
+    id: 'connectedSites',
+    label: 'Connected Sites',
+    icon: (
+      <IconGlobe width={16} height={16} />
     )
   },
   {
@@ -245,6 +254,9 @@ function Settings({ initialCategory = 'general' }: SettingsProps = {}): JSX.Elem
             )}
             {activeCategory === 'security' && (
               <SecuritySettings />
+            )}
+            {activeCategory === 'connectedSites' && (
+              <ConnectedSitesSettings />
             )}
             {activeCategory === 'advanced' && (
               <AdvancedSettings />
