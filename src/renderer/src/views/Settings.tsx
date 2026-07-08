@@ -5,6 +5,7 @@ import { NetworkSettings } from '@/components/settings/NetworkSettings'
 import { MiningSettings } from '@/components/settings/MiningSettings'
 import { SecuritySettings } from '@/components/settings/SecuritySettings'
 import { ConnectedSitesSettings } from '@/components/settings/ConnectedSitesSettings'
+import { ExternalSourceSettings } from '@/components/settings/ExternalSourceSettings'
 import { AdvancedSettings } from '@/components/settings/AdvancedSettings'
 import { AboutSettings } from '@/components/settings/AboutSettings'
 import { NotificationSettings } from '@/components/settings/NotificationSettings'
@@ -18,10 +19,11 @@ import {
   IconSettings,
   IconBox,
   IconBell,
-  IconGlobe
+  IconGlobe,
+  IconDownload
 } from '@/assets/icons'
 
-export type SettingsCategory = 'general' | 'appearance' | 'notifications' | 'network' | 'mining' | 'security' | 'connectedSites' | 'advanced' | 'about'
+export type SettingsCategory = 'general' | 'appearance' | 'notifications' | 'network' | 'mining' | 'security' | 'connectedSites' | 'externalSources' | 'advanced' | 'about'
 
 const CATEGORIES: { id: SettingsCategory; label: string; icon: JSX.Element }[] = [
   {
@@ -71,6 +73,13 @@ const CATEGORIES: { id: SettingsCategory; label: string; icon: JSX.Element }[] =
     label: 'Connected Sites',
     icon: (
       <IconGlobe width={16} height={16} />
+    )
+  },
+  {
+    id: 'externalSources',
+    label: 'External Sources',
+    icon: (
+      <IconDownload width={16} height={16} />
     )
   },
   {
@@ -257,6 +266,9 @@ function Settings({ initialCategory = 'general' }: SettingsProps = {}): JSX.Elem
             )}
             {activeCategory === 'connectedSites' && (
               <ConnectedSitesSettings />
+            )}
+            {activeCategory === 'externalSources' && (
+              <ExternalSourceSettings />
             )}
             {activeCategory === 'advanced' && (
               <AdvancedSettings />

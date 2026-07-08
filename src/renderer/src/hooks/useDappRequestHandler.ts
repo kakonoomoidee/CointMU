@@ -2,8 +2,6 @@ import { useEffect } from 'react'
 import { useDappStore, useConnectedSitesStore, useAppStore } from '@/store'
 import { resolveApprovalResult } from '@/utils/dappRpcResolver'
 
-const UNAUTHORIZED_CODE = 4100
-
 /**
  * Custom hook that listens to the main process for incoming dApp JSON-RPC
  * requests and applies the 'Connected Sites' access control logic.

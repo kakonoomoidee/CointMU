@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain, powerMonitor, dialog } from "electron";
 import { join } from "path";
 import { existsSync, writeFileSync, rmSync } from "fs";
-import { readdir, stat, readFile, writeFile, rm, mkdir } from "fs/promises";
+import { readdir, stat, readFile, writeFile, rm, mkdir, copyFile } from "fs/promises";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import { spawn, ChildProcess } from "child_process";
 import { lookup } from 'node:dns/promises';
@@ -926,6 +926,35 @@ app.whenReady().then(async () => {
       }
     },
   );
+
+  ipcMain.handle('export-extension-zip', async () => {
+    const sourcePath = app.isPackaged
+      ? join(process.resourcesPath, 'extension.zip')
+      : join(app.getAppPath(), 'resources', 'extension.zip');
+
+    if (!existsSync(sourcePath)) {
+      console.error('[export] Extension ZIP not found at:', sourcePath);
+      return false;
+    }
+
+    const result = await dialog.showSaveDialog({
+      title: 'Export Companion Browser Extension',
+      defaultPath: 'CointMU-Extension.zip',
+      filters: [{ name: 'ZIP Archive', extensions: ['zip'] }],
+    });
+
+    if (result.canceled || !result.filePath) {
+      return false;
+    }
+
+    try {
+      await copyFile(sourcePath, result.filePath);
+      return true;
+    } catch (err) {
+      console.error('[export] Failed to copy extension ZIP:', err);
+      return false;
+    }
+  });
 
   ipcMain.handle('wallet:clearAllData', () => {
     try {

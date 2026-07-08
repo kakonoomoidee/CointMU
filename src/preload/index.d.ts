@@ -68,6 +68,7 @@ interface CointmuAPI {
     filename: string
   ) => Promise<{ success: boolean; path?: string; canceled?: boolean; error?: string }>
   clearAllData: () => Promise<{ success: boolean; error?: string }>
+  exportExtensionZip: () => Promise<boolean>
   getDatadir: () => Promise<string>
   getChainDbSize: () => Promise<number>
   openDataFolder: () => Promise<string>

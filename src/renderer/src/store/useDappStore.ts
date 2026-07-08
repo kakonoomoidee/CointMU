@@ -9,6 +9,7 @@ interface DappRequest {
   method: string
   params: unknown[]
   tabId: number
+  origin: string
 }
 
 /**
