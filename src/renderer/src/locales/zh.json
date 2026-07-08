@@ -368,7 +368,10 @@
       "noUsb": "未检测到 USB",
       "resetWalletTitle": "重置钱包",
       "resetWalletDesc": "从该设备删除所有帐户和密钥。无法撤销。",
-      "resetWalletBtn": "重置..."
+      "resetWalletBtn": "重置...",
+      "access": "访问",
+      "backup": "备份",
+      "hardware": "硬件"
     }
   },
   "dashboard": {

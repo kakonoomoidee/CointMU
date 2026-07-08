@@ -368,7 +368,10 @@
       "noUsb": "No USB detected",
       "resetWalletTitle": "Reset wallet",
       "resetWalletDesc": "Removes all accounts and keys from this device. Cannot be undone.",
-      "resetWalletBtn": "Reset..."
+      "resetWalletBtn": "Reset...",
+      "access": "Access",
+      "backup": "Backup",
+      "hardware": "Hardware"
     }
   },
   "dashboard": {

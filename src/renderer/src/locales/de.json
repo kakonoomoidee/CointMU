@@ -368,7 +368,10 @@
       "noUsb": "Kein USB erkannt",
       "resetWalletTitle": "Wallet zurücksetzen",
       "resetWalletDesc": "Entfernt alle Konten und Schlüssel von diesem Gerät. Kann nicht rückgängig gemacht werden.",
-      "resetWalletBtn": "Zurücksetzen..."
+      "resetWalletBtn": "Zurücksetzen...",
+      "access": "Zugriff",
+      "backup": "Sicherung",
+      "hardware": "Hardware"
     }
   },
   "dashboard": {

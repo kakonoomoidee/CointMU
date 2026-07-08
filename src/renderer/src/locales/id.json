@@ -368,7 +368,10 @@
       "noUsb": "Tidak ada USB yang terdeteksi",
       "resetWalletTitle": "Reset dompet",
       "resetWalletDesc": "Menghapus semua akun dan kunci dari perangkat ini. Tidak dapat dibatalkan.",
-      "resetWalletBtn": "Reset..."
+      "resetWalletBtn": "Reset...",
+      "access": "Akses",
+      "backup": "Cadangan",
+      "hardware": "Perangkat Keras"
     }
   },
   "dashboard": {

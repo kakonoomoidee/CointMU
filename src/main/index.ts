@@ -25,7 +25,7 @@ const NODE_RESTART_DELAY_MS = ms('1s');
 const GETH_RESTART_DELAY_MS = ms('2s');
 const BOOTNODE_DNS_RETRY_MS = ms('30s');
 
-const GETH_GRACEFUL_TIMEOUT_MS = ms('10s');
+const GETH_GRACEFUL_TIMEOUT_MS = ms('15s');
 
 const MAX_PORT_SCAN_ATTEMPTS = 50;
 
@@ -68,7 +68,7 @@ function buildGenesis(): GenesisBlock {
     config: { ...GENESIS_BLOCK.config, chainId: Number(GETH_NETWORK_ID) },
   };
 }
-const GETH_DATA_DIR = join(process.cwd(), "data", "cointmu");
+const GETH_DATA_DIR = join(app.getPath('userData'), 'cointmu-chaindata');
 const GETH_BOOTNODE_ENODE = process.env.GETH_BOOTNODE_ENODE || "";
 
 let intentionalGethShutdown = false;
@@ -83,9 +83,7 @@ let pendingBootnodeEnode: string | null = null;
  * @returns {string} The absolute data directory path.
  */
 function resolveDataDir(): string {
-  return GETH_DATA_DIR.startsWith(".")
-    ? join(app.getPath("userData"), GETH_DATA_DIR)
-    : GETH_DATA_DIR;
+  return GETH_DATA_DIR;
 }
 
 /**

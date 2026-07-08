@@ -368,7 +368,10 @@
       "noUsb": "No se detectó USB",
       "resetWalletTitle": "Restablecer billetera",
       "resetWalletDesc": "Elimina cuentas y claves de este dispositivo. No se puede deshacer.",
-      "resetWalletBtn": "Restablecer..."
+      "resetWalletBtn": "Restablecer...",
+      "access": "Acceso",
+      "backup": "Copia de seguridad",
+      "hardware": "Hardware"
     }
   },
   "dashboard": {

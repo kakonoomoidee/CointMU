@@ -368,7 +368,10 @@
       "noUsb": "USB не обнаружен",
       "resetWalletTitle": "Сбросить кошелек",
       "resetWalletDesc": "Удаляет все аккаунты с этого устройства. Безвозвратно.",
-      "resetWalletBtn": "Сбросить..."
+      "resetWalletBtn": "Сбросить...",
+      "access": "Доступ",
+      "backup": "Резервное копирование",
+      "hardware": "Оборудование"
     }
   },
   "dashboard": {
