@@ -83,7 +83,7 @@ let pendingBootnodeEnode: string | null = null;
  * @returns {string} The absolute data directory path.
  */
 function resolveDataDir(): string {
-  return GETH_DATA_DIR;
+  return join(GETH_DATA_DIR, GETH_NETWORK_ID);
 }
 
 /**
@@ -1010,10 +1010,6 @@ app.whenReady().then(async () => {
       await killGethProcess();
 
       const dataDir = resolveDataDir();
-      const chainDataPath = join(dataDir, 'geth', 'chaindata');
-      if (existsSync(chainDataPath)) {
-        rmSync(chainDataPath, { recursive: true, force: true });
-      }
 
       setTimeout(async () => {
         try {

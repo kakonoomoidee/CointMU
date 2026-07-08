@@ -245,7 +245,10 @@
       "analyticsDesc": "Help improve CointMU with crash reports and usage data",
       "title": "Advanced",
       "openDataTitle": "Open data folder",
-      "openDataDesc": "Reveal the datadir in your file explorer"
+      "openDataDesc": "Reveal the datadir in your file explorer",
+      "purgeWalletsBtn": "Remove secondary accounts",
+      "purgeWalletsConfirm": "Are you sure? This will delete all non-primary accounts from this device.",
+      "purgeSuccess": "Secondary accounts removed."
     },
     "about": {
       "versionLine": "Version {{version}} (build {{build}}) · {{platform}}",
@@ -327,7 +330,9 @@
       "syncModeTitle": "Sync mode",
       "syncModeDesc": "Snap downloads pruned state quickly. Full validates every block from genesis",
       "pruneTitle": "Prune old state",
-      "pruneDesc": "Keep last 128 blocks of historical state to save disk"
+      "pruneDesc": "Keep last 128 blocks of historical state to save disk",
+      "switchingNetwork": "Switching network... Please wait.",
+      "restartRequired": "Node restarting to connect to the new network."
     },
     "miningSettings": {
       "subtitle": "Manage internal node mining behavior",

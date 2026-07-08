@@ -1,5 +1,5 @@
 import { Wallet, HDNodeWallet } from 'ethers'
-import { getSetting } from './settingsService'
+import { getSetting, setSetting } from './settingsService'
 
 export interface DerivedAccount {
   index: number
@@ -203,4 +203,15 @@ export function generateIdenticonGradient(address: string): string {
   // Ensure positive index
   const index = Math.abs(hash) % GRADIENTS.length
   return GRADIENTS[index]
+}
+
+/**
+ * Purges all secondary wallets, keeping only the primary wallet at index 0.
+ * @returns A promise that resolves when the secondary accounts are removed.
+ */
+export async function purgeSecondaryAccounts(): Promise<void> {
+  const accounts = await getSetting<DerivedAccount[]>('accounts')
+  if (accounts && accounts.length > 0) {
+    await setSetting('accounts', [accounts[0]])
+  }
 }

@@ -1,4 +1,4 @@
-import type { JSX } from 'react'
+import { useState, type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { SettingsStore } from '@/views/Settings'
 import { CustomDropdown } from '@/components/CustomDropdown'
@@ -31,6 +31,22 @@ interface NetworkSettingsProps {
  */
 export function NetworkSettings({ config, onUpdate }: NetworkSettingsProps): JSX.Element {
   const { t } = useTranslation()
+  const [isSwitching, setIsSwitching] = useState(false)
+
+  const handleNetworkSwitch = async (val: string): Promise<void> => {
+    onUpdate('network', val)
+    
+    let chainId = 1912
+    if (val.includes('7013')) chainId = 7013
+    else if (val.includes('Localhost')) chainId = 1337
+    
+    setIsSwitching(true)
+    try {
+      await window.api.network.setChainId(chainId)
+    } finally {
+      setIsSwitching(false)
+    }
+  }
 
   return (
     <div>
@@ -49,11 +65,17 @@ export function NetworkSettings({ config, onUpdate }: NetworkSettingsProps): JSX
                 <CustomDropdown<string>
                   options={NETWORK_OPTIONS}
                   selected={config.network}
-                  onSelect={(val) => onUpdate('network', val)}
+                  onSelect={handleNetworkSwitch}
                   renderSelected={(selected) => selected || NETWORK_OPTIONS[0]}
                   renderOption={(option) => option}
                   compact
                 />
+                {isSwitching && (
+                  <div className="mt-3 text-[11px] text-blue-600 font-medium animate-pulse bg-blue-50 p-2 rounded border border-blue-100">
+                    <p>{t('settings.networkSettings.switchingNetwork')}</p>
+                    <p className="mt-0.5 opacity-80">{t('settings.networkSettings.restartRequired')}</p>
+                  </div>
+                )}
               </div>
             </div>
 

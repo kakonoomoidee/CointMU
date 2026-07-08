@@ -245,7 +245,10 @@
       "analyticsDesc": "Bantu perbaiki CointMU dengan laporan kerusakan dan data penggunaan",
       "title": "Lanjutan",
       "openDataTitle": "Buka folder data",
-      "openDataDesc": "Tampilkan datadir di penjelajah berkas Anda"
+      "openDataDesc": "Tampilkan datadir di penjelajah berkas Anda",
+      "purgeWalletsBtn": "Hapus akun sekunder",
+      "purgeWalletsConfirm": "Apakah Anda yakin? Ini akan menghapus semua akun non-utama dari perangkat ini.",
+      "purgeSuccess": "Akun sekunder telah dihapus."
     },
     "about": {
       "versionLine": "Versi {{version}} (build {{build}}) · {{platform}}",
@@ -327,7 +330,9 @@
       "syncModeTitle": "Mode sinkronisasi",
       "syncModeDesc": "Snap mengunduh status terpangkas dengan cepat. Full memvalidasi setiap blok dari genesis",
       "pruneTitle": "Pangkas status lama",
-      "pruneDesc": "Simpan 128 blok status historis terakhir untuk menghemat disk"
+      "pruneDesc": "Simpan 128 blok status historis terakhir untuk menghemat disk",
+      "switchingNetwork": "Mengganti jaringan... Harap tunggu.",
+      "restartRequired": "Node sedang di-restart untuk terhubung ke jaringan baru."
     },
     "miningSettings": {
       "subtitle": "Kelola perilaku penambangan node internal",

@@ -245,7 +245,10 @@
       "analyticsDesc": "Ayuda a mejorar CointMU con informes de fallos y uso",
       "title": "Avanzado",
       "openDataTitle": "Abrir carpeta de datos",
-      "openDataDesc": "Revelar el directorio en tu explorador de archivos"
+      "openDataDesc": "Revelar el directorio en tu explorador de archivos",
+      "purgeWalletsBtn": "Eliminar cuentas secundarias",
+      "purgeWalletsConfirm": "¿Estás seguro? Esto eliminará todas las cuentas no principales de este dispositivo.",
+      "purgeSuccess": "Cuentas secundarias eliminadas."
     },
     "about": {
       "versionLine": "Versión {{version}} (build {{build}}) · {{platform}}",
@@ -327,7 +330,9 @@
       "syncModeTitle": "Modo de sincronización",
       "syncModeDesc": "Snap descarga estado podado rápidamente. Full valida cada bloque desde la génesis",
       "pruneTitle": "Podar estado antiguo",
-      "pruneDesc": "Mantener últimos 128 bloques de estado histórico para ahorrar disco"
+      "pruneDesc": "Mantener últimos 128 bloques de estado histórico para ahorrar disco",
+      "switchingNetwork": "Cambiando de red... Por favor, espere.",
+      "restartRequired": "El nodo se está reiniciando para conectarse a la nueva red."
     },
     "miningSettings": {
       "subtitle": "Gestionar el comportamiento de minería del nodo interno",

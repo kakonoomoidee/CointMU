@@ -245,7 +245,10 @@
       "analyticsDesc": "通过崩溃报告和使用数据帮助改进 CointMU",
       "title": "高级",
       "openDataTitle": "打开数据文件夹",
-      "openDataDesc": "在文件浏览器中显示数据目录"
+      "openDataDesc": "在文件浏览器中显示数据目录",
+      "purgeWalletsBtn": "删除辅助账户",
+      "purgeWalletsConfirm": "您确定吗？这将从此设备中删除所有非主要账户。",
+      "purgeSuccess": "已删除辅助账户。"
     },
     "about": {
       "versionLine": "版本 {{version}} (build {{build}}) · {{platform}}",
@@ -327,7 +330,9 @@
       "syncModeTitle": "同步模式",
       "syncModeDesc": "快照（Snap）快速下载修剪状态。完整（Full）从创世区块验证每个区块",
       "pruneTitle": "修剪旧状态",
-      "pruneDesc": "保留最近 128 个区块的历史状态以节省磁盘空间"
+      "pruneDesc": "保留最近 128 个区块的历史状态以节省磁盘空间",
+      "switchingNetwork": "正在切换网络...请稍候。",
+      "restartRequired": "节点正在重新启动以连接到新网络。"
     },
     "miningSettings": {
       "subtitle": "管理内部节点挖矿行为",

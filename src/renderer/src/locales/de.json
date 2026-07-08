@@ -245,7 +245,10 @@
       "analyticsDesc": "Helfen Sie, CointMU mit Fehlerberichten und Nutzungsdaten zu verbessern",
       "title": "Erweitert",
       "openDataTitle": "Datenordner öffnen",
-      "openDataDesc": "Das Datenverzeichnis im Datei-Explorer anzeigen"
+      "openDataDesc": "Das Datenverzeichnis im Datei-Explorer anzeigen",
+      "purgeWalletsBtn": "Sekundäre Konten entfernen",
+      "purgeWalletsConfirm": "Sind Sie sicher? Dadurch werden alle nicht primären Konten von diesem Gerät gelöscht.",
+      "purgeSuccess": "Sekundäre Konten entfernt."
     },
     "about": {
       "versionLine": "Version {{version}} (Build {{build}}) · {{platform}}",
@@ -327,7 +330,9 @@
       "syncModeTitle": "Sync-Modus",
       "syncModeDesc": "Snap lädt bereinigten Zustand schnell herunter. Full validiert jeden Block ab Genesis",
       "pruneTitle": "Alten Zustand bereinigen",
-      "pruneDesc": "Die letzten 128 Blöcke des historischen Zustands behalten, um Speicherplatz zu sparen"
+      "pruneDesc": "Die letzten 128 Blöcke des historischen Zustands behalten, um Speicherplatz zu sparen",
+      "switchingNetwork": "Netzwerk wechseln... Bitte warten.",
+      "restartRequired": "Knoten wird neu gestartet, um sich mit dem neuen Netzwerk zu verbinden."
     },
     "miningSettings": {
       "subtitle": "Internes Node-Mining-Verhalten verwalten",

@@ -2,6 +2,7 @@ import { useEffect, useState, type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAdvancedStore } from '@/store'
 import { CustomDropdown } from '@/components/CustomDropdown'
+import { purgeSecondaryAccounts } from '@/services/walletService'
 
 const LOG_LEVELS = ['Info', 'Debug', 'Warn', 'Error']
 
@@ -44,6 +45,13 @@ export function AdvancedSettings(): JSX.Element {
   const handleCorsBlur = (): void => {
     if (corsDraft !== settings.corsOrigins) {
       updateSettings({ corsOrigins: corsDraft })
+    }
+  }
+
+  const handlePurge = async (): Promise<void> => {
+    if (window.confirm(t('settings.advanced.purgeWalletsConfirm'))) {
+      await purgeSecondaryAccounts()
+      alert(t('settings.advanced.purgeSuccess'))
     }
   }
 
@@ -166,6 +174,24 @@ export function AdvancedSettings(): JSX.Element {
                 className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${settings.analytics ? 'bg-emerald-500' : 'bg-slate-200'}`}
               >
                 <div className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${settings.analytics ? 'translate-x-5' : 'translate-x-0'}`} />
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-red-500 mb-3">Danger Zone</h3>
+          <div className="bg-white border border-red-100 rounded-xl shadow-sm">
+            <div className="flex items-center justify-between p-4">
+              <div>
+                <p className="text-sm font-bold text-red-600">{t('settings.advanced.purgeWalletsBtn')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.advanced.purgeWalletsConfirm')}</p>
+              </div>
+              <button
+                onClick={() => void handlePurge()}
+                className="px-4 py-2 bg-red-50 border border-red-200 hover:bg-red-100 rounded-lg text-xs font-bold text-red-700 shadow-sm transition-colors"
+              >
+                {t('settings.advanced.purgeWalletsBtn')}
               </button>
             </div>
           </div>
