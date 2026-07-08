@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { QRCodeSVG } from 'qrcode.react'
 import { type DerivedAccount } from '@/services'
 import { IconCheck, IconCopy } from '@/assets/icons'
@@ -16,11 +17,13 @@ interface ReceiveModalProps {
  * @returns The rendered receive modal body.
  */
 function ReceiveModal({ activeAccount, copied, onCopy }: ReceiveModalProps): JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <div className="p-8 text-center">
-      <h3 className="text-xl font-bold text-slate-800 mb-2">Receive CMU</h3>
+      <h3 className="text-xl font-bold text-slate-800 mb-2">{t('wallet.modals.receive.title')}</h3>
       <p className="text-sm text-slate-500 mb-8">
-        Scan this QR code or copy the address below to receive funds.
+        {t('wallet.modals.receive.subtitle')}
       </p>
 
       <div className="mx-auto w-56 h-56 bg-white border-2 border-slate-100 rounded-2xl p-4 shadow-sm mb-8 flex items-center justify-center">
@@ -31,7 +34,7 @@ function ReceiveModal({ activeAccount, copied, onCopy }: ReceiveModalProps): JSX
 
       <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 mb-6">
         <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-1">
-          Your Address
+          {t('wallet.modals.receive.yourAddress')}
         </p>
         <p className="text-sm font-mono text-slate-800 break-all">{activeAccount?.address}</p>
       </div>
@@ -45,7 +48,7 @@ function ReceiveModal({ activeAccount, copied, onCopy }: ReceiveModalProps): JSX
         ) : (
           <IconCopy width={16} height={16} strokeWidth={2.5} />
         )}
-        {copied ? 'Address Copied!' : 'Copy Address'}
+        {copied ? t('wallet.modals.receive.copiedBtn') : t('wallet.modals.receive.copyBtn')}
       </button>
     </div>
   )

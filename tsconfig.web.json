@@ -3,11 +3,13 @@
   "include": [
     "src/renderer/src/**/*",
     "src/renderer/src/**/*.tsx",
+    "src/renderer/src/**/*.json",
     "src/preload/*.d.ts"
   ],
   "compilerOptions": {
     "composite": true,
     "jsx": "react-jsx",
+    "resolveJsonModule": true,
     "outDir": "./out/renderer",
     "rootDir": "./src/renderer/src",
     "baseUrl": ".",

@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Card } from '@/components'
 import { generateIdenticonGradient } from '@/services'
 
@@ -23,19 +24,21 @@ function WorkerConfiguration({
   intensity,
   rewardAddress
 }: WorkerConfigurationProps): JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <Card>
       <div className="mb-1">
-        <h3 className="text-sm font-bold text-slate-800">Worker configuration</h3>
-        <p className="text-[10px] text-slate-400 mt-0.5">Current internal node configuration</p>
+        <h3 className="text-sm font-bold text-slate-800">{t('mining.worker.title')}</h3>
+        <p className="text-[10px] text-slate-400 mt-0.5">{t('mining.worker.subtitle')}</p>
       </div>
 
       <div className="divide-y divide-slate-100 mt-4 opacity-80 pointer-events-none">
         <div className="flex items-center justify-between py-4">
           <div>
-            <p className="text-sm font-semibold text-slate-700">Worker threads</p>
+            <p className="text-sm font-semibold text-slate-700">{t('mining.worker.workerThreads')}</p>
             <p className="text-xs text-slate-400 mt-0.5">
-              {cpuThreads} of {maxCores} cores
+              {cpuThreads} {t('mining.worker.ofCores', { count: maxCores })}
             </p>
           </div>
           <div className="flex items-center gap-1">
@@ -51,9 +54,9 @@ function WorkerConfiguration({
 
         <div className="flex items-center justify-between py-4">
           <div>
-            <p className="text-sm font-semibold text-slate-700">Intensity</p>
+            <p className="text-sm font-semibold text-slate-700">{t('mining.worker.intensityTitle')}</p>
             <p className="text-xs text-slate-400 mt-0.5 max-w-[140px]">
-              Higher = more heat, faster solves
+              {t('mining.worker.higherMoreHeat')}
             </p>
           </div>
           <div className="flex items-center rounded-lg border border-slate-200 overflow-hidden">
@@ -72,8 +75,8 @@ function WorkerConfiguration({
 
         <div className="flex items-center justify-between py-4">
           <div>
-            <p className="text-sm font-semibold text-slate-700">Reward address</p>
-            <p className="text-xs text-slate-400 mt-0.5">Block rewards are credited here</p>
+            <p className="text-sm font-semibold text-slate-700">{t('mining.worker.rewardAddressTitle')}</p>
+            <p className="text-xs text-slate-400 mt-0.5">{t('mining.worker.blockRewardsCreditedHere')}</p>
           </div>
           {rewardAddress ? (
             <div className="flex items-center gap-3">
@@ -85,7 +88,7 @@ function WorkerConfiguration({
               </span>
             </div>
           ) : (
-            <span className="text-xs font-medium text-slate-400">Set in Mining Settings</span>
+            <span className="text-xs font-medium text-slate-400">{t('mining.worker.setInMiningSettings')}</span>
           )}
         </div>
       </div>

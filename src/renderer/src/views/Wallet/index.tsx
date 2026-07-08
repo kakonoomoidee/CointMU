@@ -1,4 +1,5 @@
 import { useEffect, useState, type JSX, type MouseEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import ms from 'ms'
 import {
   deriveAccount,
@@ -44,6 +45,7 @@ function Wallet({
   activeWalletAddress,
   setActiveWalletAddress
 }: WalletProps): JSX.Element {
+  const { t } = useTranslation()
   const balance = useAppStore((s) => s.balance)
   const balances = useAppStore((s) => s.balances)
   const [activeTab, setActiveTab] = useState<WalletTab>('activity')
@@ -113,20 +115,20 @@ function Wallet({
   const handleHDDerivation = async (): Promise<void> => {
     try {
       const encryptedPayload = await getSetting<string | null>('encryptedPayload')
-      if (!encryptedPayload) throw new Error('Not unlocked')
+      if (!encryptedPayload) throw new Error(t('wallet.index.notUnlocked'))
 
       const password = getSessionPassword()
-      if (!password) throw new Error('Wallet is locked. Please log in again.')
+      if (!password) throw new Error(t('wallet.index.walletLocked'))
 
       const secretKey = await decryptSecret(encryptedPayload, password)
       const newIndex = accounts.length
 
       let newAccount: DerivedAccount
       if (secretKey.split(' ').length === 12) {
-        newAccount = deriveAccount(secretKey, newIndex, `Account ${newIndex + 1}`)
+        newAccount = deriveAccount(secretKey, newIndex, t('wallet.index.accountLabel', { index: newIndex + 1 }))
       } else {
         const randomWallet = ethers.Wallet.createRandom()
-        newAccount = deriveAccountFromPrivateKey(randomWallet.privateKey, `Account ${newIndex + 1}`)
+        newAccount = deriveAccountFromPrivateKey(randomWallet.privateKey, t('wallet.index.accountLabel', { index: newIndex + 1 }))
         newAccount.encryptedKey = await encryptSecret(randomWallet.privateKey, password)
       }
 
@@ -144,15 +146,15 @@ function Wallet({
       setAddAccountError('')
       let newAccount: DerivedAccount
       const password = getSessionPassword()
-      if (!password) throw new Error('Wallet is locked. Please log in again.')
+      if (!password) throw new Error(t('wallet.index.walletLocked'))
 
       if (addAccountType === 'IMPORT_PK') {
         const pk =
           !importInput.startsWith('0x') && importInput.length === 64 ? '0x' + importInput : importInput
-        newAccount = deriveAccountFromPrivateKey(pk, 'Imported Account')
+        newAccount = deriveAccountFromPrivateKey(pk, t('wallet.index.importedAccount'))
         newAccount.encryptedKey = await encryptSecret(pk, password)
       } else if (addAccountType === 'IMPORT_SEED') {
-        newAccount = deriveAccount(importInput, 0, 'Imported Seed Account')
+        newAccount = deriveAccount(importInput, 0, t('wallet.index.importedSeedAccount'))
         newAccount.encryptedKey = await encryptSecret(importInput, password)
       } else {
         return
@@ -165,7 +167,7 @@ function Wallet({
       await handleAccountSwitch(newAccount.address)
       setModalState('NONE')
     } catch (e) {
-      setAddAccountError(e instanceof Error ? e.message : 'Failed to add account')
+      setAddAccountError(e instanceof Error ? e.message : t('wallet.index.failedToAdd'))
     }
   }
 
@@ -190,7 +192,7 @@ function Wallet({
       return
     }
 
-    const newAccount = deriveAccountFromPrivateKey(privateKey, 'Imported Account')
+    const newAccount = deriveAccountFromPrivateKey(privateKey, t('wallet.index.importedAccount'))
     newAccount.encryptedKey = await encryptSecret(privateKey, password)
 
     const updatedAccounts = [...accounts, newAccount]

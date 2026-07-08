@@ -1,4 +1,5 @@
 import { useEffect, useState, type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import ms from 'ms'
 import {
   generateMnemonic,
@@ -36,6 +37,7 @@ interface OnboardingProps {
  * @returns The onboarding screen component.
  */
 export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
+  const { t } = useTranslation()
   const step = useOnboardingStore((s) => s.step)
   const importMethod = useOnboardingStore((s) => s.importMethod)
   const hasExistingWallet = useOnboardingStore((s) => s.hasExistingWallet)
@@ -102,20 +104,20 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
 
   const handleLogin = async (): Promise<void> => {
     if (!password) {
-      setError('Please enter your password')
+      setError(t('onboarding.errors.enterPassword'))
       return
     }
 
     try {
       const encryptedPayload = await getSetting<string | null>('encryptedPayload')
       if (!encryptedPayload) {
-        setError('Wallet data corrupted. Please import again.')
+        setError(t('onboarding.errors.corruptedData'))
         return
       }
 
       const valid = await verifyPassword(encryptedPayload, password)
       if (!valid) {
-        setError('Invalid password')
+        setError(t('onboarding.errors.invalidPassword'))
         return
       }
 
@@ -124,20 +126,20 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
         unlockSession(password)
         onComplete(activeAddress)
       } else {
-        setError('Wallet data corrupted. Please import again.')
+        setError(t('onboarding.errors.corruptedData'))
       }
     } catch {
-      setError('Failed to decrypt wallet')
+      setError(t('onboarding.errors.failedDecrypt'))
     }
   }
 
   const handleSaveWallet = async (secretKey: string, isPrivateKey: boolean): Promise<void> => {
     if (password.length < MIN_PASSWORD_LENGTH) {
-      setError('Password must be at least 8 characters')
+      setError(t('onboarding.errors.passwordLength'))
       return
     }
     if (password !== confirmPassword) {
-      setError('Passwords do not match')
+      setError(t('onboarding.errors.passwordsMismatch'))
       return
     }
 
@@ -156,7 +158,7 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
       unlockSession(password)
       onComplete(firstAccount.address)
     } catch {
-      setError('Failed to generate account from the provided credentials')
+      setError(t('onboarding.errors.failedGenerate'))
     }
   }
 

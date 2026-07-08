@@ -1,4 +1,5 @@
 import { type JSX, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { type OnboardingStep, type ImportMethod } from '@/store'
 import { IconBolt } from '@/assets/icons'
 
@@ -15,42 +16,43 @@ interface StepCopy {
 
 /**
  * Resolves the title and subtitle copy for the current onboarding step.
+ * @param t - The translation function.
  * @param step - The active onboarding step.
  * @param importMethod - The selected import method, used to vary import copy.
  * @returns The title and subtitle strings for the step.
  */
-function getStepCopy(step: OnboardingStep, importMethod: ImportMethod): StepCopy {
+function getStepCopy(t: any, step: OnboardingStep, importMethod: ImportMethod): StepCopy {
   switch (step) {
     case 'initial':
       return {
-        title: 'Welcome to CointMU',
-        subtitle: 'The decentralized, gasless, and zero-storage WebRTC P2P protocol client.'
+        title: t('onboarding.shell.welcomeTitle'),
+        subtitle: t('onboarding.shell.welcomeSubtitle')
       }
     case 'login':
-      return { title: 'Welcome Back', subtitle: 'Unlock your encrypted wallet to continue.' }
+      return { title: t('onboarding.shell.welcomeBackTitle'), subtitle: t('onboarding.shell.welcomeBackSubtitle') }
     case 'create-seed':
       return {
-        title: 'Secret Recovery Phrase',
-        subtitle: 'Write down these 12 words in order. Never share them with anyone.'
+        title: t('onboarding.shell.secretRecoveryTitle'),
+        subtitle: t('onboarding.shell.secretRecoverySubtitle')
       }
     case 'create-password':
     case 'import-password':
       return {
-        title: 'Create a Password',
-        subtitle: 'This password encrypts your private keys locally on this device.'
+        title: t('onboarding.shell.createPasswordTitle'),
+        subtitle: t('onboarding.shell.createPasswordSubtitle')
       }
     case 'import-method':
       return {
-        title: 'Import Wallet',
-        subtitle: 'Select how you want to recover your existing wallet.'
+        title: t('onboarding.shell.importWalletTitle'),
+        subtitle: t('onboarding.shell.importWalletSubtitle')
       }
     case 'import-input':
       return {
-        title: importMethod === 'seed' ? 'Enter Seed Phrase' : 'Enter Private Key',
+        title: importMethod === 'seed' ? t('onboarding.shell.enterSeedTitle') : t('onboarding.shell.enterPrivateKeyTitle'),
         subtitle:
           importMethod === 'seed'
-            ? 'Paste your 12-word seed phrase.'
-            : 'Paste your raw hex private key.'
+            ? t('onboarding.shell.enterSeedSubtitle')
+            : t('onboarding.shell.enterPrivateKeySubtitle')
       }
     default:
       return { title: '', subtitle: '' }
@@ -65,7 +67,8 @@ function getStepCopy(step: OnboardingStep, importMethod: ImportMethod): StepCopy
  * @returns The rendered onboarding shell.
  */
 function OnboardingShell({ step, importMethod, children }: OnboardingShellProps): JSX.Element {
-  const { title, subtitle } = getStepCopy(step, importMethod)
+  const { t } = useTranslation()
+  const { title, subtitle } = getStepCopy(t, step, importMethod)
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 text-slate-800">

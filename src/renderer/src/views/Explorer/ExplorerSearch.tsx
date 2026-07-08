@@ -1,4 +1,5 @@
 import { type JSX, type FormEvent, type RefObject } from 'react'
+import { useTranslation } from 'react-i18next'
 import { IconSearch } from '@/assets/icons'
 
 interface ExplorerSearchProps {
@@ -20,11 +21,13 @@ function ExplorerSearch({
   onSearchValueChange,
   onSubmit
 }: ExplorerSearchProps): JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-      <p className="text-sm text-slate-500 mb-1">Search the chain</p>
+      <p className="text-sm text-slate-500 mb-1">{t('explorer.search.searchChain')}</p>
       <h2 className="text-2xl font-bold text-slate-800 tracking-tight mb-5">
-        Block, transaction, or address
+        {t('explorer.search.title')}
       </h2>
 
       <form onSubmit={onSubmit} className="relative mb-4">
@@ -37,11 +40,11 @@ function ExplorerSearch({
           value={searchValue}
           onChange={(e) => onSearchValueChange(e.target.value)}
           className="w-full pl-11 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-          placeholder="0x... address, transaction hash, block number, or username.cmu"
+          placeholder={t('explorer.search.placeholder')}
         />
         <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
           <kbd className="px-2 py-1 bg-white border border-slate-200 rounded text-[10px] font-mono text-slate-400 font-bold">
-            Ctrl+K
+            {t('explorer.search.shortcut')}
           </kbd>
         </div>
       </form>

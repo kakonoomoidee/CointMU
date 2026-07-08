@@ -1,6 +1,10 @@
 import type { JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { SettingsStore } from '@/views/Settings'
-import { IconChevronDown } from '@/assets/icons'
+import { LanguageSwitcher } from './LanguageSwitcher'
+import { CustomDropdown } from '@/components/CustomDropdown'
+
+const CURRENCY_OPTIONS = ['CMU (native)', 'USD ($)', 'EUR (€)']
 
 interface GeneralSettingsProps {
   config: SettingsStore['general']
@@ -14,18 +18,20 @@ interface GeneralSettingsProps {
  * @returns The General Settings form component.
  */
 export function GeneralSettings({ config, onUpdate }: GeneralSettingsProps): JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <div>
-      <h2 className="text-sm font-semibold text-slate-700 mb-6">Application behavior and default display</h2>
+      <h2 className="text-sm font-semibold text-slate-700 mb-6">{t('settings.general.subtitle')}</h2>
 
       <div className="space-y-8">
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Startup</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.general.startup')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Launch CointMU at login</p>
-                <p className="text-xs text-slate-500 mt-0.5">Open automatically when you sign in to your computer</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.general.launchTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.general.launchDesc')}</p>
               </div>
               <button
                 onClick={() => onUpdate('launchAtLogin', !config.launchAtLogin)}
@@ -36,8 +42,8 @@ export function GeneralSettings({ config, onUpdate }: GeneralSettingsProps): JSX
             </div>
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Open in background</p>
-                <p className="text-xs text-slate-500 mt-0.5">Start minimized so mining can run without a window</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.general.backgroundTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.general.backgroundDesc')}</p>
               </div>
               <button
                 onClick={() => onUpdate('openInBackground', !config.openInBackground)}
@@ -50,46 +56,23 @@ export function GeneralSettings({ config, onUpdate }: GeneralSettingsProps): JSX
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Display</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.general.display')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
+            <LanguageSwitcher />
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Language</p>
-                <p className="text-xs text-slate-500 mt-0.5">Application language</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.general.currencyTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.general.currencyDesc')}</p>
               </div>
-              <div className="relative">
-                <select
-                  value={config.language}
-                  onChange={(e) => onUpdate('language', e.target.value)}
-                  className="appearance-none bg-white border border-slate-200 rounded-lg pl-4 pr-10 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-                >
-                  <option>English</option>
-                  <option>Spanish</option>
-                  <option>French</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-                  <IconChevronDown width={12} height={12} strokeWidth={2.5} />
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm font-bold text-slate-800">Default currency</p>
-                <p className="text-xs text-slate-500 mt-0.5">Used everywhere amounts are shown</p>
-              </div>
-              <div className="relative">
-                <select
-                  value={config.currency}
-                  onChange={(e) => onUpdate('currency', e.target.value)}
-                  className="appearance-none bg-white border border-slate-200 rounded-lg pl-4 pr-10 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-                >
-                  <option>CMU (native)</option>
-                  <option>USD ($)</option>
-                  <option>EUR (€)</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-                  <IconChevronDown width={12} height={12} strokeWidth={2.5} />
-                </div>
+              <div className="w-48">
+                <CustomDropdown<string>
+                  options={CURRENCY_OPTIONS}
+                  selected={config.currency}
+                  onSelect={(val) => onUpdate('currency', val)}
+                  renderSelected={(selected) => selected || 'CMU (native)'}
+                  renderOption={(option) => option}
+                  compact
+                />
               </div>
             </div>
           </div>

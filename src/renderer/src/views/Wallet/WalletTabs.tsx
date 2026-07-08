@@ -1,4 +1,5 @@
 import { type JSX, useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { format } from 'date-fns'
 import { ActivityItem, type ActivityData } from './ActivityItem'
 import { getTransactions } from '@/services/transactionService'
@@ -96,6 +97,7 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
   const [currentPage, setCurrentPage] = useState(1)
   const pendingTransactions = useAppStore((s) => s.pendingTransactions)
   const nftFetcher = useNFTFetcher(activeTab === 'nfts' ? activeWalletAddress : null)
+  const { t } = useTranslation()
 
   const pendingActivities = pendingTransactions
     .filter((tx) => tx.from === activeWalletAddress)
@@ -169,7 +171,7 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
                   : 'text-slate-500 hover:text-slate-700'
               }`}
             >
-              {tab.label}
+              {t(`walletTabs.${tab.id}`)}
             </button>
           ))}
         </div>
@@ -286,7 +288,7 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
           {nftFetcher.isFetching ? (
             <div className='rounded-2xl bg-white border border-slate-200'>
               <div className='flex flex-col items-center justify-center py-16 text-center'>
-                <p className='text-sm font-medium text-slate-400'>Scanning blockchain for NFTs...</p>
+                <p className='text-sm font-medium text-slate-400'>{t('walletTabs.scanningNfts')}</p>
               </div>
             </div>
           ) : nftFetcher.nfts.length > 0 ? (
@@ -294,7 +296,7 @@ function WalletTabs({ activeWalletAddress, activeTab, onTabChange }: WalletTabsP
           ) : (
             <div className='rounded-2xl bg-white border border-slate-200'>
               <div className='flex flex-col items-center justify-center py-16 text-center'>
-                <p className='text-sm font-medium text-slate-400'>No NFTs found</p>
+                <p className='text-sm font-medium text-slate-400'>{t('walletTabs.noNftsFound')}</p>
                 {nftFetcher.error && (
                   <p className='text-xs text-red-400 mt-1'>{nftFetcher.error}</p>
                 )}

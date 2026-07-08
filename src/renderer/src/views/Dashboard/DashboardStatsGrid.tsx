@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { IconActivity, IconChevronRight, IconGrid, IconGlobe, IconLink } from '@/assets/icons'
 
 interface DashboardStatsGridProps {
@@ -26,6 +27,8 @@ function DashboardStatsGrid({
   smartContractsCount,
   onNavigate
 }: DashboardStatsGridProps): JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <div className="grid grid-cols-4 gap-5">
       <div className="rounded-2xl bg-white border border-slate-200 p-5">
@@ -34,13 +37,13 @@ function DashboardStatsGrid({
             <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
               <IconActivity className="text-blue-500 w-3.5 h-3.5" />
             </div>
-            <span className="text-xs font-medium text-slate-500">Your mining</span>
+            <span className="text-xs font-medium text-slate-500">{t('dashboard.statsGrid.yourMining')}</span>
           </div>
           <button 
             onClick={() => onNavigate('miner')}
             className="text-[11px] font-semibold text-blue-500 hover:text-blue-600 transition-colors flex items-center gap-0.5"
           >
-            Open
+            {t('dashboard.statsGrid.open')}
             <IconChevronRight className="w-2.5 h-2.5" strokeWidth={3} />
           </button>
         </div>
@@ -53,13 +56,13 @@ function DashboardStatsGrid({
           <div className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center">
             <IconGrid className="text-emerald-500 w-3.5 h-3.5" />
           </div>
-          <span className="text-xs font-medium text-slate-500">Mined blocks (24h)</span>
+          <span className="text-xs font-medium text-slate-500">{t('dashboard.statsGrid.minedBlocks')}</span>
         </div>
         <p className="text-2xl font-bold text-slate-800 tracking-tight">
           {isConnected ? minedBlocksCount : '0'}
         </p>
         <p className="text-xs text-slate-400 mt-1">
-          {isConnected ? `+${minedBlocksCount * 2} CMU rewards` : '--'}
+          {isConnected ? `+${minedBlocksCount * 2} CMU ${t('dashboard.statsGrid.rewards')}` : '--'}
         </p>
       </div>
 
@@ -68,10 +71,10 @@ function DashboardStatsGrid({
           <div className="w-7 h-7 rounded-lg bg-violet-50 flex items-center justify-center">
             <IconGlobe className="text-violet-500 w-3.5 h-3.5" />
           </div>
-          <span className="text-xs font-medium text-slate-500">Network hashrate</span>
+          <span className="text-xs font-medium text-slate-500">{t('dashboard.statsGrid.networkHashrate')}</span>
         </div>
         <p className="text-2xl font-bold text-slate-800 tracking-tight">{hashrateDisplay}</p>
-        <p className="text-xs text-slate-400 mt-1">{isConnected ? 'Real-time via RPC' : '--'}</p>
+        <p className="text-xs text-slate-400 mt-1">{isConnected ? t('dashboard.statsGrid.realTimeRpc') : '--'}</p>
       </div>
 
       <div className="rounded-2xl bg-white border border-slate-200 p-5">
@@ -79,13 +82,13 @@ function DashboardStatsGrid({
           <div className="w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center">
             <IconLink className="text-amber-500 w-3.5 h-3.5" />
           </div>
-          <span className="text-xs font-medium text-slate-500">Smart contracts</span>
+          <span className="text-xs font-medium text-slate-500">{t('dashboard.statsGrid.smartContracts')}</span>
         </div>
         <p className="text-2xl font-bold text-slate-800 tracking-tight">
           {isConnected ? smartContractsCount : '0'}
         </p>
         <p className="text-xs text-slate-400 mt-1">
-          {isConnected ? `${smartContractsCount} deployed by you` : '--'}
+          {isConnected ? `${smartContractsCount} ${t('dashboard.statsGrid.deployedByYou')}` : '--'}
         </p>
       </div>
     </div>

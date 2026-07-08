@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useOnboardingStore } from '@/store'
 import { IconCheck, IconCopy, IconAlertTriangle } from '@/assets/icons'
 
@@ -16,6 +17,7 @@ interface CreateWalletStepProps {
  * @returns The rendered create wallet step.
  */
 function CreateWalletStep({ onCopySeed, onContinue, onBack }: CreateWalletStepProps): JSX.Element {
+  const { t } = useTranslation()
   const mnemonic = useOnboardingStore((s) => s.mnemonic)
   const copied = useOnboardingStore((s) => s.copied)
 
@@ -40,12 +42,12 @@ function CreateWalletStep({ onCopySeed, onContinue, onBack }: CreateWalletStepPr
           {copied ? (
             <>
               <IconCheck className="text-emerald-500" width={14} height={14} strokeWidth={2.5} />
-              Copied!
+              {t('onboarding.createWallet.copied')}
             </>
           ) : (
             <>
               <IconCopy width={14} height={14} />
-              Copy
+              {t('onboarding.createWallet.copy')}
             </>
           )}
         </button>
@@ -54,8 +56,7 @@ function CreateWalletStep({ onCopySeed, onContinue, onBack }: CreateWalletStepPr
       <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 flex gap-3 items-start">
         <IconAlertTriangle className="text-amber-500 shrink-0 mt-0.5" width={16} height={16} strokeWidth={2.5} />
         <p className="text-xs text-amber-800 font-medium">
-          Do not save this digitally or take a screenshot. Store it completely offline in a safe
-          place.
+          {t('onboarding.createWallet.warning')}
         </p>
       </div>
 
@@ -64,13 +65,13 @@ function CreateWalletStep({ onCopySeed, onContinue, onBack }: CreateWalletStepPr
           onClick={onBack}
           className="flex-1 py-3.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors"
         >
-          Back
+          {t('onboarding.createWallet.back')}
         </button>
         <button
           onClick={onContinue}
           className="flex-[2] py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm"
         >
-          I have saved these words
+          {t('onboarding.createWallet.savedWords')}
         </button>
       </div>
     </div>

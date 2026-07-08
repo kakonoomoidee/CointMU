@@ -1,4 +1,5 @@
 import { useState, useEffect, type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMiningStore } from '@/store'
 
 /**
@@ -13,6 +14,7 @@ function NonceCounter(): JSX.Element {
   const candidate = useMiningStore((s) => s.candidate)
   const hashrateMhs = useMiningStore((s) => s.hashrateMhs)
   const isMining = useMiningStore((s) => s.sessionStartTime !== null)
+  const { t } = useTranslation()
   
   const [visualNonce, setVisualNonce] = useState<number>(nonce)
 
@@ -41,7 +43,7 @@ function NonceCounter(): JSX.Element {
   return (
     <div className="mt-4 mb-3">
       <p className="text-[11px] text-emerald-100/80 font-mono mb-2 tracking-wide font-medium">
-        Solving candidate #{displayCandidate.toLocaleString()} - {displayNonces} nonces tried
+        {t('mining.nonce.solvingCandidate', { candidate: displayCandidate.toLocaleString(), nonces: displayNonces })}
       </p>
       <div className="w-full h-1.5 rounded-full bg-emerald-950/50 overflow-hidden relative">
         <div className="h-full rounded-full bg-emerald-400 animate-[fillBar_2s_linear_infinite]" />

@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { QRCodeSVG } from 'qrcode.react'
 import { type DerivedAccount } from '@/services'
 import { AccountIcon } from '@/components'
@@ -28,6 +29,8 @@ function AccountHeroCard({
   onSend,
   onCopy
 }: AccountHeroCardProps): JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <div className="rounded-2xl bg-gradient-to-br from-slate-800 via-slate-850 to-slate-950 p-7 text-white relative overflow-hidden">
       <div className="absolute -right-8 -top-8 w-48 h-48 rounded-full bg-white/3 blur-sm" />
@@ -66,7 +69,7 @@ function AccountHeroCard({
             <span className="text-4xl font-bold tracking-tight">{balance}</span>
             <span className="text-lg font-semibold text-white/60">CMU</span>
           </div>
-          <p className="text-sm text-white/40 mt-1">Balance from node</p>
+          <p className="text-sm text-white/40 mt-1">{t('wallet.balanceFromNode')}</p>
         </div>
 
         <div className="flex items-center gap-2.5">
@@ -75,18 +78,18 @@ function AccountHeroCard({
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors"
           >
             <IconArrowUp width={12} height={12} strokeWidth={2.5} />
-            Send
+            {t('wallet.send')}
           </button>
           <button
             onClick={onReceive}
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors"
           >
             <IconArrowDown width={12} height={12} strokeWidth={2.5} />
-            Receive
+            {t('wallet.receive')}
           </button>
           <button className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors">
             <IconRefresh width={12} height={12} />
-            Swap
+            {t('wallet.swap')}
           </button>
           <button
             onClick={onCopy}
@@ -97,7 +100,7 @@ function AccountHeroCard({
             ) : (
               <IconCopy width={12} height={12} />
             )}
-            {copied ? 'Copied!' : 'Copy address'}
+            {copied ? t('wallet.copied') : t('wallet.copyAddress')}
           </button>
         </div>
       </div>

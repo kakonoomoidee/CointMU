@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useWalletUiStore } from '@/store'
 import { IconDownload, IconLock, IconFileText } from '@/assets/icons'
 
@@ -20,11 +21,12 @@ function AddAccountModal({ onImport, onImportKeystore }: AddAccountModalProps): 
   const addAccountError = useWalletUiStore((s) => s.addAccountError)
   const setAddAccountType = useWalletUiStore((s) => s.setAddAccountType)
   const setImportInput = useWalletUiStore((s) => s.setImportInput)
+  const { t } = useTranslation()
 
   return (
     <div className="p-8">
-      <h3 className="text-xl font-bold text-slate-800 mb-2">Add Account</h3>
-      <p className="text-sm text-slate-500 mb-8">Import an existing seed phrase or private key.</p>
+      <h3 className="text-xl font-bold text-slate-800 mb-2">{t('wallet.modals.addAccount.title')}</h3>
+      <p className="text-sm text-slate-500 mb-8">{t('wallet.modals.addAccount.subtitle')}</p>
 
       {addAccountType === 'SELECT' && (
         <div className="space-y-3">
@@ -36,8 +38,8 @@ function AddAccountModal({ onImport, onImportKeystore }: AddAccountModalProps): 
               <IconDownload width={20} height={20} strokeWidth={2.5} />
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-800">Import Seed Phrase</p>
-              <p className="text-xs text-slate-500">Restore an account from a 12-word seed.</p>
+              <p className="text-sm font-bold text-slate-800">{t('wallet.modals.addAccount.importSeedTitle')}</p>
+              <p className="text-xs text-slate-500">{t('wallet.modals.addAccount.importSeedSubtitle')}</p>
             </div>
           </button>
           <button
@@ -48,8 +50,8 @@ function AddAccountModal({ onImport, onImportKeystore }: AddAccountModalProps): 
               <IconLock width={20} height={20} strokeWidth={2.5} />
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-800">Import Private Key</p>
-              <p className="text-xs text-slate-500">Import a standalone hex private key.</p>
+              <p className="text-sm font-bold text-slate-800">{t('wallet.modals.addAccount.importPkTitle')}</p>
+              <p className="text-xs text-slate-500">{t('wallet.modals.addAccount.importPkSubtitle')}</p>
             </div>
           </button>
           <button
@@ -60,8 +62,8 @@ function AddAccountModal({ onImport, onImportKeystore }: AddAccountModalProps): 
               <IconFileText width={20} height={20} strokeWidth={2.5} />
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-800">Import Account (JSON)</p>
-              <p className="text-xs text-slate-500">Import an encrypted Web3 keystore file.</p>
+              <p className="text-sm font-bold text-slate-800">{t('wallet.modals.addAccount.importJsonTitle')}</p>
+              <p className="text-xs text-slate-500">{t('wallet.modals.addAccount.importJsonSubtitle')}</p>
             </div>
           </button>
         </div>
@@ -71,12 +73,12 @@ function AddAccountModal({ onImport, onImportKeystore }: AddAccountModalProps): 
         <div className="space-y-5">
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-2">
-              {addAccountType === 'IMPORT_SEED' ? '12-Word Seed Phrase' : 'Private Key (Hex)'}
+              {addAccountType === 'IMPORT_SEED' ? t('wallet.modals.addAccount.seedLabel') : t('wallet.modals.addAccount.pkLabel')}
             </label>
             <textarea
               value={importInput}
               onChange={(e) => setImportInput(e.target.value)}
-              placeholder={addAccountType === 'IMPORT_SEED' ? 'word1 word2...' : '0x...'}
+              placeholder={addAccountType === 'IMPORT_SEED' ? t('wallet.modals.addAccount.seedPlaceholder') : t('wallet.modals.addAccount.pkPlaceholder')}
               rows={3}
               className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-mono text-sm resize-none"
             />
@@ -93,13 +95,13 @@ function AddAccountModal({ onImport, onImportKeystore }: AddAccountModalProps): 
               onClick={() => setAddAccountType('SELECT')}
               className="flex-1 py-3.5 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors"
             >
-              Back
+              {t('wallet.modals.addAccount.back')}
             </button>
             <button
               onClick={onImport}
               className="flex-1 py-3.5 bg-blue-600 text-white font-bold rounded-xl shadow-sm shadow-blue-200 hover:bg-blue-700 transition-colors"
             >
-              Import
+              {t('wallet.modals.addAccount.importBtn')}
             </button>
           </div>
         </div>

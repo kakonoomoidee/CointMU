@@ -1,4 +1,5 @@
 import { type JSX } from "react";
+import { useTranslation } from "react-i18next";
 import { type BlockData } from "@/hooks";
 import { useAppStore } from "@/store";
 import { IconChevronRight, IconSquare, IconCube } from "@/assets/icons";
@@ -24,6 +25,7 @@ function LatestBlocks({
   onViewAll,
 }: LatestBlocksProps): JSX.Element {
   const balances = useAppStore((s) => s.balances);
+  const { t } = useTranslation();
 
   const checkIfMinedByMe = (
     minerAddress: string,
@@ -39,17 +41,17 @@ function LatestBlocks({
   return (
     <div className="rounded-2xl bg-white border border-slate-200 p-6">
       <div className="flex items-center justify-between mb-1">
-        <h3 className="text-sm font-bold text-slate-800">Latest blocks</h3>
+        <h3 className="text-sm font-bold text-slate-800">{t("dashboard.latestBlocks.title")}</h3>
         <button
           onClick={onViewAll}
           className="text-[11px] font-semibold text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-0.5"
         >
-          View all
+          {t("dashboard.latestBlocks.viewAll")}
           <IconChevronRight width={10} height={10} strokeWidth={3} />
         </button>
       </div>
       <p className="text-[10px] text-slate-400 mb-4">
-        Mined across the network
+        {t("dashboard.latestBlocks.minedAcrossNetwork")}
       </p>
 
       <div className="space-y-0">
@@ -69,14 +71,14 @@ function LatestBlocks({
                   </span>
                   {checkIfMinedByMe(block.miner, balances) && (
                     <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                      +2 CMU mined
+                      +2 CMU {t("dashboard.latestBlocks.mined")}
                     </span>
                   )}
                 </div>
                 <p className="text-[10px] text-slate-400 font-mono mt-0.5">
                   {block.hash.substring(0, 10)}...
                   {block.hash.substring(block.hash.length - 8)} -{" "}
-                  {block.txCount} txs
+                  {block.txCount} {t("dashboard.latestBlocks.txs")}
                 </p>
               </div>
             </div>
@@ -100,7 +102,7 @@ function LatestBlocks({
               strokeWidth={1.5}
             />
             <p className="text-sm font-medium text-slate-400">
-              Awaiting network blocks
+              {t("dashboard.latestBlocks.awaitingBlocks")}
             </p>
           </div>
         )}

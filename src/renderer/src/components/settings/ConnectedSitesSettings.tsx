@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useConnectedSitesStore } from '@/store'
 import { IconGlobe, IconLink } from '@/assets/icons'
 
@@ -12,17 +13,16 @@ import { IconGlobe, IconLink } from '@/assets/icons'
  * @returns {JSX.Element} The rendered settings panel component.
  */
 function ConnectedSitesSettings(): JSX.Element {
+  const { t } = useTranslation()
   const connectedSites = useConnectedSitesStore((s) => s.connectedSites)
   const removeConnectedSite = useConnectedSitesStore((s) => s.removeConnectedSite)
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
       <div>
-        <h2 className="text-xl font-bold text-slate-800">Connected Sites</h2>
+        <h2 className="text-xl font-bold text-slate-800">{t('settings.connectedSites.title')}</h2>
         <p className="text-sm text-slate-500 mt-1 leading-relaxed">
-          These third-party applications have been granted read-only access to your 
-          active wallet address, network state, and chain data. They can interact 
-          with your wallet without triggering the approval modal for standard reads.
+          {t('settings.connectedSites.description')}
         </p>
       </div>
 
@@ -32,9 +32,9 @@ function ConnectedSitesSettings(): JSX.Element {
             <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-100">
               <IconLink width={24} height={24} className="text-slate-300" />
             </div>
-            <h3 className="text-sm font-semibold text-slate-700">No connected sites</h3>
+            <h3 className="text-sm font-semibold text-slate-700">{t('settings.connectedSites.emptyTitle')}</h3>
             <p className="text-xs text-slate-500 mt-1 max-w-[250px]">
-              No external applications are currently connected to your CointMU wallet.
+              {t('settings.connectedSites.emptyDesc')}
             </p>
           </div>
         ) : (
@@ -50,7 +50,7 @@ function ConnectedSitesSettings(): JSX.Element {
                       {origin}
                     </p>
                     <p className="text-xs text-slate-400 mt-0.5">
-                      Read-only access granted
+                      {t('settings.connectedSites.accessGranted')}
                     </p>
                   </div>
                 </div>
@@ -59,7 +59,7 @@ function ConnectedSitesSettings(): JSX.Element {
                   onClick={() => removeConnectedSite(origin)}
                   className="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 hover:border-red-200 rounded-lg transition-colors ml-4 flex-shrink-0"
                 >
-                  Revoke
+                  {t('settings.connectedSites.revoke')}
                 </button>
               </li>
             ))}

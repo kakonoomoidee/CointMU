@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { type DerivedAccount } from '@/services'
 import { IconEye } from '@/assets/icons'
 
@@ -15,15 +16,16 @@ interface ManageHiddenModalProps {
  */
 function ManageHiddenModal({ accounts, onUnhideAccount }: ManageHiddenModalProps): JSX.Element {
   const hiddenAccounts = accounts.filter((a) => a.isHidden)
+  const { t } = useTranslation()
 
   return (
     <div className="p-8">
-      <h3 className="text-xl font-bold text-slate-800 mb-2">Hidden Accounts</h3>
-      <p className="text-sm text-slate-500 mb-8">Restore accounts to your active sidebar.</p>
+      <h3 className="text-xl font-bold text-slate-800 mb-2">{t('wallet.modals.manageHidden.title')}</h3>
+      <p className="text-sm text-slate-500 mb-8">{t('wallet.modals.manageHidden.subtitle')}</p>
 
       <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
         {hiddenAccounts.length === 0 ? (
-          <p className="text-sm text-slate-400 text-center py-8">No hidden accounts.</p>
+          <p className="text-sm text-slate-400 text-center py-8">{t('wallet.modals.manageHidden.noHidden')}</p>
         ) : (
           hiddenAccounts.map((acc, i) => (
             <div
@@ -37,7 +39,7 @@ function ManageHiddenModal({ accounts, onUnhideAccount }: ManageHiddenModalProps
               <button
                 onClick={() => onUnhideAccount(acc.address)}
                 className="flex-shrink-0 w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all flex items-center justify-center shadow-sm"
-                title="Unhide account"
+                title={t('wallet.modals.manageHidden.unhideTooltip')}
               >
                 <IconEye width={14} height={14} strokeWidth={2.5} />
               </button>

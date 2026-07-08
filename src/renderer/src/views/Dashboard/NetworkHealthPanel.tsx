@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Sparkline } from '@/components'
 
 const CONSENSUS_LABEL = 'PoW - Block 30s'
@@ -28,6 +29,8 @@ function NetworkHealthPanel({
   blocksPastHour,
   sparklineData
 }: NetworkHealthPanelProps): JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <div className="rounded-2xl bg-white border border-slate-200 p-6">
       <div className="flex items-center justify-between mb-5">
@@ -36,7 +39,7 @@ function NetworkHealthPanel({
             className={`w-2 h-2 rounded-full ${isConnected ? 'bg-emerald-500' : 'bg-red-400'}`}
           />
           <span className="text-sm font-semibold text-slate-800">
-            {isConnected ? 'Network is healthy' : 'Network is disconnected'}
+            {isConnected ? t('dashboard.networkHealth.healthy') : t('dashboard.networkHealth.disconnected')}
           </span>
         </div>
         <span className="text-[10px] font-semibold tracking-wide text-slate-500 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200">
@@ -47,40 +50,40 @@ function NetworkHealthPanel({
       <div className="grid grid-cols-2 gap-x-6 gap-y-4 mb-5">
         <div>
           <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">
-            Chain Height
+            {t('dashboard.networkHealth.chainHeight')}
           </p>
           <p className="text-xl font-bold text-slate-800 font-mono">{blockDisplay}</p>
-          <p className="text-[10px] text-slate-400">Latest block</p>
+          <p className="text-[10px] text-slate-400">{t('dashboard.networkHealth.latestBlock')}</p>
         </div>
         <div>
           <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">
-            Peers
+            {t('dashboard.networkHealth.peers')}
           </p>
           <p className="text-xl font-bold text-slate-800 font-mono">{peerDisplay}</p>
-          <p className="text-[10px] text-slate-400">Gossip connected</p>
+          <p className="text-[10px] text-slate-400">{t('dashboard.networkHealth.gossipConnected')}</p>
         </div>
         <div>
           <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">
-            Difficulty
+            {t('dashboard.networkHealth.difficulty')}
           </p>
           <p className="text-xl font-bold text-slate-800 font-mono">{difficultyDisplay}</p>
-          <p className="text-[10px] text-slate-400">Current network</p>
+          <p className="text-[10px] text-slate-400">{t('dashboard.networkHealth.currentNetwork')}</p>
         </div>
         <div>
           <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">
-            Gas (Avg)
+            {t('dashboard.networkHealth.gasAvg')}
           </p>
           <p className="text-xl font-bold text-slate-800 font-mono">
             {gasDisplay} <span className="text-sm font-medium text-slate-400">gwei</span>
           </p>
-          <p className="text-[10px] text-slate-400">Suggested price</p>
+          <p className="text-[10px] text-slate-400">{t('dashboard.networkHealth.suggestedPrice')}</p>
         </div>
       </div>
 
       <div className="rounded-xl bg-slate-50 border border-slate-100 p-3.5 flex items-center justify-between">
         <div>
           <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-0.5">
-            Blocks past hour
+            {t('dashboard.networkHealth.blocksPastHour')}
           </p>
           <p className="text-2xl font-bold text-slate-800 font-mono">
             {isConnected ? blocksPastHour.toString() : '--'}

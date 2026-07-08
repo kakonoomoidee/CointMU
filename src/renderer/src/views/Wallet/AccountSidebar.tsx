@@ -1,4 +1,5 @@
 import { type JSX, type MouseEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { type DerivedAccount } from "@/services";
 import { AccountIcon } from "@/components";
 import { IconPlus, IconEyeSlash } from "@/assets/icons";
@@ -33,12 +34,14 @@ function AccountSidebar({
   onImportWallet,
   onManageHidden,
 }: AccountSidebarProps): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <div className="w-64 flex-shrink-0 space-y-5">
       <div>
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-[10px] font-semibold tracking-[0.15em] uppercase text-slate-400">
-            Accounts
+            {t('wallet.sidebar.accounts')}
           </h3>
           <button
             onClick={onDeriveAccount}
@@ -94,7 +97,7 @@ function AccountSidebar({
                     <div
                       onClick={(e) => onHideAccount(e, acc.address)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-slate-600 bg-white/80 backdrop-blur-sm rounded-full p-1.5 shadow-sm"
-                      title="Hide account"
+                      title={t('wallet.sidebar.hideAccount')}
                     >
                       <IconEyeSlash width={14} height={14} strokeWidth={2.5} />
                     </div>
@@ -107,14 +110,14 @@ function AccountSidebar({
 
       <div>
         <h3 className="text-[10px] font-semibold tracking-[0.15em] uppercase text-slate-400 mb-3">
-          Watch List
+          {t('wallet.sidebar.watchList')}
         </h3>
         <div className="space-y-2">
           {WATCH_LIST.length > 0 ? (
             WATCH_LIST.map((_, i) => <div key={i} />)
           ) : (
             <p className="text-xs text-slate-400 px-3 py-2">
-              No watched addresses
+              {t('wallet.sidebar.noWatched')}
             </p>
           )}
         </div>
@@ -124,13 +127,13 @@ function AccountSidebar({
         onClick={onImportWallet}
         className="w-full text-center text-xs font-medium text-slate-500 hover:text-slate-700 transition-colors py-2"
       >
-        + Import wallet
+        {t('wallet.sidebar.importWallet')}
       </button>
       <button
         onClick={onManageHidden}
         className="w-full text-center text-[10px] font-medium text-slate-400 hover:text-slate-600 transition-colors py-1"
       >
-        Manage hidden accounts
+        {t('wallet.sidebar.manageHidden')}
       </button>
     </div>
   );

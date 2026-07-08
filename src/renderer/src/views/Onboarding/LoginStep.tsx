@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useOnboardingStore } from '@/store'
 import { PasswordField } from './PasswordField'
 
@@ -15,6 +16,7 @@ interface LoginStepProps {
  * @returns The rendered login step.
  */
 function LoginStep({ onUnlock, onBack }: LoginStepProps): JSX.Element {
+  const { t } = useTranslation()
   const password = useOnboardingStore((s) => s.password)
   const showPassword = useOnboardingStore((s) => s.showPassword)
   const error = useOnboardingStore((s) => s.error)
@@ -25,9 +27,9 @@ function LoginStep({ onUnlock, onBack }: LoginStepProps): JSX.Element {
   return (
     <div className="w-full flex flex-col gap-5">
       <PasswordField
-        label="Enter Password"
+        label={t('onboarding.login.enterPassword')}
         value={password}
-        placeholder="Password"
+        placeholder={t('onboarding.login.passwordPlaceholder')}
         show={showPassword}
         onChange={(value) => {
           setPassword(value)
@@ -41,13 +43,13 @@ function LoginStep({ onUnlock, onBack }: LoginStepProps): JSX.Element {
           onClick={onBack}
           className="flex-1 py-3.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors"
         >
-          Back
+          {t('onboarding.login.back')}
         </button>
         <button
           onClick={onUnlock}
           className="flex-1 py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm"
         >
-          Unlock
+          {t('onboarding.login.unlock')}
         </button>
       </div>
     </div>

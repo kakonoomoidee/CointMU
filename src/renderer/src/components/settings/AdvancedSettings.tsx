@@ -1,6 +1,7 @@
 import { useEffect, useState, type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAdvancedStore } from '@/store'
-import { IconChevronDown } from '@/assets/icons'
+import { CustomDropdown } from '@/components/CustomDropdown'
 
 const LOG_LEVELS = ['Info', 'Debug', 'Warn', 'Error']
 
@@ -24,6 +25,7 @@ function formatBytes(bytes: number): string {
  * @returns The Advanced Settings form component.
  */
 export function AdvancedSettings(): JSX.Element {
+  const { t } = useTranslation()
   const settings = useAdvancedStore((s) => s.settings)
   const storage = useAdvancedStore((s) => s.storage)
   const updateSettings = useAdvancedStore((s) => s.updateSettings)
@@ -47,16 +49,16 @@ export function AdvancedSettings(): JSX.Element {
 
   return (
     <div>
-      <h2 className="text-sm font-semibold text-slate-700 mb-6">Developer APIs, local storage, and diagnostics</h2>
+      <h2 className="text-sm font-semibold text-slate-700 mb-6">{t('settings.advanced.subtitle')}</h2>
 
       <div className="space-y-8">
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">RPC/Network</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.advanced.rpcNetwork')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Enable JSON-RPC over HTTP</p>
-                <p className="text-xs text-slate-500 mt-0.5">Listen on 127.0.0.1:8545 for dApp connections</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.advanced.httpRpcTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.advanced.httpRpcDesc')}</p>
               </div>
               <button
                 onClick={() => updateSettings({ httpRpc: !settings.httpRpc })}
@@ -68,8 +70,8 @@ export function AdvancedSettings(): JSX.Element {
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Enable WebSocket RPC</p>
-                <p className="text-xs text-slate-500 mt-0.5">Listen on 127.0.0.1:8546</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.advanced.wsRpcTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.advanced.wsRpcDesc')}</p>
               </div>
               <button
                 onClick={() => updateSettings({ wsRpc: !settings.wsRpc })}
@@ -81,8 +83,8 @@ export function AdvancedSettings(): JSX.Element {
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">CORS allowed origins</p>
-                <p className="text-xs text-slate-500 mt-0.5">Origins allowed to connect to the RPC server</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.advanced.corsTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.advanced.corsDesc')}</p>
               </div>
               <div className="w-64">
                 <input
@@ -99,71 +101,65 @@ export function AdvancedSettings(): JSX.Element {
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Storage</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.advanced.storage')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <div className="flex items-center justify-between gap-4 p-4 bg-slate-50/50">
               <div className="min-w-0">
-                <p className="text-sm font-bold text-slate-800">Datadir</p>
-                <p className="text-xs text-slate-500 mt-0.5">Where chain data and keystore are stored</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.advanced.datadirTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.advanced.datadirDesc')}</p>
               </div>
               <span className="text-sm font-bold font-mono text-slate-700 truncate max-w-[16rem]" title={storage.datadir}>
-                {storage.datadir || 'Loading...'}
+                {storage.datadir || t('settings.advanced.loading')}
               </span>
             </div>
 
             <div className="flex items-center justify-between p-4 bg-slate-50/50">
               <div>
-                <p className="text-sm font-bold text-slate-800">Chain database size</p>
-                <p className="text-xs text-slate-500 mt-0.5">Approximate disk usage</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.advanced.dbSizeTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.advanced.dbSizeDesc')}</p>
               </div>
               <span className="text-sm font-bold font-mono text-slate-700">{formatBytes(storage.dbSize)}</span>
             </div>
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Open data folder</p>
-                <p className="text-xs text-slate-500 mt-0.5">Reveal the datadir in your file explorer</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.advanced.openDataTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.advanced.openDataDesc')}</p>
               </div>
               <button
                 onClick={() => void window.api.openDataFolder()}
                 className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-colors"
               >
-                Reveal
+                {t('settings.advanced.revealBtn')}
               </button>
             </div>
           </div>
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Diagnostics</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.advanced.diagnostics')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Log level</p>
-                <p className="text-xs text-slate-500 mt-0.5">Verbosity of the node log</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.advanced.logLevelTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.advanced.logLevelDesc')}</p>
               </div>
-              <div className="relative">
-                <select
-                  value={settings.logLevel}
-                  onChange={(e) => updateSettings({ logLevel: e.target.value })}
-                  className="appearance-none bg-white border border-slate-200 rounded-lg pl-4 pr-10 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-                >
-                  {LOG_LEVELS.map((level) => (
-                    <option key={level} value={level}>
-                      {level}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-                  <IconChevronDown width={12} height={12} strokeWidth={2.5} />
-                </div>
+              <div className="w-48">
+                <CustomDropdown<string>
+                  options={LOG_LEVELS}
+                  selected={settings.logLevel}
+                  onSelect={(val) => updateSettings({ logLevel: val })}
+                  renderSelected={(selected) => selected || 'Info'}
+                  renderOption={(option) => option}
+                  compact
+                />
               </div>
             </div>
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Send anonymous analytics</p>
-                <p className="text-xs text-slate-500 mt-0.5">Help improve CointMU with crash reports and usage data</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.advanced.analyticsTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.advanced.analyticsDesc')}</p>
               </div>
               <button
                 onClick={() => updateSettings({ analytics: !settings.analytics })}

@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef, type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { SettingsStore } from '@/views/Settings'
 import { setSetting, toggleMiner, setThreads, setPoolAddress } from '@/services'
-import { IconChevronDown } from '@/assets/icons'
+import { CustomDropdown } from '@/components/CustomDropdown'
+
+const MINING_MODE_OPTIONS = ['Solo', 'campuspool.cmu', 'Custom pool...']
 
 interface MiningSettingsProps {
   config: SettingsStore['mining']
@@ -20,6 +23,7 @@ const MAX_CORES = navigator.hardwareConcurrency || 8
  * @returns {JSX.Element} The Mining Settings form component.
  */
 export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettingsProps): JSX.Element {
+  const { t } = useTranslation()
   const [rewardInput, setRewardInput] = useState<string>(config.poolAddress || '')
   
   const isAddressInAccounts = (address: string) => accounts.some(acc => acc.address === address)
@@ -146,18 +150,30 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
     }
   }, [])
 
+  const REWARD_OPTIONS = [
+    ...accounts.map((acc) => ({
+      label: `${acc.label} (${acc.address.substring(0, 6)}...${acc.address.substring(acc.address.length - 4)})`,
+      value: acc.address
+    })),
+    { label: t('settings.miningSettings.customAddress'), value: 'custom' }
+  ]
+
+  const selectedRewardOption = selectionMode === 'custom'
+    ? REWARD_OPTIONS.find((opt) => opt.value === 'custom')!
+    : REWARD_OPTIONS.find((opt) => opt.value === rewardInput) || REWARD_OPTIONS[0]
+
   return (
     <div>
-      <h2 className="text-sm font-semibold text-slate-700 mb-6">Manage internal node mining behavior</h2>
+      <h2 className="text-sm font-semibold text-slate-700 mb-6">{t('settings.miningSettings.subtitle')}</h2>
 
       <div className="space-y-8">
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Mining</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.miningSettings.mining')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Enable Mining</p>
-                <p className="text-xs text-slate-500 mt-0.5">Allow this client to solve block hashes</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.miningSettings.enableTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.miningSettings.enableDesc')}</p>
               </div>
               <button
                 onClick={() => handleToggleMining(!config.isMiningEnabled)}
@@ -169,8 +185,8 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
             
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Start mining at launch</p>
-                <p className="text-xs text-slate-500 mt-0.5">Automatically begin hashing when CointMU starts</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.miningSettings.startLaunchTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.miningSettings.startLaunchDesc')}</p>
               </div>
               <button
                 onClick={() => onUpdate('startAtLaunch', !config.startAtLaunch)}
@@ -183,17 +199,17 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Worker</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.miningSettings.worker')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             
             <div className="p-4">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="text-sm font-bold text-slate-800">CPU threads</p>
-                  <p className="text-xs text-slate-500 mt-0.5">Maximum cores used for hashing ({config.cpuThreads}/{MAX_CORES} allocated)</p>
+                  <p className="text-sm font-bold text-slate-800">{t('settings.miningSettings.cpuThreadsTitle')}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{t('settings.miningSettings.cpuThreadsDesc', { count: config.cpuThreads, max: MAX_CORES })}</p>
                 </div>
                 <span className="text-sm font-bold font-mono text-slate-800 bg-slate-100 px-2 py-1 rounded">
-                  {config.cpuThreads} cores
+                  {config.cpuThreads} {t('settings.miningSettings.coresSuffix')}
                 </span>
               </div>
               
@@ -218,8 +234,8 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Intensity</p>
-                <p className="text-xs text-slate-500 mt-0.5">Limit CPU usage per thread</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.miningSettings.intensityTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.miningSettings.intensityDesc')}</p>
               </div>
               <div className="flex items-center bg-slate-100 rounded-lg p-1">
                 {['Eco', 'Balanced', 'Turbo'].map((opt) => (
@@ -240,8 +256,8 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Pause on battery</p>
-                <p className="text-xs text-slate-500 mt-0.5">Stop mining when laptop is disconnected from power</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.miningSettings.pauseTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.miningSettings.pauseDesc')}</p>
               </div>
               <button
                 onClick={() => onUpdate('pauseOnBattery', !config.pauseOnBattery)}
@@ -254,52 +270,39 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Rewards</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.miningSettings.rewards')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Mode</p>
-                <p className="text-xs text-slate-500 mt-0.5">Solo vs pool mining</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.miningSettings.modeTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.miningSettings.modeDesc')}</p>
               </div>
-              <div className="relative flex-shrink-0">
-                <select
-                  value={config.miningMode}
-                  onChange={(e) => onUpdate('miningMode', e.target.value)}
-                  className="appearance-none bg-white border border-slate-200 rounded-lg pl-4 pr-10 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-                >
-                  <option>Solo</option>
-                  <option>campuspool.cmu</option>
-                  <option>Custom pool...</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-                  <IconChevronDown width={12} height={12} strokeWidth={2.5} />
-                </div>
+              <div className="w-56 flex-shrink-0">
+                <CustomDropdown<string>
+                  options={MINING_MODE_OPTIONS}
+                  selected={config.miningMode}
+                  onSelect={(val) => onUpdate('miningMode', val)}
+                  renderSelected={(selected) => selected || MINING_MODE_OPTIONS[0]}
+                  renderOption={(option) => option}
+                  compact
+                />
               </div>
             </div>
 
             <div className="p-4 flex flex-col gap-3">
               <div>
-                <p className="text-sm font-bold text-slate-800 mb-0.5">Reward address</p>
-                <p className="text-xs text-slate-500">Where coinbase rewards are sent (defaults to main wallet)</p>
+                <p className="text-sm font-bold text-slate-800 mb-0.5">{t('settings.miningSettings.rewardAddressTitle')}</p>
+                <p className="text-xs text-slate-500">{t('settings.miningSettings.rewardAddressDesc')}</p>
               </div>
               
-              <div className="relative">
-                <select
-                  value={selectionMode === 'local' ? rewardInput : 'custom'}
-                  onChange={(e) => handleDropdownSelection(e.target.value)}
-                  className="w-full appearance-none bg-slate-50 border border-slate-200 rounded-lg pl-4 pr-10 py-2 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-                >
-                  <option value="" disabled>Select a wallet...</option>
-                  {accounts.map(acc => (
-                    <option key={acc.address} value={acc.address}>
-                      {acc.label} ({acc.address.substring(0, 6)}...{acc.address.substring(acc.address.length - 4)})
-                    </option>
-                  ))}
-                  <option value="custom">Custom address...</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-                  <IconChevronDown width={12} height={12} strokeWidth={2.5} />
-                </div>
+              <div className="w-full">
+                <CustomDropdown<{ label: string; value: string }>
+                  options={REWARD_OPTIONS}
+                  selected={selectedRewardOption}
+                  onSelect={(opt) => handleDropdownSelection(opt.value)}
+                  renderSelected={(selected) => selected?.label || t('settings.miningSettings.selectWallet')}
+                  renderOption={(option) => option.label}
+                />
               </div>
 
               {selectionMode === 'custom' && (
@@ -311,7 +314,7 @@ export function MiningSettings({ config, accounts = [], onUpdate }: MiningSettin
                     type="text"
                     value={rewardInput}
                     onChange={(e) => handlePoolAddressChange(e.target.value)}
-                    placeholder="0xC0a7d4abcdef0011223344556677889900aa7e90a1"
+                    placeholder={t('settings.miningSettings.customAddressPlaceholder')}
                     className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-sm font-medium text-slate-800 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
                   />
                 </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo, type JSX, type FormEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import ms from 'ms'
 import { useRecentBlocks, usePagination } from '@/hooks'
 import { useAppStore } from '@/store'
@@ -62,6 +63,7 @@ function sumGenesisAllocCmu(alloc: Record<string, { balance: string }>): number 
  * @returns The complete explorer interface.
  */
 function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element {
+  const { t } = useTranslation()
   const blockHeight = useAppStore((s) => s.blockHeight)
   const isConnected = useAppStore((s) => s.isConnected)
 
@@ -77,7 +79,7 @@ function Explorer({ activeWalletAddress, accounts }: ExplorerProps): JSX.Element
           txs.push({
             id: tx.hash,
             type: tx.to ? 'send' : 'contract',
-            title: tx.to ? 'Transaction' : 'Contract Creation',
+            title: tx.to ? t('explorer.index.transaction') : t('explorer.index.contractCreation'),
             subtitle: '',
             amount: amountCmu,
             timestamp: block.timestamp,

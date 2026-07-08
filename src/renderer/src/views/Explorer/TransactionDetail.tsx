@@ -1,4 +1,5 @@
 import { useState, useEffect, type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { IconChevronLeft, IconCheck, IconAlertCircle } from '@/assets/icons'
 import { getTransactionDetail, type TransactionDetailData } from '@/services'
 import { useAppStore } from '@/store'
@@ -27,6 +28,7 @@ function TransactionDetail({
   onBlockSelect,
   onAddressSelect
 }: TransactionDetailProps): JSX.Element {
+  const { t } = useTranslation()
   const blockHeight = useAppStore((s) => s.blockHeight)
   const [detail, setDetail] = useState<TransactionDetailData | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
@@ -54,11 +56,11 @@ function TransactionDetail({
   const statusLabel =
     detail?.status === 'success'
       ? confirmations !== null
-        ? `Confirmed - ${confirmations} confirmations`
-        : 'Confirmed'
+        ? t('explorer.txDetail.confirmedWithCount', { count: confirmations })
+        : t('explorer.txDetail.confirmed')
       : detail?.status === 'failed'
-        ? 'Failed'
-        : 'Pending'
+        ? t('explorer.txDetail.failed')
+        : t('explorer.txDetail.pending')
 
   const approxUsd =
     detail !== null
@@ -85,12 +87,12 @@ function TransactionDetail({
           className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors shadow-sm"
         >
           <IconChevronLeft width={12} height={12} strokeWidth={2.5} />
-          Back
+          {t('explorer.txDetail.back')}
         </button>
 
         <div>
           <p className="text-[10px] font-semibold tracking-widest uppercase text-slate-400 mb-0.5">
-            Transaction
+            {t('explorer.txDetail.transaction')}
           </p>
           <div className="flex items-center gap-3">
             <h2 className="text-xl font-bold text-slate-800 tracking-tight font-mono">{tx.hash}</h2>
@@ -107,7 +109,7 @@ function TransactionDetail({
                 ) : (
                   <IconAlertCircle width={10} height={10} />
                 )}
-                {isSuccess ? 'Success' : detail.status === 'failed' ? 'Failed' : 'Pending'}
+                {isSuccess ? t('explorer.txDetail.success') : detail.status === 'failed' ? t('explorer.txDetail.failed') : t('explorer.txDetail.pending')}
               </span>
             )}
           </div>
@@ -117,17 +119,17 @@ function TransactionDetail({
       {loading || !detail ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-12 shadow-sm text-center">
           <div className="w-6 h-6 rounded-full border-2 border-slate-200 border-t-blue-500 animate-spin mx-auto mb-3" />
-          <p className="text-sm font-medium text-slate-400">Loading transaction...</p>
+          <p className="text-sm font-medium text-slate-400">{t('explorer.txDetail.loading')}</p>
         </div>
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
           <div className="space-y-4">
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">Transaction hash:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.txHash')}</span>
               <span className="text-sm font-mono text-slate-800 break-all">{detail.hash}</span>
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">Status:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.status')}</span>
               <span
                 className={`text-xs font-semibold px-2.5 py-1 rounded-full border flex items-center gap-1.5 ${
                   isSuccess
@@ -144,7 +146,7 @@ function TransactionDetail({
               </span>
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">Block:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.block')}</span>
               {detail.blockNumber !== null ? (
                 <span
                   className="text-sm font-mono text-blue-600 cursor-pointer hover:underline"
@@ -153,11 +155,11 @@ function TransactionDetail({
                   #{detail.blockNumber.toLocaleString()}
                 </span>
               ) : (
-                <span className="text-sm text-slate-400">Pending</span>
+                <span className="text-sm text-slate-400">{t('explorer.txDetail.pending')}</span>
               )}
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">Timestamp:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.timestamp')}</span>
               <span className="text-sm text-slate-800">
                 {detail.timestamp !== null
                   ? new Date(detail.timestamp * 1000).toLocaleString()
@@ -165,44 +167,44 @@ function TransactionDetail({
               </span>
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">From:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.from')}</span>
               <AddressBadge address={detail.from} leftAligned onClick={onAddressSelect} />
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">To:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.to')}</span>
               <AddressBadge address={detail.to} leftAligned onClick={onAddressSelect} />
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">Value:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.value')}</span>
               <span className="text-sm font-bold text-slate-800">
                 {detail.valueCmu.toFixed(4)} CMU
                 <span className="text-xs font-medium text-slate-400 ml-2">{'≈'} ${approxUsd}</span>
               </span>
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">Gas price:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.gasPrice')}</span>
               <span className="text-sm text-slate-800">{detail.gasPriceGwei} gwei</span>
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">Gas used:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.gasUsed')}</span>
               <span className="text-sm text-slate-800">{gasUsedLabel}</span>
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">Transaction fee:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.txFee')}</span>
               <span className="text-sm text-slate-800">
                 {detail.feeCmu !== null ? `${detail.feeCmu.toFixed(6)} CMU` : '--'}
               </span>
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">Nonce:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.nonce')}</span>
               <span className="text-sm text-slate-800">{detail.nonce}</span>
             </div>
             <div className="flex items-start">
-              <span className="text-xs font-semibold text-slate-500 w-1/4 pt-1">Input data:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4 pt-1">{t('explorer.txDetail.inputData')}</span>
               <div className="flex-1">
                 {detail.input === '0x' || detail.input === '' ? (
                   <p className="text-sm font-mono text-slate-500 italic">
-                    0x - empty (simple value transfer)
+                    {t('explorer.txDetail.emptyInput')}
                   </p>
                 ) : (
                   <p className="text-sm font-mono text-slate-800 break-all bg-slate-50 p-2 rounded-lg border border-slate-100">

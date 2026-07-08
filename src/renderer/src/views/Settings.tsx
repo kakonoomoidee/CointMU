@@ -1,4 +1,5 @@
 import { useState, useEffect, type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { GeneralSettings } from '@/components/settings/GeneralSettings'
 import { AppearanceSettings } from '@/components/settings/AppearanceSettings'
 import { NetworkSettings } from '@/components/settings/NetworkSettings'
@@ -162,6 +163,7 @@ interface SettingsProps {
 function Settings({ initialCategory = 'general' }: SettingsProps = {}): JSX.Element {
   const [activeCategory, setActiveCategory] = useState<SettingsCategory>(initialCategory)
   const [settings, setSettings] = useState<SettingsStore | null>(null)
+  const { t } = useTranslation()
 
   useEffect(() => {
     // Load initial settings from the Electron main process via preload bridge
@@ -211,14 +213,14 @@ function Settings({ initialCategory = 'general' }: SettingsProps = {}): JSX.Elem
       <header className="flex items-center justify-between px-8 py-4 border-b border-slate-200">
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold tracking-widest uppercase text-slate-400">
-            System
+            {t('settings.system')}
           </span>
           <span className="text-slate-300">/</span>
-          <span className="text-sm font-semibold text-slate-800">Settings</span>
+          <span className="text-sm font-semibold text-slate-800">{t('sidebar.settings')}</span>
         </div>
 
         <button className="text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors">
-          Reset to defaults
+          {t('settings.resetToDefaults')}
         </button>
       </header>
 
@@ -238,7 +240,7 @@ function Settings({ initialCategory = 'general' }: SettingsProps = {}): JSX.Elem
               <div className={`${activeCategory === cat.id ? 'text-blue-500' : 'text-slate-400'}`}>
                 {cat.icon}
               </div>
-              {cat.label}
+              {t(`settings.${cat.id}`)}
             </button>
           ))}
         </div>

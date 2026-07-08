@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface ExplorerHeaderProps {
   isConnected: boolean
@@ -12,14 +13,16 @@ interface ExplorerHeaderProps {
  * @returns The rendered explorer header.
  */
 function ExplorerHeader({ isConnected, networkHeight }: ExplorerHeaderProps): JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <header className="flex items-center justify-between px-8 py-4 bg-white/50 border-b border-slate-100">
       <div className="flex items-center gap-2">
         <span className="text-xs font-semibold tracking-widest uppercase text-slate-400">
-          Network
+          {t('explorer.header.network')}
         </span>
         <span className="text-slate-300">/</span>
-        <span className="text-sm font-semibold text-slate-800">Explorer</span>
+        <span className="text-sm font-semibold text-slate-800">{t('explorer.header.explorer')}</span>
       </div>
 
       <div className="flex items-center gap-3">
@@ -28,12 +31,12 @@ function ExplorerHeader({ isConnected, networkHeight }: ExplorerHeaderProps): JS
         >
           {isConnected && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
           <span className="text-[10px] font-bold tracking-wide">
-            {isConnected ? `Block # ${networkHeight}` : 'Disconnected'}
+            {isConnected ? t('explorer.header.blockHeight', { height: networkHeight }) : t('explorer.header.disconnected')}
           </span>
         </div>
 
         <button className="px-4 py-1.5 rounded border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
-          Saved searches
+          {t('explorer.header.savedSearches')}
         </button>
       </div>
     </header>

@@ -1,4 +1,5 @@
 import { useState, useEffect, type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import ms from 'ms'
 import { useUpdater } from '@/hooks'
 import { useAppStore } from '@/store'
@@ -44,7 +45,8 @@ const formatBytes = (bytes: number): string => {
  * @returns {JSX.Element} The About Settings view component.
  */
 export function AboutSettings(): JSX.Element {
-  const [uptimeStr, setUptimeStr] = useState<string>('Loading...')
+  const { t } = useTranslation()
+  const [uptimeStr, setUptimeStr] = useState<string>(t('settings.about.loadingUptime'))
   const [chainId, setChainId] = useState<number | null>(null)
   const [isEditingChain, setIsEditingChain] = useState<boolean>(false)
   const [newChainIdInput, setNewChainIdInput] = useState<string>('')
@@ -88,9 +90,7 @@ export function AboutSettings(): JSX.Element {
     const parsedId = parseInt(newChainIdInput, 10)
     if (isNaN(parsedId) || parsedId <= 0) return
 
-    const confirmed = window.confirm(
-      'WARNING: Changing the Chain ID will permanently WIPE your existing local blockchain data and restart the node. Are you absolutely sure you want to proceed?'
-    )
+    const confirmed = window.confirm(t('settings.about.warningChainId'))
 
     if (!confirmed) return
 
@@ -100,13 +100,13 @@ export function AboutSettings(): JSX.Element {
       if (success) {
         setChainId(parsedId)
         setIsEditingChain(false)
-        alert('Chain ID updated successfully. The node is restarting with a fresh blockchain.')
+        alert(t('settings.about.successChainId'))
       } else {
-        alert('Failed to update the Chain ID.')
+        alert(t('settings.about.failChainId'))
       }
     } catch (err) {
       console.error(err)
-      alert('An error occurred while setting the Chain ID.')
+      alert(t('settings.about.errorChainId'))
     } finally {
       setIsSavingChain(false)
     }
@@ -129,7 +129,7 @@ export function AboutSettings(): JSX.Element {
               onClick={() => window.open(EXTERNAL_LINKS.RELEASE_NOTES, '_blank')}
               className="px-4 py-1.5 bg-slate-100 text-slate-800 rounded-lg text-sm font-bold border border-slate-200 hover:bg-slate-200 transition-colors"
             >
-              Release notes
+              {t('settings.about.releaseNotes')}
             </button>
           </div>
         </div>
@@ -137,19 +137,19 @@ export function AboutSettings(): JSX.Element {
 
       <div className="space-y-8">
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Updates</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.about.updates')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-4">
             {updater.status === 'checking' && (
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-bold text-slate-800">Checking for updates</p>
-                  <p className="text-xs text-slate-500 mt-0.5">Contacting the update server...</p>
+                  <p className="text-sm font-bold text-slate-800">{t('settings.about.checkingUpdatesTitle')}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{t('settings.about.checkingUpdatesDesc')}</p>
                 </div>
                 <button
                   disabled
                   className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-slate-300 text-slate-500 cursor-not-allowed"
                 >
-                  Checking...
+                  {t('settings.about.checkingUpdatesBtn')}
                 </button>
               </div>
             )}
@@ -157,16 +157,16 @@ export function AboutSettings(): JSX.Element {
             {updater.status === 'available' && (
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-bold text-slate-800">Update available</p>
+                  <p className="text-sm font-bold text-slate-800">{t('settings.about.updateAvailableTitle')}</p>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Version {updater.info?.version ?? 'unknown'} is ready to download.
+                    {t('settings.about.updateAvailableDesc', { version: updater.info?.version ?? 'unknown' })}
                   </p>
                 </div>
                 <button
                   onClick={() => updater.download()}
                   className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-blue-500 text-white hover:bg-blue-600 transition-colors"
                 >
-                  Download Update
+                  {t('settings.about.downloadUpdateBtn')}
                 </button>
               </div>
             )}
@@ -174,7 +174,7 @@ export function AboutSettings(): JSX.Element {
             {updater.status === 'downloading' && (
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <p className="text-sm font-bold text-slate-800">Downloading update</p>
+                  <p className="text-sm font-bold text-slate-800">{t('settings.about.downloadingUpdateTitle')}</p>
                   <span className="text-sm font-medium font-mono text-slate-600">
                     {Math.round(updater.progress?.percent ?? 0)}%
                   </span>
@@ -194,16 +194,16 @@ export function AboutSettings(): JSX.Element {
             {updater.status === 'downloaded' && (
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-bold text-slate-800">Update ready to install</p>
+                  <p className="text-sm font-bold text-slate-800">{t('settings.about.updateReadyTitle')}</p>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Version {updater.info?.version ?? 'unknown'} has been downloaded.
+                    {t('settings.about.updateReadyDesc', { version: updater.info?.version ?? 'unknown' })}
                   </p>
                 </div>
                 <button
                   onClick={() => updater.install()}
                   className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-emerald-500 text-white hover:bg-emerald-600 transition-colors"
                 >
-                  Restart & Install
+                  {t('settings.about.restartInstallBtn')}
                 </button>
               </div>
             )}
@@ -211,20 +211,20 @@ export function AboutSettings(): JSX.Element {
             {(updater.status === 'idle' || updater.status === 'not-available' || updater.status === 'error') && (
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-bold text-slate-800">Software updates</p>
+                  <p className="text-sm font-bold text-slate-800">{t('settings.about.softwareUpdatesTitle')}</p>
                   {updater.status === 'error' ? (
-                    <p className="text-xs text-red-500 mt-0.5">{updater.error ?? 'Failed to check for updates.'}</p>
+                    <p className="text-xs text-red-500 mt-0.5">{updater.error ?? t('settings.about.failedCheck')}</p>
                   ) : updater.status === 'not-available' ? (
-                    <p className="text-xs text-slate-500 mt-0.5">You are on the latest version.</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{t('settings.about.latestVersion')}</p>
                   ) : (
-                    <p className="text-xs text-slate-500 mt-0.5">Check whether a newer version is available.</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{t('settings.about.checkUpdatesDesc')}</p>
                   )}
                 </div>
                 <button
                   onClick={() => updater.check()}
                   className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-blue-500 text-white hover:bg-blue-600 transition-colors"
                 >
-                  Check for Updates
+                  {t('settings.about.checkUpdatesBtn')}
                 </button>
               </div>
             )}
@@ -232,15 +232,15 @@ export function AboutSettings(): JSX.Element {
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">System</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.about.system')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <div className="flex items-center justify-between p-4">
-              <p className="text-sm font-bold text-slate-800">Node version</p>
+              <p className="text-sm font-bold text-slate-800">{t('settings.about.nodeVersion')}</p>
               <span className="text-sm font-medium font-mono text-slate-600">cointmu/v{sysInfo.version}-stable (Node v{sysInfo.nodeVersion})</span>
             </div>
             
             <div className="flex items-center justify-between p-4">
-              <p className="text-sm font-bold text-slate-800">Chain ID</p>
+              <p className="text-sm font-bold text-slate-800">{t('settings.about.chainId')}</p>
               <div className="flex items-center gap-3">
                 {isEditingChain ? (
                   <>
@@ -256,7 +256,7 @@ export function AboutSettings(): JSX.Element {
                       disabled={isSavingChain}
                       className="text-xs font-bold text-white bg-blue-500 hover:bg-blue-600 rounded px-2.5 py-1 transition-colors"
                     >
-                      {isSavingChain ? 'Saving...' : 'Save'}
+                      {isSavingChain ? t('settings.about.saving') : t('settings.about.save')}
                     </button>
                     <button
                       onClick={() => {
@@ -266,7 +266,7 @@ export function AboutSettings(): JSX.Element {
                       disabled={isSavingChain}
                       className="text-xs font-bold text-slate-500 hover:text-slate-700 transition-colors"
                     >
-                      Cancel
+                      {t('settings.about.cancel')}
                     </button>
                   </>
                 ) : (
@@ -278,7 +278,7 @@ export function AboutSettings(): JSX.Element {
                       onClick={() => setIsEditingChain(true)}
                       className="text-xs font-bold text-blue-500 hover:text-blue-600 transition-colors"
                     >
-                      Edit
+                      {t('settings.about.edit')}
                     </button>
                   </>
                 )}
@@ -286,29 +286,29 @@ export function AboutSettings(): JSX.Element {
             </div>
             
             <div className="flex items-center justify-between p-4">
-              <p className="text-sm font-bold text-slate-800">Connected peers</p>
+              <p className="text-sm font-bold text-slate-800">{t('settings.about.connectedPeers')}</p>
               <span className="text-sm font-medium font-mono text-slate-600">{peerCount !== null ? peerCount : '--'}</span>
             </div>
 
             <div className="flex items-center justify-between p-4">
-              <p className="text-sm font-bold text-slate-800">Uptime</p>
+              <p className="text-sm font-bold text-slate-800">{t('settings.about.uptime')}</p>
               <span className="text-sm font-bold text-slate-800">{uptimeStr}</span>
             </div>
           </div>
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Links</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.about.links')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <button 
               onClick={() => window.open(EXTERNAL_LINKS.DOCUMENTATION, '_blank')}
               className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors group"
             >
               <div className="text-left">
-                <p className="text-sm font-bold text-slate-800">Documentation</p>
-                <p className="text-xs text-slate-500 mt-0.5">Guides, API reference, RPC schema</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.about.documentationTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.about.documentationDesc')}</p>
               </div>
-              <span className="text-sm font-bold text-slate-800 group-hover:text-blue-500 transition-colors">{'Open \u203A'}</span>
+              <span className="text-sm font-bold text-slate-800 group-hover:text-blue-500 transition-colors">{t('settings.about.openLink')}</span>
             </button>
             
             <button 
@@ -316,10 +316,10 @@ export function AboutSettings(): JSX.Element {
               className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors group"
             >
               <div className="text-left">
-                <p className="text-sm font-bold text-slate-800">GitHub</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.about.githubTitle')}</p>
                 <p className="text-xs text-slate-500 mt-0.5">github.com/kakonoomoidee/CointMU</p>
               </div>
-              <span className="text-sm font-bold text-slate-800 group-hover:text-blue-500 transition-colors">{'Open \u203A'}</span>
+              <span className="text-sm font-bold text-slate-800 group-hover:text-blue-500 transition-colors">{t('settings.about.openLink')}</span>
             </button>
             
             <button 
@@ -327,10 +327,10 @@ export function AboutSettings(): JSX.Element {
               className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors group"
             >
               <div className="text-left">
-                <p className="text-sm font-bold text-slate-800">Report an issue</p>
-                <p className="text-xs text-slate-500 mt-0.5">Send a bug report or feature request</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.about.reportIssueTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.about.reportIssueDesc')}</p>
               </div>
-              <span className="text-sm font-bold text-slate-800 group-hover:text-blue-500 transition-colors">{'Open \u203A'}</span>
+              <span className="text-sm font-bold text-slate-800 group-hover:text-blue-500 transition-colors">{t('settings.about.openLink')}</span>
             </button>
           </div>
         </section>

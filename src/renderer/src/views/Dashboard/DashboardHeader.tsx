@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { IconArrowDown, IconArrowUp } from '@/assets/icons'
 
 interface DashboardHeaderProps {
@@ -14,7 +15,8 @@ interface DashboardHeaderProps {
  * @returns The rendered dashboard header.
  */
 function DashboardHeader({ isConnected, onReceive, onSend }: DashboardHeaderProps): JSX.Element {
-  const syncLabel = isConnected ? 'Synced' : 'Offline'
+  const { t } = useTranslation()
+  const syncLabel = isConnected ? t('dashboard.header.synced') : t('dashboard.header.offline')
   const syncDotColor = isConnected ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
   const syncBorderColor = isConnected
     ? 'border-emerald-200 bg-emerald-50'
@@ -25,10 +27,10 @@ function DashboardHeader({ isConnected, onReceive, onSend }: DashboardHeaderProp
     <header className="flex items-center justify-between px-8 py-4">
       <div className="flex items-center gap-2">
         <span className="text-xs font-semibold tracking-widest uppercase text-slate-400">
-          Workspace
+          {t('dashboard.header.workspace')}
         </span>
         <span className="text-slate-300">/</span>
-        <span className="text-sm font-semibold text-slate-800">Dashboard</span>
+        <span className="text-sm font-semibold text-slate-800">{t('dashboard.header.title')}</span>
       </div>
 
       <div className="flex items-center gap-3">
@@ -42,7 +44,7 @@ function DashboardHeader({ isConnected, onReceive, onSend }: DashboardHeaderProp
           className="flex items-center gap-2 px-5 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
         >
           <IconArrowDown width={14} height={14} />
-          Receive
+          {t('dashboard.header.receive')}
         </button>
 
         <button
@@ -50,7 +52,7 @@ function DashboardHeader({ isConnected, onReceive, onSend }: DashboardHeaderProp
           className="flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200"
         >
           <IconArrowUp width={14} height={14} strokeWidth={2.5} />
-          Send
+          {t('dashboard.header.send')}
         </button>
       </div>
     </header>

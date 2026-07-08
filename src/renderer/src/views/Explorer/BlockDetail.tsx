@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { hexToAscii, formatTxAge } from '@/utils'
 import { IconChevronLeft, IconSquare, IconFile } from '@/assets/icons'
 import { AddressBadge } from './AddressBadge'
@@ -24,6 +25,7 @@ function BlockDetail({
   onTransactionSelect,
   onAddressSelect
 }: BlockDetailProps): JSX.Element {
+  const { t } = useTranslation()
   const blockNumber = parseInt(block.number, 16)
 
   return (
@@ -33,83 +35,83 @@ function BlockDetail({
         className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors shadow-sm"
       >
         <IconChevronLeft width={12} height={12} strokeWidth={2.5} />
-        Back
+        {t('explorer.blockDetail.back')}
       </button>
 
       <div>
         <p className="text-[10px] font-semibold tracking-widest uppercase text-slate-400 mb-1">
-          Block
+          {t('explorer.blockDetail.block')}
         </p>
         <h2 className="text-3xl font-bold text-slate-800 tracking-tight font-mono">{blockNumber}</h2>
       </div>
 
       <div className="grid grid-cols-[1.5fr_1fr] gap-6">
         <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-          <h3 className="text-sm font-bold text-slate-800 mb-5">Overview</h3>
+          <h3 className="text-sm font-bold text-slate-800 mb-5">{t('explorer.blockDetail.overview')}</h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/3">Block Height:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/3">{t('explorer.blockDetail.blockHeight')}</span>
               <span className="text-sm font-mono text-slate-800 text-right">{blockNumber}</span>
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/3">Status:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/3">{t('explorer.blockDetail.status')}</span>
               <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Finalized
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> {t('explorer.blockDetail.finalized')}
               </span>
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/3">Timestamp:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/3">{t('explorer.blockDetail.timestamp')}</span>
               <span className="text-sm text-slate-800 text-right">
                 {new Date(parseInt(block.timestamp, 16) * 1000).toLocaleString()}
               </span>
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/3">Hash:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/3">{t('explorer.blockDetail.hash')}</span>
               <span className="text-sm font-mono text-slate-800 text-right">{block.hash}</span>
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/3">Parent Hash:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/3">{t('explorer.blockDetail.parentHash')}</span>
               <span className="text-sm font-mono text-slate-800 text-right break-all">
                 {block.parentHash}
               </span>
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/3">Merkle Root:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/3">{t('explorer.blockDetail.merkleRoot')}</span>
               <span className="text-sm font-mono text-slate-800 text-right break-all">
                 {block.transactionsRoot}
               </span>
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/3">Miner:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/3">{t('explorer.blockDetail.miner')}</span>
               <AddressBadge address={block.miner} onClick={onAddressSelect} />
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/3">Nonce:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/3">{t('explorer.blockDetail.nonce')}</span>
               <span className="text-sm font-mono text-slate-800 text-right">
                 {parseInt(block.nonce, 16).toLocaleString()}
               </span>
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/3">Difficulty:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/3">{t('explorer.blockDetail.difficulty')}</span>
               <span className="text-sm font-mono text-slate-800 text-right">
                 {parseInt(block.difficulty, 16).toLocaleString()}
               </span>
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/3">Block Size:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/3">{t('explorer.blockDetail.blockSize')}</span>
               <span className="text-sm font-mono text-slate-800 text-right">
-                {parseInt(block.size, 16).toLocaleString()} bytes
+                {t('explorer.blockDetail.bytes', { size: parseInt(block.size, 16).toLocaleString() })}
               </span>
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/3">Transactions:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/3">{t('explorer.blockDetail.transactions')}</span>
               <span className="text-sm font-mono text-slate-800 text-right">
-                {block.transactions?.length || 0} transactions
+                {t('explorer.blockDetail.txsCount', { count: block.transactions?.length || 0 })}
               </span>
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <span className="text-xs font-semibold text-slate-500 w-1/3">
-                Gas Used / Gas Limit:
+                {t('explorer.blockDetail.gasUsedLimit')}
               </span>
               <span className="text-sm font-mono text-slate-800 text-right">
                 {parseInt(block.gasUsed, 16).toLocaleString()} /{' '}
@@ -117,13 +119,13 @@ function BlockDetail({
               </span>
             </div>
             <div className="flex items-start justify-between">
-              <span className="text-xs font-semibold text-slate-500 w-1/3 pt-1">Extra Data:</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/3 pt-1">{t('explorer.blockDetail.extraData')}</span>
               <div className="text-right flex-1">
                 <p className="text-sm font-mono text-slate-800 break-all bg-slate-50 p-2 rounded-lg border border-slate-100">
                   {block.extraData}
                 </p>
                 <p className="text-[10px] text-slate-500 mt-2 italic font-mono px-1">
-                  Ascii: {hexToAscii(block.extraData) || 'None'}
+                  {t('explorer.blockDetail.ascii', { ascii: hexToAscii(block.extraData) || t('explorer.blockDetail.noneAscii') })}
                 </p>
               </div>
             </div>
@@ -132,7 +134,7 @@ function BlockDetail({
 
         <div className="flex flex-col gap-6">
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-            <h3 className="text-sm font-bold text-slate-800 mb-2">Block Reward</h3>
+            <h3 className="text-sm font-bold text-slate-800 mb-2">{t('explorer.blockDetail.blockReward')}</h3>
             <p className="text-2xl font-bold text-emerald-600 font-mono tracking-tight">
               +2.00 <span className="text-sm font-medium text-slate-400">CMU</span>
             </p>
@@ -140,7 +142,7 @@ function BlockDetail({
 
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex-1">
             <h3 className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-4">
-              Chain Position
+              {t('explorer.blockDetail.chainPosition')}
             </h3>
             <div className="flex flex-col gap-3">
               {[
@@ -177,28 +179,28 @@ function BlockDetail({
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-        <h3 className="text-sm font-bold text-slate-800 mb-1">Transactions in this block</h3>
+        <h3 className="text-sm font-bold text-slate-800 mb-1">{t('explorer.blockDetail.txsInBlock')}</h3>
         <p className="text-[10px] text-slate-400 mb-5">
-          {block.transactions?.length || 0} entries
+          {t('explorer.blockDetail.entriesCount', { count: block.transactions?.length || 0 })}
         </p>
 
         <table className="w-full text-left">
           <thead>
             <tr className="border-b border-slate-100">
               <th className="px-2 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                Hash
+                {t('explorer.blockDetail.tableHash')}
               </th>
               <th className="px-2 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                From
+                {t('explorer.blockDetail.tableFrom')}
               </th>
               <th className="px-2 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                To
+                {t('explorer.blockDetail.tableTo')}
               </th>
               <th className="px-2 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
-                Amount
+                {t('explorer.blockDetail.tableAmount')}
               </th>
               <th className="px-2 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
-                Age
+                {t('explorer.blockDetail.tableAge')}
               </th>
             </tr>
           </thead>
@@ -241,7 +243,7 @@ function BlockDetail({
               <tr>
                 <td colSpan={5} className="px-2 py-12 text-center">
                   <p className="text-sm font-medium text-slate-400">
-                    No transactions found in this block
+                    {t('explorer.blockDetail.noTxs')}
                   </p>
                 </td>
               </tr>

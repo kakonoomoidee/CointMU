@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface WelcomeStepProps {
   hasExistingWallet: boolean
@@ -14,6 +15,7 @@ interface WelcomeStepProps {
  * @returns The rendered welcome step.
  */
 function WelcomeStep({ hasExistingWallet, onLogin, onCreate, onImport }: WelcomeStepProps): JSX.Element {
+  const { t } = useTranslation()
   return (
     <div className="w-full flex flex-col gap-4">
       {hasExistingWallet && (
@@ -21,20 +23,20 @@ function WelcomeStep({ hasExistingWallet, onLogin, onCreate, onImport }: Welcome
           onClick={onLogin}
           className="w-full py-3.5 bg-slate-800 text-white rounded-xl text-sm font-bold hover:bg-slate-900 transition-colors shadow-sm"
         >
-          Login
+          {t('onboarding.welcome.login')}
         </button>
       )}
       <button
         onClick={onCreate}
         className="w-full py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm"
       >
-        Create New Wallet
+        {t('onboarding.welcome.createNewWallet')}
       </button>
       <button
         onClick={onImport}
         className="w-full py-3.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors shadow-sm"
       >
-        Import Wallet
+        {t('onboarding.welcome.importWallet')}
       </button>
     </div>
   )

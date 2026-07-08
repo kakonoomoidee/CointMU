@@ -1,4 +1,5 @@
 import type { JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { SettingsStore } from '@/views/Settings'
 
 interface AppearanceSettingsProps {
@@ -22,13 +23,15 @@ const COLORS = [
  * @returns The Appearance Settings form component.
  */
 export function AppearanceSettings({ config, onUpdate }: AppearanceSettingsProps): JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <div>
-      <h2 className="text-sm font-semibold text-slate-700 mb-6">Customize how CointMU looks</h2>
+      <h2 className="text-sm font-semibold text-slate-700 mb-6">{t('settings.appearance.subtitle')}</h2>
 
       <div className="space-y-8">
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Theme</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.appearance.theme')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex gap-4">
             
             <button
@@ -48,7 +51,7 @@ export function AppearanceSettings({ config, onUpdate }: AppearanceSettingsProps
                   <div className="w-8 h-1 rounded-full bg-slate-100" />
                 </div>
               </div>
-              <span className="text-sm font-bold text-slate-800 px-2">Light</span>
+              <span className="text-sm font-bold text-slate-800 px-2">{t('settings.appearance.themeLight')}</span>
             </button>
 
             <button
@@ -68,7 +71,7 @@ export function AppearanceSettings({ config, onUpdate }: AppearanceSettingsProps
                   <div className="w-8 h-1 rounded-full bg-slate-800" />
                 </div>
               </div>
-              <span className="text-sm font-bold text-slate-800 px-2">Dark</span>
+              <span className="text-sm font-bold text-slate-800 px-2">{t('settings.appearance.themeDark')}</span>
             </button>
 
             <button
@@ -92,14 +95,14 @@ export function AppearanceSettings({ config, onUpdate }: AppearanceSettingsProps
                    <div className="w-6 h-1 rounded-full bg-slate-200" />
                 </div>
               </div>
-              <span className="text-sm font-bold text-slate-800 px-2">Auto</span>
+              <span className="text-sm font-bold text-slate-800 px-2">{t('settings.appearance.themeAuto')}</span>
             </button>
 
           </div>
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Accent Color</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.appearance.accentColor')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex items-center gap-3">
             {COLORS.map((c) => (
               <button
@@ -116,12 +119,12 @@ export function AppearanceSettings({ config, onUpdate }: AppearanceSettingsProps
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Layout</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.appearance.layout')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Density</p>
-                <p className="text-xs text-slate-500 mt-0.5">Vertical spacing in lists and tables</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.appearance.densityTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.appearance.densityDesc')}</p>
               </div>
               <div className="flex items-center bg-slate-100 rounded-lg p-1">
                 {['Compact', 'Comfortable', 'Spacious'].map((opt) => (
@@ -142,8 +145,8 @@ export function AppearanceSettings({ config, onUpdate }: AppearanceSettingsProps
             
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Show sidebar icons in color</p>
-                <p className="text-xs text-slate-500 mt-0.5">Accent network items by color in the sidebar</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.appearance.showSidebarColorsTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.appearance.showSidebarColorsDesc')}</p>
               </div>
               <button
                 onClick={() => onUpdate('showSidebarColors', !config.showSidebarColors)}
@@ -155,8 +158,8 @@ export function AppearanceSettings({ config, onUpdate }: AppearanceSettingsProps
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Animated transitions</p>
-                <p className="text-xs text-slate-500 mt-0.5">Smooth page changes and motion</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.appearance.animatedTransitionsTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.appearance.animatedTransitionsDesc')}</p>
               </div>
               <button
                 onClick={() => onUpdate('animatedTransitions', !config.animatedTransitions)}

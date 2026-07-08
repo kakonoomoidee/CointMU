@@ -1,4 +1,5 @@
 import { useState, useEffect, type JSX } from "react";
+import { useTranslation } from "react-i18next";
 import ms from "ms";
 import {
   useRecentBlocks,
@@ -63,6 +64,7 @@ function Dashboard({
   const loading = useAppStore((s) => s.loading);
   const balance = useAppStore((s) => s.balance);
   const recentBlocks = useRecentBlocks(blockHeight, isConnected);
+  const { t } = useTranslation();
 
   const { config } = useMiningControls();
   const telemetry = useMiningStats(config.cpuThreads);
@@ -159,7 +161,7 @@ function Dashboard({
     : "0.00 H/s";
 
   const miningUptimeLabel =
-    isConnected && telemetry.isMining ? "Actively mining" : "Miner idle";
+    isConnected && telemetry.isMining ? t("dashboard.index.activelyMining") : t("dashboard.index.minerIdle");
 
   const difficultyDisplay = isConnected ? formatDifficulty(difficulty) : "--";
   const gasDisplay = isConnected && gasPriceGwei !== null ? gasPriceGwei : "0";

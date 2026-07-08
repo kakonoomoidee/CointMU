@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { MiningIcon, SendIcon, ReceiveIcon, ContractIcon } from '@/assets/icons'
 
 export type ActivityType = 'mining' | 'send' | 'receive' | 'contract'
@@ -29,6 +30,8 @@ interface ActivityItemProps {
  * @returns The rendered list item.
  */
 function ActivityItem({ activity }: ActivityItemProps): JSX.Element {
+  const { t } = useTranslation()
+
   let Icon: JSX.Element
   let bgClass: string
   let amountClass: string
@@ -73,7 +76,7 @@ function ActivityItem({ activity }: ActivityItemProps): JSX.Element {
             {activity.pending && (
               <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-100 text-amber-600 text-[10px] font-bold uppercase tracking-wide">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                Pending
+                {t('wallet.activity.pending')}
               </span>
             )}
           </div>

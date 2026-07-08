@@ -1,4 +1,5 @@
 import { useState, type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { IconDownload, IconBox } from '@/assets/icons'
 
 /**
@@ -8,6 +9,7 @@ import { IconDownload, IconBox } from '@/assets/icons'
  * @returns {JSX.Element} The rendered settings panel component.
  */
 function ExternalSourceSettings(): JSX.Element {
+  const { t } = useTranslation()
   const [isExporting, setIsExporting] = useState(false)
 
   /**
@@ -27,9 +29,9 @@ function ExternalSourceSettings(): JSX.Element {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
       <div>
-        <h2 className="text-xl font-bold text-slate-800">External Sources</h2>
+        <h2 className="text-xl font-bold text-slate-800">{t('settings.externalSources.title')}</h2>
         <p className="text-sm text-slate-500 mt-1 leading-relaxed">
-          Manage integrations and standalone companions for your CointMU wallet.
+          {t('settings.externalSources.description')}
         </p>
       </div>
 
@@ -38,9 +40,9 @@ function ExternalSourceSettings(): JSX.Element {
           <IconBox width={24} height={24} className="text-blue-500" />
         </div>
         <div className="flex-1">
-          <h3 className="text-sm font-bold text-slate-800">Companion Browser Extension</h3>
+          <h3 className="text-sm font-bold text-slate-800">{t('settings.externalSources.extensionTitle')}</h3>
           <p className="text-xs text-slate-500 mt-1 leading-relaxed max-w-lg">
-            This standalone extension bridges external dApps to your desktop node. Download the bundled ZIP file and load it unpacked into your browser to enable Web3 connectivity.
+            {t('settings.externalSources.extensionDesc')}
           </p>
         </div>
         <button
@@ -50,7 +52,7 @@ function ExternalSourceSettings(): JSX.Element {
           className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-500 hover:bg-blue-600 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <IconDownload width={16} height={16} />
-          {isExporting ? 'Saving...' : 'Download ZIP'}
+          {isExporting ? t('settings.externalSources.saving') : t('settings.externalSources.download')}
         </button>
       </div>
     </div>

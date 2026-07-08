@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useOnboardingStore } from '@/store'
 import { IconFileText, IconChevronRight, IconKey, IconDownload } from '@/assets/icons'
 
@@ -27,6 +28,7 @@ function ImportWalletStep({
   onBackToInitial,
   onBackToMethod
 }: ImportWalletStepProps): JSX.Element {
+  const { t } = useTranslation()
   const importMethod = useOnboardingStore((s) => s.importMethod)
   const inputValue = useOnboardingStore((s) => s.inputValue)
   const setInputValue = useOnboardingStore((s) => s.setInputValue)
@@ -43,8 +45,8 @@ function ImportWalletStep({
               <IconFileText width={20} height={20} />
             </div>
             <div className="text-left">
-              <p className="text-sm font-bold text-slate-800">12-word Seed Phrase</p>
-              <p className="text-[10px] text-slate-500">Standard BIP39 mnemonic</p>
+              <p className="text-sm font-bold text-slate-800">{t('onboarding.importWallet.seedPhraseTitle')}</p>
+              <p className="text-[10px] text-slate-500">{t('onboarding.importWallet.seedPhraseDesc')}</p>
             </div>
           </div>
           <IconChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
@@ -59,8 +61,8 @@ function ImportWalletStep({
               <IconKey width={20} height={20} />
             </div>
             <div className="text-left">
-              <p className="text-sm font-bold text-slate-800">Private Key</p>
-              <p className="text-[10px] text-slate-500">Raw hex string (0x...)</p>
+              <p className="text-sm font-bold text-slate-800">{t('onboarding.importWallet.privateKeyTitle')}</p>
+              <p className="text-[10px] text-slate-500">{t('onboarding.importWallet.privateKeyDesc')}</p>
             </div>
           </div>
           <IconChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
@@ -76,8 +78,8 @@ function ImportWalletStep({
                 <IconDownload width={20} height={20} />
               </div>
               <div className="text-left">
-                <p className="text-sm font-bold text-slate-800">Import from Keystore JSON</p>
-                <p className="text-[10px] text-slate-500">Encrypted Web3 keystore file</p>
+                <p className="text-sm font-bold text-slate-800">{t('onboarding.importWallet.keystoreTitle')}</p>
+                <p className="text-[10px] text-slate-500">{t('onboarding.importWallet.keystoreDesc')}</p>
               </div>
             </div>
             <IconChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
@@ -88,7 +90,7 @@ function ImportWalletStep({
           onClick={onBackToInitial}
           className="w-full mt-2 py-3.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors"
         >
-          Back
+          {t('onboarding.importWallet.back')}
         </button>
       </div>
     )
@@ -98,24 +100,24 @@ function ImportWalletStep({
     <div className="w-full flex flex-col gap-5">
       {importMethod === 'seed' ? (
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1.5">Seed Phrase</label>
+          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{t('onboarding.importWallet.seedPhraseLabel')}</label>
           <textarea
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
             rows={4}
-            placeholder="apple banana cherry..."
+            placeholder={t('onboarding.importWallet.seedPhrasePlaceholder')}
           />
         </div>
       ) : (
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1.5">Private Key</label>
+          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{t('onboarding.importWallet.privateKeyLabel')}</label>
           <input
             type="password"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-            placeholder="0x..."
+            placeholder={t('onboarding.importWallet.privateKeyPlaceholder')}
           />
         </div>
       )}
@@ -125,14 +127,14 @@ function ImportWalletStep({
           onClick={onBackToMethod}
           className="flex-1 py-3.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors"
         >
-          Back
+          {t('onboarding.importWallet.back')}
         </button>
         <button
           onClick={onContinue}
           disabled={!inputValue.trim()}
           className="flex-1 py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Next
+          {t('onboarding.importWallet.next')}
         </button>
       </div>
     </div>

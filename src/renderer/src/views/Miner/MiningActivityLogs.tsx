@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMiningStore, type MiningLog } from '@/store'
 
 const LEVEL_TEXT_COLOR: Record<MiningLog['level'], string> = {
@@ -16,6 +17,7 @@ const LEVEL_TEXT_COLOR: Record<MiningLog['level'], string> = {
  */
 function MiningActivityLogs(): JSX.Element {
   const logs = useMiningStore((s) => s.miningLogs)
+  const { t } = useTranslation()
 
   return (
     <div className="h-[280px] bg-slate-900 rounded-xl p-4 overflow-y-auto font-mono text-[11px] shadow-inner">
@@ -36,7 +38,7 @@ function MiningActivityLogs(): JSX.Element {
             </div>
           ))
         ) : (
-          <div className="text-slate-500 text-center py-8">Awaiting node activity...</div>
+          <div className="text-slate-500 text-center py-8">{t('mining.activity.logAwaiting')}</div>
         )}
       </div>
     </div>

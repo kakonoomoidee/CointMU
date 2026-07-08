@@ -1,6 +1,22 @@
 import type { JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { SettingsStore } from '@/views/Settings'
-import { IconChevronDown } from '@/assets/icons'
+import { CustomDropdown } from '@/components/CustomDropdown'
+
+const NETWORK_OPTIONS = [
+  'CointMU Mainnet · chain ID 1912',
+  'CointMU Testnet · chain ID 7013',
+  'Localhost 8545'
+]
+
+const MAX_PEERS_OPTIONS = [
+  { label: '10', value: 10 },
+  { label: '14 (recommended)', value: 14 },
+  { label: '25', value: 25 },
+  { label: '50', value: 50 }
+]
+
+const SYNC_MODE_OPTIONS = ['Snap (recommended)', 'Full', 'Light']
 
 interface NetworkSettingsProps {
   config: SettingsStore['network']
@@ -14,39 +30,37 @@ interface NetworkSettingsProps {
  * @returns The Network Settings form component.
  */
 export function NetworkSettings({ config, onUpdate }: NetworkSettingsProps): JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <div>
-      <h2 className="text-sm font-semibold text-slate-700 mb-6">Connection, RPC endpoints, and chain selection</h2>
+      <h2 className="text-sm font-semibold text-slate-700 mb-6">{t('settings.networkSettings.subtitle')}</h2>
 
       <div className="space-y-8">
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Active Network</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.networkSettings.activeNetwork')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Network</p>
-                <p className="text-xs text-slate-500 mt-0.5">Which chain CointMU is connected to</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.networkSettings.networkTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.networkSettings.networkDesc')}</p>
               </div>
-              <div className="relative">
-                <select
-                  value={config.network}
-                  onChange={(e) => onUpdate('network', e.target.value)}
-                  className="appearance-none bg-white border border-slate-200 rounded-lg pl-4 pr-10 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-                >
-                  <option>CointMU Mainnet · chain ID 1912</option>
-                  <option>CointMU Testnet · chain ID 7013</option>
-                  <option>Localhost 8545</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-                  <IconChevronDown width={12} height={12} strokeWidth={2.5} />
-                </div>
+              <div className="w-64">
+                <CustomDropdown<string>
+                  options={NETWORK_OPTIONS}
+                  selected={config.network}
+                  onSelect={(val) => onUpdate('network', val)}
+                  renderSelected={(selected) => selected || NETWORK_OPTIONS[0]}
+                  renderOption={(option) => option}
+                  compact
+                />
               </div>
             </div>
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">RPC endpoint</p>
-                <p className="text-xs text-slate-500 mt-0.5">Where transactions and queries are sent</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.networkSettings.rpcTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.networkSettings.rpcDesc')}</p>
               </div>
               <div className="w-64">
                 <input
@@ -60,16 +74,16 @@ export function NetworkSettings({ config, onUpdate }: NetworkSettingsProps): JSX
 
             <div className="flex items-center justify-between p-4 bg-slate-50/50">
               <div>
-                <p className="text-sm font-bold text-slate-800">Chain ID</p>
-                <p className="text-xs text-slate-500 mt-0.5">Used for transaction signing</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.networkSettings.chainIdTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.networkSettings.chainIdDesc')}</p>
               </div>
               <span className="text-sm font-bold font-mono text-slate-700">1912</span>
             </div>
 
             <div className="flex items-center justify-between p-4 bg-slate-50/50">
               <div>
-                <p className="text-sm font-bold text-slate-800">Block time</p>
-                <p className="text-xs text-slate-500 mt-0.5">Target time between blocks</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.networkSettings.blockTimeTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.networkSettings.blockTimeDesc')}</p>
               </div>
               <span className="text-sm font-bold font-mono text-slate-700">30s</span>
             </div>
@@ -77,34 +91,29 @@ export function NetworkSettings({ config, onUpdate }: NetworkSettingsProps): JSX
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Peers</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.networkSettings.peers')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Max peers</p>
-                <p className="text-xs text-slate-500 mt-0.5">Upper bound on simultaneous peer connections</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.networkSettings.maxPeersTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.networkSettings.maxPeersDesc')}</p>
               </div>
-              <div className="relative">
-                <select
-                  value={config.maxPeers}
-                  onChange={(e) => onUpdate('maxPeers', parseInt(e.target.value))}
-                  className="appearance-none bg-white border border-slate-200 rounded-lg pl-4 pr-10 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-                >
-                  <option value={10}>10</option>
-                  <option value={14}>14 (recommended)</option>
-                  <option value={25}>25</option>
-                  <option value={50}>50</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-                  <IconChevronDown width={12} height={12} strokeWidth={2.5} />
-                </div>
+              <div className="w-56">
+                <CustomDropdown<{ label: string; value: number }>
+                  options={MAX_PEERS_OPTIONS}
+                  selected={MAX_PEERS_OPTIONS.find((opt) => opt.value === config.maxPeers) || MAX_PEERS_OPTIONS[1]}
+                  onSelect={(val) => onUpdate('maxPeers', val.value)}
+                  renderSelected={(selected) => selected?.label}
+                  renderOption={(option) => option.label}
+                  compact
+                />
               </div>
             </div>
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Discovery</p>
-                <p className="text-xs text-slate-500 mt-0.5">Automatically find new peers via DHT</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.networkSettings.discoveryTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.networkSettings.discoveryDesc')}</p>
               </div>
               <button
                 onClick={() => onUpdate('discovery', !config.discovery)}
@@ -116,52 +125,48 @@ export function NetworkSettings({ config, onUpdate }: NetworkSettingsProps): JSX
 
             <div className="flex items-center justify-between p-4 bg-slate-50/50">
               <div>
-                <p className="text-sm font-bold text-slate-800">Listen port</p>
-                <p className="text-xs text-slate-500 mt-0.5">UDP / TCP port used by the gossip protocol</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.networkSettings.listenPortTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.networkSettings.listenPortDesc')}</p>
               </div>
               <span className="text-sm font-bold font-mono text-slate-700">{config.listenPort}</span>
             </div>
 
             <div className="flex items-center justify-between p-4 bg-slate-50/50">
               <div>
-                <p className="text-sm font-bold text-slate-800">Connected peers</p>
-                <p className="text-xs text-slate-500 mt-0.5">14 nodes currently gossiping with you</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.networkSettings.connectedPeersTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.networkSettings.connectedPeersDesc', { count: 14 })}</p>
               </div>
               <button className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-colors">
-                View list
+                {t('settings.networkSettings.viewList')}
               </button>
             </div>
           </div>
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Sync</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.networkSettings.sync')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div className="pr-4">
-                <p className="text-sm font-bold text-slate-800">Sync mode</p>
-                <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">Snap downloads pruned state quickly. Full validates every block from genesis</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.networkSettings.syncModeTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{t('settings.networkSettings.syncModeDesc')}</p>
               </div>
-              <div className="relative flex-shrink-0">
-                <select
-                  value={config.syncMode}
-                  onChange={(e) => onUpdate('syncMode', e.target.value)}
-                  className="appearance-none bg-white border border-slate-200 rounded-lg pl-4 pr-10 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-                >
-                  <option>Snap (recommended)</option>
-                  <option>Full</option>
-                  <option>Light</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-                  <IconChevronDown width={12} height={12} strokeWidth={2.5} />
-                </div>
+              <div className="w-56 flex-shrink-0">
+                <CustomDropdown<string>
+                  options={SYNC_MODE_OPTIONS}
+                  selected={config.syncMode}
+                  onSelect={(val) => onUpdate('syncMode', val)}
+                  renderSelected={(selected) => selected || SYNC_MODE_OPTIONS[0]}
+                  renderOption={(option) => option}
+                  compact
+                />
               </div>
             </div>
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Prune old state</p>
-                <p className="text-xs text-slate-500 mt-0.5">Keep last 128 blocks of historical state to save disk</p>
+                <p className="text-sm font-bold text-slate-800">{t('settings.networkSettings.pruneTitle')}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t('settings.networkSettings.pruneDesc')}</p>
               </div>
               <button
                 onClick={() => onUpdate('pruneOldState', !config.pruneOldState)}

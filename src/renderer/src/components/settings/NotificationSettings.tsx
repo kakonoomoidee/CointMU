@@ -1,4 +1,5 @@
 import type { JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNotificationStore } from '@/store'
 
 interface ToggleRowProps {
@@ -36,32 +37,33 @@ function ToggleRow({ title, description, value, onChange }: ToggleRowProps): JSX
  * @returns The Notifications settings form component.
  */
 export function NotificationSettings(): JSX.Element {
+  const { t } = useTranslation()
   const settings = useNotificationStore((s) => s.settings)
   const updateSettings = useNotificationStore((s) => s.updateSettings)
 
   return (
     <div>
-      <h2 className="text-sm font-semibold text-slate-700 mb-6">Alerts, delivery channels, and event categories</h2>
+      <h2 className="text-sm font-semibold text-slate-700 mb-6">{t('settings.notifications.subtitle')}</h2>
 
       <div className="space-y-8">
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Delivery</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.notifications.delivery')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <ToggleRow
-              title="Global notifications"
-              description="Master switch for all in-app and desktop notifications"
+              title={t('settings.notifications.globalTitle')}
+              description={t('settings.notifications.globalDesc')}
               value={settings.global}
               onChange={() => updateSettings({ global: !settings.global })}
             />
             <ToggleRow
-              title="Desktop / OS notifications"
-              description="Show native system notifications outside the app window"
+              title={t('settings.notifications.desktopTitle')}
+              description={t('settings.notifications.desktopDesc')}
               value={settings.desktopOs}
               onChange={() => updateSettings({ desktopOs: !settings.desktopOs })}
             />
             <ToggleRow
-              title="Notification sound"
-              description="Play a short tone when a notification arrives"
+              title={t('settings.notifications.soundTitle')}
+              description={t('settings.notifications.soundDesc')}
               value={settings.sound}
               onChange={() => updateSettings({ sound: !settings.sound })}
             />
@@ -69,23 +71,23 @@ export function NotificationSettings(): JSX.Element {
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">Event categories</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.notifications.eventCategories')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
             <ToggleRow
-              title="Transaction events"
-              description="Sends, confirmations, and failed transactions"
+              title={t('settings.notifications.txTitle')}
+              description={t('settings.notifications.txDesc')}
               value={settings.transactions}
               onChange={() => updateSettings({ transactions: !settings.transactions })}
             />
             <ToggleRow
-              title="Mining events"
-              description="Blocks you seal and mining milestones"
+              title={t('settings.notifications.miningTitle')}
+              description={t('settings.notifications.miningDesc')}
               value={settings.mining}
               onChange={() => updateSettings({ mining: !settings.mining })}
             />
             <ToggleRow
-              title="Security events"
-              description="Wallet lock, key reveal, and other sensitive actions"
+              title={t('settings.notifications.securityTitle')}
+              description={t('settings.notifications.securityDesc')}
               value={settings.security}
               onChange={() => updateSettings({ security: !settings.security })}
             />

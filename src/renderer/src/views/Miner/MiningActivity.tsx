@@ -1,4 +1,5 @@
 import { useMemo, type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import ms from 'ms'
 import { subDays, format, differenceInMinutes } from 'date-fns'
 import { Card, WalletHistoryFilter, Pagination } from '@/components'
@@ -107,6 +108,8 @@ function FoundBlocksPanel({
   historyFilter,
   onFilterChange,
 }: FoundBlocksPanelProps): JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <div>
       <div className='flex mb-2'>
@@ -127,10 +130,10 @@ function FoundBlocksPanel({
               height={32}
             />
             <p className='text-sm font-medium text-slate-400'>
-              No blocks found yet
+              {t('mining.activity.noBlocks')}
             </p>
             <p className='text-xs text-slate-400 mt-1'>
-              Start mining to find blocks
+              {t('mining.activity.startMining')}
             </p>
           </div>
         ) : (
@@ -193,12 +196,14 @@ function ActivityGraphPanel({
   rejectedDays,
   minutesSinceLast,
 }: ActivityGraphPanelProps): JSX.Element {
+  const { t } = useTranslation()
+
   return (
     <div className='py-2'>
       <p className='text-[11px] font-semibold text-slate-500 mb-3'>
         {minutesSinceLast !== null
-          ? `Accepted shares · last ${minutesSinceLast} minute${minutesSinceLast === 1 ? '' : 's'}`
-          : 'Accepted shares · no activity in the last 30 days'}
+          ? minutesSinceLast === 1 ? t('mining.activity.acceptedSharesLastMin', { count: minutesSinceLast }) : t('mining.activity.acceptedSharesLastMins', { count: minutesSinceLast })
+          : t('mining.activity.acceptedSharesNoActivity')}
       </p>
 
       <div className='flex flex-wrap gap-1.5'>
@@ -214,17 +219,17 @@ function ActivityGraphPanel({
       <div className='flex items-center justify-between mt-4 pt-4 border-t border-slate-100'>
         <p className='text-[11px] font-medium text-slate-500'>
           <span className='font-bold text-emerald-600'>{acceptedDays}</span>
-          {' shares accepted · '}
+          {t('mining.activity.sharesAccepted')}
           <span className='font-bold text-red-500'>{rejectedDays}</span>
-          {' rejected'}
+          {t('mining.activity.rejected')}
         </p>
         <div className='flex items-center gap-1.5'>
-          <span className='text-[10px] text-slate-400 mr-1'>Less</span>
+          <span className='text-[10px] text-slate-400 mr-1'>{t('mining.activity.less')}</span>
           <div className='w-3 h-3 rounded-sm bg-slate-100' />
           <div className='w-3 h-3 rounded-sm bg-green-200' />
           <div className='w-3 h-3 rounded-sm bg-green-400' />
           <div className='w-3 h-3 rounded-sm bg-green-600' />
-          <span className='text-[10px] text-slate-400 ml-1'>More</span>
+          <span className='text-[10px] text-slate-400 ml-1'>{t('mining.activity.more')}</span>
         </div>
       </div>
     </div>
@@ -252,6 +257,8 @@ function MiningActivity({
   historyFilter,
   onFilterChange,
 }: MiningActivityProps): JSX.Element {
+  const { t } = useTranslation()
+
   const recentBlocks = useMemo(() => {
     const cutoff = Date.now() - ACTIVITY_WINDOW_MS
     return scopedFoundBlocks.filter(
@@ -283,9 +290,9 @@ function MiningActivity({
     <Card>
       <div className='flex items-center justify-between mb-1'>
         <div>
-          <h3 className='text-sm font-bold text-slate-800'>Mining activity</h3>
+          <h3 className='text-sm font-bold text-slate-800'>{t('mining.activity.title')}</h3>
           <p className='text-[10px] text-slate-400 mt-0.5'>
-            Blocks you found and what the network paid
+            {t('mining.activity.subtitle')}
           </p>
         </div>
         <div className='relative z-10 flex items-center rounded-lg border border-slate-200 overflow-hidden'>
@@ -299,7 +306,9 @@ function MiningActivity({
                   : 'bg-white text-slate-500 hover:bg-slate-50'
               }`}
             >
-              {tab}
+              {tab === ACTIVITY_TAB_FOUND && t('mining.activity.tabFound')}
+              {tab === ACTIVITY_TAB_LOG && t('mining.activity.tabLog')}
+              {tab === ACTIVITY_TAB_ACTIVITY && t('mining.activity.tabActivity')}
             </button>
           ))}
         </div>

@@ -1,4 +1,5 @@
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { type BlockData } from '@/hooks'
 import { useAppStore } from '@/store'
 import { type ActivityData } from '@/views/Wallet/ActivityItem'
@@ -66,6 +67,7 @@ function ExplorerDataTabs({
   onTxPageChange,
   activeWalletAddress
 }: ExplorerDataTabsProps): JSX.Element {
+  const { t } = useTranslation()
   const balances = useAppStore((s) => s.balances)
 
   const checkIfMinedByMe = (minerAddress: string, balancesMap: Record<string, string>): boolean => {
@@ -83,23 +85,23 @@ function ExplorerDataTabs({
               onClick={() => onTabChange('blocks')}
               className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === 'blocks' ? 'bg-slate-100 text-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}
             >
-              Latest blocks
+              {t('explorer.dataTabs.latestBlocks')}
             </button>
             <button
               onClick={() => onTabChange('transactions')}
               className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === 'transactions' ? 'bg-slate-100 text-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}
             >
-              Transactions
+              {t('explorer.dataTabs.transactions')}
             </button>
             <button
               onClick={() => onTabChange('accounts')}
               className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === 'accounts' ? 'bg-slate-100 text-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}
             >
-              Top accounts
+              {t('explorer.dataTabs.topAccounts')}
             </button>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-semibold text-slate-400">Auto-refresh</span>
+            <span className="text-[10px] font-semibold text-slate-400">{t('explorer.dataTabs.autoRefresh')}</span>
             <div
               className={`flex items-center gap-1.5 px-2 py-1 rounded ${isConnected ? 'bg-emerald-50' : 'bg-slate-100'}`}
             >
@@ -109,7 +111,7 @@ function ExplorerDataTabs({
               <span
                 className={`text-[9px] font-bold uppercase ${isConnected ? 'text-emerald-600' : 'text-slate-500'}`}
               >
-                {isConnected ? 'Live' : 'Off'}
+                {isConnected ? t('explorer.dataTabs.live') : t('explorer.dataTabs.off')}
               </span>
             </div>
           </div>
@@ -121,19 +123,19 @@ function ExplorerDataTabs({
               <thead>
                 <tr className="border-b border-slate-100">
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    Block
+                    {t('explorer.dataTabs.tableBlock')}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    Miner / Hash
+                    {t('explorer.dataTabs.tableMinerHash')}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    Txs
+                    {t('explorer.dataTabs.tableTxs')}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    Reward
+                    {t('explorer.dataTabs.tableReward')}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
-                    Age
+                    {t('explorer.dataTabs.tableAge')}
                   </th>
                 </tr>
               </thead>
@@ -168,7 +170,7 @@ function ExplorerDataTabs({
                           </div>
                           {checkIfMinedByMe(block.miner, balances) && (
                             <span className="px-1.5 py-0.5 rounded bg-blue-50 text-[9px] font-bold text-blue-600 uppercase tracking-wider">
-                              You
+                              {t('explorer.dataTabs.you')}
                             </span>
                           )}
                         </div>
@@ -196,8 +198,8 @@ function ExplorerDataTabs({
                 ) : (
                   <tr>
                     <td colSpan={5} className="px-5 py-12 text-center">
-                      <p className="text-sm font-medium text-slate-400">Awaiting network activity</p>
-                      <p className="text-xs text-slate-400 mt-1">Block data requires an indexer</p>
+                      <p className="text-sm font-medium text-slate-400">{t('explorer.dataTabs.awaitingActivity')}</p>
+                      <p className="text-xs text-slate-400 mt-1">{t('explorer.dataTabs.blockDataRequires')}</p>
                     </td>
                   </tr>
                 )}
@@ -210,19 +212,19 @@ function ExplorerDataTabs({
               <thead>
                 <tr className="border-b border-slate-100">
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    Hash
+                    {t('explorer.dataTabs.tableHash')}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    From
+                    {t('explorer.dataTabs.tableFrom')}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    To
+                    {t('explorer.dataTabs.tableTo')}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
-                    Amount
+                    {t('explorer.dataTabs.tableAmount')}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
-                    Age
+                    {t('explorer.dataTabs.tableAge')}
                   </th>
                 </tr>
               </thead>
@@ -287,9 +289,9 @@ function ExplorerDataTabs({
                 ) : (
                   <tr>
                     <td colSpan={5} className="px-5 py-12 text-center">
-                      <p className="text-sm font-medium text-slate-400">No transactions found</p>
+                      <p className="text-sm font-medium text-slate-400">{t('explorer.dataTabs.noTxsFound')}</p>
                       <p className="text-xs text-slate-400 mt-1">
-                        No transactions have occurred on the network yet
+                        {t('explorer.dataTabs.noTxsOccurred')}
                       </p>
                     </td>
                   </tr>
@@ -313,19 +315,19 @@ function ExplorerDataTabs({
               <thead>
                 <tr className="border-b border-slate-100">
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    #
+                    {t('explorer.dataTabs.tableNumber')}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    Address
+                    {t('explorer.dataTabs.tableAddress')}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    Tag
+                    {t('explorer.dataTabs.tableTag')}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
-                    Balance
+                    {t('explorer.dataTabs.tableBalance')}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
-                    % Supply
+                    {t('explorer.dataTabs.tableSupply')}
                   </th>
                 </tr>
               </thead>
@@ -356,14 +358,14 @@ function ExplorerDataTabs({
                           </p>
                           {checkIfMinedByMe(acc.address, balances) && (
                             <span className="px-1.5 py-0.5 rounded bg-blue-50 text-[9px] font-bold text-blue-600 uppercase tracking-wider">
-                              You
+                              {t('explorer.dataTabs.you')}
                             </span>
                           )}
                         </div>
                       </td>
                       <td className="px-5 py-3.5">
                         <span className="px-2 py-1 rounded bg-slate-100 text-[10px] font-medium text-slate-500">
-                          Miner
+                          {t('explorer.dataTabs.miner')}
                         </span>
                       </td>
                       <td className="px-5 py-3.5 text-right">
@@ -385,9 +387,9 @@ function ExplorerDataTabs({
                 ) : (
                   <tr>
                     <td colSpan={5} className="px-5 py-12 text-center">
-                      <p className="text-sm font-medium text-slate-400">Awaiting network activity</p>
+                      <p className="text-sm font-medium text-slate-400">{t('explorer.dataTabs.awaitingActivity')}</p>
                       <p className="text-xs text-slate-400 mt-1">
-                        Account data requires an indexer or active network
+                        {t('explorer.dataTabs.accountDataRequires')}
                       </p>
                     </td>
                   </tr>
