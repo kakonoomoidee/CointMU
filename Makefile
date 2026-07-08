@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 6
-SUBLEVEL = 4
-EXTRAVERSION = nemesis
+SUBLEVEL = 5
+EXTRAVERSION = Hestia
 
 .PHONY: help dev build\:win build\:linux build\:mac clean
 

@@ -1,7 +1,7 @@
 {
   "name": "cointmu-desktop",
   "productName": "CointMU",
-  "version": "1.6.4-nemesis",
+  "version": "1.6.5-Hestia",
   "description": "CointMU Desktop Client - Proof of Work Blockchain Node Manager",
   "main": "./out/main/index.js",
   "author": "CointMU",
