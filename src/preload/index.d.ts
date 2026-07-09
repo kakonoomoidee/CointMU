@@ -118,6 +118,7 @@ interface CointmuAPI {
   extension: {
     unlink: () => void
     onLinked: (callback: () => void) => () => void
+    onStatusChange: (callback: (status: boolean) => void) => () => void
   }
 }
 

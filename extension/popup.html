@@ -10,16 +10,23 @@
     <!-- Default Popup View -->
     <div id="default-view" class="view active">
       <div class="header">
-        <h2 id="extension.wallet.setupNetwork">Setup Network</h2>
-        <select id="network-select">
+        <select id="network-select" class="network-selector">
           <option value="cointmu">CointMU Mainnet</option>
           <option value="cointmu_testnet">CointMU Testnet</option>
           <option value="custom" id="extension.wallet.customRpc">Custom RPC</option>
         </select>
       </div>
+      <div class="account-section">
+        <div class="account-switcher-container">
+          <select id="account-select" class="account-switcher">
+            <option value="" disabled selected id="extension.wallet.selectAccount">Select Account</option>
+          </select>
+        </div>
+      </div>
       <div class="content">
-        <h3 id="extension.wallet.balance">Balance</h3>
-        <div class="balance-display" id="balance-value">0.00 CMU</div>
+        <div class="balance-container">
+          <div class="balance-display" id="balance-value">0.00 CMU</div>
+        </div>
       </div>
       <div class="footer">
         <button id="linkAppBtn" class="btn primary-btn"><span id="extension.wallet.linkToApp">Link to CointMU App</span></button>

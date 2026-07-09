@@ -41,6 +41,21 @@
       return;
     }
 
+    if (event.data.source === PROVIDER_MESSAGE_SOURCE && event.data.type === 'COINTMU_ACCOUNTS_CHANGED') {
+      const accounts = Array.isArray(event.data.accounts) ? event.data.accounts : [];
+      provider.selectedAddress = accounts[0] || null;
+      if (provider._listeners && provider._listeners['accountsChanged']) {
+        provider._listeners['accountsChanged'].forEach(function (listener) {
+          try {
+            listener(accounts);
+          } catch (e) {
+            console.error('Error executing accountsChanged listener', e);
+          }
+        });
+      }
+      return;
+    }
+
     if (event.data.source !== PROVIDER_MESSAGE_SOURCE) return;
     const { id, result, error } = event.data;
     const entry = pending.get(id);

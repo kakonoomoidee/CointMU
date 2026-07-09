@@ -94,5 +94,7 @@ window.addEventListener('message', handlePageMessage);
 chrome.runtime.onMessage.addListener((message) => {
   if (message && message.type === 'REVOKE_SITE') {
     window.postMessage({ type: 'COINTMU_REVOKE_SITE', source: INJECTED_MESSAGE_SOURCE }, '*');
+  } else if (message && message.type === 'ACCOUNTS_CHANGED') {
+    window.postMessage({ type: 'COINTMU_ACCOUNTS_CHANGED', accounts: message.accounts, source: INJECTED_MESSAGE_SOURCE }, '*');
   }
 });

@@ -48,6 +48,7 @@ async function initPopup() {
   await loadTranslations();
 
   const networkSelect = document.getElementById('network-select');
+  const accountSelect = document.getElementById('account-select');
   const balanceValue = document.getElementById('balance-value');
   const btnApproveConfirm = document.getElementById('btn-approve-confirm');
   const rejectTxBtn = document.getElementById('extension.wallet.rejectTx');
@@ -120,6 +121,7 @@ async function initPopup() {
         if (state && state.balance !== undefined && balanceValue) {
           balanceValue.textContent = `${state.balance} CMU`;
         }
+
       } else {
         linkAppBtn.classList.remove('hidden');
         if (connectedStatus) {
@@ -139,11 +141,35 @@ async function initPopup() {
 
     updateUI(isLinked, walletState);
 
+    if (isLinked) {
+      chrome.runtime.sendMessage({ action: 'GET_ACCOUNTS' });
+    }
+
     chrome.storage.onChanged.addListener((changes, namespace) => {
       if (namespace === 'local') {
         chrome.storage.local.get(['isLinked', 'walletState']).then(res => {
           updateUI(res.isLinked === true, res.walletState);
         });
+      }
+    });
+
+    chrome.runtime.onMessage.addListener((message) => {
+      if (message && message.type === 'ACCOUNTS_LIST' && accountSelect) {
+        const currentOptions = Array.from(accountSelect.options).filter(opt => opt.disabled);
+        accountSelect.innerHTML = '';
+        currentOptions.forEach(opt => accountSelect.appendChild(opt));
+
+        if (Array.isArray(message.accounts)) {
+          message.accounts.forEach((acc) => {
+            const option = document.createElement('option');
+            option.value = acc;
+            option.textContent = acc.substring(0, 6) + '...' + acc.substring(acc.length - 4);
+            if (message.activeAccount === acc) {
+              option.selected = true;
+            }
+            accountSelect.appendChild(option);
+          });
+        }
       }
     });
 
@@ -168,6 +194,15 @@ async function initPopup() {
   networkSelect.addEventListener('change', (e) => {
     console.log('Network switched to:', e.target.value);
   });
+
+  if (accountSelect) {
+    accountSelect.addEventListener('change', (e) => {
+      const address = e.target.value;
+      if (address) {
+        chrome.runtime.sendMessage({ action: 'SWITCH_ACCOUNT', address });
+      }
+    });
+  }
 }
 
 document.addEventListener('DOMContentLoaded', initPopup);

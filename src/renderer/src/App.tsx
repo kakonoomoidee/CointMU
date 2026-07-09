@@ -50,11 +50,17 @@ function App(): JSX.Element {
     void useAdvancedStore.getState().hydrate()
     
     let offLinked = (): void => {}
+    let offStatus = (): void => {}
     let offSite = (): void => {}
 
     if (window.api?.extension?.onLinked) {
       offLinked = window.api.extension.onLinked(() => {
         useConnectedSitesStore.getState().setExtensionLinked(true)
+      })
+    }
+    if (window.api?.extension?.onStatusChange) {
+      offStatus = window.api.extension.onStatusChange((status: boolean) => {
+        useConnectedSitesStore.getState().setExtensionLinked(status)
       })
     }
     if (window.api?.dapp?.onSiteConnected) {
@@ -63,8 +69,9 @@ function App(): JSX.Element {
       })
     }
         
-    return (): void => { 
-      offLinked() 
+    return () => {
+      offLinked()
+      offStatus()
       offSite()
     }
   }, [])

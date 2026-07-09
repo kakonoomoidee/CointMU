@@ -28,6 +28,33 @@ function ConnectedSitesSettings(): JSX.Element {
         </p>
       </div>
 
+      {/* Extension Status Banner */}
+      <div className={`flex items-center justify-between p-4 border rounded-2xl shadow-sm ${isExtensionLinked ? 'bg-green-50 border-green-200' : 'bg-slate-50 border-slate-200'}`}>
+        <div className="flex items-center gap-4">
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isExtensionLinked ? 'bg-green-100 border border-green-200' : 'bg-slate-200 border border-slate-300'}`}>
+            <IconBox width={20} height={20} className={isExtensionLinked ? 'text-green-600' : 'text-slate-500'} />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-slate-800">
+                {t('settings.connectedSites.extensionStatusTitle')}
+              </h3>
+              <div className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md flex items-center gap-1.5 ${isExtensionLinked ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-slate-200 text-slate-600 border border-slate-300'}`}>
+                {isExtensionLinked ? (
+                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                ) : (
+                  <span className="w-1.5 h-1.5 bg-slate-400 rounded-full" />
+                )}
+                {isExtensionLinked ? t('settings.connectedSites.statusConnected') : t('settings.connectedSites.statusDisconnected')}
+              </div>
+            </div>
+            <p className="text-xs text-slate-500 mt-1">
+              {isExtensionLinked ? t('settings.connectedSites.statusConnectedDesc') : t('settings.connectedSites.statusDisconnectedDesc')}
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
         {connectedSites.length === 0 && !isExtensionLinked ? (
           <div className="flex flex-col items-center justify-center py-12 px-6 text-center">

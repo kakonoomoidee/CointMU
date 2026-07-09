@@ -169,11 +169,18 @@ const api = {
     close: (): void => ipcRenderer.send('window-close')
   },
   extension: {
-    unlink: (): void => ipcRenderer.send('extension:unlink'),
+    unlink: () => {
+      ipcRenderer.send('extension:unlink')
+    },
     onLinked: (callback: () => void) => {
       const handler = (): void => callback()
       ipcRenderer.on('extension:linked', handler)
       return () => ipcRenderer.removeListener('extension:linked', handler)
+    },
+    onStatusChange: (callback: (status: boolean) => void) => {
+      const handler = (_: any, status: boolean): void => callback(status)
+      ipcRenderer.on('dapp:extensionStatus', handler)
+      return () => ipcRenderer.removeListener('dapp:extensionStatus', handler)
     }
   }
 }

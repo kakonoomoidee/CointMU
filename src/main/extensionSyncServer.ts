@@ -20,6 +20,8 @@ export async function broadcastWalletState(store: any, rpcPort: number): Promise
   const network = store.get('network.network') || 'CointMU Mainnet';
   let balance = '0.00';
 
+  let accounts: string[] = [];
+
   if (address) {
     try {
       const balanceHex = await callGethRpc(rpcPort, 'eth_getBalance', [address, 'latest']);
@@ -33,9 +35,19 @@ export async function broadcastWalletState(store: any, rpcPort: number): Promise
     }
   }
 
+  try {
+    const gethAccounts = await callGethRpc(rpcPort, 'eth_accounts', []);
+    if (Array.isArray(gethAccounts)) {
+      accounts = gethAccounts;
+    }
+  } catch (err) {
+    console.error('[extension-sync] Failed to fetch accounts:', err);
+  }
+
   const payload = JSON.stringify({
     type: 'WALLET_STATE',
     address,
+    accounts,
     balance,
     network
   });
@@ -99,6 +111,7 @@ export function startExtensionSyncServer(store: any, rpcPort: number, win: Brows
 
   wss.on('connection', (socket: WebSocket) => {
     console.log('[extension-sync] Extension UI connected.');
+    BrowserWindow.getAllWindows()[0]?.webContents.send('dapp:extensionStatus', true);
 
     socket.on('message', async (data: Buffer) => {
       try {
@@ -108,6 +121,28 @@ export function startExtensionSyncServer(store: any, rpcPort: number, win: Brows
           win.webContents.send('pairing:request');
         } else if (msg.type === 'AUTO_RECONNECT') {
           void broadcastWalletState(store, rpcPort);
+        } else if (msg.type === 'GET_ACCOUNTS') {
+          let accounts: string[] = [];
+          try {
+            const gethAccounts = await callGethRpc(rpcPort, 'eth_accounts', []);
+            if (Array.isArray(gethAccounts)) {
+              accounts = gethAccounts;
+            }
+          } catch (err) {
+            console.error('[extension-sync] Failed to fetch accounts:', err);
+          }
+          const activeAccount = store.get('activeWalletAddress') || (accounts[0] || '');
+          socket.send(JSON.stringify({ type: 'ACCOUNTS_LIST', accounts, activeAccount }));
+        } else if (msg.type === 'SWITCH_ACCOUNT') {
+          store.set('activeWalletAddress', msg.address);
+          void broadcastWalletState(store, rpcPort);
+          if (wss) {
+            wss.clients.forEach((client) => {
+              if (client.readyState === 1) {
+                client.send(JSON.stringify({ type: 'ACCOUNTS_CHANGED', accounts: [msg.address] }));
+              }
+            });
+          }
         } else if (msg.jsonrpc === '2.0') {
           try {
             const parsedPayload = msg;
@@ -163,10 +198,16 @@ export function startExtensionSyncServer(store: any, rpcPort: number, win: Brows
       if (pendingSocket === socket) {
         pendingSocket = null;
       }
+      if (wss && wss.clients.size === 0) {
+        BrowserWindow.getAllWindows()[0]?.webContents.send('dapp:extensionStatus', false);
+      }
     });
 
     socket.on('error', (err: Error) => {
       console.error('[extension-sync] Socket error:', err.message);
+      if (wss && wss.clients.size === 0) {
+        BrowserWindow.getAllWindows()[0]?.webContents.send('dapp:extensionStatus', false);
+      }
     });
   });
 

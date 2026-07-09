@@ -62,6 +62,9 @@ function handleSocketMessage(event) {
   } else if (payload.type === 'WALLET_STATE') {
     chrome.storage.local.set({ isLinked: true, walletState: payload });
     return;
+  } else if (payload.type === 'ACCOUNTS_LIST') {
+    chrome.runtime.sendMessage(payload);
+    return;
   } else if (payload.type === 'REVOKE_SITE') {
     if (payload.origin) {
       chrome.tabs.query({ url: payload.origin + '/*' }, (tabs) => {
@@ -72,6 +75,15 @@ function handleSocketMessage(event) {
         }
       });
     }
+    return;
+  } else if (payload.type === 'ACCOUNTS_CHANGED') {
+    chrome.tabs.query({}, (tabs) => {
+      for (const tab of tabs) {
+        if (tab.id) {
+          chrome.tabs.sendMessage(tab.id, { type: 'ACCOUNTS_CHANGED', accounts: payload.accounts });
+        }
+      }
+    });
     return;
   }
 
@@ -199,9 +211,19 @@ function handleContentMessage(message, sender, sendResponse) {
  * @returns {boolean}
  */
 function handleInternalMessage(message, sender, sendResponse) {
-  if (message.action === 'REQUEST_LINK' || message.action === 'AUTO_RECONNECT') {
+  if (message.action === 'REQUEST_LINK' || message.action === 'AUTO_RECONNECT' || message.action === 'GET_ACCOUNTS') {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify({ type: message.action }));
+      sendResponse({ success: true });
+    } else {
+      sendResponse({ success: false, error: 'WebSocket not connected' });
+    }
+    return false;
+  }
+
+  if (message.action === 'SWITCH_ACCOUNT') {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ type: message.action, address: message.address }));
       sendResponse({ success: true });
     } else {
       sendResponse({ success: false, error: 'WebSocket not connected' });
