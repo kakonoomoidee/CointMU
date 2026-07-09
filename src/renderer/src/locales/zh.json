@@ -219,7 +219,14 @@
       "emptyTitle": "没有连接的站点",
       "emptyDesc": "目前没有任何外部应用程序连接到您的 CointMU 钱包。",
       "extensionName": "CointMU Browser Extension",
-      "extensionDesc": "Full Access"
+      "extensionDesc": "Full Access",
+      "revoke": "撤销",
+      "connectedOn": "连接于 {{date}}",
+      "extensionStatusTitle": "扩展状态",
+      "statusConnected": "活跃连接",
+      "statusConnectedDesc": "浏览器扩展已链接并正在桥接请求。",
+      "statusDisconnected": "已断开连接",
+      "statusDisconnectedDesc": "浏览器扩展当前未链接。"
     },
     "externalSources": {
       "title": "外部来源",
@@ -767,7 +774,8 @@
       "syncing": "Syncing...",
       "connectionFailed": "Failed to connect to Desktop App",
       "waitingApproval": "Waiting for approval in Desktop App...",
-      "contextInvalidated": "Extension context invalidated. Please refresh the page."
+      "contextInvalidated": "Extension context invalidated. Please refresh the page.",
+      "selectAccount": "选择账户"
     },
     "error": {
       "title": "出了点问题",

@@ -219,7 +219,14 @@
       "emptyTitle": "Tidak ada situs yang terhubung",
       "emptyDesc": "Tidak ada aplikasi eksternal yang saat ini terhubung ke dompet CointMU Anda.",
       "extensionName": "CointMU Browser Extension",
-      "extensionDesc": "Full Access"
+      "extensionDesc": "Full Access",
+      "revoke": "Cabut",
+      "connectedOn": "Terhubung pada {{date}}",
+      "extensionStatusTitle": "Status Ekstensi",
+      "statusConnected": "Aktif Terhubung",
+      "statusConnectedDesc": "Ekstensi peramban terhubung dan menjembatani permintaan.",
+      "statusDisconnected": "Terputus",
+      "statusDisconnectedDesc": "Ekstensi peramban saat ini tidak terhubung."
     },
     "externalSources": {
       "title": "Sumber Eksternal",
@@ -767,7 +774,8 @@
       "syncing": "Syncing...",
       "connectionFailed": "Failed to connect to Desktop App",
       "waitingApproval": "Waiting for approval in Desktop App...",
-      "contextInvalidated": "Extension context invalidated. Please refresh the page."
+      "contextInvalidated": "Extension context invalidated. Please refresh the page.",
+      "selectAccount": "Pilih Akun"
     },
     "error": {
       "title": "Terjadi kesalahan",

@@ -219,7 +219,14 @@
       "emptyTitle": "No hay sitios conectados",
       "emptyDesc": "No hay aplicaciones externas conectadas a tu billetera CointMU.",
       "extensionName": "CointMU Browser Extension",
-      "extensionDesc": "Full Access"
+      "extensionDesc": "Full Access",
+      "revoke": "Revocar",
+      "connectedOn": "Conectado el {{date}}",
+      "extensionStatusTitle": "Estado de la Extensión",
+      "statusConnected": "Conectado Activamente",
+      "statusConnectedDesc": "La extensión del navegador está vinculada y conectando solicitudes.",
+      "statusDisconnected": "Desconectado",
+      "statusDisconnectedDesc": "La extensión del navegador no está vinculada actualmente."
     },
     "externalSources": {
       "title": "Fuentes Externas",
@@ -767,7 +774,8 @@
       "syncing": "Syncing...",
       "connectionFailed": "Failed to connect to Desktop App",
       "waitingApproval": "Waiting for approval in Desktop App...",
-      "contextInvalidated": "Extension context invalidated. Please refresh the page."
+      "contextInvalidated": "Extension context invalidated. Please refresh the page.",
+      "selectAccount": "Seleccionar Cuenta"
     },
     "error": {
       "title": "Algo salio mal",
