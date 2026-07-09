@@ -212,8 +212,6 @@
     "connectedSites": {
       "title": "Connected Sites",
       "description": "These third-party applications have been granted read-only access to your active wallet address, network state, and chain data. They can interact with your wallet without triggering the approval modal for standard reads.",
-      "extensionName": "CointMU Browser Extension",
-      "extensionDesc": "Full Access",
       "noConnectedSitesTitle": "No connected sites",
       "noConnectedSitesDesc": "No external applications are currently connected to your CointMU wallet.",
       "readOnlyAccess": "Read-only access granted",

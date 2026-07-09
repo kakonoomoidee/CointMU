@@ -1,7 +1,7 @@
 import { type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useConnectedSitesStore } from '@/store'
-import { IconGlobe, IconLink } from '@/assets/icons'
+import { IconGlobe, IconLink, IconBox } from '@/assets/icons'
 
 /**
  * Settings view panel that displays the list of whitelisted dApp origins.
@@ -15,7 +15,9 @@ import { IconGlobe, IconLink } from '@/assets/icons'
 function ConnectedSitesSettings(): JSX.Element {
   const { t } = useTranslation()
   const connectedSites = useConnectedSitesStore((s) => s.connectedSites)
+  const isExtensionLinked = useConnectedSitesStore((s) => s.isExtensionLinked)
   const removeConnectedSite = useConnectedSitesStore((s) => s.removeConnectedSite)
+  const setExtensionLinked = useConnectedSitesStore((s) => s.setExtensionLinked)
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -27,7 +29,7 @@ function ConnectedSitesSettings(): JSX.Element {
       </div>
 
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-        {connectedSites.length === 0 ? (
+        {connectedSites.length === 0 && !isExtensionLinked ? (
           <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
             <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-100">
               <IconLink width={24} height={24} className="text-slate-300" />
@@ -39,31 +41,65 @@ function ConnectedSitesSettings(): JSX.Element {
           </div>
         ) : (
           <ul className="divide-y divide-slate-100">
-            {connectedSites.map((origin) => (
-              <li key={origin} className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
+            {isExtensionLinked && (
+              <li className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0">
-                    <IconGlobe width={20} height={20} className="text-blue-500" />
+                  <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center flex-shrink-0">
+                    <IconBox width={20} height={20} className="text-indigo-500" />
                   </div>
                   <div className="overflow-hidden">
-                    <p className="text-sm font-semibold text-slate-800 truncate" title={origin}>
-                      {origin}
+                    <p className="text-sm font-semibold text-slate-800 truncate" title="CointMU Extension">
+                      {t('settings.connectedSites.extensionName')}
                     </p>
                     <p className="text-xs text-slate-400 mt-0.5">
-                      {t('settings.connectedSites.accessGranted')}
+                      {t('settings.connectedSites.extensionDesc')}
                     </p>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => removeConnectedSite(origin)}
-                  className="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 hover:border-red-200 rounded-lg transition-colors ml-4 flex-shrink-0"
-                >
-                  {t('settings.connectedSites.revoke')}
-                </button>
+                <div className="flex items-center gap-3">
+                  <div className="px-3 py-1.5 text-xs font-semibold text-indigo-600 bg-indigo-50 border border-indigo-100 rounded-lg flex-shrink-0 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse" />
+                    Active
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      window.api.extension.unlink()
+                      setExtensionLinked(false)
+                    }}
+                    className="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 hover:border-red-200 rounded-lg transition-colors flex-shrink-0"
+                  >
+                    {t('settings.connectedSites.revoke')}
+                  </button>
+                </div>
               </li>
-            ))}
-          </ul>
+            )}
+          
+          {connectedSites.map((origin) => (
+            <li key={origin} className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0">
+                  <IconGlobe width={20} height={20} className="text-blue-500" />
+                </div>
+                <div className="overflow-hidden">
+                  <p className="text-sm font-semibold text-slate-800 truncate" title={origin}>
+                    {origin}
+                  </p>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    {t('settings.connectedSites.accessGranted')}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => removeConnectedSite(origin)}
+                className="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 hover:border-red-200 rounded-lg transition-colors ml-4 flex-shrink-0"
+              >
+                {t('settings.connectedSites.revoke')}
+              </button>
+            </li>
+          ))}
+        </ul>
         )}
       </div>
     </div>

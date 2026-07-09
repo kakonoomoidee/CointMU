@@ -217,7 +217,9 @@
       "readOnlyAccess": "Lesezugriff gewährt",
       "revokeBtn": "Widerrufen",
       "emptyTitle": "Keine verbundenen Seiten",
-      "emptyDesc": "Derzeit sind keine externen Anwendungen mit Ihrem CointMU-Wallet verbunden."
+      "emptyDesc": "Derzeit sind keine externen Anwendungen mit Ihrem CointMU-Wallet verbunden.",
+      "extensionName": "CointMU Browser Extension",
+      "extensionDesc": "Full Access"
     },
     "externalSources": {
       "title": "Externe Quellen",
@@ -311,7 +313,8 @@
       "documentationTitle": "Dokumentation",
       "documentationDesc": "Leitfäden, API-Referenz, RPC-Schema",
       "openLink": "Öffnen ›",
-      "reportIssueTitle": "Ein Problem melden"
+      "reportIssueTitle": "Ein Problem melden",
+      "latestVersion": "Sie haben die neueste Version"
     },
     "resetToDefaults": "Auf Standard zurücksetzen",
     "system": "System",
@@ -737,6 +740,37 @@
     "window": {
       "minimize": "Minimieren",
       "close": "Schließen"
+    },
+    "pairing": {
+      "pairingRequest": "Extension Link Request",
+      "pairingDesc": "Do you want to allow the CointMU Browser Extension to connect to your wallet?",
+      "approve": "Approve",
+      "reject": "Reject"
+    }
+  },
+  "extension": {
+    "wallet": {
+      "title": "CointMU Wallet",
+      "setupNetwork": "Netzwerk einrichten",
+      "linkToApp": "Mit CointMU App verbinden",
+      "customRpc": "Benutzerdefinierter RPC",
+      "balance": "Guthaben",
+      "address": "Adresse",
+      "approveTx": "Transaktion genehmigen",
+      "rejectTx": "Ablehnen",
+      "method": "Methode",
+      "params": "Parameter",
+      "sender": "Von",
+      "connected": "Verbunden",
+      "disconnected": "Getrennt",
+      "loading": "Laden...",
+      "syncing": "Syncing...",
+      "connectionFailed": "Failed to connect to Desktop App",
+      "waitingApproval": "Waiting for approval in Desktop App..."
+    },
+    "error": {
+      "title": "Etwas ist schiefgelaufen",
+      "retryBtn": "Popup neu laden"
     }
   }
 }

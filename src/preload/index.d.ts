@@ -105,9 +105,17 @@ interface CointmuAPI {
     onDappRequest: (callback: (payload: DappRequest) => void) => () => void
     sendDappResponse: (payload: { id: number; tabId: number; approved: boolean; result?: unknown }) => void
   }
+  pairing: {
+    onRequest: (callback: () => void) => () => void
+    respond: (approved: boolean) => void
+  }
   window: {
     minimize: () => void
     close: () => void
+  }
+  extension: {
+    unlink: () => void
+    onLinked: (callback: () => void) => () => void
   }
 }
 

@@ -217,7 +217,9 @@
       "readOnlyAccess": "Доступ на чтение",
       "revokeBtn": "Отозвать",
       "emptyTitle": "Нет подключенных сайтов",
-      "emptyDesc": "Нет внешних приложений, подключенных к вашему кошельку."
+      "emptyDesc": "Нет внешних приложений, подключенных к вашему кошельку.",
+      "extensionName": "CointMU Browser Extension",
+      "extensionDesc": "Full Access"
     },
     "externalSources": {
       "title": "Внешние источники",
@@ -311,7 +313,8 @@
       "documentationTitle": "Документация",
       "documentationDesc": "Руководства, API, схема RPC",
       "openLink": "Открыть ›",
-      "reportIssueTitle": "Сообщить о проблеме"
+      "reportIssueTitle": "Сообщить о проблеме",
+      "latestVersion": "У вас установлена последняя версия"
     },
     "resetToDefaults": "Сбросить настройки",
     "system": "Система",
@@ -737,6 +740,37 @@
     "window": {
       "minimize": "Свернуть",
       "close": "Закрыть"
+    },
+    "pairing": {
+      "pairingRequest": "Extension Link Request",
+      "pairingDesc": "Do you want to allow the CointMU Browser Extension to connect to your wallet?",
+      "approve": "Approve",
+      "reject": "Reject"
+    }
+  },
+  "extension": {
+    "wallet": {
+      "title": "CointMU Wallet",
+      "setupNetwork": "Настройка сети",
+      "linkToApp": "Подключить к CointMU",
+      "customRpc": "Пользовательский RPC",
+      "balance": "Баланс",
+      "address": "Адрес",
+      "approveTx": "Подтвердить транзакцию",
+      "rejectTx": "Отклонить",
+      "method": "Метод",
+      "params": "Параметры",
+      "sender": "От",
+      "connected": "Подключено",
+      "disconnected": "Отключено",
+      "loading": "Загрузка...",
+      "syncing": "Syncing...",
+      "connectionFailed": "Failed to connect to Desktop App",
+      "waitingApproval": "Waiting for approval in Desktop App..."
+    },
+    "error": {
+      "title": "Что-то пошло не так",
+      "retryBtn": "Перезагрузить"
     }
   }
 }

@@ -217,7 +217,9 @@
       "readOnlyAccess": "Akses baca-saja diberikan",
       "revokeBtn": "Cabut",
       "emptyTitle": "Tidak ada situs yang terhubung",
-      "emptyDesc": "Tidak ada aplikasi eksternal yang saat ini terhubung ke dompet CointMU Anda."
+      "emptyDesc": "Tidak ada aplikasi eksternal yang saat ini terhubung ke dompet CointMU Anda.",
+      "extensionName": "CointMU Browser Extension",
+      "extensionDesc": "Full Access"
     },
     "externalSources": {
       "title": "Sumber Eksternal",
@@ -311,7 +313,8 @@
       "documentationTitle": "Dokumentasi",
       "documentationDesc": "Panduan, referensi API, skema RPC",
       "openLink": "Buka ›",
-      "reportIssueTitle": "Laporkan masalah"
+      "reportIssueTitle": "Laporkan masalah",
+      "latestVersion": "Anda menggunakan versi terbaru"
     },
     "resetToDefaults": "Kembalikan ke awal",
     "system": "Sistem",
@@ -737,6 +740,37 @@
     "window": {
       "minimize": "Minimalkan",
       "close": "Tutup"
+    },
+    "pairing": {
+      "pairingRequest": "Extension Link Request",
+      "pairingDesc": "Do you want to allow the CointMU Browser Extension to connect to your wallet?",
+      "approve": "Approve",
+      "reject": "Reject"
+    }
+  },
+  "extension": {
+    "wallet": {
+      "title": "CointMU Wallet",
+      "setupNetwork": "Atur Jaringan",
+      "linkToApp": "Hubungkan ke CointMU App",
+      "customRpc": "RPC Kustom",
+      "balance": "Saldo",
+      "address": "Alamat",
+      "approveTx": "Setujui Transaksi",
+      "rejectTx": "Tolak",
+      "method": "Metode",
+      "params": "Parameter",
+      "sender": "Dari",
+      "connected": "Terhubung",
+      "disconnected": "Terputus",
+      "loading": "Memuat...",
+      "syncing": "Syncing...",
+      "connectionFailed": "Failed to connect to Desktop App",
+      "waitingApproval": "Waiting for approval in Desktop App..."
+    },
+    "error": {
+      "title": "Terjadi kesalahan",
+      "retryBtn": "Muat Ulang Popup"
     }
   }
 }

@@ -17,6 +17,7 @@ import ms from "ms";
 import { callGethRpc } from './rpcUtils';
 import { scanWalletActivity, fetchNetworkInsights } from './activityScanner';
 import { startDappWsServer } from './dappWsServer';
+import { startExtensionSyncServer, broadcastWalletState } from './extensionSyncServer';
 
 config({ path: join(app.getAppPath(), ".env") });
 
@@ -900,7 +901,12 @@ app.whenReady().then(async () => {
   });
 
   ipcMain.handle("settings:get", (_, key) => store.get(key));
-  ipcMain.handle("settings:set", (_, key, value) => store.set(key, value));
+  ipcMain.handle("settings:set", (_, key, value) => {
+    store.set(key, value);
+    if (key === 'activeWalletAddress' || key === 'network.network') {
+      void broadcastWalletState(store, resolvedRpcPort);
+    }
+  });
   ipcMain.handle("settings:getAll", () => store.store);
 
   ipcMain.handle(
@@ -1069,6 +1075,7 @@ app.whenReady().then(async () => {
   miningController.setWindow(win);
 
   const dappServer = startDappWsServer(win);
+  const extSyncServer = startExtensionSyncServer(store, resolvedRpcPort, win);
 
   app.on("activate", function () {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -1078,6 +1085,7 @@ app.whenReady().then(async () => {
 
   app.on('before-quit', () => {
     dappServer.close();
+    extSyncServer.close();
   });
 });
 

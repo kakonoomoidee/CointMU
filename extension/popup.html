@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CointMU Wallet</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <!-- Default Popup View -->
+    <div id="default-view" class="view active">
+      <div class="header">
+        <h2 id="extension.wallet.setupNetwork">Setup Network</h2>
+        <select id="network-select">
+          <option value="cointmu">CointMU Mainnet</option>
+          <option value="cointmu_testnet">CointMU Testnet</option>
+          <option value="custom" id="extension.wallet.customRpc">Custom RPC</option>
+        </select>
+      </div>
+      <div class="content">
+        <h3 id="extension.wallet.balance">Balance</h3>
+        <div class="balance-display" id="balance-value">0.00 CMU</div>
+      </div>
+      <div class="footer">
+        <button id="linkAppBtn" class="btn primary-btn"><span id="extension.wallet.linkToApp">Link to CointMU App</span></button>
+        <div id="connected-status" class="hidden" style="text-align: center; color: #10b981; font-weight: bold; padding: 10px;">
+          <span id="extension.wallet.connected">Connected to CointMU</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transaction Approval View -->
+    <div id="approval-view" class="view hidden">
+      <div class="header">
+        <h2 id="extension.wallet.approveTx">Approve Transaction</h2>
+      </div>
+      <div class="content tx-content">
+        <div class="tx-details">
+          <div class="tx-row">
+            <span class="tx-label">To:</span>
+            <span id="tx-to" class="tx-value"></span>
+          </div>
+          <div class="tx-row">
+            <span class="tx-label">Value:</span>
+            <span id="tx-value" class="tx-value"></span>
+          </div>
+          <div class="tx-row">
+            <span class="tx-label">Data:</span>
+            <span id="tx-data" class="tx-value"></span>
+          </div>
+        </div>
+      </div>
+      <div class="footer action-footer">
+        <button id="extension.wallet.rejectTx" class="btn danger-btn">Reject</button>
+        <!-- The button below doesn't have a specific translation key in the prompt, so I use a default text which will be updated if needed -->
+        <button id="btn-approve-confirm" class="btn success-btn">Approve</button>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

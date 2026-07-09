@@ -217,7 +217,9 @@
       "readOnlyAccess": "Acceso de solo lectura concedido",
       "revokeBtn": "Revocar",
       "emptyTitle": "No hay sitios conectados",
-      "emptyDesc": "No hay aplicaciones externas conectadas a tu billetera CointMU."
+      "emptyDesc": "No hay aplicaciones externas conectadas a tu billetera CointMU.",
+      "extensionName": "CointMU Browser Extension",
+      "extensionDesc": "Full Access"
     },
     "externalSources": {
       "title": "Fuentes Externas",
@@ -311,7 +313,8 @@
       "documentationTitle": "Documentación",
       "documentationDesc": "Guías, referencia API, esquema RPC",
       "openLink": "Abrir ›",
-      "reportIssueTitle": "Reportar un problema"
+      "reportIssueTitle": "Reportar un problema",
+      "latestVersion": "Estás en la última versión"
     },
     "resetToDefaults": "Restablecer valores",
     "system": "Sistema",
@@ -737,6 +740,37 @@
     "window": {
       "minimize": "Minimizar",
       "close": "Cerrar"
+    },
+    "pairing": {
+      "pairingRequest": "Extension Link Request",
+      "pairingDesc": "Do you want to allow the CointMU Browser Extension to connect to your wallet?",
+      "approve": "Approve",
+      "reject": "Reject"
+    }
+  },
+  "extension": {
+    "wallet": {
+      "title": "CointMU Wallet",
+      "setupNetwork": "Configurar Red",
+      "linkToApp": "Conectar a CointMU App",
+      "customRpc": "RPC Personalizado",
+      "balance": "Saldo",
+      "address": "Direccion",
+      "approveTx": "Aprobar Transaccion",
+      "rejectTx": "Rechazar",
+      "method": "Metodo",
+      "params": "Parametros",
+      "sender": "De",
+      "connected": "Conectado",
+      "disconnected": "Desconectado",
+      "loading": "Cargando...",
+      "syncing": "Syncing...",
+      "connectionFailed": "Failed to connect to Desktop App",
+      "waitingApproval": "Waiting for approval in Desktop App..."
+    },
+    "error": {
+      "title": "Algo salio mal",
+      "retryBtn": "Recargar Popup"
     }
   }
 }

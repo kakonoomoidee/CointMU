@@ -217,7 +217,9 @@
       "readOnlyAccess": "已授予只读权限",
       "revokeBtn": "撤销",
       "emptyTitle": "没有连接的站点",
-      "emptyDesc": "目前没有任何外部应用程序连接到您的 CointMU 钱包。"
+      "emptyDesc": "目前没有任何外部应用程序连接到您的 CointMU 钱包。",
+      "extensionName": "CointMU Browser Extension",
+      "extensionDesc": "Full Access"
     },
     "externalSources": {
       "title": "外部来源",
@@ -311,7 +313,8 @@
       "documentationTitle": "文档",
       "documentationDesc": "指南，API 参考，RPC 架构",
       "openLink": "打开 ›",
-      "reportIssueTitle": "报告问题"
+      "reportIssueTitle": "报告问题",
+      "latestVersion": "您使用的是最新版本"
     },
     "resetToDefaults": "恢复默认值",
     "system": "系统",
@@ -737,6 +740,37 @@
     "window": {
       "minimize": "最小化",
       "close": "关闭"
+    },
+    "pairing": {
+      "pairingRequest": "Extension Link Request",
+      "pairingDesc": "Do you want to allow the CointMU Browser Extension to connect to your wallet?",
+      "approve": "Approve",
+      "reject": "Reject"
+    }
+  },
+  "extension": {
+    "wallet": {
+      "title": "CointMU 钱包",
+      "setupNetwork": "设置网络",
+      "linkToApp": "连接到 CointMU 应用",
+      "customRpc": "自定义 RPC",
+      "balance": "余额",
+      "address": "地址",
+      "approveTx": "批准交易",
+      "rejectTx": "拒绝",
+      "method": "方法",
+      "params": "参数",
+      "sender": "发送方",
+      "connected": "已连接",
+      "disconnected": "已断开",
+      "loading": "加载中...",
+      "syncing": "Syncing...",
+      "connectionFailed": "Failed to connect to Desktop App",
+      "waitingApproval": "Waiting for approval in Desktop App..."
+    },
+    "error": {
+      "title": "出了点问题",
+      "retryBtn": "重新加载弹窗"
     }
   }
 }

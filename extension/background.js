@@ -1,6 +1,6 @@
 'use strict';
 
-const WS_URL = 'ws://127.0.0.1:8546';
+const WS_URL = 'ws://127.0.0.1:8765';
 const RECONNECT_DELAY_MS = 3000;
 const JSON_RPC_VERSION = '2.0';
 
@@ -40,6 +40,20 @@ function handleSocketMessage(event) {
     payload = JSON.parse(event.data);
   } catch {
     console.error('[CointMU-bg] Received malformed JSON from WS server:', event.data);
+    return;
+  }
+
+  if (payload.type === 'LINK_APPROVED') {
+    chrome.storage.local.set({ isLinked: true });
+    return;
+  } else if (payload.type === 'LINK_REJECTED') {
+    chrome.storage.local.set({ isLinked: false });
+    return;
+  } else if (payload.type === 'FORCE_UNLINK') {
+    chrome.storage.local.remove(['isLinked', 'walletState']);
+    return;
+  } else if (payload.type === 'WALLET_STATE') {
+    chrome.storage.local.set({ isLinked: true, walletState: payload });
     return;
   }
 
@@ -118,6 +132,16 @@ function disconnect() {
  * @returns {boolean} Returns true to keep the message channel open for the async response.
  */
 function handleContentMessage(message, sender, sendResponse) {
+  if (message.action === 'REQUEST_LINK' || message.action === 'AUTO_RECONNECT') {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ type: message.action }));
+      sendResponse({ success: true });
+    } else {
+      sendResponse({ success: false, error: 'WebSocket not connected' });
+    }
+    return false;
+  }
+
   const tabId = sender.tab?.id;
   if (tabId === undefined) {
     sendResponse({ result: null, error: { message: 'Sender has no tab context.' } });

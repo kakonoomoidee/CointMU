@@ -8,11 +8,12 @@ import {
   useAppStore,
   useNotificationStore,
   useSecurityStore,
-  useAdvancedStore
+  useAdvancedStore,
+  useConnectedSitesStore
 } from '@/store'
 
-import { Sidebar, ToastViewport, DappApprovalModal, CustomTitleBar } from '@/components'
-import { useDappRequestHandler } from '@/hooks'
+import { Sidebar, ToastViewport, PairingApprovalModal, CustomTitleBar } from '@/components'
+import { useDappRequestHandler, useAutoLock } from '@/hooks'
 
 const Miner = lazy(() => import('@/views/Miner').then((m) => ({ default: m.Miner })))
 const Explorer = lazy(() => import('@/views/Explorer').then((m) => ({ default: m.Explorer })))
@@ -47,6 +48,13 @@ function App(): JSX.Element {
     void useNotificationStore.getState().hydrate()
     void useSecurityStore.getState().hydrate()
     void useAdvancedStore.getState().hydrate()
+    
+    if (window.api?.extension?.onLinked) {
+      const off = window.api.extension.onLinked(() => {
+        useConnectedSitesStore.getState().setExtensionLinked(true)
+      })
+      return () => { off() }
+    }
   }, [])
 
   useDappRequestHandler()
@@ -79,6 +87,20 @@ function App(): JSX.Element {
     return (): void => clearInterval(intervalId)
   }, [activeWalletAddress, accountsKey])
 
+  /**
+   * Locks the wallet by clearing the decrypted session state in React.
+   * Does NOT delete the encrypted payload from the persistent electron-store.
+   * Also resets the transient Onboarding UI state back to the initial screen.
+   */
+  const handleLogout = (): void => {
+    useOnboardingStore.getState().reset()
+    setActiveWalletAddress(null)
+    setAccounts([])
+    setActiveView(NAV_ITEM_DASHBOARD)
+  }
+
+  useAutoLock(handleLogout, activeWalletAddress !== null)
+
   if (isLoadingWallet) {
     return (
       <div className="flex items-center justify-center h-screen bg-slate-50">
@@ -97,23 +119,11 @@ function App(): JSX.Element {
     return <Onboarding onComplete={(address) => handleOnboardingComplete(address)} />
   }
 
-  /**
-   * Locks the wallet by clearing the decrypted session state in React.
-   * Does NOT delete the encrypted payload from the persistent electron-store.
-   * Also resets the transient Onboarding UI state back to the initial screen.
-   */
-  const handleLogout = (): void => {
-    useOnboardingStore.getState().reset()
-    setActiveWalletAddress(null)
-    setAccounts([])
-    setActiveView(NAV_ITEM_DASHBOARD)
-  }
-
   return (
     <div className="flex flex-col h-full bg-slate-50 overflow-hidden">
       <CustomTitleBar />
       <div className="flex flex-1 overflow-hidden">
-        <DappApprovalModal />
+        <PairingApprovalModal />
         <ToastViewport />
       <Sidebar
         accounts={accounts}

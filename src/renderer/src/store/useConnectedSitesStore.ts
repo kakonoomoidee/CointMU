@@ -5,10 +5,12 @@ const SETTINGS_KEY = 'connectedSites'
 
 interface ConnectedSitesStore {
   connectedSites: string[]
+  isExtensionLinked: boolean
   hydrated: boolean
   hydrate: () => Promise<void>
   addConnectedSite: (origin: string) => void
   removeConnectedSite: (origin: string) => void
+  setExtensionLinked: (linked: boolean) => void
 }
 
 /**
@@ -30,12 +32,14 @@ function persistSites(sites: string[]): void {
  */
 export const useConnectedSitesStore = create<ConnectedSitesStore>((set, get) => ({
   connectedSites: [],
+  isExtensionLinked: false,
   hydrated: false,
   hydrate: async () => {
     if (get().hydrated) return
     try {
       const stored = await getSetting<string[] | null>(SETTINGS_KEY)
-      set({ connectedSites: stored ?? [], hydrated: true })
+      const isLinked = await getSetting<boolean>('isExtensionLinked')
+      set({ connectedSites: stored ?? [], isExtensionLinked: isLinked ?? false, hydrated: true })
     } catch (err) {
       console.error('Failed to hydrate connected sites store', err)
       set({ hydrated: true })
@@ -55,5 +59,9 @@ export const useConnectedSitesStore = create<ConnectedSitesStore>((set, get) => 
       persistSites(sites)
       return { connectedSites: sites }
     })
+  },
+  setExtensionLinked: (linked: boolean) => {
+    window.api.settings.set('isExtensionLinked', linked)
+    set({ isExtensionLinked: linked })
   }
 }))

@@ -146,9 +146,25 @@ const api = {
       ipcRenderer.send('dapp:response', payload)
     }
   },
+  pairing: {
+    onRequest: (callback: () => void) => {
+      const handler = (): void => callback()
+      ipcRenderer.on('pairing:request', handler)
+      return () => ipcRenderer.removeListener('pairing:request', handler)
+    },
+    respond: (approved: boolean) => ipcRenderer.send('pairing:respond', approved)
+  },
   window: {
     minimize: (): void => ipcRenderer.send('window-minimize'),
     close: (): void => ipcRenderer.send('window-close')
+  },
+  extension: {
+    unlink: (): void => ipcRenderer.send('extension:unlink'),
+    onLinked: (callback: () => void) => {
+      const handler = (): void => callback()
+      ipcRenderer.on('extension:linked', handler)
+      return () => ipcRenderer.removeListener('extension:linked', handler)
+    }
   }
 }
 

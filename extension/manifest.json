@@ -1,10 +1,18 @@
 {
   "manifest_version": 3,
   "name": "CointMU Wallet",
-  "version": "1.0.1",
-  "description": "Connects dApps to the CointMU desktop wallet via a local WebSocket relay.",
-  "permissions": [],
-  "host_permissions": ["http://127.0.0.1:8546/*"],
+  "version": "1.0.4",
+  "default_locale": "en",
+  "description": "Connects dApps to the CointMU desktop wallet via a local WebSocket relay or custom RPC.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "CointMU Wallet"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
@@ -12,9 +20,6 @@
       "run_at": "document_start"
     }
   ],
-  "background": {
-    "service_worker": "background.js"
-  },
   "web_accessible_resources": [
     {
       "resources": ["injected.js"],
