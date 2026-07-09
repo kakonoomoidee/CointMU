@@ -55,6 +55,50 @@ async function initPopup() {
   const linkAppBtn = document.getElementById('linkAppBtn');
   const connectedStatus = document.getElementById('connected-status');
   
+  const urlParams = new URLSearchParams(window.location.search);
+  const mode = urlParams.get('mode');
+  const reqIdParam = urlParams.get('reqId');
+  const reqId = reqIdParam ? parseInt(reqIdParam, 10) : null;
+
+  if (mode === 'approve' && reqId) {
+    document.getElementById('default-view').classList.remove('active');
+    document.getElementById('default-view').classList.add('hidden');
+    document.getElementById('approval-view').classList.remove('hidden');
+    document.getElementById('approval-view').classList.add('active');
+
+    chrome.runtime.sendMessage({ action: 'GET_PENDING_REQ', reqId }, (response) => {
+      if (response && response.success && response.data) {
+        const { method, params, origin } = response.data;
+        const txTo = document.getElementById('tx-to');
+        const txValue = document.getElementById('tx-value');
+        const txData = document.getElementById('tx-data');
+
+        if (method === 'eth_requestAccounts') {
+          txTo.textContent = origin || 'Unknown Origin';
+          txValue.textContent = 'Connection Request';
+          txData.textContent = 'Allow access to your wallet address';
+        } else if (method === 'eth_sendTransaction' && params && params[0]) {
+          txTo.textContent = params[0].to || 'Contract Creation';
+          txValue.textContent = params[0].value || '0x0';
+          txData.textContent = params[0].data || '0x';
+        }
+      }
+    });
+
+    btnApproveConfirm.addEventListener('click', () => {
+      chrome.runtime.sendMessage({ action: 'RESOLVE_REQ', reqId, approved: true }, () => {
+        window.close();
+      });
+    });
+
+    rejectTxBtn.addEventListener('click', () => {
+      chrome.runtime.sendMessage({ action: 'RESOLVE_REQ', reqId, approved: false }, () => {
+        window.close();
+      });
+    });
+    return;
+  }
+
   if (linkAppBtn) {
     const result = await chrome.storage.local.get(['isLinked', 'walletState']);
     const isLinked = result.isLinked === true;
@@ -123,16 +167,6 @@ async function initPopup() {
 
   networkSelect.addEventListener('change', (e) => {
     console.log('Network switched to:', e.target.value);
-  });
-
-  btnApproveConfirm.addEventListener('click', () => {
-    console.log('Transaction approved');
-    window.close();
-  });
-
-  rejectTxBtn.addEventListener('click', () => {
-    console.log('Transaction rejected');
-    window.close();
   });
 }
 

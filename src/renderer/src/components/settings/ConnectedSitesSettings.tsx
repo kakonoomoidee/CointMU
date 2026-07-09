@@ -75,24 +75,29 @@ function ConnectedSitesSettings(): JSX.Element {
               </li>
             )}
           
-          {connectedSites.map((origin) => (
-            <li key={origin} className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
+          {connectedSites.map((site) => (
+            <li key={site.origin} className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0">
                   <IconGlobe width={20} height={20} className="text-blue-500" />
                 </div>
                 <div className="overflow-hidden">
-                  <p className="text-sm font-semibold text-slate-800 truncate" title={origin}>
-                    {origin}
+                  <p className="text-sm font-semibold text-slate-800 truncate" title={site.origin}>
+                    {site.origin}
                   </p>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    {t('settings.connectedSites.accessGranted')}
+                    {site.connectedAt 
+                      ? t('settings.connectedSites.connectedOn', { date: new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(site.connectedAt)) }) 
+                      : t('settings.connectedSites.accessGranted')}
                   </p>
                 </div>
               </div>
               <button
                 type="button"
-                onClick={() => removeConnectedSite(origin)}
+                onClick={() => {
+                  window.api.dapp.revokeSite(site.origin)
+                  removeConnectedSite(site.origin)
+                }}
                 className="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 hover:border-red-200 rounded-lg transition-colors ml-4 flex-shrink-0"
               >
                 {t('settings.connectedSites.revoke')}

@@ -217,9 +217,10 @@
       "noConnectedSitesTitle": "No connected sites",
       "noConnectedSitesDesc": "No external applications are currently connected to your CointMU wallet.",
       "readOnlyAccess": "Read-only access granted",
-      "revokeBtn": "Revoke",
+      "revoke": "Revoke",
       "emptyTitle": "No connected sites",
-      "emptyDesc": "No external applications are currently connected to your CointMU wallet."
+      "emptyDesc": "No external applications are currently connected to your CointMU wallet.",
+      "connectedOn": "Connected on {{date}}"
     },
     "externalSources": {
       "title": "External Sources",
@@ -759,7 +760,8 @@
       "connected": "Connected to CointMU",
       "syncing": "Syncing...",
       "connectionFailed": "Failed to connect to Desktop App",
-      "waitingApproval": "Waiting for approval in Desktop App..."
+      "waitingApproval": "Waiting for approval in Desktop App...",
+      "contextInvalidated": "Extension context invalidated. Please refresh the page."
     }
   }
 }

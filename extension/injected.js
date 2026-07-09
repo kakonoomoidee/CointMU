@@ -25,7 +25,23 @@
    * @returns {void}
    */
   function handleResponse(event) {
-    if (!event.data || event.data.source !== PROVIDER_MESSAGE_SOURCE) return;
+    if (!event.data) return;
+
+    if (event.data.source === PROVIDER_MESSAGE_SOURCE && event.data.type === 'COINTMU_REVOKE_SITE') {
+      provider.selectedAddress = null;
+      if (provider._listeners && provider._listeners['accountsChanged']) {
+        provider._listeners['accountsChanged'].forEach(function (listener) {
+          try {
+            listener([]);
+          } catch (e) {
+            console.error('Error executing accountsChanged listener', e);
+          }
+        });
+      }
+      return;
+    }
+
+    if (event.data.source !== PROVIDER_MESSAGE_SOURCE) return;
     const { id, result, error } = event.data;
     const entry = pending.get(id);
     if (!entry) return;
@@ -101,25 +117,51 @@
         });
     },
 
+    /** @type {Record<string, Function[]>} */
+    _listeners: {},
+
     /**
-     * Stub event emitter — dApps may call on/removeListener. No real events are
-     * emitted in this release; the methods are present so dApps do not throw on
-     * subscription attempts.
-     * @param {string} _eventName - The event name to subscribe to.
-     * @param {Function} _listener - The listener function (unused).
+     * @param {string} eventName - The event name to subscribe to.
+     * @param {Function} listener - The listener function.
      * @returns {typeof provider} The provider object for chaining.
      */
-    on(_eventName, _listener) {
+    on(eventName, listener) {
+      if (!this._listeners[eventName]) {
+        this._listeners[eventName] = [];
+      }
+      this._listeners[eventName].push(listener);
       return this;
     },
 
     /**
-     * @param {string} _eventName - The event name to unsubscribe from.
-     * @param {Function} _listener - The listener to remove (unused).
+     * @param {string} eventName - The event name to unsubscribe from.
+     * @param {Function} listener - The listener to remove.
      * @returns {typeof provider} The provider object for chaining.
      */
-    removeListener(_eventName, _listener) {
+    removeListener(eventName, listener) {
+      if (this._listeners[eventName]) {
+        this._listeners[eventName] = this._listeners[eventName].filter(function (l) {
+          return l !== listener;
+        });
+      }
       return this;
+    },
+
+    /**
+     * @param {string} eventName - The event to emit.
+     * @param {unknown} payload - The event payload.
+     * @returns {void}
+     */
+    emit(eventName, payload) {
+      if (this._listeners[eventName]) {
+        this._listeners[eventName].forEach(function (listener) {
+          try {
+            listener(payload);
+          } catch (e) {
+            console.error('Error in event listener', e);
+          }
+        });
+      }
     }
   };
 

@@ -49,11 +49,23 @@ function App(): JSX.Element {
     void useSecurityStore.getState().hydrate()
     void useAdvancedStore.getState().hydrate()
     
+    let offLinked = (): void => {}
+    let offSite = (): void => {}
+
     if (window.api?.extension?.onLinked) {
-      const off = window.api.extension.onLinked(() => {
+      offLinked = window.api.extension.onLinked(() => {
         useConnectedSitesStore.getState().setExtensionLinked(true)
       })
-      return () => { off() }
+    }
+    if (window.api?.dapp?.onSiteConnected) {
+      offSite = window.api.dapp.onSiteConnected((origin) => {
+        useConnectedSitesStore.getState().addConnectedSite(origin)
+      })
+    }
+        
+    return (): void => { 
+      offLinked() 
+      offSite()
     }
   }, [])
 

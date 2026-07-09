@@ -37,34 +37,62 @@ function handlePageMessage(event) {
 
   const { id, method, params } = event.data;
 
-  chrome.runtime.sendMessage(
-    { id, method, params, origin: window.location.origin },
-    function (response) {
-      if (chrome.runtime.lastError) {
+  try {
+    chrome.runtime.sendMessage(
+      { id, method, params, origin: window.location.origin },
+      function (response) {
+        if (chrome.runtime.lastError) {
+          window.postMessage(
+            {
+              source: INJECTED_MESSAGE_SOURCE,
+              id,
+              error: { message: chrome.runtime.lastError.message || 'Extension relay error' }
+            },
+            '*'
+          );
+          return;
+        }
+
         window.postMessage(
           {
             source: INJECTED_MESSAGE_SOURCE,
             id,
-            error: { message: chrome.runtime.lastError.message || 'Extension relay error' }
+            result: response.result,
+            error: response.error || null
           },
           '*'
         );
-        return;
       }
-
+    );
+  } catch (err) {
+    if (err.message && err.message.includes('Extension context invalidated')) {
       window.postMessage(
         {
           source: INJECTED_MESSAGE_SOURCE,
           id,
-          result: response.result,
-          error: response.error || null
+          error: { message: 'Extension context invalidated. Please refresh the page.' }
+        },
+        '*'
+      );
+    } else {
+      window.postMessage(
+        {
+          source: INJECTED_MESSAGE_SOURCE,
+          id,
+          error: { message: err.message || 'Unknown extension error' }
         },
         '*'
       );
     }
-  );
+  }
 }
 
 injectProvider();
 
 window.addEventListener('message', handlePageMessage);
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message && message.type === 'REVOKE_SITE') {
+    window.postMessage({ type: 'COINTMU_REVOKE_SITE', source: INJECTED_MESSAGE_SOURCE }, '*');
+  }
+});

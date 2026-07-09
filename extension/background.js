@@ -18,6 +18,13 @@ let intentionalClose = false;
 const pendingCallbacks = new Map();
 
 /**
+ * Stores pending dApp requests waiting for user approval via the popup.
+ * Keyed by request ID.
+ * @type {Map<number, any>}
+ */
+const pendingApprovals = new Map();
+
+/**
  * Builds the composite pending-map key for a given tab and request ID.
  * @param {number} tabId - The Chrome tab ID of the originating content script.
  * @param {number} requestId - The JSON-RPC request ID assigned by the injected provider.
@@ -54,6 +61,17 @@ function handleSocketMessage(event) {
     return;
   } else if (payload.type === 'WALLET_STATE') {
     chrome.storage.local.set({ isLinked: true, walletState: payload });
+    return;
+  } else if (payload.type === 'REVOKE_SITE') {
+    if (payload.origin) {
+      chrome.tabs.query({ url: payload.origin + '/*' }, (tabs) => {
+        for (const tab of tabs) {
+          if (tab.id) {
+            chrome.tabs.sendMessage(tab.id, { type: 'REVOKE_SITE' });
+          }
+        }
+      });
+    }
     return;
   }
 
@@ -120,6 +138,8 @@ function disconnect() {
   }
 }
 
+const approvalQueue = new Map();
+
 /**
  * Receives a JSON-RPC request message forwarded by a content script, tags it
  * with the originating tab ID so the response can be routed back, stores the
@@ -132,16 +152,6 @@ function disconnect() {
  * @returns {boolean} Returns true to keep the message channel open for the async response.
  */
 function handleContentMessage(message, sender, sendResponse) {
-  if (message.action === 'REQUEST_LINK' || message.action === 'AUTO_RECONNECT') {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({ type: message.action }));
-      sendResponse({ success: true });
-    } else {
-      sendResponse({ success: false, error: 'WebSocket not connected' });
-    }
-    return false;
-  }
-
   const tabId = sender.tab?.id;
   if (tabId === undefined) {
     sendResponse({ result: null, error: { message: 'Sender has no tab context.' } });
@@ -166,10 +176,89 @@ function handleContentMessage(message, sender, sendResponse) {
     origin: origin || `Tab ${tabId}`
   });
 
-  socket.send(wsPayload);
-  return true;
+  if (method === 'eth_requestAccounts' || method === 'eth_sendTransaction') {
+    approvalQueue.set(id, { id, method, params, origin: origin || `Tab ${tabId}`, tabId, wsPayload, sendResponse });
+    chrome.windows.create({
+      url: `popup.html?mode=approve&reqId=${id}`,
+      type: 'popup',
+      width: 360,
+      height: 700
+    });
+    return true; // Keep message channel open
+  } else {
+    socket.send(wsPayload);
+    return true;
+  }
 }
 
-chrome.runtime.onMessage.addListener(handleContentMessage);
+/**
+ * Handles internal extension messages from the popup UI.
+ * @param {any} message - The message payload.
+ * @param {chrome.runtime.MessageSender} sender - The sender.
+ * @param {Function} sendResponse - The reply callback.
+ * @returns {boolean}
+ */
+function handleInternalMessage(message, sender, sendResponse) {
+  if (message.action === 'REQUEST_LINK' || message.action === 'AUTO_RECONNECT') {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ type: message.action }));
+      sendResponse({ success: true });
+    } else {
+      sendResponse({ success: false, error: 'WebSocket not connected' });
+    }
+    return false;
+  }
+
+  if (message.action === 'GET_PENDING_REQ') {
+    const data = approvalQueue.get(Number(message.reqId));
+    // Do not include sendResponse in the response to the popup as it can't be serialized
+    if (data) {
+      const { id, method, params, origin, tabId, wsPayload } = data;
+      sendResponse({ success: true, data: { id, method, params, origin, tabId, wsPayload } });
+    } else {
+      sendResponse({ success: false });
+    }
+    return false;
+  }
+
+  if (message.action === 'RESOLVE_REQ') {
+    const reqId = Number(message.reqId);
+    const entry = approvalQueue.get(reqId);
+    if (!entry) {
+      console.error('[CointMU-bg] Request not found in queue for id:', reqId);
+      sendResponse({ success: false, error: 'Request not found in queue' });
+      return false;
+    }
+
+    approvalQueue.delete(reqId);
+    const key = pendingKey(entry.tabId, reqId);
+
+    if (message.approved === false) {
+      pendingCallbacks.delete(key);
+      entry.sendResponse({ result: null, error: { code: 4001, message: 'User Rejected Request' } });
+    } else if (message.approved === true) {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        pendingCallbacks.set(key, entry.sendResponse);
+        console.log('[CointMU-bg] Forwarding approved payload to Desktop', entry.wsPayload);
+        socket.send(entry.wsPayload);
+      } else {
+        pendingCallbacks.delete(key);
+        entry.sendResponse({ result: null, error: { message: 'WebSocket disconnected before execution.' } });
+      }
+    }
+    sendResponse({ success: true });
+    return false;
+  }
+
+  return false;
+}
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action) {
+    return handleInternalMessage(message, sender, sendResponse);
+  } else {
+    return handleContentMessage(message, sender, sendResponse);
+  }
+});
 
 connect();

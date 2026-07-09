@@ -144,6 +144,16 @@ const api = {
     },
     sendDappResponse: (payload: { id: number; tabId: number; approved: boolean; result?: unknown }) => {
       ipcRenderer.send('dapp:response', payload)
+    },
+    onSiteConnected: (callback: (origin: string) => void) => {
+      const handler = (_: any, origin: string): void => {
+        callback(origin)
+      }
+      ipcRenderer.on('dapp:siteConnected', handler)
+      return () => ipcRenderer.removeListener('dapp:siteConnected', handler)
+    },
+    revokeSite: (origin: string) => {
+      ipcRenderer.send('dapp:revokeSite', origin)
     }
   },
   pairing: {

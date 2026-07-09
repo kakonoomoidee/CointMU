@@ -104,6 +104,8 @@ interface CointmuAPI {
   dapp: {
     onDappRequest: (callback: (payload: DappRequest) => void) => () => void
     sendDappResponse: (payload: { id: number; tabId: number; approved: boolean; result?: unknown }) => void
+    onSiteConnected: (callback: (origin: string) => void) => () => void
+    revokeSite: (origin: string) => void
   }
   pairing: {
     onRequest: (callback: () => void) => () => void

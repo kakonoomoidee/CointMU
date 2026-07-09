@@ -3,8 +3,13 @@ import { getSetting, setSetting } from '@/services/settingsService'
 
 const SETTINGS_KEY = 'connectedSites'
 
+export interface ConnectedSite {
+  origin: string
+  connectedAt: string
+}
+
 interface ConnectedSitesStore {
-  connectedSites: string[]
+  connectedSites: ConnectedSite[]
   isExtensionLinked: boolean
   hydrated: boolean
   hydrate: () => Promise<void>
@@ -16,10 +21,10 @@ interface ConnectedSitesStore {
 /**
  * Persists the connected sites list to electron-store, swallowing write errors so
  * a storage failure never breaks the in-memory preference flow.
- * @param sites - The array of connected site origins to persist.
+ * @param sites - The array of connected sites to persist.
  * @returns Nothing.
  */
-function persistSites(sites: string[]): void {
+function persistSites(sites: ConnectedSite[]): void {
   void setSetting(SETTINGS_KEY, sites).catch((err) => {
     console.error('Failed to persist connected sites', err)
   })
@@ -37,9 +42,17 @@ export const useConnectedSitesStore = create<ConnectedSitesStore>((set, get) => 
   hydrate: async () => {
     if (get().hydrated) return
     try {
-      const stored = await getSetting<string[] | null>(SETTINGS_KEY)
+      const stored = await getSetting<any[] | null>(SETTINGS_KEY)
       const isLinked = await getSetting<boolean>('isExtensionLinked')
-      set({ connectedSites: stored ?? [], isExtensionLinked: isLinked ?? false, hydrated: true })
+      
+      const sites: ConnectedSite[] = (stored ?? []).map((item) => {
+        if (typeof item === 'string') {
+          return { origin: item, connectedAt: new Date().toISOString() }
+        }
+        return item
+      })
+      
+      set({ connectedSites: sites, isExtensionLinked: isLinked ?? false, hydrated: true })
     } catch (err) {
       console.error('Failed to hydrate connected sites store', err)
       set({ hydrated: true })
@@ -47,15 +60,15 @@ export const useConnectedSitesStore = create<ConnectedSitesStore>((set, get) => 
   },
   addConnectedSite: (origin: string) => {
     set((state) => {
-      if (state.connectedSites.includes(origin)) return state
-      const sites = [...state.connectedSites, origin]
+      if (state.connectedSites.some((s) => s.origin === origin)) return state
+      const sites = [...state.connectedSites, { origin, connectedAt: new Date().toISOString() }]
       persistSites(sites)
       return { connectedSites: sites }
     })
   },
   removeConnectedSite: (origin: string) => {
     set((state) => {
-      const sites = state.connectedSites.filter((site) => site !== origin)
+      const sites = state.connectedSites.filter((site) => site.origin !== origin)
       persistSites(sites)
       return { connectedSites: sites }
     })

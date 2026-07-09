@@ -766,7 +766,8 @@
       "loading": "Memuat...",
       "syncing": "Syncing...",
       "connectionFailed": "Failed to connect to Desktop App",
-      "waitingApproval": "Waiting for approval in Desktop App..."
+      "waitingApproval": "Waiting for approval in Desktop App...",
+      "contextInvalidated": "Extension context invalidated. Please refresh the page."
     },
     "error": {
       "title": "Terjadi kesalahan",

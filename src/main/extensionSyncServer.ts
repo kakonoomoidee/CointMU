@@ -1,6 +1,6 @@
 import { WebSocketServer, type WebSocket } from 'ws';
 import { callGethRpc } from './rpcUtils';
-import { ipcMain, type BrowserWindow } from 'electron';
+import { ipcMain, BrowserWindow } from 'electron';
 
 const EXTENSION_SYNC_PORT = process.env.ELECTRON_WS_PORT ? parseInt(process.env.ELECTRON_WS_PORT) : 8765;
 let wss: WebSocketServer | null = null;
@@ -83,6 +83,16 @@ export function startExtensionSyncServer(store: any, rpcPort: number, win: Brows
     store.set('isExtensionLinked', false);
   });
 
+  ipcMain.on('dapp:revokeSite', (_, origin: string) => {
+    if (wss) {
+      wss.clients.forEach((client) => {
+        if (client.readyState === 1) {
+          client.send(JSON.stringify({ type: 'REVOKE_SITE', origin }));
+        }
+      });
+    }
+  });
+
   wss.on('listening', () => {
     console.log(`[Extension-Bridge] Listening on port ${EXTENSION_SYNC_PORT}`);
   });
@@ -90,7 +100,7 @@ export function startExtensionSyncServer(store: any, rpcPort: number, win: Brows
   wss.on('connection', (socket: WebSocket) => {
     console.log('[extension-sync] Extension UI connected.');
 
-    socket.on('message', (data: Buffer) => {
+    socket.on('message', async (data: Buffer) => {
       try {
         const msg = JSON.parse(data.toString());
         if (msg.type === 'REQUEST_LINK') {
@@ -98,6 +108,50 @@ export function startExtensionSyncServer(store: any, rpcPort: number, win: Brows
           win.webContents.send('pairing:request');
         } else if (msg.type === 'AUTO_RECONNECT') {
           void broadcastWalletState(store, rpcPort);
+        } else if (msg.jsonrpc === '2.0') {
+          try {
+            const parsedPayload = msg;
+            
+            if (parsedPayload.method === 'eth_requestAccounts' || parsedPayload.method === 'eth_accounts') {
+              let walletAddress = '0x0000000000000000000000000000000000000000';
+              try {
+                const storedAddress = store.get('activeWalletAddress');
+                if (storedAddress) walletAddress = storedAddress;
+              } catch (e) {
+                console.error('[WS Server Error] Failed to fetch activeWalletAddress:', e);
+              }
+
+              if (parsedPayload.method === 'eth_requestAccounts') {
+                BrowserWindow.getAllWindows()[0]?.webContents.send('dapp:siteConnected', parsedPayload.origin);
+              }
+
+              const response = JSON.stringify({ jsonrpc: '2.0', id: parsedPayload.id, result: [walletAddress], __tabId: parsedPayload.__tabId });
+              socket.send(response);
+            } else {
+              try {
+                const result = await callGethRpc(rpcPort, parsedPayload.method, parsedPayload.params);
+                socket.send(
+                  JSON.stringify({
+                    jsonrpc: '2.0',
+                    id: parsedPayload.id,
+                    __tabId: parsedPayload.__tabId,
+                    result
+                  })
+                );
+              } catch (err: any) {
+                socket.send(
+                  JSON.stringify({
+                    jsonrpc: '2.0',
+                    id: parsedPayload.id,
+                    __tabId: parsedPayload.__tabId,
+                    error: { code: -32603, message: err.message }
+                  })
+                );
+              }
+            }
+          } catch (error) {
+            console.error('[WS Server Error]:', error);
+          }
         }
       } catch (err) {
         console.error('[extension-sync] Failed to parse message:', err);
@@ -128,6 +182,7 @@ export function startExtensionSyncServer(store: any, rpcPort: number, win: Brows
       }
       ipcMain.removeAllListeners('pairing:respond');
       ipcMain.removeAllListeners('extension:unlink');
+      ipcMain.removeAllListeners('dapp:revokeSite');
     }
   };
 }
