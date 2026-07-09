@@ -165,7 +165,17 @@
       "title": "Notificaciones"
     },
     "network": {
-      "title": "Red"
+      "title": "Red",
+      "addNetwork": {
+        "addNetworkBtn": "Añadir red",
+        "modalTitle": "Añadir red personalizada",
+        "networkNameLabel": "Nombre de la red",
+        "rpcUrlLabel": "URL de RPC",
+        "chainIdLabel": "ID de cadena",
+        "currencySymbolLabel": "Símbolo de moneda",
+        "saveBtn": "Guardar",
+        "cancelBtn": "Cancelar"
+      }
     },
     "mining": {
       "title": "Minería"
@@ -721,6 +731,12 @@
       "passwordLength": "La contraseña debe tener al menos 8 caracteres",
       "passwordsMismatch": "Las contraseñas no coinciden",
       "failedGenerate": "Error al generar la cuenta a partir de las credenciales proporcionadas"
+    }
+  },
+  "ui": {
+    "window": {
+      "minimize": "Minimizar",
+      "close": "Cerrar"
     }
   }
 }

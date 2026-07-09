@@ -165,7 +165,17 @@
       "title": "Notifikasi"
     },
     "network": {
-      "title": "Jaringan"
+      "title": "Jaringan",
+      "addNetwork": {
+        "addNetworkBtn": "Tambah Jaringan",
+        "modalTitle": "Tambah Jaringan Kustom",
+        "networkNameLabel": "Nama Jaringan",
+        "rpcUrlLabel": "URL RPC",
+        "chainIdLabel": "ID Chain",
+        "currencySymbolLabel": "Simbol Mata Uang",
+        "saveBtn": "Simpan",
+        "cancelBtn": "Batal"
+      }
     },
     "mining": {
       "title": "Penambangan"
@@ -721,6 +731,12 @@
       "passwordLength": "Kata sandi minimal 8 karakter",
       "passwordsMismatch": "Kata sandi tidak cocok",
       "failedGenerate": "Gagal menghasilkan akun dari kredensial yang diberikan"
+    }
+  },
+  "ui": {
+    "window": {
+      "minimize": "Minimalkan",
+      "close": "Tutup"
     }
   }
 }

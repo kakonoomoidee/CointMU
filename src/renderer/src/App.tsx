@@ -11,7 +11,7 @@ import {
   useAdvancedStore
 } from '@/store'
 
-import { Sidebar, ToastViewport, DappApprovalModal } from '@/components'
+import { Sidebar, ToastViewport, DappApprovalModal, CustomTitleBar } from '@/components'
 import { useDappRequestHandler } from '@/hooks'
 
 const Miner = lazy(() => import('@/views/Miner').then((m) => ({ default: m.Miner })))
@@ -110,9 +110,11 @@ function App(): JSX.Element {
   }
 
   return (
-    <div className="flex h-full bg-slate-50">
-      <DappApprovalModal />
-      <ToastViewport />
+    <div className="flex flex-col h-full bg-slate-50 overflow-hidden">
+      <CustomTitleBar />
+      <div className="flex flex-1 overflow-hidden">
+        <DappApprovalModal />
+        <ToastViewport />
       <Sidebar
         accounts={accounts}
         activeWalletAddress={activeWalletAddress}
@@ -156,6 +158,7 @@ function App(): JSX.Element {
           {activeView === NAV_ITEM_SETTINGS && <Settings initialCategory={settingsTab as any} />}
         </Suspense>
       </main>
+      </div>
     </div>
   )
 }

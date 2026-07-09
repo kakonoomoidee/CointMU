@@ -145,6 +145,10 @@ const api = {
     sendDappResponse: (payload: { id: number; tabId: number; approved: boolean; result?: unknown }) => {
       ipcRenderer.send('dapp:response', payload)
     }
+  },
+  window: {
+    minimize: (): void => ipcRenderer.send('window-minimize'),
+    close: (): void => ipcRenderer.send('window-close')
   }
 }
 

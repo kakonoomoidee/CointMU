@@ -105,6 +105,10 @@ interface CointmuAPI {
     onDappRequest: (callback: (payload: DappRequest) => void) => () => void
     sendDappResponse: (payload: { id: number; tabId: number; approved: boolean; result?: unknown }) => void
   }
+  window: {
+    minimize: () => void
+    close: () => void
+  }
 }
 
 declare global {

@@ -165,7 +165,17 @@
       "title": "Уведомления"
     },
     "network": {
-      "title": "Сеть"
+      "title": "Сеть",
+      "addNetwork": {
+        "addNetworkBtn": "Добавить сеть",
+        "modalTitle": "Добавить пользовательскую сеть",
+        "networkNameLabel": "Имя сети",
+        "rpcUrlLabel": "URL-адрес RPC",
+        "chainIdLabel": "ID цепочки",
+        "currencySymbolLabel": "Символ валюты",
+        "saveBtn": "Сохранить",
+        "cancelBtn": "Отмена"
+      }
     },
     "mining": {
       "title": "Майнинг"
@@ -721,6 +731,12 @@
       "passwordLength": "Пароль должен содержать не менее 8 символов",
       "passwordsMismatch": "Пароли не совпадают",
       "failedGenerate": "Не удалось создать аккаунт из предоставленных учётных данных"
+    }
+  },
+  "ui": {
+    "window": {
+      "minimize": "Свернуть",
+      "close": "Закрыть"
     }
   }
 }

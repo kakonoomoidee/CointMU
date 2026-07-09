@@ -165,7 +165,17 @@
       "title": "Notifications"
     },
     "network": {
-      "title": "Network"
+      "title": "Network",
+      "addNetwork": {
+        "addNetworkBtn": "Add Network",
+        "modalTitle": "Add Custom Network",
+        "networkNameLabel": "Network Name",
+        "rpcUrlLabel": "RPC URL",
+        "chainIdLabel": "Chain ID",
+        "currencySymbolLabel": "Currency Symbol",
+        "saveBtn": "Save",
+        "cancelBtn": "Cancel"
+      }
     },
     "mining": {
       "title": "Mining"
@@ -721,6 +731,12 @@
       "passwordLength": "Password must be at least 8 characters",
       "passwordsMismatch": "Passwords do not match",
       "failedGenerate": "Failed to generate account from the provided credentials"
+    }
+  },
+  "ui": {
+    "window": {
+      "minimize": "Minimize",
+      "close": "Close"
     }
   }
 }

@@ -99,6 +99,13 @@ const CATEGORIES: { id: SettingsCategory; label: string; icon: JSX.Element }[] =
   }
 ]
 
+export interface CustomNetwork {
+  name: string
+  rpcUrl: string
+  chainId: number
+  symbol: string
+}
+
 export interface SettingsStore {
   mnemonic: string | null
   activeWalletAddress: string | null
@@ -126,6 +133,7 @@ export interface SettingsStore {
     listenPort: number
     syncMode: string
     pruneOldState: boolean
+    customNetworks?: CustomNetwork[]
   }
   mining: {
     isMiningEnabled: boolean

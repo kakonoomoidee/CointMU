@@ -347,19 +347,17 @@ async function handleGethCorruption(store: any): Promise<void> {
   }
   intentionalGethShutdown = true;
 
-  if (gethProcess) {
-    gethProcess.kill('SIGKILL');
-    gethProcess = null;
-  }
+  await killGethProcess();
 
   try {
-    const chainDataPath = join(GETH_DATA_DIR, 'geth', 'chaindata');
+    const dataDir = resolveDataDir();
+    const chainDataPath = join(dataDir, 'geth', 'chaindata');
     if (existsSync(chainDataPath)) {
       console.log(`[geth:recovery] Deleting corrupted chaindata at ${chainDataPath}`);
       rmSync(chainDataPath, { recursive: true, force: true });
     }
     
-    await initGethIfNeeded(GETH_DATA_DIR);
+    await initGethIfNeeded(dataDir);
   } catch (error) {
     console.error('[geth:recovery] Failed during recovery process:', error);
   } finally {
@@ -395,7 +393,7 @@ async function spawnGethProcess(store: any): Promise<void> {
     "--networkid",
     GETH_NETWORK_ID,
     "--datadir",
-    GETH_DATA_DIR,
+    resolveDataDir(),
     "--port",
     String(listenPort),
     "--verbosity",
@@ -592,7 +590,6 @@ function killGethProcess(): Promise<void> {
         proc.kill('SIGKILL');
       } catch {
       }
-      onExit();
     }, GETH_GRACEFUL_TIMEOUT_MS);
 
     proc.once('close', onExit);
@@ -634,7 +631,8 @@ function createWindow(): BrowserWindow {
         ? join(__dirname, "../../resources/icon.ico")
         : join(__dirname, "../../resources/icon.png"),
     backgroundColor: "#0a0a0f",
-    titleBarStyle: "hiddenInset",
+    frame: false,
+    titleBarStyle: "hidden",
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: false,
@@ -1034,6 +1032,22 @@ app.whenReady().then(async () => {
         void spawnGethProcess(store);
       }, NODE_RESTART_DELAY_MS);
     });
+  });
+
+  ipcMain.on('window-minimize', (event) => {
+    const webContents = event.sender;
+    const win = BrowserWindow.fromWebContents(webContents);
+    if (win) {
+      win.minimize();
+    }
+  });
+
+  ipcMain.on('window-close', (event) => {
+    const webContents = event.sender;
+    const win = BrowserWindow.fromWebContents(webContents);
+    if (win) {
+      win.close();
+    }
   });
 
   resolvedRpcPort = await findAvailablePort();

@@ -165,7 +165,17 @@
       "title": "通知"
     },
     "network": {
-      "title": "网络"
+      "title": "网络",
+      "addNetwork": {
+        "addNetworkBtn": "添加网络",
+        "modalTitle": "添加自定义网络",
+        "networkNameLabel": "网络名称",
+        "rpcUrlLabel": "RPC URL",
+        "chainIdLabel": "链 ID",
+        "currencySymbolLabel": "货币符号",
+        "saveBtn": "保存",
+        "cancelBtn": "取消"
+      }
     },
     "mining": {
       "title": "挖矿"
@@ -721,6 +731,12 @@
       "passwordLength": "密码至少需要8个字符",
       "passwordsMismatch": "密码不匹配",
       "failedGenerate": "无法从提供的凭据生成账户"
+    }
+  },
+  "ui": {
+    "window": {
+      "minimize": "最小化",
+      "close": "关闭"
     }
   }
 }

@@ -1,7 +1,8 @@
 import { useState, type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { SettingsStore } from '@/views/Settings'
+import type { CustomNetwork, SettingsStore } from '@/views/Settings'
 import { CustomDropdown } from '@/components/CustomDropdown'
+import { AddNetworkModal } from './AddNetworkModal'
 
 const NETWORK_OPTIONS = [
   'CointMU Mainnet · chain ID 1912',
@@ -20,7 +21,7 @@ const SYNC_MODE_OPTIONS = ['Snap (recommended)', 'Full', 'Light']
 
 interface NetworkSettingsProps {
   config: SettingsStore['network']
-  onUpdate: (key: string, value: any) => void
+  onUpdate: (key: string, value: any) => Promise<void> | void
 }
 
 /**
@@ -32,13 +33,30 @@ interface NetworkSettingsProps {
 export function NetworkSettings({ config, onUpdate }: NetworkSettingsProps): JSX.Element {
   const { t } = useTranslation()
   const [isSwitching, setIsSwitching] = useState(false)
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+
+  const customNetworks = config.customNetworks || []
+  const options = [
+    ...NETWORK_OPTIONS,
+    ...customNetworks.map(n => n.name),
+    '+ Add Network'
+  ]
 
   const handleNetworkSwitch = async (val: string): Promise<void> => {
+    if (val === '+ Add Network') {
+      setIsAddModalOpen(true)
+      return
+    }
+
     onUpdate('network', val)
     
     let chainId = 1912
     if (val.includes('7013')) chainId = 7013
     else if (val.includes('Localhost')) chainId = 1337
+    else {
+      const custom = customNetworks.find(n => n.name === val)
+      if (custom) chainId = custom.chainId
+    }
     
     setIsSwitching(true)
     try {
@@ -46,6 +64,13 @@ export function NetworkSettings({ config, onUpdate }: NetworkSettingsProps): JSX
     } finally {
       setIsSwitching(false)
     }
+  }
+
+  const handleAddCustomNetwork = async (network: CustomNetwork): Promise<void> => {
+    const updatedNetworks = [...customNetworks, network]
+    await onUpdate('customNetworks', updatedNetworks)
+    setIsAddModalOpen(false)
+    await handleNetworkSwitch(network.name)
   }
 
   return (
@@ -63,11 +88,16 @@ export function NetworkSettings({ config, onUpdate }: NetworkSettingsProps): JSX
               </div>
               <div className="w-64">
                 <CustomDropdown<string>
-                  options={NETWORK_OPTIONS}
+                  options={options}
                   selected={config.network}
                   onSelect={handleNetworkSwitch}
                   renderSelected={(selected) => selected || NETWORK_OPTIONS[0]}
-                  renderOption={(option) => option}
+                  renderOption={(option) => {
+                    if (option === '+ Add Network') {
+                      return <span className="text-blue-500 font-bold">{option}</span>
+                    }
+                    return option
+                  }}
                   compact
                 />
                 {isSwitching && (
@@ -200,6 +230,11 @@ export function NetworkSettings({ config, onUpdate }: NetworkSettingsProps): JSX
           </div>
         </section>
       </div>
+      <AddNetworkModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSave={handleAddCustomNetwork}
+      />
     </div>
   )
 }
