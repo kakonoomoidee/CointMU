@@ -299,7 +299,7 @@
       "githubTitle": "GitHub",
       "githubDesc": "github.com/kakonoomoidee/CointMU",
       "reportTitle": "Report an issue",
-      "reportDesc": "Send a bug report or feature request",
+      "reportIssueDesc": "Send a bug report or feature request",
       "openBtn": "Open ›",
       "saveBtn": "Save",
       "savingBtn": "Saving...",
@@ -378,6 +378,7 @@
       "customAddressPlaceholder": "0x..."
     },
     "securitySettings": {
+      "subtitle": "Manage security settings for your wallet",
       "autoLockTitle": "Auto-lock wallet",
       "autoLockDesc": "Lock keys after 5 minutes of inactivity",
       "seedPhraseTitle": "Recovery phrase",
@@ -752,22 +753,6 @@
       "pairingDesc": "Do you want to allow the CointMU Browser Extension to connect to your wallet?",
       "approve": "Approve",
       "reject": "Reject"
-    }
-  },
-  "extension": {
-    "wallet": {
-      "setupNetwork": "Setup Network",
-      "linkToApp": "Link to CointMU App",
-      "customRpc": "Custom RPC",
-      "balance": "Balance",
-      "approveTx": "Approve Transaction",
-      "rejectTx": "Reject",
-      "connected": "Connected to CointMU",
-      "syncing": "Syncing...",
-      "connectionFailed": "Failed to connect to Desktop App",
-      "waitingApproval": "Waiting for approval in Desktop App...",
-      "contextInvalidated": "Extension context invalidated. Please refresh the page.",
-      "selectAccount": "Select Account"
     }
   }
 }

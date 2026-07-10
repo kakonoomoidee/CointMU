@@ -36,12 +36,12 @@ export async function broadcastWalletState(store: any, rpcPort: number): Promise
   }
 
   try {
-    const gethAccounts = await callGethRpc(rpcPort, 'eth_accounts', []);
-    if (Array.isArray(gethAccounts)) {
-      accounts = gethAccounts;
-    }
+    const storedAccounts = store.get('accounts') || [];
+    accounts = storedAccounts
+      .filter((a: any) => !a.isHidden)
+      .map((a: any) => a.address);
   } catch (err) {
-    console.error('[extension-sync] Failed to fetch accounts:', err);
+    console.error('[extension-sync] Failed to fetch accounts from store:', err);
   }
 
   const payload = JSON.stringify({
@@ -119,17 +119,19 @@ export function startExtensionSyncServer(store: any, rpcPort: number, win: Brows
         if (msg.type === 'REQUEST_LINK') {
           pendingSocket = socket;
           win.webContents.send('pairing:request');
+        } else if (msg.type === 'ping') {
+          socket.send(JSON.stringify({ type: 'pong' }));
         } else if (msg.type === 'AUTO_RECONNECT') {
           void broadcastWalletState(store, rpcPort);
         } else if (msg.type === 'GET_ACCOUNTS') {
           let accounts: string[] = [];
           try {
-            const gethAccounts = await callGethRpc(rpcPort, 'eth_accounts', []);
-            if (Array.isArray(gethAccounts)) {
-              accounts = gethAccounts;
-            }
+            const storedAccounts = store.get('accounts') || [];
+            accounts = storedAccounts
+              .filter((a: any) => !a.isHidden)
+              .map((a: any) => a.address);
           } catch (err) {
-            console.error('[extension-sync] Failed to fetch accounts:', err);
+            console.error('[extension-sync] Failed to fetch accounts from store:', err);
           }
           const activeAccount = store.get('activeWalletAddress') || (accounts[0] || '');
           socket.send(JSON.stringify({ type: 'ACCOUNTS_LIST', accounts, activeAccount }));

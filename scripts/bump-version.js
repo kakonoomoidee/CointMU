@@ -98,17 +98,17 @@ function calculateNewVersion(currentVersion, bumpType, prereleaseTag) {
  * Updates the Linux kernel style version variables in the Makefile content.
  * @param {string} makefileContent - The original Makefile content.
  * @param {string} newVersion - The new version string to set.
+ * @param {string} codename - The codename string.
  * @returns {string} The updated Makefile content.
  */
-function updateMakefileVersion(makefileContent, newVersion) {
+function updateMakefileVersion(makefileContent, newVersion, codename) {
   const versionCore = newVersion.split('-')[0]
-  const prereleaseTag = newVersion.includes('-') ? newVersion.substring(versionCore.length + 1) : ''
   const parts = versionCore.split('.').map(Number)
 
   let updated = makefileContent.replace(/^VERSION\s*=\s*.*$/m, `VERSION = ${parts[PART_MAJOR_INDEX]}`)
   updated = updated.replace(/^PATCHLEVEL\s*=\s*.*$/m, `PATCHLEVEL = ${parts[PART_MINOR_INDEX]}`)
   updated = updated.replace(/^SUBLEVEL\s*=\s*.*$/m, `SUBLEVEL = ${parts[PART_PATCH_INDEX]}`)
-  updated = updated.replace(/^EXTRAVERSION\s*=\s*.*$/m, `EXTRAVERSION = ${prereleaseTag}`)
+  updated = updated.replace(/^EXTRAVERSION\s*=\s*.*$/m, `EXTRAVERSION = -${codename}`)
   
   return updated
 }
@@ -149,7 +149,7 @@ function main() {
   writePackageJson(pkg)
 
   const makefileContent = readMakefile()
-  const updatedMakefile = updateMakefileVersion(makefileContent, newVersion)
+  const updatedMakefile = updateMakefileVersion(makefileContent, newVersion, newCodename)
   writeMakefile(updatedMakefile)
 
   runCommand('npm install')

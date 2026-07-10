@@ -1,5 +1,7 @@
 'use strict';
 
+importScripts('ethers.umd.min.js');
+
 const WS_URL = 'ws://127.0.0.1:8765';
 const RECONNECT_DELAY_MS = 3000;
 const JSON_RPC_VERSION = '2.0';
@@ -9,6 +11,33 @@ let socket = null;
 
 /** @type {boolean} */
 let intentionalClose = false;
+
+/** @type {'desktop' | 'standalone'} */
+let connectionMode = 'desktop';
+
+let pingInterval = null;
+let pongTimeout = null;
+
+function clearHeartbeat() {
+  if (pingInterval) clearInterval(pingInterval);
+  if (pongTimeout) clearTimeout(pongTimeout);
+  pingInterval = null;
+  pongTimeout = null;
+}
+
+function startHeartbeat() {
+  clearHeartbeat();
+  pingInterval = setInterval(() => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ type: 'ping' }));
+      pongTimeout = setTimeout(() => {
+        console.warn('[CointMU-bg] Heartbeat timeout, closing socket...');
+        chrome.storage.local.set({ isLinked: false });
+        if (socket) socket.close();
+      }, 5000);
+    }
+  }, 30000);
+}
 
 /**
  * Maps a composite key of tabId:requestId to the chrome.runtime response callback
@@ -50,8 +79,12 @@ function handleSocketMessage(event) {
     return;
   }
 
-  if (payload.type === 'LINK_APPROVED') {
-    chrome.storage.local.set({ isLinked: true });
+  if (payload.type === 'pong') {
+    if (pongTimeout) clearTimeout(pongTimeout);
+    return;
+  } else if (payload.type === 'LINK_APPROVED') {
+    connectionMode = 'desktop';
+    chrome.storage.local.set({ isLinked: true, connectionMode: 'desktop' });
     return;
   } else if (payload.type === 'LINK_REJECTED') {
     chrome.storage.local.set({ isLinked: false });
@@ -60,17 +93,18 @@ function handleSocketMessage(event) {
     chrome.storage.local.remove(['isLinked', 'walletState']);
     return;
   } else if (payload.type === 'WALLET_STATE') {
-    chrome.storage.local.set({ isLinked: true, walletState: payload });
+    connectionMode = 'desktop';
+    chrome.storage.local.set({ isLinked: true, connectionMode: 'desktop', walletState: payload });
     return;
   } else if (payload.type === 'ACCOUNTS_LIST') {
-    chrome.runtime.sendMessage(payload);
+    chrome.runtime.sendMessage(payload).catch(() => {});
     return;
   } else if (payload.type === 'REVOKE_SITE') {
     if (payload.origin) {
       chrome.tabs.query({ url: payload.origin + '/*' }, (tabs) => {
         for (const tab of tabs) {
           if (tab.id) {
-            chrome.tabs.sendMessage(tab.id, { type: 'REVOKE_SITE' });
+            chrome.tabs.sendMessage(tab.id, { type: 'REVOKE_SITE' }).catch(() => {});
           }
         }
       });
@@ -80,7 +114,7 @@ function handleSocketMessage(event) {
     chrome.tabs.query({}, (tabs) => {
       for (const tab of tabs) {
         if (tab.id) {
-          chrome.tabs.sendMessage(tab.id, { type: 'ACCOUNTS_CHANGED', accounts: payload.accounts });
+          chrome.tabs.sendMessage(tab.id, { type: 'ACCOUNTS_CHANGED', accounts: payload.accounts }).catch(() => {});
         }
       }
     });
@@ -116,11 +150,17 @@ function connect() {
 
   socket.addEventListener('open', function () {
     console.log('[CointMU-bg] WebSocket connected to Electron.');
+    chrome.storage.local.set({ isReconnecting: false });
+    if (connectionMode === 'desktop') {
+      startHeartbeat();
+    }
   });
 
   socket.addEventListener('message', handleSocketMessage);
 
   socket.addEventListener('close', function () {
+    clearHeartbeat();
+    chrome.storage.local.set({ isReconnecting: true });
     socket = null;
     pendingCallbacks.forEach(function (callback) {
       callback({ result: null, error: { message: 'CointMU desktop wallet disconnected.' } });
@@ -211,7 +251,25 @@ function handleContentMessage(message, sender, sendResponse) {
  * @returns {boolean}
  */
 function handleInternalMessage(message, sender, sendResponse) {
-  if (message.action === 'REQUEST_LINK' || message.action === 'AUTO_RECONNECT' || message.action === 'GET_ACCOUNTS') {
+  if (message.action === 'REQUEST_LINK') {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ type: 'REQUEST_LINK' }));
+      sendResponse({ success: true });
+    } else {
+      connect();
+      const onOpen = () => {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+          socket.send(JSON.stringify({ type: 'REQUEST_LINK' }));
+        }
+        if (socket) socket.removeEventListener('open', onOpen);
+      };
+      if (socket) socket.addEventListener('open', onOpen);
+      sendResponse({ success: true });
+    }
+    return false;
+  }
+
+  if (message.action === 'AUTO_RECONNECT' || message.action === 'GET_ACCOUNTS') {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify({ type: message.action }));
       sendResponse({ success: true });
@@ -221,14 +279,146 @@ function handleInternalMessage(message, sender, sendResponse) {
     return false;
   }
 
-  if (message.action === 'SWITCH_ACCOUNT') {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({ type: message.action, address: message.address }));
-      sendResponse({ success: true });
-    } else {
-      sendResponse({ success: false, error: 'WebSocket not connected' });
+  if (message.action === 'GET_CURRENT_STATE') {
+    chrome.storage.local.get(['isLinked', 'walletState', 'connectionMode', 'wallets', 'customNetworks', 'activeStandaloneAddress', 'activeNetworkId']).then(res => {
+      sendResponse({ 
+        isLinked: res.isLinked === true,
+        isReconnecting: res.isReconnecting === true,
+        walletState: res.walletState,
+        connectionMode: res.connectionMode || 'desktop',
+        wallets: res.wallets || [],
+        customNetworks: res.customNetworks || [],
+        activeStandaloneAddress: res.activeStandaloneAddress || null,
+        activeNetworkId: res.activeNetworkId || 'cointmu'
+      });
+    });
+    return true;
+  }
+
+  if (message.action === 'IMPORT_PRIVATE_KEY') {
+    try {
+      const wallet = new ethers.Wallet(message.privateKey);
+      const address = wallet.address;
+      
+      chrome.storage.local.get(['wallets'], (res) => {
+        let wallets = res.wallets || [];
+        // Check if exists
+        const exists = wallets.find(w => w.address === address);
+        if (!exists) {
+          wallets.push({ privateKey: message.privateKey, address });
+        }
+        
+        connectionMode = 'standalone';
+        
+        const standaloneState = {
+          type: 'WALLET_STATE',
+          address: address,
+          accounts: [address],
+          balance: '0.00',
+          network: 'Standalone'
+        };
+
+        chrome.storage.local.set({ 
+          isLinked: true, 
+          connectionMode: 'standalone',
+          walletState: standaloneState,
+          wallets: wallets,
+          activeStandaloneAddress: address
+        }).then(() => {
+          disconnect(); // Disconnect from desktop WS
+          sendResponse({ success: true, address });
+        }).catch((err) => {
+          console.error('Failed to save to local storage', err);
+          sendResponse({ success: false, error: 'Storage save failed' });
+        });
+      });
+    } catch (err) {
+      console.error('Derivation error:', err);
+      sendResponse({ success: false, error: 'Invalid private key or derivation failed' });
     }
-    return false;
+    return true;
+  }
+
+  if (message.action === 'ADD_CUSTOM_NETWORK') {
+    chrome.storage.local.get(['customNetworks'], (res) => {
+      let customNetworks = res.customNetworks || [];
+      const newNetwork = {
+        id: 'custom_' + Date.now(),
+        name: message.name,
+        rpcUrl: message.rpcUrl,
+        chainId: message.chainId
+      };
+      customNetworks.push(newNetwork);
+      chrome.storage.local.set({ customNetworks, activeNetworkId: newNetwork.id }).then(() => {
+        sendResponse({ success: true, network: newNetwork });
+      });
+    });
+    return true;
+  }
+
+  if (message.action === 'SWITCH_NETWORK') {
+    chrome.storage.local.set({ activeNetworkId: message.networkId }).then(() => {
+      sendResponse({ success: true });
+    });
+    return true;
+  }
+
+  if (message.action === 'SWITCH_ACCOUNT') {
+    if (message.mode === 'standalone' || (connectionMode === 'standalone' && !message.mode)) {
+      connectionMode = 'standalone';
+      chrome.storage.local.get(['customNetworks', 'activeNetworkId']).then(res => {
+        const customNet = (res.customNetworks || []).find(n => n.id === res.activeNetworkId);
+        
+        const finishSwitch = (balanceStr) => {
+          const standaloneState = {
+            type: 'WALLET_STATE',
+            address: message.address,
+            accounts: [message.address],
+            balance: balanceStr,
+            network: 'Standalone'
+          };
+          chrome.storage.local.set({ 
+            activeStandaloneAddress: message.address, 
+            connectionMode: 'standalone',
+            walletState: standaloneState
+          }).then(() => {
+            sendResponse({ success: true });
+            disconnect();
+          });
+        };
+
+        if (customNet) {
+          const provider = new ethers.JsonRpcProvider(customNet.rpcUrl);
+          provider.getBalance(message.address).then(bal => {
+            finishSwitch(ethers.formatEther(bal));
+          }).catch(err => {
+            console.error('[CointMU-bg] Failed to fetch balance on switch:', err);
+            finishSwitch('0.00');
+          });
+        } else {
+          finishSwitch('0.00');
+        }
+      });
+      return true;
+    } else {
+      connectionMode = 'desktop';
+      chrome.storage.local.set({ connectionMode: 'desktop' });
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: message.action, address: message.address }));
+        sendResponse({ success: true });
+      } else {
+        connect();
+        const onOpen = () => {
+          if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: message.action, address: message.address }));
+          }
+          if (socket) socket.removeEventListener('open', onOpen);
+        };
+        if (socket) socket.addEventListener('open', onOpen);
+        sendResponse({ success: true });
+      }
+      return false;
+    }
   }
 
   if (message.action === 'GET_PENDING_REQ') {
@@ -283,4 +473,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-connect();
+chrome.storage.local.get(['isLinked', 'connectionMode']).then(res => {
+  if (res.isLinked && res.connectionMode === 'desktop') {
+    connect();
+  }
+});
