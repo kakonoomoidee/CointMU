@@ -1,5 +1,6 @@
 import { app, ipcMain, type BrowserWindow } from 'electron'
 import { autoUpdater, type UpdateInfo, type ProgressInfo } from 'electron-updater'
+import { is } from '@electron-toolkit/utils'
 
 /**
  * Structured update lifecycle payload forwarded to the renderer over the
@@ -81,12 +82,15 @@ function initUpdater(mainWindow: BrowserWindow): void {
   })
 
   ipcMain.handle('updater:check', async () => {
-    if (!app.isPackaged) {
+    if (!app.isPackaged && !is.dev) {
       console.warn('[updater] Skipping update check in development mode.')
       send({ status: 'not-available' })
       return
     }
     try {
+      if (is.dev) {
+        autoUpdater.forceDevUpdateConfig = true
+      }
       await autoUpdater.checkForUpdates()
     } catch (err) {
       send({ status: 'error', error: (err as Error).message })
@@ -108,6 +112,11 @@ function initUpdater(mainWindow: BrowserWindow): void {
   if (app.isPackaged) {
     autoUpdater.checkForUpdatesAndNotify().catch((err: Error) => {
       console.error('[updater] Initial update check failed:', err.message)
+    })
+  } else if (is.dev) {
+    autoUpdater.forceDevUpdateConfig = true
+    autoUpdater.checkForUpdatesAndNotify().catch((err: Error) => {
+      console.error('[updater] Initial development update check failed:', err.message)
     })
   } else {
     console.warn('[updater] Development mode: automatic update check skipped.')
