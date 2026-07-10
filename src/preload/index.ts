@@ -26,6 +26,7 @@ try {
 
 const systemInfo = {
   version: pkg.version,
+  codename: pkg.codename,
   build: buildId,
   platform: platformStr,
   nodeVersion: process.versions.node,

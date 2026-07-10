@@ -286,7 +286,7 @@
       "softwareUpdateTitle": "Software updates",
       "updateError": "Failed to check for updates.",
       "updateLatest": "You are on the latest version.",
-      "updateCheckDesc": "Check whether a newer version is available.",
+      "checkUpdateDesc": "Check whether a newer version is available.",
       "checkUpdateBtn": "Check for Updates",
       "system": "System",
       "nodeVersionTitle": "Node version",

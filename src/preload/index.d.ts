@@ -128,6 +128,7 @@ declare global {
     api: CointmuAPI
     systemInfo?: {
       version: string
+      codename?: string
       build: string
       platform: string
       nodeVersion: string

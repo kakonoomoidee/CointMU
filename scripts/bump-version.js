@@ -7,7 +7,8 @@ const MAKEFILE_PATH = path.resolve(__dirname, '../Makefile')
 const ENCODING_UTF8 = 'utf8'
 
 const ARG_POSITION_BUMP_TYPE = 2
-const ARG_POSITION_PRERELEASE = 3
+const ARG_POSITION_CODENAME = 3
+const ARG_POSITION_PRERELEASE = 4
 const VERSION_PARTS_LENGTH = 3
 const PART_MAJOR_INDEX = 0
 const PART_MINOR_INDEX = 1
@@ -129,10 +130,11 @@ function runCommand(command) {
 function main() {
   const args = process.argv
   const bumpType = args[ARG_POSITION_BUMP_TYPE]
+  const newCodename = args[ARG_POSITION_CODENAME]
   const prereleaseTag = args[ARG_POSITION_PRERELEASE]
 
-  if (!bumpType) {
-    console.error('Usage: node scripts/bump-version.js <major|minor|patch> [prerelease-tag]')
+  if (!bumpType || !newCodename) {
+    console.error('Usage: node scripts/bump-version.js <major|minor|patch> <codename> [prerelease-tag]')
     process.exit(EXIT_CODE_ERROR)
   }
 
@@ -140,9 +142,10 @@ function main() {
   const currentVersion = pkg.version
   const newVersion = calculateNewVersion(currentVersion, bumpType, prereleaseTag)
 
-  console.log(`Bumping version from ${currentVersion} to ${newVersion}`)
+  console.log(`Bumping version from ${currentVersion} to ${newVersion} with codename ${newCodename}`)
 
   pkg.version = newVersion
+  pkg.codename = newCodename
   writePackageJson(pkg)
 
   const makefileContent = readMakefile()
@@ -151,12 +154,13 @@ function main() {
 
   runCommand('npm install')
   runCommand('git add .')
-  runCommand(`git commit -m "chore: release version ${newVersion}"`)
-  runCommand(`git tag -a v${newVersion} -m "Release v${newVersion}"`)
+  const fullVersionString = `${newVersion}-${newCodename}`
+  runCommand(`git commit -m "chore: release version ${fullVersionString}"`)
+  runCommand(`git tag -a v${fullVersionString} -m "Release v${fullVersionString}"`)
   runCommand('git push origin main')
   runCommand('git push origin --tags')
 
-  console.log(`Successfully released version ${newVersion}`)
+  console.log(`Successfully released version ${fullVersionString}`)
 }
 
 main()
