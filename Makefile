@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 6
-SUBLEVEL = 8
-EXTRAVERSION = Aphrodite
+SUBLEVEL = 9
+EXTRAVERSION = 
 
 .PHONY: help dev build\:win build\:linux build\:mac clean
 
