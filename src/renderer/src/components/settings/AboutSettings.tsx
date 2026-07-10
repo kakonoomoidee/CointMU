@@ -137,19 +137,19 @@ export function AboutSettings(): JSX.Element {
 
       <div className="space-y-8">
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.about.updates')}</h3>
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">{t('settings.about.update')}</h3>
           <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-4">
             {updater.status === 'checking' && (
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-bold text-slate-800">{t('settings.about.checkingUpdatesTitle')}</p>
-                  <p className="text-xs text-slate-500 mt-0.5">{t('settings.about.checkingUpdatesDesc')}</p>
+                  <p className="text-sm font-bold text-slate-800">{t('settings.about.checkingUpdateTitle')}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{t('settings.about.checkingUpdateDesc')}</p>
                 </div>
                 <button
                   disabled
                   className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-slate-300 text-slate-500 cursor-not-allowed"
                 >
-                  {t('settings.about.checkingUpdatesBtn')}
+                  {t('settings.about.checkingUpdateBtn')}
                 </button>
               </div>
             )}
@@ -211,20 +211,20 @@ export function AboutSettings(): JSX.Element {
             {(updater.status === 'idle' || updater.status === 'not-available' || updater.status === 'error') && (
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-bold text-slate-800">{t('settings.about.softwareUpdatesTitle')}</p>
+                  <p className="text-sm font-bold text-slate-800">{t('settings.about.softwareUpdateTitle')}</p>
                   {updater.status === 'error' ? (
                     <p className="text-xs text-red-500 mt-0.5">{updater.error ?? t('settings.about.failedCheck')}</p>
                   ) : updater.status === 'not-available' ? (
                     <p className="text-xs text-slate-500 mt-0.5">{t('settings.about.latestVersion')}</p>
                   ) : (
-                    <p className="text-xs text-slate-500 mt-0.5">{t('settings.about.checkUpdatesDesc')}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{t('settings.about.checkUpdateDesc')}</p>
                   )}
                 </div>
                 <button
                   onClick={() => updater.check()}
                   className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-blue-500 text-white hover:bg-blue-600 transition-colors"
                 >
-                  {t('settings.about.checkUpdatesBtn')}
+                  {t('settings.about.checkUpdateBtn')}
                 </button>
               </div>
             )}

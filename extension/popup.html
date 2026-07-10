@@ -7,30 +7,54 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
+
     <!-- Default Popup View -->
     <div id="default-view" class="view active">
+
+      <!-- Header: brand + network switcher -->
       <div class="header">
-        <select id="network-select" class="network-selector">
-          <option value="cointmu">CointMU Mainnet</option>
-          <option value="cointmu_testnet">CointMU Testnet</option>
-          <option value="custom" id="extension.wallet.customRpc">Custom RPC</option>
-        </select>
+        <div class="brand">
+          <div class="logo-mark"><span>C</span></div>
+          <span class="brand-name">CointMU</span>
+        </div>
+
+        <div class="select-wrap">
+          <select id="network-select" class="network-selector">
+            <option value="cointmu">CointMU Mainnet</option>
+            <option value="cointmu_testnet">CointMU Testnet</option>
+            <option value="custom" id="extension.wallet.customRpc">Custom RPC</option>
+          </select>
+          <svg class="select-chevron select-chevron--network" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
       </div>
+
+      <!-- Account switcher -->
       <div class="account-section">
-        <div class="account-switcher-container">
+        <div class="select-wrap">
           <select id="account-select" class="account-switcher">
             <option value="" disabled selected id="extension.wallet.selectAccount">Select Account</option>
           </select>
+          <svg class="select-chevron select-chevron--account" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+          </svg>
         </div>
       </div>
+
+      <!-- Balance -->
       <div class="content">
-        <div class="balance-container">
-          <div class="balance-display" id="balance-value">0.00 CMU</div>
-        </div>
+        <p class="balance-label">Total balance</p>
+        <div id="balance-value" class="balance-display">0.00 CMU</div>
       </div>
+
+      <!-- Link / connected status -->
       <div class="footer">
-        <button id="linkAppBtn" class="btn primary-btn"><span id="extension.wallet.linkToApp">Link to CointMU App</span></button>
-        <div id="connected-status" class="hidden" style="text-align: center; color: #10b981; font-weight: bold; padding: 10px;">
+        <button id="linkAppBtn" class="btn primary-btn">
+          <span id="extension.wallet.linkToApp">Link to CointMU App</span>
+        </button>
+        <div id="connected-status" class="connected-badge hidden">
+          <span class="status-dot"></span>
           <span id="extension.wallet.connected">Connected to CointMU</span>
         </div>
       </div>
@@ -38,28 +62,29 @@
 
     <!-- Transaction Approval View -->
     <div id="approval-view" class="view hidden">
-      <div class="header">
+      <div class="approval-header">
         <h2 id="extension.wallet.approveTx">Approve Transaction</h2>
       </div>
-      <div class="content tx-content">
+
+      <div class="tx-content">
         <div class="tx-details">
           <div class="tx-row">
-            <span class="tx-label">To:</span>
+            <span class="tx-label">To</span>
             <span id="tx-to" class="tx-value"></span>
           </div>
           <div class="tx-row">
-            <span class="tx-label">Value:</span>
+            <span class="tx-label">Value</span>
             <span id="tx-value" class="tx-value"></span>
           </div>
-          <div class="tx-row">
-            <span class="tx-label">Data:</span>
+          <div class="tx-row tx-row--data">
+            <span class="tx-label">Data</span>
             <span id="tx-data" class="tx-value"></span>
           </div>
         </div>
       </div>
-      <div class="footer action-footer">
+
+      <div class="action-footer">
         <button id="extension.wallet.rejectTx" class="btn danger-btn">Reject</button>
-        <!-- The button below doesn't have a specific translation key in the prompt, so I use a default text which will be updated if needed -->
         <button id="btn-approve-confirm" class="btn success-btn">Approve</button>
       </div>
     </div>
