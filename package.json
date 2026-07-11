@@ -21,7 +21,9 @@
     "i18n:audit": "npx tsx scripts/sync-i18n.ts"
   },
   "dependencies": {
+    "archiver": "^8.0.0",
     "boring-avatars": "^2.0.4",
+    "crypto": "^1.0.1",
     "date-fns": "^4.4.0",
     "dotenv": "^16.5.0",
     "electron-store": "^11.0.2",

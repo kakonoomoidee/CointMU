@@ -1,30 +1,119 @@
-const fs = require('fs')
-const path = require('path')
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const { ZipArchive } = require("archiver");
 
 /**
- * Generates a compact 8-character hexadecimal build identifier.
- * The first 5 characters are derived from the current Unix timestamp
- * in seconds (last 5 hex digits), and the remaining 3 characters are
- * cryptographically insignificant random hex digits for uniqueness.
- * @returns {string} An 8-character lowercase hex build ID.
+ * Generates an 8-character hexadecimal build ID.
+ * Format:
+ * - 5 hex chars from current Unix timestamp
+ * - 3 random hex chars
+ *
+ * Example:
+ *   a13cf7b2
+ *
+ * @returns {string}
  */
 function generateBuildId() {
-  const timestampHex = Math.floor(Date.now() / 1000).toString(16).slice(-5)
-  const randomHex = Math.random().toString(16).substring(2, 5)
-  return timestampHex + randomHex
+  const timestamp = Math.floor(Date.now() / 1000)
+    .toString(16)
+    .slice(-5);
+
+  const random = crypto.randomBytes(2).toString("hex").slice(0, 3);
+
+  return `${timestamp}${random}`;
 }
 
 /**
- * Generates a new hexadecimal build identifier and persists it to
- * the build-info.json manifest in the project root.
- * @returns {void}
+ * Writes the generated build ID to build-info.json.
+ *
+ * @returns {string} Generated build ID.
  */
 function updateBuildId() {
-  const filePath = path.join(__dirname, 'build-info.json')
-  const buildId = generateBuildId()
+  const buildId = generateBuildId();
 
-  fs.writeFileSync(filePath, JSON.stringify({ build: buildId }, null, 2), 'utf-8')
-  console.log(`Build ID updated to ${buildId}`)
+  fs.writeFileSync(
+    path.join(__dirname, "build-info.json"),
+    JSON.stringify(
+      {
+        build: buildId,
+      },
+      null,
+      2,
+    ),
+    "utf8",
+  );
+
+  console.log(`Build ID updated: ${buildId}`);
+
+  return buildId;
 }
 
-updateBuildId()
+/**
+ * Creates ZIP archive.
+ * @param {string} sourceDir
+ * @param {string} outFile
+ */
+function zipDirectory(sourceDir, outFile) {
+  return new Promise((resolve, reject) => {
+    const output = fs.createWriteStream(outFile);
+
+    const archive = new ZipArchive({
+      zlib: {
+        level: 9,
+      },
+    });
+
+    output.on("close", () => {
+      console.log(`ZIP size: ${archive.pointer().toLocaleString()} bytes`);
+      resolve();
+    });
+
+    output.on("error", reject);
+
+    archive.on("warning", (err) => {
+      if (err.code === "ENOENT") {
+        console.warn(err.message);
+      } else {
+        reject(err);
+      }
+    });
+
+    archive.on("error", reject);
+
+    archive.pipe(output);
+
+    archive.directory(sourceDir, false);
+
+    archive.finalize();
+  });
+}
+
+/**
+ * Build process.
+ */
+async function runBuild() {
+  const extensionDir = path.join(__dirname, "extension");
+  const resourceDir = path.join(__dirname, "resources");
+  const zipFile = path.join(resourceDir, "extension.zip");
+
+  if (!fs.existsSync(extensionDir)) {
+    throw new Error(`Directory not found: ${extensionDir}`);
+  }
+
+  fs.mkdirSync(resourceDir, {
+    recursive: true,
+  });
+
+  updateBuildId();
+
+  await zipDirectory(extensionDir, zipFile);
+
+  console.log("Build completed successfully.");
+}
+
+runBuild().catch((err) => {
+  console.error("Build failed");
+  console.error(err);
+  process.exit(1);
+});
