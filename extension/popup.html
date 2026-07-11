@@ -65,15 +65,16 @@
         </div>
 
         <div style="display: flex; gap: 8px; align-items: center;">
-          <div class="select-wrap outline-wrap">
+          <div class="select-wrap outline-wrap custom-dropdown" id="network-dropdown">
             <span class="network-dot"></span>
-            <select id="network-select" class="network-selector">
-              <option value="cointmu" id="extension.wallet.cointmuMainnet">CointMU Mainnet</option>
-              <option value="cointmu_testnet" id="extension.wallet.cointmuTestnet">CointMU Testnet</option>
-            </select>
-            <svg class="select-chevron select-chevron--network" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
-            </svg>
+            <div class="dropdown-selected">
+              <span id="network-selected-text">CointMU Mainnet</span>
+              <svg class="select-chevron select-chevron--network" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+              </svg>
+            </div>
+            <ul class="dropdown-options hidden" id="network-options">
+            </ul>
           </div>
           <button id="add-network-btn" class="outline-wrap" style="background: transparent; cursor: pointer; padding: 4px 8px;" title="Add Network">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -90,13 +91,15 @@
 
       <!-- Account Switcher -->
       <div class="account-section" style="padding: 0 20px; display: flex; gap: 8px; align-items: center;">
-        <div class="select-wrap outline-wrap" style="width: 100%;">
-          <select id="account-select" class="network-selector" style="width: 100%; text-align: center;">
-            <!-- Populated by JS -->
-          </select>
-          <svg class="select-chevron select-chevron--account" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
-          </svg>
+        <div class="select-wrap outline-wrap custom-dropdown" style="width: 100%;" id="account-dropdown">
+          <div class="dropdown-selected" style="width: 100%; justify-content: center;">
+            <span id="account-selected-text">Select Account</span>
+            <svg class="select-chevron select-chevron--account" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+            </svg>
+          </div>
+          <ul class="dropdown-options hidden" id="account-options">
+          </ul>
         </div>
         <button id="delete-wallet-btn" class="outline-wrap hidden" style="background: transparent; cursor: pointer; padding: 4px 8px; border: 1px solid var(--danger-color, #ff4d4f); color: var(--danger-color, #ff4d4f);" title="Delete Wallet">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -229,6 +232,6 @@
       </div>
     </div>
 
-    <script src="popup.js"></script>
+    <script type="module" src="popup.js"></script>
   </body>
 </html>

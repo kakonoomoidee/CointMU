@@ -1,12 +1,12 @@
 :root {
   --bg-color: #ffffff;
   --panel-bg: #f9fafb;
-  --text-primary: #111827;
+  --text-primary: #1a1a1a;
   --text-secondary: #6b7280;
   --border-color: #e5e7eb;
-  --accent-color: #10b981;
-  --btn-bg: #f3f4f6;
-  --btn-hover: #e5e7eb;
+  --primary-color: #0052FF;
+  --btn-bg: #f9fafb;
+  --btn-hover: #f3f4f6;
   --card-bg: #ffffff;
   --danger-color: #ef4444;
   --danger-hover: #dc2626;
@@ -46,6 +46,8 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .brand {
@@ -95,19 +97,50 @@ body {
 }
 
 .outline-wrap.connected .network-dot {
-  background-color: var(--accent-color);
+  background-color: var(--primary-color);
 }
 
-.network-selector {
-  appearance: none;
-  background: transparent;
-  border: none;
+.dropdown-selected {
+  display: flex;
+  align-items: center;
   color: var(--text-secondary);
   font-size: 12px;
   font-weight: 500;
   padding-right: 16px;
   cursor: pointer;
   outline: none;
+  width: 100%;
+}
+
+.custom-dropdown {
+  position: relative;
+}
+
+.dropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 50;
+  list-style: none;
+  margin-top: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dropdown-options li {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.dropdown-options li:hover {
+  background-color: #eff6ff; /* light blue */
 }
 
 .select-chevron {
@@ -261,6 +294,8 @@ body {
   padding: 16px 20px;
   display: flex;
   justify-content: center;
+  background-color: var(--bg-color);
+  border-top: 1px solid var(--border-color);
 }
 
 .connected-pill {
@@ -282,7 +317,7 @@ body {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--accent-color);
+  background-color: var(--primary-color);
 }
 
 /* Login View */
@@ -314,7 +349,7 @@ body {
 }
 
 .priv-key-input:focus {
-  border-color: var(--accent-color);
+  border-color: var(--primary-color);
 }
 
 .btn {
@@ -330,12 +365,12 @@ body {
 }
 
 .primary-btn {
-  background-color: var(--text-primary);
-  color: var(--bg-color);
+  background-color: var(--primary-color);
+  color: white;
 }
 
 .primary-btn:hover {
-  background-color: #374151;
+  background-color: #1d4ed8;
 }
 
 .secondary-btn {
@@ -418,12 +453,12 @@ body {
 }
 
 .success-btn {
-  background-color: var(--accent-color);
+  background-color: var(--primary-color);
   color: white;
 }
 
 .success-btn:hover {
-  background-color: #059669;
+  background-color: #0040d6;
 }
 
 .mt-4 { margin-top: 16px; }
