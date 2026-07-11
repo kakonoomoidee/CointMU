@@ -80,11 +80,16 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
             </svg>
           </button>
+          <button id="delete-network-btn" class="outline-wrap hidden" style="background: transparent; cursor: pointer; padding: 4px 8px; border: 1px solid var(--danger-color, #ff4d4f); color: var(--danger-color, #ff4d4f);" title="Delete Network">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+            </svg>
+          </button>
         </div>
       </div>
 
       <!-- Account Switcher -->
-      <div class="account-section" style="padding: 0 20px;">
+      <div class="account-section" style="padding: 0 20px; display: flex; gap: 8px; align-items: center;">
         <div class="select-wrap outline-wrap" style="width: 100%;">
           <select id="account-select" class="network-selector" style="width: 100%; text-align: center;">
             <!-- Populated by JS -->
@@ -93,6 +98,11 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
           </svg>
         </div>
+        <button id="delete-wallet-btn" class="outline-wrap hidden" style="background: transparent; cursor: pointer; padding: 4px 8px; border: 1px solid var(--danger-color, #ff4d4f); color: var(--danger-color, #ff4d4f);" title="Delete Wallet">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+          </svg>
+        </button>
       </div>
 
       <!-- Balance -->
@@ -191,6 +201,30 @@
         </button>
         <button id="cancel-network-btn" class="btn secondary-btn mt-2">
           <span id="extension.wallet.cancel">Cancel</span>
+        </button>
+      </div>
+    </div>
+    <!-- Send View -->
+    <div id="send-view" class="view hidden">
+      <div class="header">
+        <div class="brand">
+          <div class="logo-mark"><span>C</span></div>
+          <span class="brand-name">CointMU</span>
+        </div>
+      </div>
+      <div class="login-content">
+        <h2 id="extension.wallet.sendTitle" class="login-title">Send Asset</h2>
+        <div class="input-group" style="margin-bottom: 12px;">
+          <input type="text" id="send-to-input" class="priv-key-input" placeholder="Recipient Address" />
+        </div>
+        <div class="input-group">
+          <input type="number" id="send-amount-input" class="priv-key-input" placeholder="Amount" step="any" />
+        </div>
+        <button id="send-confirm-btn" class="btn primary-btn mt-4">
+          <span id="extension.wallet.sendConfirmBtn">Confirm</span>
+        </button>
+        <button id="send-cancel-btn" class="btn secondary-btn mt-2">
+          <span id="extension.wallet.sendCancelBtn">Cancel</span>
         </button>
       </div>
     </div>

@@ -64,6 +64,13 @@ async function initPopup() {
   const saveNetworkBtn = document.getElementById('save-network-btn');
   const cancelNetworkBtn = document.getElementById('cancel-network-btn');
 
+  const sendView = document.getElementById('send-view');
+  const actionSendBtn = document.getElementById('action-send');
+  const sendConfirmBtn = document.getElementById('send-confirm-btn');
+  const sendCancelBtn = document.getElementById('send-cancel-btn');
+  const sendToInput = document.getElementById('send-to-input');
+  const sendAmountInput = document.getElementById('send-amount-input');
+
   const btnApproveConfirm = document.getElementById('btn-approve-confirm');
   const rejectTxBtn = document.getElementById('extension.wallet.rejectTx');
 
@@ -130,8 +137,7 @@ async function initPopup() {
   const updateUI = async (res) => {
     // Populate Custom Networks
     const baseNetworks = [
-      { id: 'cointmu', name: translations['extension.wallet.cointmuMainnet'] || 'CointMU Mainnet' },
-      { id: 'cointmu_testnet', name: translations['extension.wallet.cointmuTestnet'] || 'CointMU Testnet' }
+      { id: 'desktop_connection', name: translations['extension.wallet.desktopConnection'] || 'Desktop Connection' }
     ];
     networkSelect.innerHTML = '';
     [...baseNetworks, ...(res.customNetworks || [])].forEach(net => {
@@ -154,9 +160,11 @@ async function initPopup() {
 
     let isStandaloneSelected = false;
     let isDesktopSelected = false;
+    const trackingSet = new Set();
 
     // Local standalone wallets
     (res.wallets || []).forEach(w => {
+      if (w.address) trackingSet.add(w.address.toLowerCase());
       const opt = document.createElement('option');
       opt.dataset.mode = 'standalone';
       opt.value = w.address;
@@ -170,8 +178,10 @@ async function initPopup() {
     });
 
     // Desktop wallets
-    if (res.isLinked && res.walletState && res.walletState.accounts) {
+    if (res.isLinked && res.walletState && Array.isArray(res.walletState.accounts) && res.walletState.accounts.length > 0) {
       res.walletState.accounts.forEach(acc => {
+        if (acc && trackingSet.has(acc.toLowerCase())) return;
+        if (acc) trackingSet.add(acc.toLowerCase());
         const opt = document.createElement('option');
         opt.dataset.mode = 'desktop';
         opt.value = acc;
@@ -197,6 +207,13 @@ async function initPopup() {
     
     if (!currentAddress) {
       accountSelect.value = '';
+    }
+
+    const deleteBtn = document.getElementById('delete-wallet-btn');
+    if (res.connectionMode === 'standalone' && currentAddress && (res.wallets || []).some(w => w.address === currentAddress)) {
+      deleteBtn.classList.remove('hidden');
+    } else {
+      deleteBtn.classList.add('hidden');
     }
 
     // Adjust view layout and balances based on connection mode
@@ -232,17 +249,39 @@ async function initPopup() {
 
     // Adaptive Asset Fetching
     const customNet = (res.customNetworks || []).find(n => n.id === res.activeNetworkId);
+    
+    const deleteNetBtn = document.getElementById('delete-network-btn');
+    if (deleteNetBtn) {
+      if (customNet) {
+        deleteNetBtn.classList.remove('hidden');
+      } else {
+        deleteNetBtn.classList.add('hidden');
+      }
+    }
+
     if (customNet && currentAddress) {
       renderAssets('--', 'ETH');
+      let rpcUrl = customNet.rpcUrl;
+      if (!rpcUrl.startsWith('http')) {
+        rpcUrl = 'http://' + rpcUrl;
+      }
       try {
-        const provider = new ethers.JsonRpcProvider(customNet.rpcUrl);
-        const bal = await provider.getBalance(currentAddress);
-        renderAssets(ethers.formatEther(bal), 'ETH');
+        const provider = new ethers.JsonRpcProvider(rpcUrl, parseInt(customNet.chainId, 10), { staticNetwork: true });
+        provider.getBalance(currentAddress).then(bal => {
+          if (accountSelect.value === currentAddress) {
+            renderAssets(ethers.formatEther(bal), 'ETH');
+          }
+        }).catch(err => {
+          console.error('Failed to fetch from custom RPC', err);
+          if (accountSelect.value === currentAddress) {
+            renderAssets('0.00', 'ERR');
+          }
+        });
       } catch (err) {
-        console.error('Failed to fetch from custom RPC', err);
+        console.error('Failed to initialize provider', err);
         renderAssets('0.00', 'ERR');
       }
-    } else if (res.connectionMode === 'desktop' && res.walletState) {
+    } else if (res.activeNetworkId === 'desktop_connection' && res.connectionMode === 'desktop' && res.walletState) {
       renderAssets(res.walletState.balance, 'CMU');
     } else {
       renderAssets('0.00', 'CMU');
@@ -336,6 +375,18 @@ async function initPopup() {
     addNetworkView.classList.remove('hidden');
   });
 
+  const deleteBtn = document.getElementById('delete-wallet-btn');
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', () => {
+      if (confirm(translations['extension.wallet.deleteWalletConfirm'] || 'Are you sure you want to remove this wallet?')) {
+        const currentAddress = accountSelect.dataset.currentAddress;
+        if (currentAddress) {
+          chrome.runtime.sendMessage({ action: 'DELETE_WALLET', address: currentAddress });
+        }
+      }
+    });
+  }
+
   cancelNetworkBtn.addEventListener('click', () => {
     addNetworkView.classList.add('hidden');
     defaultView.classList.remove('hidden');
@@ -359,6 +410,68 @@ async function initPopup() {
       }
     });
   });
+
+  const deleteNetBtn = document.getElementById('delete-network-btn');
+  if (deleteNetBtn) {
+    deleteNetBtn.addEventListener('click', () => {
+      const netId = networkSelect.value;
+      if (netId !== 'desktop_connection') {
+        chrome.runtime.sendMessage({ action: 'DELETE_NETWORK', networkId: netId });
+      }
+    });
+  }
+
+  if (actionSendBtn) {
+    actionSendBtn.addEventListener('click', () => {
+      defaultView.classList.add('hidden');
+      sendView.classList.remove('hidden');
+    });
+  }
+
+  if (sendCancelBtn) {
+    sendCancelBtn.addEventListener('click', () => {
+      sendToInput.value = '';
+      sendAmountInput.value = '';
+      sendView.classList.add('hidden');
+      defaultView.classList.remove('hidden');
+    });
+  }
+
+  if (sendConfirmBtn) {
+    sendConfirmBtn.addEventListener('click', () => {
+      const to = sendToInput.value.trim();
+      const amount = sendAmountInput.value.trim();
+      if (!to || !amount || isNaN(amount)) {
+        alert('Valid recipient and amount are required');
+        return;
+      }
+      
+      const currentMode = accountSelect.options[accountSelect.selectedIndex]?.dataset.mode || 'desktop';
+      const activeNetworkId = networkSelect.value;
+      const currentAddress = accountSelect.value;
+
+      sendConfirmBtn.querySelector('span').textContent = translations['extension.wallet.sendInProgress'] || 'Sending...';
+      sendConfirmBtn.disabled = true;
+
+      chrome.runtime.sendMessage({
+        action: 'EXECUTE_SEND',
+        to,
+        amount,
+        mode: currentMode,
+        networkId: activeNetworkId,
+        from: currentAddress
+      }, (res) => {
+        sendConfirmBtn.disabled = false;
+        sendConfirmBtn.querySelector('span').textContent = translations['extension.wallet.sendConfirmBtn'] || 'Confirm';
+        if (res && res.success) {
+          alert((translations['extension.wallet.sendSuccess'] || 'Transaction Sent!') + (res.hash ? ' Hash: ' + res.hash : ''));
+          sendCancelBtn.click();
+        } else {
+          alert((translations['extension.wallet.sendFailed'] || 'Transaction Failed') + ': ' + (res?.error || 'Unknown error'));
+        }
+      });
+    });
+  }
 }
 
 document.addEventListener('DOMContentLoaded', initPopup);
