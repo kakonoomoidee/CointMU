@@ -156,7 +156,7 @@ function main() {
   runCommand('git add .')
   const fullVersionString = `${newVersion}-${newCodename}`
   runCommand(`git commit -m "chore: release version ${fullVersionString}"`)
-  runCommand(`git tag -a v${fullVersionString} -m "Release v${fullVersionString}"`)
+  runCommand(`git tag -a v${newVersion} -m "Release v${newVersion}"`)
   runCommand('git push origin main')
   runCommand('git push origin --tags')
 
