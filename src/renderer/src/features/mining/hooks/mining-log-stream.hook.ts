@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
-import { subscribeMiningLog } from '@/services'
-import { useMiningStore } from '@/store'
+import { useEffect } from "react";
+import { subscribeMiningLog } from "@/services";
+import { useMiningStore } from "../mining.store";
 
 /**
  * Subscribes to the parsed Geth mining log stream for the lifetime of the
@@ -12,9 +12,9 @@ import { useMiningStore } from '@/store'
 function useMiningLogStream(): void {
   useEffect(() => {
     return subscribeMiningLog((log) => {
-      useMiningStore.getState().addMiningLog(log)
-    })
-  }, [])
+      useMiningStore.getState().addMiningLog(log);
+    });
+  }, []);
 }
 
-export { useMiningLogStream }
+export { useMiningLogStream };

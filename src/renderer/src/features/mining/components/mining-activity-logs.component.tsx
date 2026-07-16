@@ -1,13 +1,13 @@
-import { type JSX } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useMiningStore, type MiningLog } from '@/store'
+import { type JSX } from "react";
+import { useTranslation } from "react-i18next";
+import { useMiningStore, type MiningLog } from "@/store";
 
-const LEVEL_TEXT_COLOR: Record<MiningLog['level'], string> = {
-  OK: 'text-emerald-400',
-  INFO: 'text-blue-400',
-  WARN: 'text-amber-400',
-  ERROR: 'text-red-400'
-}
+const LEVEL_TEXT_COLOR: Record<MiningLog["level"], string> = {
+  OK: "text-emerald-400",
+  INFO: "text-blue-400",
+  WARN: "text-amber-400",
+  ERROR: "text-red-400",
+};
 
 /**
  * Terminal-style mining log viewer. Renders the parsed Geth log stream from the
@@ -16,8 +16,8 @@ const LEVEL_TEXT_COLOR: Record<MiningLog['level'], string> = {
  * @returns The rendered mining log terminal.
  */
 function MiningActivityLogs(): JSX.Element {
-  const logs = useMiningStore((s) => s.miningLogs)
-  const { t } = useTranslation()
+  const logs = useMiningStore((s) => s.miningLogs);
+  const { t } = useTranslation();
 
   return (
     <div className="h-[280px] bg-slate-900 rounded-xl p-4 overflow-y-auto font-mono text-[11px] shadow-inner">
@@ -28,8 +28,12 @@ function MiningActivityLogs(): JSX.Element {
               key={log.id}
               className="flex items-start gap-4 hover:bg-slate-800/50 px-2 py-0.5 rounded transition-colors"
             >
-              <span className="text-slate-500 w-16 flex-shrink-0">{log.timestamp}</span>
-              <span className={`${LEVEL_TEXT_COLOR[log.level]} w-10 flex-shrink-0 font-bold`}>
+              <span className="text-slate-500 w-16 flex-shrink-0">
+                {log.timestamp}
+              </span>
+              <span
+                className={`${LEVEL_TEXT_COLOR[log.level]} w-10 flex-shrink-0 font-bold`}
+              >
                 {log.level}
               </span>
               <span className="text-slate-300 flex-1 whitespace-pre-wrap break-all">
@@ -38,11 +42,13 @@ function MiningActivityLogs(): JSX.Element {
             </div>
           ))
         ) : (
-          <div className="text-slate-500 text-center py-8">{t('mining.activity.logAwaiting')}</div>
+          <div className="text-slate-500 text-center py-8">
+            {t("mining.activity.logAwaiting")}
+          </div>
         )}
       </div>
     </div>
-  )
+  );
 }
 
-export { MiningActivityLogs }
+export { MiningActivityLogs };

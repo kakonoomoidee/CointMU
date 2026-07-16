@@ -1,15 +1,14 @@
-import { type JSX } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Card } from '@/components'
-import { generateIdenticonGradient } from '@/services'
-
-const INTENSITY_OPTIONS = ['Eco', 'Balanced', 'Turbo'] as const
+import { INTENSITY_OPTIONS } from "../mining.constants";
+import { type JSX } from "react";
+import { useTranslation } from "react-i18next";
+import { Card } from "@/components";
+import { generateIdenticonGradient } from "@/services";
 
 interface WorkerConfigurationProps {
-  cpuThreads: number
-  maxCores: number
-  intensity: string
-  rewardAddress: string
+  cpuThreads: number;
+  maxCores: number;
+  intensity: string;
+  rewardAddress: string;
 }
 
 /**
@@ -22,31 +21,37 @@ function WorkerConfiguration({
   cpuThreads,
   maxCores,
   intensity,
-  rewardAddress
+  rewardAddress,
 }: WorkerConfigurationProps): JSX.Element {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <Card>
       <div className="mb-1">
-        <h3 className="text-sm font-bold text-slate-800">{t('mining.worker.title')}</h3>
-        <p className="text-[10px] text-slate-400 mt-0.5">{t('mining.worker.subtitle')}</p>
+        <h3 className="text-sm font-bold text-slate-800">
+          {t("mining.worker.title")}
+        </h3>
+        <p className="text-[10px] text-slate-400 mt-0.5">
+          {t("mining.worker.subtitle")}
+        </p>
       </div>
 
       <div className="divide-y divide-slate-100 mt-4 opacity-80 pointer-events-none">
         <div className="flex items-center justify-between py-4">
           <div>
-            <p className="text-sm font-semibold text-slate-700">{t('mining.worker.workerThreads')}</p>
+            <p className="text-sm font-semibold text-slate-700">
+              {t("mining.worker.workerThreads")}
+            </p>
             <p className="text-xs text-slate-400 mt-0.5">
-              {cpuThreads} {t('mining.worker.ofCores', { count: maxCores })}
+              {cpuThreads} {t("mining.worker.ofCores", { count: maxCores })}
             </p>
           </div>
           <div className="flex items-center gap-1">
             {Array.from({ length: maxCores }).map((_, i) => (
               <div
                 key={i}
-                className={`w-4 h-6 rounded-sm cursor-default ${i < cpuThreads ? 'bg-emerald-400' : 'bg-slate-200'}`}
-                title={`${i + 1} Thread${i === 0 ? '' : 's'}`}
+                className={`w-4 h-6 rounded-sm cursor-default ${i < cpuThreads ? "bg-emerald-400" : "bg-slate-200"}`}
+                title={`${i + 1} Thread${i === 0 ? "" : "s"}`}
               />
             ))}
           </div>
@@ -54,9 +59,11 @@ function WorkerConfiguration({
 
         <div className="flex items-center justify-between py-4">
           <div>
-            <p className="text-sm font-semibold text-slate-700">{t('mining.worker.intensityTitle')}</p>
+            <p className="text-sm font-semibold text-slate-700">
+              {t("mining.worker.intensityTitle")}
+            </p>
             <p className="text-xs text-slate-400 mt-0.5 max-w-[140px]">
-              {t('mining.worker.higherMoreHeat')}
+              {t("mining.worker.higherMoreHeat")}
             </p>
           </div>
           <div className="flex items-center rounded-lg border border-slate-200 overflow-hidden">
@@ -64,7 +71,9 @@ function WorkerConfiguration({
               <div
                 key={option}
                 className={`px-3.5 py-1.5 text-xs font-semibold cursor-default transition-colors ${
-                  intensity === option ? 'bg-slate-300 text-slate-700' : 'bg-white text-slate-400'
+                  intensity === option
+                    ? "bg-slate-300 text-slate-700"
+                    : "bg-white text-slate-400"
                 }`}
               >
                 {option}
@@ -75,8 +84,12 @@ function WorkerConfiguration({
 
         <div className="flex items-center justify-between py-4">
           <div>
-            <p className="text-sm font-semibold text-slate-700">{t('mining.worker.rewardAddressTitle')}</p>
-            <p className="text-xs text-slate-400 mt-0.5">{t('mining.worker.blockRewardsCreditedHere')}</p>
+            <p className="text-sm font-semibold text-slate-700">
+              {t("mining.worker.rewardAddressTitle")}
+            </p>
+            <p className="text-xs text-slate-400 mt-0.5">
+              {t("mining.worker.blockRewardsCreditedHere")}
+            </p>
           </div>
           {rewardAddress ? (
             <div className="flex items-center gap-3">
@@ -84,17 +97,20 @@ function WorkerConfiguration({
                 className={`w-5 h-5 rounded-full bg-gradient-to-br ${generateIdenticonGradient(rewardAddress)} flex-shrink-0`}
               />
               <span className="text-xs font-mono text-slate-500 font-medium tracking-tight">
-                {rewardAddress.substring(0, 10)}...{rewardAddress.substring(rewardAddress.length - 8)}
+                {rewardAddress.substring(0, 10)}...
+                {rewardAddress.substring(rewardAddress.length - 8)}
               </span>
             </div>
           ) : (
-            <span className="text-xs font-medium text-slate-400">{t('mining.worker.setInMiningSettings')}</span>
+            <span className="text-xs font-medium text-slate-400">
+              {t("mining.worker.setInMiningSettings")}
+            </span>
           )}
         </div>
       </div>
     </Card>
-  )
+  );
 }
 
-export { WorkerConfiguration }
-export type { WorkerConfigurationProps }
+export { WorkerConfiguration };
+export type { WorkerConfigurationProps };

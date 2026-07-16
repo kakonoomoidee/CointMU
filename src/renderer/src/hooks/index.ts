@@ -22,3 +22,4 @@ export { useBiometrics } from './useBiometrics'
 export { useDappRequestHandler } from './useDappRequestHandler'
 export { useHardwareDetection } from './useHardwareDetection'
 export { useAutoLock } from './useAutoLock'
+

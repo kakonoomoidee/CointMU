@@ -1,6 +1,5 @@
-import { type BlockData } from '@/hooks'
-
-const DEFAULT_CONCURRENCY = 8
+import { DEFAULT_CONCURRENCY } from "./mining.constants";
+import { type BlockData } from "@/hooks";
 
 /**
  * Resolves a safe CPU core count from the browser environment, falling back to
@@ -9,9 +8,12 @@ const DEFAULT_CONCURRENCY = 8
  */
 export function getSafeConcurrency(): number {
   try {
-    return (typeof navigator !== 'undefined' && navigator.hardwareConcurrency) || DEFAULT_CONCURRENCY
+    return (
+      (typeof navigator !== "undefined" && navigator.hardwareConcurrency) ||
+      DEFAULT_CONCURRENCY
+    );
   } catch {
-    return DEFAULT_CONCURRENCY
+    return DEFAULT_CONCURRENCY;
   }
 }
 
@@ -27,15 +29,18 @@ export function getSafeConcurrency(): number {
 export function computeSharesData(
   recentBlocks: BlockData[],
   windowSize: number,
-  activeWalletAddress: string | null
+  activeWalletAddress: string | null,
 ): Array<boolean | null> {
   return Array.from({ length: windowSize }).map((_, i) => {
-    const blockIndex = windowSize - 1 - i
+    const blockIndex = windowSize - 1 - i;
     if (blockIndex < recentBlocks.length) {
-      return recentBlocks[blockIndex].miner.toLowerCase() === activeWalletAddress?.toLowerCase()
+      return (
+        recentBlocks[blockIndex].miner.toLowerCase() ===
+        activeWalletAddress?.toLowerCase()
+      );
     }
-    return null
-  })
+    return null;
+  });
 }
 
 /**
@@ -45,14 +50,14 @@ export function computeSharesData(
  * @returns The formatted rewards string, or '0.0' when the balance is invalid.
  */
 export function formatRewards(balance: string): string {
-  const parsed = parseFloat(balance.replace(/,/g, ''))
+  const parsed = parseFloat(balance.replace(/,/g, ""));
   if (isNaN(parsed)) {
-    return '0.0'
+    return "0.0";
   }
   return parsed.toLocaleString(undefined, {
     minimumFractionDigits: parsed % 1 === 0 ? 1 : 2,
-    maximumFractionDigits: 2
-  })
+    maximumFractionDigits: 2,
+  });
 }
 
 /**
@@ -62,5 +67,5 @@ export function formatRewards(balance: string): string {
  * @returns The hex-formatted difficulty label or a loading placeholder.
  */
 export function formatDifficultyLabel(difficulty: number): string {
-  return difficulty > 0 ? '0x' + difficulty.toString(16) : 'Loading...'
+  return difficulty > 0 ? "0x" + difficulty.toString(16) : "Loading...";
 }
