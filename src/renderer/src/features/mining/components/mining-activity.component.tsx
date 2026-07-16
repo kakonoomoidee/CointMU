@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import { subDays, format, differenceInMinutes } from "date-fns";
 import { Card, WalletHistoryFilter, Pagination } from "@/components";
 import { IconCheck, IconCube } from "@/assets/icons";
-import { formatAge } from "@/utils";
+import { formatAge } from '@/utils';
 import { type FoundBlock, type HistoryFilter } from "@/store";
 import { type DerivedAccount } from '@/features/wallet';
 import { MiningActivityLogs } from "./mining-activity-logs.component";

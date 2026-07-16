@@ -5,8 +5,8 @@ const MILLISECONDS_PER_SECOND = 1000
 
 /**
  * Left-pads a numeric value to two digits for fixed-width clock display.
- * @param value - The number to pad.
- * @returns A two-character zero-padded string.
+ * @param {any} value - The number to pad.
+ * @returns {any} A two-character zero-padded string.
  */
 function padTwo(value: number): string {
   return value.toString().padStart(2, '0')
@@ -16,8 +16,8 @@ function padTwo(value: number): string {
  * Formats an elapsed duration in milliseconds into a compact clock string using
  * date-fns intervalToDuration. Hours are only shown once the elapsed time
  * reaches one hour, otherwise a minutes and seconds layout is used.
- * @param elapsedMs - The elapsed duration in milliseconds.
- * @returns A formatted duration string such as '1h 02m 03s' or '02m 03s'.
+ * @param {any} elapsedMs - The elapsed duration in milliseconds.
+ * @returns {any} A formatted duration string such as '1h 02m 03s' or '02m 03s'.
  */
 function formatElapsed(elapsedMs: number): string {
   if (!Number.isFinite(elapsedMs) || elapsedMs <= 0) {
@@ -40,8 +40,8 @@ function formatElapsed(elapsedMs: number): string {
 /**
  * Formats a Unix timestamp expressed in seconds into a human-readable relative
  * age string using date-fns formatDistanceToNowStrict.
- * @param timestampSeconds - The Unix timestamp in seconds.
- * @returns A relative age string such as '5 seconds ago'.
+ * @param {any} timestampSeconds - The Unix timestamp in seconds.
+ * @returns {any} A relative age string such as '5 seconds ago'.
  */
 function formatAge(timestampSeconds: number): string {
   if (!Number.isFinite(timestampSeconds) || timestampSeconds <= 0) {
@@ -56,8 +56,8 @@ function formatAge(timestampSeconds: number): string {
 /**
  * Determines whether a Unix timestamp expressed in seconds falls within the
  * last 24 hours relative to now.
- * @param timestampSeconds - The Unix timestamp in seconds.
- * @returns True when the timestamp is newer than 24 hours ago.
+ * @param {any} timestampSeconds - The Unix timestamp in seconds.
+ * @returns {any} True when the timestamp is newer than 24 hours ago.
  */
 function isWithinLastDay(timestampSeconds: number): boolean {
   if (!Number.isFinite(timestampSeconds) || timestampSeconds <= 0) {
@@ -69,3 +69,4 @@ function isWithinLastDay(timestampSeconds: number): boolean {
 }
 
 export { formatElapsed, formatAge, isWithinLastDay }
+

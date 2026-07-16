@@ -22,7 +22,7 @@ import { call, fetchBalance } from '@/services'
 import { getNetworkInsights } from '@/features/settings'
 import { detectSearchType } from '@/features/explorer'
 import { type DerivedAccount } from '@/features/wallet';
-import { formatBlockNumber } from "@/utils";
+import { formatBlockNumber } from '@/utils';
 import { type ActivityData } from "@/components";
 import { Insights } from "./insights.component";
 import { ChainTimeline } from "./chain-timeline.component";

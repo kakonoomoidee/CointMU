@@ -12,15 +12,8 @@ import { getTransactions } from "@/services/transactionService";
 import { CacheService } from "@/services/cacheService";
 import { type DerivedAccount } from '@/features/wallet';
 import { type ActivityData } from '@/components';
-import {
-  formatBlockNumber,
-  formatHashrate,
-  formatDifficulty,
-  formatMhs,
-  isWithinLastDay,
-  resolveHistoryAddresses,
-  filterFoundBlocks,
-} from "@/utils";
+import { formatBlockNumber, formatHashrate, formatDifficulty, formatMhs, isWithinLastDay } from '@/utils'
+import { resolveHistoryAddresses, filterFoundBlocks } from '@/features/wallet/utils/history.util';
 import { DashboardHeader } from './dashboard-header.component';
 import { WalletOverviewCard } from './wallet-overview-card.component';
 import { useRecentBlocks } from '@/features/explorer';

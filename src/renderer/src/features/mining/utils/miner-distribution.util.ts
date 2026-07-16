@@ -18,7 +18,7 @@ export interface MinerEntry {
  * 'latest', tallying miner addresses within a strict 24-hour UTC window.
  * Scanning stops as soon as a block timestamp is older than 24 hours ago
  * or a safety cap of scanned blocks is reached.
- * @returns A promise resolving to a sorted, capped array of miner entries
+ * @returns {Promise<MinerEntry[]>} A promise resolving to a sorted, capped array of miner entries
  *          where any miners beyond the top 5 are folded into an 'Others'
  *          entry. Returns an empty array if no blocks were found.
  */
@@ -76,3 +76,5 @@ export async function fetchMinerDistribution(): Promise<MinerEntry[]> {
 
   return top
 }
+
+

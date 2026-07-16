@@ -5,8 +5,8 @@ const PEER_PLURAL = 'peers'
 
 /**
  * Formats a block number into a locale-aware string with thousands separators.
- * @param blockNumber - The raw block number, or null if unavailable.
- * @returns A formatted string representation of the block number.
+ * @param {any} blockNumber - The raw block number, or null if unavailable.
+ * @returns {any} A formatted string representation of the block number.
  */
 function formatBlockNumber(blockNumber: number | null): string {
   if (blockNumber === null) {
@@ -17,8 +17,8 @@ function formatBlockNumber(blockNumber: number | null): string {
 
 /**
  * Formats an RPC port number into a display string with prefix colon.
- * @param port - The port number, or null if not yet resolved.
- * @returns A formatted port display string.
+ * @param {any} port - The port number, or null if not yet resolved.
+ * @returns {any} A formatted port display string.
  */
 function formatPortDisplay(port: number | null): string {
   if (port === null) {
@@ -29,8 +29,8 @@ function formatPortDisplay(port: number | null): string {
 
 /**
  * Formats a peer count with the correct singular or plural label.
- * @param count - The number of connected peers, or null if unavailable.
- * @returns A formatted peer count string.
+ * @param {any} count - The number of connected peers, or null if unavailable.
+ * @returns {any} A formatted peer count string.
  */
 function formatPeerCount(count: number | null): string {
   if (count === null) {
@@ -42,8 +42,8 @@ function formatPeerCount(count: number | null): string {
 
 /**
  * Formats a chain ID bigint into a human-readable decimal string.
- * @param chainId - The chain ID as a bigint, or null if unavailable.
- * @returns A string representation of the chain ID.
+ * @param {any} chainId - The chain ID as a bigint, or null if unavailable.
+ * @returns {any} A string representation of the chain ID.
  */
 function formatChainId(chainId: bigint | null): string {
   if (chainId === null) {
@@ -54,8 +54,8 @@ function formatChainId(chainId: bigint | null): string {
 
 /**
  * Formats a timestamp into a locale-aware time string.
- * @param timestamp - Unix timestamp in milliseconds, or null.
- * @returns A formatted time string (HH:MM:SS).
+ * @param {any} timestamp - Unix timestamp in milliseconds, or null.
+ * @returns {any} A formatted time string (HH:MM:SS).
  */
 function formatTimestamp(timestamp: number | null): string {
   if (timestamp === null) {
@@ -71,8 +71,8 @@ const HASHRATE_UNITS = ['H/s', 'KH/s', 'MH/s', 'GH/s', 'TH/s']
 /**
  * Formats a raw hashrate value into a human-readable string with automatic
  * unit scaling from H/s through TH/s.
- * @param hashrate - The raw hashrate in hashes per second, or null if unavailable.
- * @returns A formatted hashrate string with the appropriate unit suffix.
+ * @param {any} hashrate - The raw hashrate in hashes per second, or null if unavailable.
+ * @returns {any} A formatted hashrate string with the appropriate unit suffix.
  */
 function formatHashrate(hashrate: number | null): string {
   if (hashrate === null || hashrate === 0) {
@@ -101,8 +101,8 @@ const DIFFICULTY_DECIMAL_PLACES = 1
 /**
  * Formats a raw difficulty value into a human-readable string with automatic
  * unit scaling from raw through P (peta).
- * @param difficulty - The raw difficulty integer, or null if unavailable.
- * @returns A formatted difficulty string with the appropriate unit suffix.
+ * @param {any} difficulty - The raw difficulty integer, or null if unavailable.
+ * @returns {any} A formatted difficulty string with the appropriate unit suffix.
  */
 function formatDifficulty(difficulty: number | null): string {
   if (difficulty === null || difficulty === 0) {
@@ -129,8 +129,8 @@ const MHS_DECIMAL_PLACES = 2
 /**
  * Formats a hashrate already expressed in megahashes per second into a fixed
  * two-decimal string suitable for direct display.
- * @param megahashes - The hashrate in MH/s.
- * @returns The formatted value such as '2.50', or '0.00' when not positive.
+ * @param {any} megahashes - The hashrate in MH/s.
+ * @returns {any} The formatted value such as '2.50', or '0.00' when not positive.
  */
 function formatMhs(megahashes: number): string {
   if (!Number.isFinite(megahashes) || megahashes <= 0) {
@@ -140,3 +140,4 @@ function formatMhs(megahashes: number): string {
 }
 
 export { formatBlockNumber, formatPortDisplay, formatPeerCount, formatChainId, formatTimestamp, formatHashrate, formatDifficulty, formatMhs }
+

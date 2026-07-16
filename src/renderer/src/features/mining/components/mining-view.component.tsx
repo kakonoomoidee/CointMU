@@ -9,15 +9,8 @@ import {
 } from "@/hooks";
 import { useMiningStore, useAppStore, type FoundBlock } from "@/store";
 import { type DerivedAccount } from '@/features/wallet';
-import {
-  formatMhs,
-  isWithinLastDay,
-  getSafeConcurrency,
-  formatRewards,
-  formatDifficultyLabel,
-  resolveHistoryAddresses,
-  filterFoundBlocks,
-} from "@/utils";
+import { formatMhs, isWithinLastDay, getSafeConcurrency, formatRewards, formatDifficultyLabel } from '@/utils'
+import { resolveHistoryAddresses, filterFoundBlocks } from '@/features/wallet/utils/history.util';
 import { IconAlertCircle } from "@/assets/icons";
 import { MiningHeader } from "./mining-header.component";
 import { MiningHeroCard } from './mining-hero-card.component';
