@@ -15,7 +15,8 @@ import {
   type SyntheticEvent,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { useRecentBlocks, usePagination } from "@/hooks";
+import { usePagination } from '@/hooks'
+import { useRecentBlocks } from '@/features/explorer';
 import { useAppStore } from "@/store";
 import {
   call,
@@ -409,3 +410,4 @@ function ExplorerView({
 }
 
 export { ExplorerView };
+

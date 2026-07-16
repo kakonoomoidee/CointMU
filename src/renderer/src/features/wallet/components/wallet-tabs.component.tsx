@@ -14,7 +14,7 @@ import { AddTokenModal, TokenIcon } from '@/features/wallet'
 import { NFTGrid } from '@/features/nft'
 import { IconBolt, IconPlus } from "@/assets/icons";
 import { useAppStore, type PendingTransaction } from "@/store";
-import { useNFTFetcher } from "@/hooks/useNFTFetcher";
+import { useNFTFetcher } from '@/features/nft';
 
 type WalletTab = "activity" | "tokens" | "nfts";
 
@@ -369,4 +369,5 @@ function WalletTabs({
 
 export { WalletTabs };
 export type { WalletTabsProps, WalletTab };
+
 

@@ -2,7 +2,6 @@ import { DASHBOARD_TICK_INTERVAL_MS, ACTIVITY_PAGE_SIZE, ACTIVITY_POLL_INTERVAL_
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  useRecentBlocks,
   useMiningStats,
   useMiningControls,
   usePagination,
@@ -24,6 +23,7 @@ import {
 } from "@/utils";
 import { DashboardHeader } from './dashboard-header.component';
 import { WalletOverviewCard } from './wallet-overview-card.component';
+import { useRecentBlocks } from '@/features/explorer';
 import { NetworkHealthPanel } from './network-health-panel.component';
 import { DashboardStatsGrid } from './dashboard-stats-grid.component';
 import { LatestBlocks } from './latest-blocks.component';
@@ -304,6 +304,7 @@ function DashboardView({
 }
 
 export { DashboardView };
+
 
 
 

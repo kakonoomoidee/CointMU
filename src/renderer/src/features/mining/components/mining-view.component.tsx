@@ -1,7 +1,6 @@
 import { FOUND_BLOCKS_PAGE_SIZE } from "../mining.constants";
 import { useState, useMemo, type JSX } from "react";
 import {
-  useRecentBlocks,
   useMiningStats,
   useMiningControls,
   useMiningActivity,
@@ -21,7 +20,8 @@ import {
 } from "@/utils";
 import { IconAlertCircle } from "@/assets/icons";
 import { MiningHeader } from "./mining-header.component";
-import { MiningHeroCard } from "./mining-hero-card.component";
+import { MiningHeroCard } from './mining-hero-card.component';
+import { useRecentBlocks } from '@/features/explorer';
 import { MiningStatsGrid } from "./mining-stats-grid.component";
 import { WorkerConfiguration } from "./worker-configuration.component";
 import {
@@ -220,3 +220,4 @@ function MiningView({ accounts, onNavigate }: MinerProps): JSX.Element {
 }
 
 export { MiningView };
+

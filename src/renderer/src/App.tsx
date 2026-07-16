@@ -13,7 +13,8 @@ import { useAuthStore } from '@/features/auth'
 import { Sidebar, CustomTitleBar } from '@/components'
 import { PairingApprovalModal } from '@/features/dapp'
 import { ToastViewport, useNotificationStore } from '@/features/notifications'
-import { useDappRequestHandler, useAutoLock } from '@/hooks'
+import { useDappRequestHandler } from '@/features/dapp'
+import { useAutoLock } from '@/features/auth'
 
 const Miner = lazy(() => import('@/features/mining').then((m) => ({ default: m.MiningView })))
 const Explorer = lazy(() => import('@/features/explorer').then((m) => ({ default: m.ExplorerView })))
@@ -193,6 +194,7 @@ function App(): JSX.Element {
 }
 
 export default App
+
 
 
 

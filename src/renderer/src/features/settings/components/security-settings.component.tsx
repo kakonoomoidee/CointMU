@@ -2,7 +2,7 @@ import { CONNECT_FEEDBACK_MS } from "../settings.constants";
 import { useEffect, useRef, useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { useSecurityStore } from "../security.store";
-import { useBiometrics, useHardwareDetection } from "@/hooks";
+import { useBiometrics, useHardwareDetection } from '@/features/settings';
 import { IconShieldCheck } from "@/assets/icons";
 import { RevealPrivateKeyModal } from "../modals/reveal-private-key-modal.component";
 import { RecoveryPhraseModal } from "../modals/recovery-phrase-modal.component";
@@ -262,3 +262,4 @@ export function SecuritySettings(): JSX.Element {
     </div>
   );
 }
+
