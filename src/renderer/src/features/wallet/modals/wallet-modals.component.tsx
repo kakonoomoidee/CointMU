@@ -1,5 +1,5 @@
 import { type JSX } from "react";
-import { type DerivedAccount } from "@/services";
+import { type DerivedAccount } from '@/features/wallet';
 import { useWalletUiStore } from "../wallet-ui.store";
 import { IconX } from "@/assets/icons";
 import { ReceiveModal } from "./receive-modal.component";

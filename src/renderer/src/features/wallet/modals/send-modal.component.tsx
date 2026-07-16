@@ -22,11 +22,8 @@ import {
   requireSessionPassword,
   parseTransferError,
 } from "@/services/transferService";
-import {
-  call,
-  waitForTransactionReceipt,
-  dispatchNotification,
-} from "@/services";
+import { call, waitForTransactionReceipt } from '@/services'
+import { dispatchNotification } from '@/features/notifications';
 import { IconCheck, IconAlertCircle } from "@/assets/icons";
 import { CustomDropdown } from '@/components'
 import { TokenIcon } from '@/features/wallet';

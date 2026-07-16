@@ -8,7 +8,7 @@ import {
   usePagination,
 } from "@/hooks";
 import { useMiningStore, useAppStore, type FoundBlock } from "@/store";
-import { type DerivedAccount } from "@/services";
+import { type DerivedAccount } from '@/features/wallet';
 import {
   formatMhs,
   isWithinLastDay,

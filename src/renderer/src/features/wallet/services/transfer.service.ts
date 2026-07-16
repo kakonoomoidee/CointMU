@@ -1,12 +1,8 @@
 import { ethers } from 'ethers'
 import { STANDARD_ERC20_ABI } from './tokenService'
 import { call } from './rpcClient'
-import {
-  getSetting,
-  getSessionPassword,
-  decryptSecret,
-  type DerivedAccount
-} from '@/services'
+import { getSetting } from '@/features/settings'
+import { getSessionPassword, decryptSecret, type DerivedAccount } from '@/features/wallet'
 
 const RPC_URL = 'http://127.0.0.1:8585'
 

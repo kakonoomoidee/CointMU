@@ -1,10 +1,6 @@
 import { CONFIG_SYNC_INTERVAL_MS } from "../mining.constants";
 import { useState, useEffect, useCallback } from "react";
-import {
-  getMiningConfig,
-  setMiningEnabled,
-  type MiningConfig,
-} from "@/services";
+import { getMiningConfig, setMiningEnabled, type MiningConfig } from '@/features/mining';
 
 interface MiningControls {
   config: MiningConfig;

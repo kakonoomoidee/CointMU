@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { type DerivedAccount } from "@/services";
+import { type DerivedAccount } from '@/features/wallet';
 import { type UpdaterStatus } from "@/hooks";
 import { useAppStore } from "@/store";
 import { NotificationCenter } from "../notifications/NotificationCenter";

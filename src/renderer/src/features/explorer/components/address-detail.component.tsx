@@ -5,7 +5,8 @@ import {
 } from "../explorer.constants";
 import { useState, useEffect, useMemo, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { getAddressSummary, type DerivedAccount } from "@/services";
+import { getAddressSummary } from '@/features/explorer'
+import { type DerivedAccount } from '@/features/wallet';
 import { getTransactions } from "@/services/transactionService";
 import { usePagination } from "@/hooks";
 import { formatTxAge } from "../explorer.utils";

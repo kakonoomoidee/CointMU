@@ -18,13 +18,10 @@ import { useTranslation } from "react-i18next";
 import { usePagination } from '@/hooks'
 import { useRecentBlocks } from '@/features/explorer';
 import { useAppStore } from "@/store";
-import {
-  call,
-  fetchBalance,
-  getNetworkInsights,
-  detectSearchType,
-  type DerivedAccount,
-} from "@/services";
+import { call, fetchBalance } from '@/services'
+import { getNetworkInsights } from '@/features/settings'
+import { detectSearchType } from '@/features/explorer'
+import { type DerivedAccount } from '@/features/wallet';
 import { formatBlockNumber } from "@/utils";
 import { type ActivityData } from "@/components";
 import { Insights } from "./insights.component";

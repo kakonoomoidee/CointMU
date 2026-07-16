@@ -15,7 +15,7 @@ import {
   IconAlertTriangle,
   IconX,
 } from "@/assets/icons";
-import { revealRecoveryPhrase } from "@/services";
+import { revealRecoveryPhrase } from '@/features/wallet';
 
 interface RecoveryPhraseModalProps {
   onClose: () => void;

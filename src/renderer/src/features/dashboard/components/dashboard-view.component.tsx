@@ -10,7 +10,7 @@ import { useAppStore, useMiningStore } from '@/store';
 import { useWalletUiStore } from '@/features/wallet/wallet-ui.store';
 import { getTransactions } from "@/services/transactionService";
 import { CacheService } from "@/services/cacheService";
-import { type DerivedAccount } from "@/services";
+import { type DerivedAccount } from '@/features/wallet';
 import { type ActivityData } from '@/components';
 import {
   formatBlockNumber,

@@ -1,18 +1,9 @@
 import { COPY_FEEDBACK_MS } from "../wallet.constants";
 import { useEffect, useState, type JSX, type MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  deriveAccount,
-  generateIdenticonGradient,
-  deriveAccountFromPrivateKey,
-  getSetting,
-  setSetting,
-  call,
-  encryptSecret,
-  decryptSecret,
-  getSessionPassword,
-  type DerivedAccount,
-} from "@/services";
+import { deriveAccount, generateIdenticonGradient, deriveAccountFromPrivateKey, encryptSecret, decryptSecret, getSessionPassword, type DerivedAccount } from '@/features/wallet'
+import { getSetting, setSetting } from '@/features/settings'
+import { call } from '@/services';
 import { ethers } from "ethers";
 import { useAppStore } from "@/store";
 import { useWalletUiStore } from "../wallet-ui.store";

@@ -10,7 +10,7 @@ import { ExternalSourceSettings } from "./external-source-settings.component";
 import { AdvancedSettings } from "./advanced-settings.component";
 import { AboutSettings } from "./about-settings.component";
 import { NotificationSettings } from "./notification-settings.component";
-import { getAllSettings, setSetting } from "@/services";
+import { getAllSettings, setSetting } from '@/features/settings';
 import {
   IconSun,
   IconImage,

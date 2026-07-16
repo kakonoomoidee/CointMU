@@ -1,3 +1,4 @@
+import { GRADIENTS } from '../wallet.constants';
 import { Wallet, HDNodeWallet } from 'ethers'
 import { getSetting, setSetting } from './settingsService'
 
@@ -8,21 +9,6 @@ export interface DerivedAccount {
   encryptedKey?: string
   isHidden?: boolean
 }
-
-const GRADIENTS = [
-  'from-emerald-400 to-emerald-600',
-  'from-blue-400 to-blue-600',
-  'from-violet-400 to-fuchsia-500',
-  'from-amber-400 to-orange-500',
-  'from-pink-400 to-rose-500',
-  'from-cyan-400 to-teal-500',
-  'from-lime-400 to-emerald-500',
-  'from-indigo-400 to-purple-500',
-  'from-red-400 to-orange-500',
-  'from-sky-400 to-blue-600',
-  'from-fuchsia-400 to-pink-500',
-  'from-teal-400 to-emerald-600'
-]
 
 /**
  * Generates a new 12-word BIP39 mnemonic seed phrase.
@@ -215,3 +201,4 @@ export async function purgeSecondaryAccounts(): Promise<void> {
     await setSetting('accounts', [accounts[0]])
   }
 }
+

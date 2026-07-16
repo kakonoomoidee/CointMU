@@ -6,7 +6,8 @@ import {
   IconCheck,
   IconX,
 } from "@/assets/icons";
-import { generateKeystore, getSetting, type DerivedAccount } from "@/services";
+import { generateKeystore, type DerivedAccount } from '@/features/wallet'
+import { getSetting } from '@/features/settings';
 import { useAppStore } from "@/store";
 
 interface ExportKeystoreModalProps {

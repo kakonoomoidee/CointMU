@@ -7,12 +7,8 @@ import {
   FALLBACK_BASE_LOAD,
 } from "../mining.constants";
 import { useState, useEffect } from "react";
-import {
-  fetchMiningStats,
-  subscribeDagProgress,
-  subscribeMiningStatus,
-  getCpuUsage,
-} from "@/services";
+import { fetchMiningStats, subscribeDagProgress, subscribeMiningStatus } from '@/features/mining'
+import { getCpuUsage } from '@/services';
 import { fetchHashrate, fetchSyncingStatus } from "@/services/rpcClient";
 import { useMiningStore } from "../mining.store";
 

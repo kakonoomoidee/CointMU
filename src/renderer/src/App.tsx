@@ -3,7 +3,8 @@ import ms from 'ms'
 import { Wallet } from '@/views'
 import { DashboardView } from '@/features/dashboard'
 import { AuthFlow } from '@/features/auth'
-import { type DerivedAccount, getSetting } from '@/services'
+import { type DerivedAccount } from '@/features/wallet'
+import { getSetting } from '@/features/settings'
 import { useUpdater, useMiningLogStream } from '@/hooks'
 import {
   useAppStore,

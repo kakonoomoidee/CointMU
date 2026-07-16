@@ -56,3 +56,10 @@ export const ASCII_PRINTABLE_MIN = 0;
 export const ASCII_PRINTABLE_MAX = 127;
 export const HEX_RADIX = 16;
 export const HEX_CHARS_PER_BYTE = 2;
+
+export const ADDRESS_LENGTH = 42;
+export const HASH_LENGTH = 66;
+export const WEI_PER_CMU = 1e18;
+export const WEI_PER_GWEI = 1e9;
+export const HEX_RADIX = 16;
+

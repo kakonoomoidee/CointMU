@@ -15,7 +15,7 @@ import { Card, WalletHistoryFilter, Pagination } from "@/components";
 import { IconCheck, IconCube } from "@/assets/icons";
 import { formatAge } from "@/utils";
 import { type FoundBlock, type HistoryFilter } from "@/store";
-import { type DerivedAccount } from "@/services";
+import { type DerivedAccount } from '@/features/wallet';
 import { MiningActivityLogs } from "./mining-activity-logs.component";
 
 export interface DayContribution {

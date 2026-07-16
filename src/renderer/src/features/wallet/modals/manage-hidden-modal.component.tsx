@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { type DerivedAccount } from "@/services";
+import { type DerivedAccount } from '@/features/wallet';
 import { IconEye } from "@/assets/icons";
 
 interface ManageHiddenModalProps {

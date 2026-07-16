@@ -6,7 +6,8 @@ import {
   IconEyeSlash,
   IconX,
 } from "@/assets/icons";
-import { getSetting, verifyPassword, lockSession } from "@/services";
+import { getSetting } from '@/features/settings'
+import { verifyPassword, lockSession } from '@/features/wallet';
 
 interface ResetWalletModalProps {
   onClose: () => void;

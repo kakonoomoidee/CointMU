@@ -1,10 +1,6 @@
+import { ADDRESS_LENGTH, HASH_LENGTH, WEI_PER_CMU, WEI_PER_GWEI, HEX_RADIX } from '../explorer.constants';
 import { call, fetchBalance } from './rpcClient'
 
-const ADDRESS_LENGTH = 42
-const HASH_LENGTH = 66
-const WEI_PER_CMU = 1e18
-const WEI_PER_GWEI = 1e9
-const HEX_RADIX = 16
 
 type SearchType = 'block' | 'address' | 'hash'
 
@@ -127,3 +123,4 @@ async function getAddressSummary(address: string): Promise<AddressSummary> {
 
 export { detectSearchType, getTransactionDetail, getAddressSummary }
 export type { SearchType, TransactionDetailData, AddressSummary }
+

@@ -4,7 +4,7 @@ import { ActivityItem, type ActivityData } from '@/components'
 import { WalletHistoryFilter, Pagination } from '@/components'
 import { IconChevronRight, IconClock } from '@/assets/icons'
 import { downloadActivityCsv } from '@/utils'
-import { type DerivedAccount } from '@/services'
+import { type DerivedAccount } from '@/features/wallet'
 import { type HistoryFilter } from '@/store'
 import { ACTIVITY_CSV_FILENAME } from '../dashboard.constants';
 

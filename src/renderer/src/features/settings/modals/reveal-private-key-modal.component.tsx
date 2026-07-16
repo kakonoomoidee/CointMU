@@ -15,7 +15,8 @@ import {
   IconAlertTriangle,
   IconX,
 } from "@/assets/icons";
-import { getSetting, revealPrivateKey, type DerivedAccount } from "@/services";
+import { getSetting } from '@/features/settings'
+import { revealPrivateKey, type DerivedAccount } from '@/features/wallet';
 import { useAppStore } from "@/store";
 
 interface RevealPrivateKeyModalProps {

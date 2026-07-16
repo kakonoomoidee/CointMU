@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { subscribeMiningLog } from "@/services";
+import { subscribeMiningLog } from '@/features/mining';
 import { useMiningStore } from "../mining.store";
 
 /**

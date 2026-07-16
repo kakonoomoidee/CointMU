@@ -2,7 +2,7 @@ import { MOCK_USD_RATE } from "../explorer.constants";
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { IconChevronLeft, IconCheck, IconAlertCircle } from "@/assets/icons";
-import { getTransactionDetail, type TransactionDetailData } from "@/services";
+import { getTransactionDetail, type TransactionDetailData } from '@/features/explorer';
 import { useAppStore } from "@/store";
 import { AddressBadge } from "./address-badge.component";
 

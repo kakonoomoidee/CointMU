@@ -1,5 +1,5 @@
 import { useState, type FormEvent, type JSX } from 'react'
-import { importKeystore } from '@/services'
+import { importKeystore } from '@/features/wallet'
 import { IconFileText, IconEye, IconEyeSlash, IconX } from '@/assets/icons'
 
 interface ImportKeystoreResult {
