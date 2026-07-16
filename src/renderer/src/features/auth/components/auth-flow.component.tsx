@@ -1,7 +1,6 @@
 import { MIN_PASSWORD_LENGTH, COPY_FEEDBACK_MS } from '../auth.constants'
 import { useEffect, useState, type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
-import ms from 'ms'
 import {
   generateMnemonic,
   deriveAccount,
@@ -20,8 +19,6 @@ import { LoginStep } from './login-step.component'
 import { CreateWalletStep } from './create-wallet-step.component'
 import { ImportWalletStep } from './import-wallet-step.component'
 import { SecureWalletStep } from './secure-wallet-step.component'
-
-const COPY_FEEDBACK_MS = ms('2s')
 
 interface AuthFlowProps {
   onComplete: (address: string) => void

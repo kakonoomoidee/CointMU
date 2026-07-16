@@ -6,8 +6,7 @@ import { IconChevronRight, IconClock } from '@/assets/icons'
 import { downloadActivityCsv } from '@/utils'
 import { type DerivedAccount } from '@/services'
 import { type HistoryFilter } from '@/store'
-
-const ACTIVITY_CSV_FILENAME = 'cointmu-activity.csv'
+import { ACTIVITY_CSV_FILENAME } from '../dashboard.constants';
 
 interface ActivityFeedProps {
   isConnected: boolean

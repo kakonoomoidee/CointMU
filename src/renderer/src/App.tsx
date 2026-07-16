@@ -1,6 +1,7 @@
 import { useState, useEffect, Suspense, lazy, type JSX } from 'react'
 import ms from 'ms'
-import { Dashboard, Wallet } from '@/views'
+import { Wallet } from '@/views'
+import { DashboardView } from '@/features/dashboard'
 import { AuthFlow } from '@/features/auth'
 import { type DerivedAccount, getSetting } from '@/services'
 import { useUpdater, useMiningLogStream } from '@/hooks'
@@ -161,7 +162,7 @@ function App(): JSX.Element {
           </div>
         }>
           {activeView === NAV_ITEM_DASHBOARD && (
-            <Dashboard
+            <DashboardView
               activeWalletAddress={activeWalletAddress}
               accounts={accounts}
               onNavigate={handleNavigate}

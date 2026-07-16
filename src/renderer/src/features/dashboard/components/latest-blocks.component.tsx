@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { type BlockData } from "@/hooks";
 import { useAppStore } from "@/store";
 import { IconChevronRight, IconSquare, IconCube } from "@/assets/icons";
-import { formatRelativeAge } from "@/utils";
+import { formatRelativeAge } from '../dashboard.utils';
 
 interface LatestBlocksProps {
   isConnected: boolean;
@@ -113,3 +113,4 @@ function LatestBlocks({
 
 export { LatestBlocks };
 export type { LatestBlocksProps };
+

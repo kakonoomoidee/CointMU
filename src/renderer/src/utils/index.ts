@@ -18,8 +18,6 @@ export {
   formatDifficultyLabel
 } from './mining'
 
-export { formatRelativeAge, computeMinedBlocksCount } from './dashboard'
-
 export { formatTxAge, hexToAscii } from './explorer'
 
 export { resolveHistoryAddresses, filterFoundBlocks } from './history'
@@ -32,3 +30,4 @@ export { getTokenGradient, getTokenInitials } from './tokenIcon'
 
 export { fetchMinerDistribution } from './minerDistribution'
 export type { MinerEntry } from './minerDistribution'
+

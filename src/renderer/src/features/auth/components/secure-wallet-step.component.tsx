@@ -1,4 +1,4 @@
-import { MIN_PASSWORD_LENGTH, COPY_FEEDBACK_MS } from '../auth.constants'
+import { MIN_PASSWORD_LENGTH } from '../auth.constants'
 import { type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../auth.store'

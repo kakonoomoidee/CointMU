@@ -1,4 +1,3 @@
-export { Dashboard } from './Dashboard'
 export { Miner } from './Miner'
 export { Wallet } from './Wallet'
 export { Settings } from './Settings'

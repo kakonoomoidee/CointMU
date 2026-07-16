@@ -1,8 +1,7 @@
 import { type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Sparkline } from '@/components'
-
-const CONSENSUS_LABEL = 'PoW - Block 30s'
+import { CONSENSUS_LABEL } from '../dashboard.constants';
 
 interface NetworkHealthPanelProps {
   isConnected: boolean

@@ -1,6 +1,6 @@
+import { DASHBOARD_TICK_INTERVAL_MS, ACTIVITY_PAGE_SIZE, ACTIVITY_POLL_INTERVAL_MS, PAST_HOUR_MS, SPARKLINE_BUCKET_MS, SPARKLINE_WINDOW_MS, TARGET_BLOCK_TIME_SECONDS } from '../dashboard.constants';
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import ms from "ms";
 import {
   useRecentBlocks,
   useMiningStats,
@@ -21,20 +21,13 @@ import {
   resolveHistoryAddresses,
   filterFoundBlocks,
 } from "@/utils";
-import { DashboardHeader } from "./DashboardHeader";
-import { WalletOverviewCard } from "./WalletOverviewCard";
-import { NetworkHealthPanel } from "./NetworkHealthPanel";
-import { DashboardStatsGrid } from "./DashboardStatsGrid";
-import { LatestBlocks } from "./LatestBlocks";
-import { ActivityFeed } from "./ActivityFeed";
+import { DashboardHeader } from './dashboard-header.component';
+import { WalletOverviewCard } from './wallet-overview-card.component';
+import { NetworkHealthPanel } from './network-health-panel.component';
+import { DashboardStatsGrid } from './dashboard-stats-grid.component';
+import { LatestBlocks } from './latest-blocks.component';
+import { ActivityFeed } from './activity-feed.component';
 import { SkeletonCard, SkeletonList, Skeleton } from "@/components";
-
-const DASHBOARD_TICK_INTERVAL_MS = ms("5s");
-const ACTIVITY_PAGE_SIZE = 10;
-const ACTIVITY_POLL_INTERVAL_MS = ms("30s");
-const PAST_HOUR_MS = ms("1h");
-const SPARKLINE_BUCKET_MS = ms("10m");
-const SPARKLINE_WINDOW_MS = ms("1h");
 
 interface DashboardProps {
   activeWalletAddress: string | null;
@@ -51,7 +44,7 @@ interface DashboardProps {
  * @param props - The active wallet address and the view navigation callback.
  * @returns The complete dashboard layout.
  */
-function Dashboard({
+function DashboardView({
   activeWalletAddress,
   accounts,
   onNavigate,
@@ -151,7 +144,6 @@ function Dashboard({
     ? `${formatMhs(telemetry.hashrateMhs)} MH/s`
     : "0.00 MH/s";
 
-  const TARGET_BLOCK_TIME_SECONDS = 30;
   const networkHashrateRaw =
     isConnected && difficulty !== null && difficulty > 0
       ? difficulty / TARGET_BLOCK_TIME_SECONDS
@@ -310,4 +302,5 @@ function Dashboard({
   );
 }
 
-export { Dashboard };
+export { DashboardView };
+

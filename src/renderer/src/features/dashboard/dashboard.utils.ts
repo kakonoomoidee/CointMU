@@ -1,6 +1,4 @@
-const SECONDS_PER_MINUTE = 60
-const SECONDS_PER_HOUR = 3600
-const CMU_PER_MINED_BLOCK = 10
+import { SECONDS_PER_MINUTE, SECONDS_PER_HOUR, CMU_PER_MINED_BLOCK } from './dashboard.constants'
 
 /**
  * Formats a unix timestamp as a coarse relative age string using seconds,
@@ -31,3 +29,4 @@ export function computeMinedBlocksCount(balance: string): number {
   const parsed = parseFloat(balance.replace(/,/g, ''))
   return isNaN(parsed) ? 0 : Math.floor(parsed / CMU_PER_MINED_BLOCK)
 }
+
