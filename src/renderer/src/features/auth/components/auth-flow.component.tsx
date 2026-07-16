@@ -1,3 +1,4 @@
+import { MIN_PASSWORD_LENGTH, COPY_FEEDBACK_MS } from '../auth.constants'
 import { useEffect, useState, type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
 import ms from 'ms'
@@ -11,50 +12,49 @@ import {
   verifyPassword,
   unlockSession
 } from '@/services'
-import { useOnboardingStore } from '@/store'
+import { useAuthStore } from '../auth.store'
 import { ImportKeystoreModal, type ImportKeystoreResult } from '@/components'
-import { OnboardingShell } from './OnboardingShell'
-import { WelcomeStep } from './WelcomeStep'
-import { LoginStep } from './LoginStep'
-import { CreateWalletStep } from './CreateWalletStep'
-import { ImportWalletStep } from './ImportWalletStep'
-import { SecureWalletStep } from './SecureWalletStep'
+import { AuthShell } from './auth-shell.component'
+import { WelcomeStep } from './welcome-step.component'
+import { LoginStep } from './login-step.component'
+import { CreateWalletStep } from './create-wallet-step.component'
+import { ImportWalletStep } from './import-wallet-step.component'
+import { SecureWalletStep } from './secure-wallet-step.component'
 
-const MIN_PASSWORD_LENGTH = 8
 const COPY_FEEDBACK_MS = ms('2s')
 
-interface OnboardingProps {
+interface AuthFlowProps {
   onComplete: (address: string) => void
 }
 
 /**
- * Secure onboarding orchestrator for CointMU Desktop. It owns the wallet
+ * Secure AuthFlow orchestrator for CointMU Desktop. It owns the wallet
  * generation, recovery, login, and encryption business logic, sources transient
- * wizard state from the onboarding store, and routes to the active step
+ * wizard state from the AuthFlow store, and routes to the active step
  * sub-component. Secrets are encrypted and verified through the secure crypto IPC
  * service so no plaintext password or mnemonic is ever persisted.
  * @param props - Contains the onComplete callback to update the parent state.
- * @returns The onboarding screen component.
+ * @returns The AuthFlow screen component.
  */
-export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
+export function AuthFlow({ onComplete }: AuthFlowProps): JSX.Element {
   const { t } = useTranslation()
-  const step = useOnboardingStore((s) => s.step)
-  const importMethod = useOnboardingStore((s) => s.importMethod)
-  const hasExistingWallet = useOnboardingStore((s) => s.hasExistingWallet)
-  const mnemonic = useOnboardingStore((s) => s.mnemonic)
-  const inputValue = useOnboardingStore((s) => s.inputValue)
-  const password = useOnboardingStore((s) => s.password)
-  const confirmPassword = useOnboardingStore((s) => s.confirmPassword)
+  const step = useAuthStore((s) => s.step)
+  const importMethod = useAuthStore((s) => s.importMethod)
+  const hasExistingWallet = useAuthStore((s) => s.hasExistingWallet)
+  const mnemonic = useAuthStore((s) => s.mnemonic)
+  const inputValue = useAuthStore((s) => s.inputValue)
+  const password = useAuthStore((s) => s.password)
+  const confirmPassword = useAuthStore((s) => s.confirmPassword)
 
-  const setStep = useOnboardingStore((s) => s.setStep)
-  const setHasExistingWallet = useOnboardingStore((s) => s.setHasExistingWallet)
-  const setMnemonic = useOnboardingStore((s) => s.setMnemonic)
-  const setCopied = useOnboardingStore((s) => s.setCopied)
-  const setImportMethod = useOnboardingStore((s) => s.setImportMethod)
-  const setInputValue = useOnboardingStore((s) => s.setInputValue)
-  const setPassword = useOnboardingStore((s) => s.setPassword)
-  const setConfirmPassword = useOnboardingStore((s) => s.setConfirmPassword)
-  const setError = useOnboardingStore((s) => s.setError)
+  const setStep = useAuthStore((s) => s.setStep)
+  const setHasExistingWallet = useAuthStore((s) => s.setHasExistingWallet)
+  const setMnemonic = useAuthStore((s) => s.setMnemonic)
+  const setCopied = useAuthStore((s) => s.setCopied)
+  const setImportMethod = useAuthStore((s) => s.setImportMethod)
+  const setInputValue = useAuthStore((s) => s.setInputValue)
+  const setPassword = useAuthStore((s) => s.setPassword)
+  const setConfirmPassword = useAuthStore((s) => s.setConfirmPassword)
+  const setError = useAuthStore((s) => s.setError)
 
   const [keystoreJson, setKeystoreJson] = useState<string | null>(null)
 
@@ -104,20 +104,20 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
 
   const handleLogin = async (): Promise<void> => {
     if (!password) {
-      setError(t('onboarding.errors.enterPassword'))
+      setError(t('auth.errors.enterPassword'))
       return
     }
 
     try {
       const encryptedPayload = await getSetting<string | null>('encryptedPayload')
       if (!encryptedPayload) {
-        setError(t('onboarding.errors.corruptedData'))
+        setError(t('auth.errors.corruptedData'))
         return
       }
 
       const valid = await verifyPassword(encryptedPayload, password)
       if (!valid) {
-        setError(t('onboarding.errors.invalidPassword'))
+        setError(t('auth.errors.invalidPassword'))
         return
       }
 
@@ -126,20 +126,20 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
         unlockSession(password)
         onComplete(activeAddress)
       } else {
-        setError(t('onboarding.errors.corruptedData'))
+        setError(t('auth.errors.corruptedData'))
       }
     } catch {
-      setError(t('onboarding.errors.failedDecrypt'))
+      setError(t('auth.errors.failedDecrypt'))
     }
   }
 
   const handleSaveWallet = async (secretKey: string, isPrivateKey: boolean): Promise<void> => {
     if (password.length < MIN_PASSWORD_LENGTH) {
-      setError(t('onboarding.errors.passwordLength'))
+      setError(t('auth.errors.passwordLength'))
       return
     }
     if (password !== confirmPassword) {
-      setError(t('onboarding.errors.passwordsMismatch'))
+      setError(t('auth.errors.passwordsMismatch'))
       return
     }
 
@@ -158,7 +158,7 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
       unlockSession(password)
       onComplete(firstAccount.address)
     } catch {
-      setError(t('onboarding.errors.failedGenerate'))
+      setError(t('auth.errors.failedGenerate'))
     }
   }
 
@@ -176,7 +176,7 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
 
   return (
     <>
-    <OnboardingShell step={step} importMethod={importMethod}>
+    <AuthShell step={step} importMethod={importMethod}>
       {step === 'initial' && (
         <WelcomeStep
           hasExistingWallet={hasExistingWallet}
@@ -245,7 +245,7 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
           }}
         />
       )}
-    </OnboardingShell>
+    </AuthShell>
 
     {keystoreJson && (
       <ImportKeystoreModal
@@ -257,3 +257,6 @@ export function Onboarding({ onComplete }: OnboardingProps): JSX.Element {
     </>
   )
 }
+
+
+

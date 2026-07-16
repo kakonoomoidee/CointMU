@@ -1,16 +1,17 @@
 import { useState, useEffect, Suspense, lazy, type JSX } from 'react'
 import ms from 'ms'
-import { Dashboard, Wallet, Onboarding } from '@/views'
+import { Dashboard, Wallet } from '@/views'
+import { AuthFlow } from '@/features/auth'
 import { type DerivedAccount, getSetting } from '@/services'
 import { useUpdater, useMiningLogStream } from '@/hooks'
 import {
-  useOnboardingStore,
   useAppStore,
   useNotificationStore,
   useSecurityStore,
   useAdvancedStore,
   useConnectedSitesStore
 } from '@/store'
+import { useAuthStore } from '@/features/auth'
 
 import { Sidebar, ToastViewport, PairingApprovalModal, CustomTitleBar } from '@/components'
 import { useDappRequestHandler, useAutoLock } from '@/hooks'
@@ -109,10 +110,10 @@ function App(): JSX.Element {
   /**
    * Locks the wallet by clearing the decrypted session state in React.
    * Does NOT delete the encrypted payload from the persistent electron-store.
-   * Also resets the transient Onboarding UI state back to the initial screen.
+   * Also resets the transient AuthFlow UI state back to the initial screen.
    */
   const handleLogout = (): void => {
-    useOnboardingStore.getState().reset()
+    useAuthStore.getState().reset()
     setActiveWalletAddress(null)
     setAccounts([])
     setActiveView(NAV_ITEM_DASHBOARD)
@@ -135,7 +136,7 @@ function App(): JSX.Element {
       setActiveWalletAddress(address)
     }
 
-    return <Onboarding onComplete={(address) => handleOnboardingComplete(address)} />
+    return <AuthFlow onComplete={(address) => handleOnboardingComplete(address)} />
   }
 
   return (
@@ -193,3 +194,4 @@ function App(): JSX.Element {
 }
 
 export default App
+

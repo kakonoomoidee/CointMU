@@ -1,6 +1,6 @@
 import { type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useOnboardingStore } from '@/store'
+import { useAuthStore } from '../auth.store'
 import { IconFileText, IconChevronRight, IconKey, IconDownload } from '@/assets/icons'
 
 interface ImportWalletStepProps {
@@ -16,7 +16,7 @@ interface ImportWalletStepProps {
  * Import step covering both the recovery-method picker and the secret input. In
  * method mode it offers seed phrase or private key; in input mode it renders the
  * matching field. The selected method and input value are read from the
- * onboarding store.
+ * AuthFlow store.
  * @param props - The current mode, method selection, and navigation handlers.
  * @returns The rendered import wallet step.
  */
@@ -29,9 +29,9 @@ function ImportWalletStep({
   onBackToMethod
 }: ImportWalletStepProps): JSX.Element {
   const { t } = useTranslation()
-  const importMethod = useOnboardingStore((s) => s.importMethod)
-  const inputValue = useOnboardingStore((s) => s.inputValue)
-  const setInputValue = useOnboardingStore((s) => s.setInputValue)
+  const importMethod = useAuthStore((s) => s.importMethod)
+  const inputValue = useAuthStore((s) => s.inputValue)
+  const setInputValue = useAuthStore((s) => s.setInputValue)
 
   if (mode === 'method') {
     return (
@@ -45,8 +45,8 @@ function ImportWalletStep({
               <IconFileText width={20} height={20} />
             </div>
             <div className="text-left">
-              <p className="text-sm font-bold text-slate-800">{t('onboarding.importWallet.seedPhraseTitle')}</p>
-              <p className="text-[10px] text-slate-500">{t('onboarding.importWallet.seedPhraseDesc')}</p>
+              <p className="text-sm font-bold text-slate-800">{t('auth.importWallet.seedPhraseTitle')}</p>
+              <p className="text-[10px] text-slate-500">{t('auth.importWallet.seedPhraseDesc')}</p>
             </div>
           </div>
           <IconChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
@@ -61,8 +61,8 @@ function ImportWalletStep({
               <IconKey width={20} height={20} />
             </div>
             <div className="text-left">
-              <p className="text-sm font-bold text-slate-800">{t('onboarding.importWallet.privateKeyTitle')}</p>
-              <p className="text-[10px] text-slate-500">{t('onboarding.importWallet.privateKeyDesc')}</p>
+              <p className="text-sm font-bold text-slate-800">{t('auth.importWallet.privateKeyTitle')}</p>
+              <p className="text-[10px] text-slate-500">{t('auth.importWallet.privateKeyDesc')}</p>
             </div>
           </div>
           <IconChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
@@ -78,8 +78,8 @@ function ImportWalletStep({
                 <IconDownload width={20} height={20} />
               </div>
               <div className="text-left">
-                <p className="text-sm font-bold text-slate-800">{t('onboarding.importWallet.keystoreTitle')}</p>
-                <p className="text-[10px] text-slate-500">{t('onboarding.importWallet.keystoreDesc')}</p>
+                <p className="text-sm font-bold text-slate-800">{t('auth.importWallet.keystoreTitle')}</p>
+                <p className="text-[10px] text-slate-500">{t('auth.importWallet.keystoreDesc')}</p>
               </div>
             </div>
             <IconChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
@@ -90,7 +90,7 @@ function ImportWalletStep({
           onClick={onBackToInitial}
           className="w-full mt-2 py-3.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors"
         >
-          {t('onboarding.importWallet.back')}
+          {t('auth.importWallet.back')}
         </button>
       </div>
     )
@@ -100,24 +100,24 @@ function ImportWalletStep({
     <div className="w-full flex flex-col gap-5">
       {importMethod === 'seed' ? (
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{t('onboarding.importWallet.seedPhraseLabel')}</label>
+          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{t('auth.importWallet.seedPhraseLabel')}</label>
           <textarea
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
             rows={4}
-            placeholder={t('onboarding.importWallet.seedPhrasePlaceholder')}
+            placeholder={t('auth.importWallet.seedPhrasePlaceholder')}
           />
         </div>
       ) : (
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{t('onboarding.importWallet.privateKeyLabel')}</label>
+          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{t('auth.importWallet.privateKeyLabel')}</label>
           <input
             type="password"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-            placeholder={t('onboarding.importWallet.privateKeyPlaceholder')}
+            placeholder={t('auth.importWallet.privateKeyPlaceholder')}
           />
         </div>
       )}
@@ -127,14 +127,14 @@ function ImportWalletStep({
           onClick={onBackToMethod}
           className="flex-1 py-3.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors"
         >
-          {t('onboarding.importWallet.back')}
+          {t('auth.importWallet.back')}
         </button>
         <button
           onClick={onContinue}
           disabled={!inputValue.trim()}
           className="flex-1 py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {t('onboarding.importWallet.next')}
+          {t('auth.importWallet.next')}
         </button>
       </div>
     </div>
@@ -143,3 +143,6 @@ function ImportWalletStep({
 
 export { ImportWalletStep }
 export type { ImportWalletStepProps }
+
+
+

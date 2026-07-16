@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-type OnboardingStep =
+type AuthStep =
   | 'initial'
   | 'login'
   | 'create-seed'
@@ -11,8 +11,8 @@ type OnboardingStep =
 
 type ImportMethod = 'seed' | 'privateKey'
 
-interface OnboardingStore {
-  step: OnboardingStep
+interface AuthStore {
+  step: AuthStep
   hasExistingWallet: boolean
   mnemonic: string
   copied: boolean
@@ -23,7 +23,7 @@ interface OnboardingStore {
   showPassword: boolean
   showConfirmPassword: boolean
   error: string | null
-  setStep: (step: OnboardingStep) => void
+  setStep: (step: AuthStep) => void
   setHasExistingWallet: (value: boolean) => void
   setMnemonic: (value: string) => void
   setCopied: (value: boolean) => void
@@ -38,13 +38,13 @@ interface OnboardingStore {
 }
 
 /**
- * Holds the transient onboarding wizard state shared between the orchestrator and
+ * Holds the transient AuthFlow wizard state shared between the orchestrator and
  * its step sub-components. Centralizing this state removes the need to drill form
  * values and setters through every step, while the orchestrator retains the
  * login, account-derivation, and encryption business logic. This state is
  * setup-only and intentionally separate from the wallet UI store.
  */
-export const useOnboardingStore = create<OnboardingStore>((set) => ({
+export const useAuthStore = create<AuthStore>((set) => ({
   step: 'initial',
   hasExistingWallet: false,
   mnemonic: '',
@@ -82,4 +82,6 @@ export const useOnboardingStore = create<OnboardingStore>((set) => ({
     })
 }))
 
-export type { OnboardingStep, ImportMethod }
+export type { AuthStep, ImportMethod }
+
+

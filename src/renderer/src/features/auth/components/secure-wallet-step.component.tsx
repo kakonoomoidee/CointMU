@@ -1,10 +1,10 @@
+import { MIN_PASSWORD_LENGTH, COPY_FEEDBACK_MS } from '../auth.constants'
 import { type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useOnboardingStore } from '@/store'
-import { PasswordField } from './PasswordField'
+import { useAuthStore } from '../auth.store'
+import { PasswordField } from './password-field.component'
 import { IconLock } from '@/assets/icons'
 
-const MIN_PASSWORD_LENGTH = 8
 
 interface SecureWalletStepProps {
   onSave: () => void
@@ -15,22 +15,22 @@ interface SecureWalletStepProps {
  * Password creation step shared by the create and import flows. It collects and
  * confirms the password used to encrypt the wallet secret; the encryption itself
  * is performed by the orchestrator through the secure crypto IPC service. The
- * field values and error state are read from the onboarding store.
+ * field values and error state are read from the AuthFlow store.
  * @param props - The save and back navigation handlers.
  * @returns The rendered secure wallet step.
  */
 function SecureWalletStep({ onSave, onBack }: SecureWalletStepProps): JSX.Element {
   const { t } = useTranslation()
-  const password = useOnboardingStore((s) => s.password)
-  const confirmPassword = useOnboardingStore((s) => s.confirmPassword)
-  const showPassword = useOnboardingStore((s) => s.showPassword)
-  const showConfirmPassword = useOnboardingStore((s) => s.showConfirmPassword)
-  const error = useOnboardingStore((s) => s.error)
-  const setPassword = useOnboardingStore((s) => s.setPassword)
-  const setConfirmPassword = useOnboardingStore((s) => s.setConfirmPassword)
-  const setShowPassword = useOnboardingStore((s) => s.setShowPassword)
-  const setShowConfirmPassword = useOnboardingStore((s) => s.setShowConfirmPassword)
-  const setError = useOnboardingStore((s) => s.setError)
+  const password = useAuthStore((s) => s.password)
+  const confirmPassword = useAuthStore((s) => s.confirmPassword)
+  const showPassword = useAuthStore((s) => s.showPassword)
+  const showConfirmPassword = useAuthStore((s) => s.showConfirmPassword)
+  const error = useAuthStore((s) => s.error)
+  const setPassword = useAuthStore((s) => s.setPassword)
+  const setConfirmPassword = useAuthStore((s) => s.setConfirmPassword)
+  const setShowPassword = useAuthStore((s) => s.setShowPassword)
+  const setShowConfirmPassword = useAuthStore((s) => s.setShowConfirmPassword)
+  const setError = useAuthStore((s) => s.setError)
 
   const isValid =
     password.length >= MIN_PASSWORD_LENGTH && password === confirmPassword
@@ -38,9 +38,9 @@ function SecureWalletStep({ onSave, onBack }: SecureWalletStepProps): JSX.Elemen
   return (
     <div className="w-full flex flex-col gap-4">
       <PasswordField
-        label={t('onboarding.secureWallet.newPassword')}
+        label={t('auth.secureWallet.newPassword')}
         value={password}
-        placeholder={t('onboarding.secureWallet.newPasswordPlaceholder')}
+        placeholder={t('auth.secureWallet.newPasswordPlaceholder')}
         show={showPassword}
         onChange={(value) => {
           setPassword(value)
@@ -49,9 +49,9 @@ function SecureWalletStep({ onSave, onBack }: SecureWalletStepProps): JSX.Elemen
         onToggleShow={() => setShowPassword(!showPassword)}
       />
       <PasswordField
-        label={t('onboarding.secureWallet.confirmPassword')}
+        label={t('auth.secureWallet.confirmPassword')}
         value={confirmPassword}
-        placeholder={t('onboarding.secureWallet.confirmPasswordPlaceholder')}
+        placeholder={t('auth.secureWallet.confirmPasswordPlaceholder')}
         show={showConfirmPassword}
         onChange={(value) => {
           setConfirmPassword(value)
@@ -67,7 +67,7 @@ function SecureWalletStep({ onSave, onBack }: SecureWalletStepProps): JSX.Elemen
           onClick={onBack}
           className="flex-1 py-3.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors"
         >
-          {t('onboarding.secureWallet.back')}
+          {t('auth.secureWallet.back')}
         </button>
         <button
           onClick={onSave}
@@ -75,7 +75,7 @@ function SecureWalletStep({ onSave, onBack }: SecureWalletStepProps): JSX.Elemen
           className="flex-[2] py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <IconLock width={16} height={16} strokeWidth={2.5} />
-          {t('onboarding.secureWallet.encryptAndSave')}
+          {t('auth.secureWallet.encryptAndSave')}
         </button>
       </div>
     </div>
@@ -84,3 +84,6 @@ function SecureWalletStep({ onSave, onBack }: SecureWalletStepProps): JSX.Elemen
 
 export { SecureWalletStep }
 export type { SecureWalletStepProps }
+
+
+

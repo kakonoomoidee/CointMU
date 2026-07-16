@@ -1,10 +1,10 @@
 import { type JSX, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type OnboardingStep, type ImportMethod } from '@/store'
+import { type AuthStep, type ImportMethod } from '../auth.store'
 import { IconBolt } from '@/assets/icons'
 
-interface OnboardingShellProps {
-  step: OnboardingStep
+interface AuthShellProps {
+  step: AuthStep
   importMethod: ImportMethod
   children: ReactNode
 }
@@ -15,44 +15,44 @@ interface StepCopy {
 }
 
 /**
- * Resolves the title and subtitle copy for the current onboarding step.
+ * Resolves the title and subtitle copy for the current AuthFlow step.
  * @param t - The translation function.
- * @param step - The active onboarding step.
+ * @param step - The active AuthFlow step.
  * @param importMethod - The selected import method, used to vary import copy.
  * @returns The title and subtitle strings for the step.
  */
-function getStepCopy(t: any, step: OnboardingStep, importMethod: ImportMethod): StepCopy {
+function getStepCopy(t: any, step: AuthStep, importMethod: ImportMethod): StepCopy {
   switch (step) {
     case 'initial':
       return {
-        title: t('onboarding.shell.welcomeTitle'),
-        subtitle: t('onboarding.shell.welcomeSubtitle')
+        title: t('auth.shell.welcomeTitle'),
+        subtitle: t('auth.shell.welcomeSubtitle')
       }
     case 'login':
-      return { title: t('onboarding.shell.welcomeBackTitle'), subtitle: t('onboarding.shell.welcomeBackSubtitle') }
+      return { title: t('auth.shell.welcomeBackTitle'), subtitle: t('auth.shell.welcomeBackSubtitle') }
     case 'create-seed':
       return {
-        title: t('onboarding.shell.secretRecoveryTitle'),
-        subtitle: t('onboarding.shell.secretRecoverySubtitle')
+        title: t('auth.shell.secretRecoveryTitle'),
+        subtitle: t('auth.shell.secretRecoverySubtitle')
       }
     case 'create-password':
     case 'import-password':
       return {
-        title: t('onboarding.shell.createPasswordTitle'),
-        subtitle: t('onboarding.shell.createPasswordSubtitle')
+        title: t('auth.shell.createPasswordTitle'),
+        subtitle: t('auth.shell.createPasswordSubtitle')
       }
     case 'import-method':
       return {
-        title: t('onboarding.shell.importWalletTitle'),
-        subtitle: t('onboarding.shell.importWalletSubtitle')
+        title: t('auth.shell.importWalletTitle'),
+        subtitle: t('auth.shell.importWalletSubtitle')
       }
     case 'import-input':
       return {
-        title: importMethod === 'seed' ? t('onboarding.shell.enterSeedTitle') : t('onboarding.shell.enterPrivateKeyTitle'),
+        title: importMethod === 'seed' ? t('auth.shell.enterSeedTitle') : t('auth.shell.enterPrivateKeyTitle'),
         subtitle:
           importMethod === 'seed'
-            ? t('onboarding.shell.enterSeedSubtitle')
-            : t('onboarding.shell.enterPrivateKeySubtitle')
+            ? t('auth.shell.enterSeedSubtitle')
+            : t('auth.shell.enterPrivateKeySubtitle')
       }
     default:
       return { title: '', subtitle: '' }
@@ -60,13 +60,13 @@ function getStepCopy(t: any, step: OnboardingStep, importMethod: ImportMethod): 
 }
 
 /**
- * Outer presentational shell for the onboarding wizard. Renders the centered
+ * Outer presentational shell for the AuthFlow wizard. Renders the centered
  * card, brand logo, and step-aware title and subtitle, then renders the active
  * step as its children.
  * @param props - The current step, import method, and the active step content.
- * @returns The rendered onboarding shell.
+ * @returns The rendered AuthFlow shell.
  */
-function OnboardingShell({ step, importMethod, children }: OnboardingShellProps): JSX.Element {
+function AuthShell({ step, importMethod, children }: AuthShellProps): JSX.Element {
   const { t } = useTranslation()
   const { title, subtitle } = getStepCopy(t, step, importMethod)
 
@@ -88,5 +88,8 @@ function OnboardingShell({ step, importMethod, children }: OnboardingShellProps)
   )
 }
 
-export { OnboardingShell, getStepCopy }
-export type { OnboardingShellProps, StepCopy }
+export { AuthShell, getStepCopy }
+export type { AuthShellProps, StepCopy }
+
+
+

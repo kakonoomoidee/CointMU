@@ -1,6 +1,6 @@
 import { type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useOnboardingStore } from '@/store'
+import { useAuthStore } from '../auth.store'
 import { IconCheck, IconCopy, IconAlertTriangle } from '@/assets/icons'
 
 interface CreateWalletStepProps {
@@ -12,14 +12,14 @@ interface CreateWalletStepProps {
 /**
  * Wallet creation step displaying the generated 12-word recovery phrase with a
  * copy control and an offline-storage warning. The mnemonic and copied flag are
- * read from the onboarding store.
+ * read from the AuthFlow store.
  * @param props - The copy, continue, and back navigation handlers.
  * @returns The rendered create wallet step.
  */
 function CreateWalletStep({ onCopySeed, onContinue, onBack }: CreateWalletStepProps): JSX.Element {
   const { t } = useTranslation()
-  const mnemonic = useOnboardingStore((s) => s.mnemonic)
-  const copied = useOnboardingStore((s) => s.copied)
+  const mnemonic = useAuthStore((s) => s.mnemonic)
+  const copied = useAuthStore((s) => s.copied)
 
   return (
     <div className="w-full flex flex-col gap-6">
@@ -42,12 +42,12 @@ function CreateWalletStep({ onCopySeed, onContinue, onBack }: CreateWalletStepPr
           {copied ? (
             <>
               <IconCheck className="text-emerald-500" width={14} height={14} strokeWidth={2.5} />
-              {t('onboarding.createWallet.copied')}
+              {t('auth.createWallet.copied')}
             </>
           ) : (
             <>
               <IconCopy width={14} height={14} />
-              {t('onboarding.createWallet.copy')}
+              {t('auth.createWallet.copy')}
             </>
           )}
         </button>
@@ -56,7 +56,7 @@ function CreateWalletStep({ onCopySeed, onContinue, onBack }: CreateWalletStepPr
       <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 flex gap-3 items-start">
         <IconAlertTriangle className="text-amber-500 shrink-0 mt-0.5" width={16} height={16} strokeWidth={2.5} />
         <p className="text-xs text-amber-800 font-medium">
-          {t('onboarding.createWallet.warning')}
+          {t('auth.createWallet.warning')}
         </p>
       </div>
 
@@ -65,13 +65,13 @@ function CreateWalletStep({ onCopySeed, onContinue, onBack }: CreateWalletStepPr
           onClick={onBack}
           className="flex-1 py-3.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors"
         >
-          {t('onboarding.createWallet.back')}
+          {t('auth.createWallet.back')}
         </button>
         <button
           onClick={onContinue}
           className="flex-[2] py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm"
         >
-          {t('onboarding.createWallet.savedWords')}
+          {t('auth.createWallet.savedWords')}
         </button>
       </div>
     </div>
@@ -80,3 +80,6 @@ function CreateWalletStep({ onCopySeed, onContinue, onBack }: CreateWalletStepPr
 
 export { CreateWalletStep }
 export type { CreateWalletStepProps }
+
+
+

@@ -676,7 +676,7 @@
       "offline": "离线"
     }
   },
-  "onboarding": {
+  "auth": {
     "createWallet": {
       "copied": "已复制！",
       "copy": "复制",
@@ -783,3 +783,4 @@
     }
   }
 }
+
