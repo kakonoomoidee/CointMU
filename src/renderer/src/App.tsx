@@ -10,7 +10,8 @@ import {
 } from '@/store'
 import { useAuthStore } from '@/features/auth'
 
-import { Sidebar, PairingApprovalModal, CustomTitleBar } from '@/components'
+import { Sidebar, CustomTitleBar } from '@/components'
+import { PairingApprovalModal } from '@/features/dapp'
 import { ToastViewport, useNotificationStore } from '@/features/notifications'
 import { useDappRequestHandler, useAutoLock } from '@/hooks'
 
@@ -192,6 +193,7 @@ function App(): JSX.Element {
 }
 
 export default App
+
 
 
 

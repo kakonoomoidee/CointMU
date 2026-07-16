@@ -1,9 +1,7 @@
+import { DROPDOWN_AUTO_SEARCH_THRESHOLD, DROPDOWN_MAX_VISIBLE_ITEMS, DROPDOWN_ITEM_HEIGHT_PX } from './ui.constants';
 import { type JSX, useState, useRef, useEffect } from 'react'
 import { IconChevronDown } from '@/assets/icons'
 
-const AUTO_SEARCH_THRESHOLD = 10
-const MAX_VISIBLE_ITEMS = 5
-const ITEM_HEIGHT_PX = 48
 
 /**
  * Props for the CustomDropdown component.
@@ -50,7 +48,7 @@ export function CustomDropdown<T>({
   const dropdownRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
 
-  const showSearch = enableSearch || options.length > AUTO_SEARCH_THRESHOLD
+  const showSearch = enableSearch || options.length > DROPDOWN_AUTO_SEARCH_THRESHOLD
 
   const filteredOptions =
     showSearch && query.trim().length > 0
@@ -80,7 +78,7 @@ export function CustomDropdown<T>({
     }
   }, [isOpen, showSearch])
 
-  const maxHeight = MAX_VISIBLE_ITEMS * ITEM_HEIGHT_PX
+  const maxHeight = DROPDOWN_MAX_VISIBLE_ITEMS * DROPDOWN_ITEM_HEIGHT_PX
 
   return (
     <div className={`relative ${className || 'w-full'}`} ref={dropdownRef}>
@@ -141,3 +139,4 @@ export function CustomDropdown<T>({
     </div>
   )
 }
+

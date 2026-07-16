@@ -1,5 +1,5 @@
 import { type JSX } from 'react'
-import { NFTCard } from './NFTCard'
+import { NFTCard } from './nft-card.component'
 import { type NFTMetadata } from '@/services/nftService'
 
 interface NFTGridProps {
@@ -29,3 +29,4 @@ function NFTGrid({ nfts }: NFTGridProps): JSX.Element {
 }
 
 export { NFTGrid }
+

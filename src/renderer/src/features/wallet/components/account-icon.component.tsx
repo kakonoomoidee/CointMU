@@ -1,7 +1,7 @@
+import { AVATAR_PALETTE } from '../wallet.constants';
 import { type JSX } from 'react'
 import Avatar from 'boring-avatars'
 
-const AVATAR_PALETTE = ['#171921', '#5B61FE', '#D3D4FA', '#9C9EFE', '#232635']
 
 interface AccountIconProps {
   address: string
@@ -30,3 +30,4 @@ function AccountIcon({ address, size = 20 }: AccountIconProps): JSX.Element {
 }
 
 export { AccountIcon }
+

@@ -21,10 +21,7 @@ import { AccountSidebar } from "./account-sidebar.component";
 import { AccountHeroCard } from "./account-hero-card.component";
 import { WalletTabs, type WalletTab } from "./wallet-tabs.component";
 import { WalletModals } from "../modals/wallet-modals.component";
-import {
-  ImportKeystoreModal,
-  type ImportKeystoreResult,
-} from "@/components/ImportKeystoreModal";
+import { ImportKeystoreModal, type ImportKeystoreResult } from '@/features/wallet';
 
 interface WalletProps {
   accounts: DerivedAccount[];
@@ -305,3 +302,4 @@ function WalletView({
 }
 
 export { WalletView };
+

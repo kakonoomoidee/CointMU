@@ -9,14 +9,9 @@ import {
   type TokenInfo,
 } from "@/services/tokenService";
 import { CacheService } from "@/services/cacheService";
-import {
-  AddTokenModal,
-  TokenIcon,
-  SkeletonList,
-  SkeletonTable,
-  Pagination,
-  NFTGrid,
-} from "@/components";
+import { SkeletonList, SkeletonTable, Pagination } from '@/components'
+import { AddTokenModal, TokenIcon } from '@/features/wallet'
+import { NFTGrid } from '@/features/nft'
 import { IconBolt, IconPlus } from "@/assets/icons";
 import { useAppStore, type PendingTransaction } from "@/store";
 import { useNFTFetcher } from "@/hooks/useNFTFetcher";
@@ -374,3 +369,4 @@ function WalletTabs({
 
 export { WalletTabs };
 export type { WalletTabsProps, WalletTab };
+

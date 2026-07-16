@@ -2,7 +2,7 @@ import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { QRCodeSVG } from "qrcode.react";
 import { type DerivedAccount } from "@/services";
-import { AccountIcon } from "@/components";
+import { AccountIcon } from '@/features/wallet';
 import {
   IconArrowUp,
   IconArrowDown,
@@ -125,3 +125,4 @@ function AccountHeroCard({
 
 export { AccountHeroCard };
 export type { AccountHeroCardProps };
+

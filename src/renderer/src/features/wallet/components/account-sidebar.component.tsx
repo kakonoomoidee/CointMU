@@ -1,7 +1,7 @@
 import { type JSX, type MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { type DerivedAccount } from "@/services";
-import { AccountIcon } from "@/components";
+import { AccountIcon } from '@/features/wallet';
 import { IconPlus, IconEyeSlash } from "@/assets/icons";
 
 const WATCH_LIST: never[] = [];
@@ -141,3 +141,4 @@ function AccountSidebar({
 
 export { AccountSidebar };
 export type { AccountSidebarProps };
+

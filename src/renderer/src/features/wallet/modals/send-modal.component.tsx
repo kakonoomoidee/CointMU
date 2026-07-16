@@ -28,7 +28,8 @@ import {
   dispatchNotification,
 } from "@/services";
 import { IconCheck, IconAlertCircle } from "@/assets/icons";
-import { TokenIcon, CustomDropdown } from "@/components";
+import { CustomDropdown } from '@/components'
+import { TokenIcon } from '@/features/wallet';
 import type { DerivedAccount } from "@/services";
 
 interface SendModalProps {
@@ -606,3 +607,4 @@ function SendModal({
 
 export { SendModal };
 export type { SendModalProps };
+
