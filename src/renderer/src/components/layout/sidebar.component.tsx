@@ -1,9 +1,9 @@
-import { useState, useRef, useEffect, type JSX } from 'react'
-import { useTranslation } from 'react-i18next'
-import { type DerivedAccount } from '@/services'
-import { type UpdaterStatus } from '@/hooks'
-import { useAppStore } from '@/store'
-import { NotificationCenter } from './notifications/NotificationCenter'
+import { useState, useRef, useEffect, type JSX } from "react";
+import { useTranslation } from "react-i18next";
+import { type DerivedAccount } from "@/services";
+import { type UpdaterStatus } from "@/hooks";
+import { useAppStore } from "@/store";
+import { NotificationCenter } from "../notifications/NotificationCenter";
 import {
   IconBolt,
   IconGrid,
@@ -11,19 +11,19 @@ import {
   IconWallet,
   IconSearch,
   IconSettings,
-  IconLockOpen
-} from '@/assets/icons'
+  IconLockOpen,
+} from "@/assets/icons";
 
 interface SidebarProps {
-  accounts: DerivedAccount[]
-  activeWalletAddress: string | null
-  activeView: string
-  setActiveView: (view: string) => void
-  onLogout: () => void
-  updateStatus: UpdaterStatus
+  accounts: DerivedAccount[];
+  activeWalletAddress: string | null;
+  activeView: string;
+  setActiveView: (view: string) => void;
+  onLogout: () => void;
+  updateStatus: UpdaterStatus;
 }
 
-const APP_NETWORK = 'testnet'
+const APP_NETWORK = "testnet";
 
 /**
  * Sidebar navigation component with workspace routing and a popover-enabled
@@ -37,28 +37,32 @@ export function Sidebar({
   activeView,
   setActiveView,
   onLogout,
-  updateStatus
+  updateStatus,
 }: SidebarProps): JSX.Element {
-  const balance = useAppStore((s) => s.balance)
-  const peerCount = useAppStore((s) => s.peerCount)
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
-  const popoverRef = useRef<HTMLDivElement>(null)
-  const { t } = useTranslation()
+  const balance = useAppStore((s) => s.balance);
+  const peerCount = useAppStore((s) => s.peerCount);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
-  const activeAccount = accounts.find(a => a.address === activeWalletAddress) || accounts[0]
-  const abbrAddress = activeWalletAddress 
+  const activeAccount =
+    accounts.find((a) => a.address === activeWalletAddress) || accounts[0];
+  const abbrAddress = activeWalletAddress
     ? `${activeWalletAddress.substring(0, 6)}...${activeWalletAddress.substring(activeWalletAddress.length - 4)}`
-    : '--'
+    : "--";
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent): void {
-      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
-        setIsPopoverOpen(false)
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(event.target as Node)
+      ) {
+        setIsPopoverOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <aside className="w-56 flex flex-col border-r border-slate-200 bg-white">
@@ -69,7 +73,9 @@ export function Sidebar({
           </div>
           <div>
             <p className="text-sm font-bold text-slate-800">CointMU</p>
-            <p className="text-[10px] text-slate-400 tracking-wide">v{window.systemInfo?.version || '0.0.1'} - {APP_NETWORK}</p>
+            <p className="text-[10px] text-slate-400 tracking-wide">
+              v{window.systemInfo?.version || "0.0.1"} - {APP_NETWORK}
+            </p>
           </div>
         </div>
         <NotificationCenter />
@@ -79,106 +85,139 @@ export function Sidebar({
         <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-50 border border-slate-100">
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="text-[11px] font-medium text-slate-600">
-            {t('sidebar.connectedTo')}
-            <span className="font-semibold text-blue-600 ml-1">CointMU Mainnet</span>
+            {t("sidebar.connectedTo")}
+            <span className="font-semibold text-blue-600 ml-1">
+              CointMU Mainnet
+            </span>
           </span>
           <span className="ml-auto text-[10px] font-bold text-slate-500">
-            {peerCount !== null ? peerCount : '--'}
+            {peerCount !== null ? peerCount : "--"}
           </span>
-          <span className="text-[10px] text-slate-400">{t('sidebar.peers')}</span>
+          <span className="text-[10px] text-slate-400">
+            {t("sidebar.peers")}
+          </span>
         </div>
       </div>
 
       <div className="px-4 pt-5 pb-1">
         <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-slate-400 px-2">
-          {t('sidebar.workspace')}
+          {t("sidebar.workspace")}
         </p>
       </div>
       <nav className="flex-1 px-3 py-1 space-y-0.5">
         <button
-          onClick={() => setActiveView('dashboard')}
+          onClick={() => setActiveView("dashboard")}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 text-left ${
-            activeView === 'dashboard' ? 'bg-blue-600 text-white shadow-sm shadow-blue-200' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+            activeView === "dashboard"
+              ? "bg-blue-600 text-white shadow-sm shadow-blue-200"
+              : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
           }`}
         >
           <IconGrid width={18} height={18} />
-          {t('sidebar.dashboard')}
+          {t("sidebar.dashboard")}
         </button>
 
         <button
-          onClick={() => setActiveView('miner')}
+          onClick={() => setActiveView("miner")}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 text-left ${
-            activeView === 'miner' ? 'bg-blue-600 text-white shadow-sm shadow-blue-200' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+            activeView === "miner"
+              ? "bg-blue-600 text-white shadow-sm shadow-blue-200"
+              : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
           }`}
         >
           <IconCpu width={18} height={18} />
-          {t('sidebar.mining')}
+          {t("sidebar.mining")}
           <span className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-500" />
         </button>
 
         <button
-          onClick={() => setActiveView('wallet')}
+          onClick={() => setActiveView("wallet")}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 text-left ${
-            activeView === 'wallet' ? 'bg-blue-600 text-white shadow-sm shadow-blue-200' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+            activeView === "wallet"
+              ? "bg-blue-600 text-white shadow-sm shadow-blue-200"
+              : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
           }`}
         >
           <IconWallet width={18} height={18} />
-          {t('sidebar.wallet')}
+          {t("sidebar.wallet")}
         </button>
 
         <button
-          onClick={() => setActiveView('explorer')}
+          onClick={() => setActiveView("explorer")}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 text-left ${
-            activeView === 'explorer' ? 'bg-blue-600 text-white shadow-sm shadow-blue-200' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+            activeView === "explorer"
+              ? "bg-blue-600 text-white shadow-sm shadow-blue-200"
+              : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
           }`}
         >
           <IconSearch width={18} height={18} />
-          {t('sidebar.explorer')}
+          {t("sidebar.explorer")}
         </button>
 
         <div className="pt-4 pb-1 px-2">
           <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-slate-400">
-            {t('sidebar.system')}
+            {t("sidebar.system")}
           </p>
         </div>
 
         <button
-          onClick={() => setActiveView('settings')}
+          onClick={() => setActiveView("settings")}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 text-left ${
-            activeView === 'settings' ? 'bg-blue-600 text-white shadow-sm shadow-blue-200' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+            activeView === "settings"
+              ? "bg-blue-600 text-white shadow-sm shadow-blue-200"
+              : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
           }`}
         >
           <IconSettings width={18} height={18} />
-          {t('sidebar.settings')}
-          {(updateStatus === 'available' || updateStatus === 'downloading' || updateStatus === 'downloaded') && (
+          {t("sidebar.settings")}
+          {(updateStatus === "available" ||
+            updateStatus === "downloading" ||
+            updateStatus === "downloaded") && (
             <span className="ml-auto w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
           )}
         </button>
       </nav>
 
-      <div className="relative px-4 py-3 border-t border-slate-100" ref={popoverRef}>
+      <div
+        className="relative px-4 py-3 border-t border-slate-100"
+        ref={popoverRef}
+      >
         {isPopoverOpen && (
           <div className="absolute bottom-full mb-2 left-4 right-4 bg-white border border-slate-200 rounded-xl shadow-lg p-1.5 z-50 animate-in fade-in zoom-in-95 duration-100 origin-bottom">
             <button
               onClick={() => {
-                setIsPopoverOpen(false)
-                setActiveView('settings')
+                setIsPopoverOpen(false);
+                setActiveView("settings");
               }}
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors text-left"
             >
-              <IconSettings className="text-slate-400" width={14} height={14} strokeWidth={2.5} />
-              <span className="text-xs font-semibold text-slate-700">{t('sidebar.settings')}</span>
+              <IconSettings
+                className="text-slate-400"
+                width={14}
+                height={14}
+                strokeWidth={2.5}
+              />
+              <span className="text-xs font-semibold text-slate-700">
+                {t("sidebar.settings")}
+              </span>
             </button>
             <div className="h-px bg-slate-100 my-1 mx-2" />
             <button
               onClick={() => {
-                setIsPopoverOpen(false)
-                onLogout()
+                setIsPopoverOpen(false);
+                onLogout();
               }}
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-red-50 transition-colors text-left group"
             >
-              <IconLockOpen className="text-red-400 group-hover:text-red-500 transition-colors" width={14} height={14} strokeWidth={2.5} />
-              <span className="text-xs font-semibold text-red-600">{t('sidebar.lockWallet')}</span>
+              <IconLockOpen
+                className="text-red-400 group-hover:text-red-500 transition-colors"
+                width={14}
+                height={14}
+                strokeWidth={2.5}
+              />
+              <span className="text-xs font-semibold text-red-600">
+                {t("sidebar.lockWallet")}
+              </span>
             </button>
           </div>
         )}
@@ -192,11 +231,16 @@ export function Sidebar({
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
-              <p className="text-xs font-semibold text-slate-700 truncate">{activeAccount?.label || 'Wallet'}</p>
+              <p className="text-xs font-semibold text-slate-700 truncate">
+                {activeAccount?.label || "Wallet"}
+              </p>
               <p className="text-xs font-bold text-slate-800 ml-2">{balance}</p>
             </div>
             <div className="flex items-center justify-between mt-0.5">
-              <p className="text-[10px] text-slate-400 font-mono" title={activeWalletAddress || undefined}>
+              <p
+                className="text-[10px] text-slate-400 font-mono"
+                title={activeWalletAddress || undefined}
+              >
                 {abbrAddress}
               </p>
               <p className="text-[10px] text-slate-400">CMU</p>
@@ -205,5 +249,5 @@ export function Sidebar({
         </button>
       </div>
     </aside>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import type { JSX } from 'react'
-import { useTranslation } from 'react-i18next'
+import type { JSX } from "react";
+import { useTranslation } from "react-i18next";
 
 /**
  * A custom frameless window title bar.
@@ -7,26 +7,29 @@ import { useTranslation } from 'react-i18next'
  * @returns The CustomTitleBar component.
  */
 export function CustomTitleBar(): JSX.Element {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   const handleMinimize = (): void => {
-    window.api.window.minimize()
-  }
+    window.api.window.minimize();
+  };
 
   const handleClose = (): void => {
-    window.api.window.close()
-  }
+    window.api.window.close();
+  };
 
   return (
     <div
-      style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}
+      style={{ WebkitAppRegion: "drag" } as React.CSSProperties}
       className="flex items-center justify-between h-8 bg-white select-none z-50 shrink-0"
     >
       <div className="flex-1" />
-      <div className="flex h-full" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
+      <div
+        className="flex h-full"
+        style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
+      >
         <button
           onClick={handleMinimize}
-          title={t('ui.window.minimize')}
+          title={t("ui.window.minimize")}
           className="flex items-center justify-center w-12 h-full text-slate-500 hover:bg-slate-200 hover:text-slate-900 transition-colors"
         >
           <svg width="10" height="1" viewBox="0 0 10 1" fill="currentColor">
@@ -35,7 +38,7 @@ export function CustomTitleBar(): JSX.Element {
         </button>
         <button
           onClick={handleClose}
-          title={t('ui.window.close')}
+          title={t("ui.window.close")}
           className="flex items-center justify-center w-12 h-full text-slate-500 hover:bg-red-500 hover:text-white transition-colors"
         >
           <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
@@ -44,5 +47,5 @@ export function CustomTitleBar(): JSX.Element {
         </button>
       </div>
     </div>
-  )
+  );
 }

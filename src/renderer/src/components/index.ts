@@ -7,7 +7,6 @@ export { TokenIcon } from './TokenIcon'
 export type { TokenIconProps } from './TokenIcon'
 export { Skeleton, SkeletonCard, SkeletonList, SkeletonTable } from './Skeletons'
 
-export { Sidebar } from './Sidebar'
 export { ImportKeystoreModal } from './ImportKeystoreModal'
 export type { ImportKeystoreResult } from './ImportKeystoreModal'
 export { NotificationCenter } from './notifications/NotificationCenter'
@@ -22,6 +21,8 @@ export * from './ui'
 export { IconEyeSlash } from '@/assets/icons'
 export type { IconProps } from '@/assets/icons'
 export { PairingApprovalModal } from './PairingApprovalModal'
-export { CustomTitleBar } from './CustomTitleBar'
 
 export * from './activity';
+
+export * from './layout';
+
