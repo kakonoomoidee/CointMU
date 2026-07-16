@@ -18,7 +18,7 @@ import { Sidebar, ToastViewport, PairingApprovalModal, CustomTitleBar } from '@/
 import { useDappRequestHandler, useAutoLock } from '@/hooks'
 
 const Miner = lazy(() => import('@/views/Miner').then((m) => ({ default: m.Miner })))
-const Explorer = lazy(() => import('@/views/Explorer').then((m) => ({ default: m.Explorer })))
+const Explorer = lazy(() => import('@/features/explorer').then((m) => ({ default: m.ExplorerView })))
 const Settings = lazy(() => import('@/views/Settings').then((m) => ({ default: m.Settings })))
 
 const NAV_ITEM_DASHBOARD = 'dashboard'

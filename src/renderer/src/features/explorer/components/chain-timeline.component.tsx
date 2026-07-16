@@ -1,9 +1,7 @@
+import { CHAIN_TIMELINE_TICK_INTERVAL_MS as TICK_INTERVAL_MS } from "../explorer.constants";
 import { type JSX, useEffect, useState } from "react";
-import ms from 'ms'
-import { useAppStore } from '@/store'
-import { IconX, IconAlertTriangle, IconCheck, IconCube } from '@/assets/icons'
-
-const TICK_INTERVAL_MS = ms('1s');
+import { useAppStore } from "@/store";
+import { IconX, IconAlertTriangle, IconCheck, IconCube } from "@/assets/icons";
 
 interface BlockItem {
   number: number;
@@ -45,9 +43,14 @@ export function ChainTimeline({
   const [now, setNow] = useState<number>(Date.now());
   const balances = useAppStore((s) => s.balances);
 
-  const checkIfMinedByMe = (minerAddress: string, balancesMap: Record<string, string>): boolean => {
+  const checkIfMinedByMe = (
+    minerAddress: string,
+    balancesMap: Record<string, string>,
+  ): boolean => {
     if (!minerAddress || !balancesMap) return false;
-    const allMyAddresses = Object.keys(balancesMap).map((addr) => addr.toLowerCase());
+    const allMyAddresses = Object.keys(balancesMap).map((addr) =>
+      addr.toLowerCase(),
+    );
     return allMyAddresses.includes(minerAddress.toLowerCase());
   };
 
@@ -82,7 +85,12 @@ export function ChainTimeline({
       <div className="flex items-center gap-3 overflow-x-auto pb-4 pt-2 hide-scrollbar">
         {!isOnline ? (
           <div className="w-full py-8 flex flex-col items-center justify-center text-center">
-            <IconAlertTriangle className="text-red-300 mb-2" width={28} height={28} strokeWidth={1.5} />
+            <IconAlertTriangle
+              className="text-red-300 mb-2"
+              width={28}
+              height={28}
+              strokeWidth={1.5}
+            />
             <p className="text-sm font-medium text-slate-500">
               Node is offline
             </p>
@@ -125,7 +133,12 @@ export function ChainTimeline({
                 >
                   {isMinedByMe && (
                     <div className="absolute -top-2 -right-2 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-sm border border-emerald-100">
-                      <IconCheck className="text-emerald-500" width={12} height={12} strokeWidth={3} />
+                      <IconCheck
+                        className="text-emerald-500"
+                        width={12}
+                        height={12}
+                        strokeWidth={3}
+                      />
                     </div>
                   )}
                   <span
@@ -148,7 +161,12 @@ export function ChainTimeline({
           })
         ) : (
           <div className="w-full py-8 flex flex-col items-center justify-center">
-            <IconCube className="text-slate-300 mb-2" width={28} height={28} strokeWidth={1.5} />
+            <IconCube
+              className="text-slate-300 mb-2"
+              width={28}
+              height={28}
+              strokeWidth={1.5}
+            />
             <p className="text-sm font-medium text-slate-400">
               Awaiting network activity
             </p>

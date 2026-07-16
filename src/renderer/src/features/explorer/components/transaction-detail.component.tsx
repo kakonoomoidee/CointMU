@@ -1,18 +1,17 @@
-import { useState, useEffect, type JSX } from 'react'
-import { useTranslation } from 'react-i18next'
-import { IconChevronLeft, IconCheck, IconAlertCircle } from '@/assets/icons'
-import { getTransactionDetail, type TransactionDetailData } from '@/services'
-import { useAppStore } from '@/store'
-import { AddressBadge } from './AddressBadge'
+import { MOCK_USD_RATE } from "../explorer.constants";
+import { useState, useEffect, type JSX } from "react";
+import { useTranslation } from "react-i18next";
+import { IconChevronLeft, IconCheck, IconAlertCircle } from "@/assets/icons";
+import { getTransactionDetail, type TransactionDetailData } from "@/services";
+import { useAppStore } from "@/store";
+import { AddressBadge } from "./address-badge.component";
 
 interface TransactionDetailProps {
-  tx: { hash: string }
-  onBack: () => void
-  onBlockSelect: (blockNumber: number) => void
-  onAddressSelect: (address: string) => void
+  tx: { hash: string };
+  onBack: () => void;
+  onBlockSelect: (blockNumber: number) => void;
+  onAddressSelect: (address: string) => void;
 }
-
-const MOCK_USD_RATE = 0.42
 
 /**
  * Detailed transaction view presenting the hash, receipt-derived status and
@@ -26,58 +25,58 @@ function TransactionDetail({
   tx,
   onBack,
   onBlockSelect,
-  onAddressSelect
+  onAddressSelect,
 }: TransactionDetailProps): JSX.Element {
-  const { t } = useTranslation()
-  const blockHeight = useAppStore((s) => s.blockHeight)
-  const [detail, setDetail] = useState<TransactionDetailData | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
+  const { t } = useTranslation();
+  const blockHeight = useAppStore((s) => s.blockHeight);
+  const [detail, setDetail] = useState<TransactionDetailData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    let mounted = true
-    setLoading(true)
+    let mounted = true;
+    setLoading(true);
     getTransactionDetail(tx.hash).then((result) => {
       if (mounted) {
-        setDetail(result)
-        setLoading(false)
+        setDetail(result);
+        setLoading(false);
       }
-    })
+    });
     return (): void => {
-      mounted = false
-    }
-  }, [tx.hash])
+      mounted = false;
+    };
+  }, [tx.hash]);
 
   const confirmations =
     detail && detail.blockNumber !== null && blockHeight !== null
       ? Math.max(0, blockHeight - detail.blockNumber + 1)
-      : null
+      : null;
 
-  const isSuccess = detail?.status === 'success'
+  const isSuccess = detail?.status === "success";
   const statusLabel =
-    detail?.status === 'success'
+    detail?.status === "success"
       ? confirmations !== null
-        ? t('explorer.txDetail.confirmedWithCount', { count: confirmations })
-        : t('explorer.txDetail.confirmed')
-      : detail?.status === 'failed'
-        ? t('explorer.txDetail.failed')
-        : t('explorer.txDetail.pending')
+        ? t("explorer.txDetail.confirmedWithCount", { count: confirmations })
+        : t("explorer.txDetail.confirmed")
+      : detail?.status === "failed"
+        ? t("explorer.txDetail.failed")
+        : t("explorer.txDetail.pending");
 
   const approxUsd =
     detail !== null
-      ? (detail.valueCmu * MOCK_USD_RATE).toLocaleString('en-US', {
+      ? (detail.valueCmu * MOCK_USD_RATE).toLocaleString("en-US", {
           minimumFractionDigits: 2,
-          maximumFractionDigits: 2
+          maximumFractionDigits: 2,
         })
-      : '0.00'
+      : "0.00";
 
   const gasUsedLabel =
     detail && detail.gasUsed !== null
       ? `${detail.gasUsed.toLocaleString()} / ${detail.gasLimit.toLocaleString()} (${Math.round(
-          (detail.gasUsed / detail.gasLimit) * 100
+          (detail.gasUsed / detail.gasLimit) * 100,
         )}%)`
       : detail
         ? detail.gasLimit.toLocaleString()
-        : '--'
+        : "--";
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -87,21 +86,23 @@ function TransactionDetail({
           className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors shadow-sm"
         >
           <IconChevronLeft width={12} height={12} strokeWidth={2.5} />
-          {t('explorer.txDetail.back')}
+          {t("explorer.txDetail.back")}
         </button>
 
         <div>
           <p className="text-[10px] font-semibold tracking-widest uppercase text-slate-400 mb-0.5">
-            {t('explorer.txDetail.transaction')}
+            {t("explorer.txDetail.transaction")}
           </p>
           <div className="flex items-center gap-3">
-            <h2 className="text-xl font-bold text-slate-800 tracking-tight font-mono">{tx.hash}</h2>
+            <h2 className="text-xl font-bold text-slate-800 tracking-tight font-mono">
+              {tx.hash}
+            </h2>
             {detail && (
               <span
                 className={`text-xs font-semibold px-2.5 py-1 rounded-full border flex items-center gap-1.5 ${
                   isSuccess
-                    ? 'text-emerald-600 bg-emerald-50 border-emerald-100'
-                    : 'text-red-600 bg-red-50 border-red-100'
+                    ? "text-emerald-600 bg-emerald-50 border-emerald-100"
+                    : "text-red-600 bg-red-50 border-red-100"
                 }`}
               >
                 {isSuccess ? (
@@ -109,7 +110,11 @@ function TransactionDetail({
                 ) : (
                   <IconAlertCircle width={10} height={10} />
                 )}
-                {isSuccess ? t('explorer.txDetail.success') : detail.status === 'failed' ? t('explorer.txDetail.failed') : t('explorer.txDetail.pending')}
+                {isSuccess
+                  ? t("explorer.txDetail.success")
+                  : detail.status === "failed"
+                    ? t("explorer.txDetail.failed")
+                    : t("explorer.txDetail.pending")}
               </span>
             )}
           </div>
@@ -119,22 +124,30 @@ function TransactionDetail({
       {loading || !detail ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-12 shadow-sm text-center">
           <div className="w-6 h-6 rounded-full border-2 border-slate-200 border-t-blue-500 animate-spin mx-auto mb-3" />
-          <p className="text-sm font-medium text-slate-400">{t('explorer.txDetail.loading')}</p>
+          <p className="text-sm font-medium text-slate-400">
+            {t("explorer.txDetail.loading")}
+          </p>
         </div>
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
           <div className="space-y-4">
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.txHash')}</span>
-              <span className="text-sm font-mono text-slate-800 break-all">{detail.hash}</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">
+                {t("explorer.txDetail.txHash")}
+              </span>
+              <span className="text-sm font-mono text-slate-800 break-all">
+                {detail.hash}
+              </span>
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.status')}</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">
+                {t("explorer.txDetail.status")}
+              </span>
               <span
                 className={`text-xs font-semibold px-2.5 py-1 rounded-full border flex items-center gap-1.5 ${
                   isSuccess
-                    ? 'text-emerald-600 bg-emerald-50 border-emerald-100'
-                    : 'text-red-600 bg-red-50 border-red-100'
+                    ? "text-emerald-600 bg-emerald-50 border-emerald-100"
+                    : "text-red-600 bg-red-50 border-red-100"
                 }`}
               >
                 {isSuccess ? (
@@ -146,7 +159,9 @@ function TransactionDetail({
               </span>
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.block')}</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">
+                {t("explorer.txDetail.block")}
+              </span>
               {detail.blockNumber !== null ? (
                 <span
                   className="text-sm font-mono text-blue-600 cursor-pointer hover:underline"
@@ -155,56 +170,90 @@ function TransactionDetail({
                   #{detail.blockNumber.toLocaleString()}
                 </span>
               ) : (
-                <span className="text-sm text-slate-400">{t('explorer.txDetail.pending')}</span>
+                <span className="text-sm text-slate-400">
+                  {t("explorer.txDetail.pending")}
+                </span>
               )}
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.timestamp')}</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">
+                {t("explorer.txDetail.timestamp")}
+              </span>
               <span className="text-sm text-slate-800">
                 {detail.timestamp !== null
                   ? new Date(detail.timestamp * 1000).toLocaleString()
-                  : '--'}
+                  : "--"}
               </span>
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.from')}</span>
-              <AddressBadge address={detail.from} leftAligned onClick={onAddressSelect} />
+              <span className="text-xs font-semibold text-slate-500 w-1/4">
+                {t("explorer.txDetail.from")}
+              </span>
+              <AddressBadge
+                address={detail.from}
+                leftAligned
+                onClick={onAddressSelect}
+              />
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.to')}</span>
-              <AddressBadge address={detail.to} leftAligned onClick={onAddressSelect} />
+              <span className="text-xs font-semibold text-slate-500 w-1/4">
+                {t("explorer.txDetail.to")}
+              </span>
+              <AddressBadge
+                address={detail.to}
+                leftAligned
+                onClick={onAddressSelect}
+              />
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.value')}</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">
+                {t("explorer.txDetail.value")}
+              </span>
               <span className="text-sm font-bold text-slate-800">
                 {detail.valueCmu.toFixed(4)} CMU
-                <span className="text-xs font-medium text-slate-400 ml-2">{'≈'} ${approxUsd}</span>
+                <span className="text-xs font-medium text-slate-400 ml-2">
+                  {"≈"} ${approxUsd}
+                </span>
               </span>
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.gasPrice')}</span>
-              <span className="text-sm text-slate-800">{detail.gasPriceGwei} gwei</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">
+                {t("explorer.txDetail.gasPrice")}
+              </span>
+              <span className="text-sm text-slate-800">
+                {detail.gasPriceGwei} gwei
+              </span>
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.gasUsed')}</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">
+                {t("explorer.txDetail.gasUsed")}
+              </span>
               <span className="text-sm text-slate-800">{gasUsedLabel}</span>
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.txFee')}</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">
+                {t("explorer.txDetail.txFee")}
+              </span>
               <span className="text-sm text-slate-800">
-                {detail.feeCmu !== null ? `${detail.feeCmu.toFixed(6)} CMU` : '--'}
+                {detail.feeCmu !== null
+                  ? `${detail.feeCmu.toFixed(6)} CMU`
+                  : "--"}
               </span>
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 w-1/4">{t('explorer.txDetail.nonce')}</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4">
+                {t("explorer.txDetail.nonce")}
+              </span>
               <span className="text-sm text-slate-800">{detail.nonce}</span>
             </div>
             <div className="flex items-start">
-              <span className="text-xs font-semibold text-slate-500 w-1/4 pt-1">{t('explorer.txDetail.inputData')}</span>
+              <span className="text-xs font-semibold text-slate-500 w-1/4 pt-1">
+                {t("explorer.txDetail.inputData")}
+              </span>
               <div className="flex-1">
-                {detail.input === '0x' || detail.input === '' ? (
+                {detail.input === "0x" || detail.input === "" ? (
                   <p className="text-sm font-mono text-slate-500 italic">
-                    {t('explorer.txDetail.emptyInput')}
+                    {t("explorer.txDetail.emptyInput")}
                   </p>
                 ) : (
                   <p className="text-sm font-mono text-slate-800 break-all bg-slate-50 p-2 rounded-lg border border-slate-100">
@@ -217,8 +266,8 @@ function TransactionDetail({
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export { TransactionDetail }
-export type { TransactionDetailProps }
+export { TransactionDetail };
+export type { TransactionDetailProps };

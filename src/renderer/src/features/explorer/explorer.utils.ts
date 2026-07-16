@@ -1,9 +1,11 @@
-const SECONDS_PER_MINUTE = 60
-const SECONDS_PER_HOUR = 3600
-const ASCII_PRINTABLE_MIN = 0
-const ASCII_PRINTABLE_MAX = 127
-const HEX_RADIX = 16
-const HEX_CHARS_PER_BYTE = 2
+import {
+  SECONDS_PER_MINUTE,
+  SECONDS_PER_HOUR,
+  ASCII_PRINTABLE_MIN,
+  ASCII_PRINTABLE_MAX,
+  HEX_RADIX,
+  HEX_CHARS_PER_BYTE,
+} from "./explorer.constants";
 
 /**
  * Formats a unix timestamp as a coarse relative age string for explorer tables,
@@ -12,17 +14,17 @@ const HEX_CHARS_PER_BYTE = 2
  * @returns A human-readable relative age label.
  */
 export function formatTxAge(timestamp: number): string {
-  const diff = Math.floor(Date.now() / 1000) - timestamp
+  const diff = Math.floor(Date.now() / 1000) - timestamp;
   if (diff < 0) {
-    return 'Just now'
+    return "Just now";
   }
   if (diff < SECONDS_PER_MINUTE) {
-    return `${diff} secs ago`
+    return `${diff} secs ago`;
   }
   if (diff < SECONDS_PER_HOUR) {
-    return `${Math.floor(diff / SECONDS_PER_MINUTE)} mins ago`
+    return `${Math.floor(diff / SECONDS_PER_MINUTE)} mins ago`;
   }
-  return `${Math.floor(diff / SECONDS_PER_HOUR)} hrs ago`
+  return `${Math.floor(diff / SECONDS_PER_HOUR)} hrs ago`;
 }
 
 /**
@@ -32,13 +34,13 @@ export function formatTxAge(timestamp: number): string {
  * @returns The decoded printable ASCII string.
  */
 export function hexToAscii(hex: string): string {
-  const cleaned = hex.startsWith('0x') ? hex.slice(2) : hex
-  let str = ''
+  const cleaned = hex.startsWith("0x") ? hex.slice(2) : hex;
+  let str = "";
   for (let i = 0; i < cleaned.length; i += HEX_CHARS_PER_BYTE) {
-    const charCode = parseInt(cleaned.substr(i, HEX_CHARS_PER_BYTE), HEX_RADIX)
+    const charCode = parseInt(cleaned.substr(i, HEX_CHARS_PER_BYTE), HEX_RADIX);
     if (charCode > ASCII_PRINTABLE_MIN && charCode < ASCII_PRINTABLE_MAX) {
-      str += String.fromCharCode(charCode)
+      str += String.fromCharCode(charCode);
     }
   }
-  return str
+  return str;
 }

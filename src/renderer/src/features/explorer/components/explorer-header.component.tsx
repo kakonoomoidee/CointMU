@@ -1,9 +1,9 @@
-import { type JSX } from 'react'
-import { useTranslation } from 'react-i18next'
+import { type JSX } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ExplorerHeaderProps {
-  isConnected: boolean
-  networkHeight: string
+  isConnected: boolean;
+  networkHeight: string;
 }
 
 /**
@@ -12,36 +12,45 @@ interface ExplorerHeaderProps {
  * @param props - Connection state and the formatted network height label.
  * @returns The rendered explorer header.
  */
-function ExplorerHeader({ isConnected, networkHeight }: ExplorerHeaderProps): JSX.Element {
-  const { t } = useTranslation()
+function ExplorerHeader({
+  isConnected,
+  networkHeight,
+}: ExplorerHeaderProps): JSX.Element {
+  const { t } = useTranslation();
 
   return (
     <header className="flex items-center justify-between px-8 py-4 bg-white/50 border-b border-slate-100">
       <div className="flex items-center gap-2">
         <span className="text-xs font-semibold tracking-widest uppercase text-slate-400">
-          {t('explorer.header.network')}
+          {t("explorer.header.network")}
         </span>
         <span className="text-slate-300">/</span>
-        <span className="text-sm font-semibold text-slate-800">{t('explorer.header.explorer')}</span>
+        <span className="text-sm font-semibold text-slate-800">
+          {t("explorer.header.explorer")}
+        </span>
       </div>
 
       <div className="flex items-center gap-3">
         <div
-          className={`flex items-center gap-2 px-3 py-1.5 rounded ${isConnected ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-500'}`}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded ${isConnected ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-500"}`}
         >
-          {isConnected && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
+          {isConnected && (
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          )}
           <span className="text-[10px] font-bold tracking-wide">
-            {isConnected ? t('explorer.header.blockHeight', { height: networkHeight }) : t('explorer.header.disconnected')}
+            {isConnected
+              ? t("explorer.header.blockHeight", { height: networkHeight })
+              : t("explorer.header.disconnected")}
           </span>
         </div>
 
         <button className="px-4 py-1.5 rounded border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
-          {t('explorer.header.savedSearches')}
+          {t("explorer.header.savedSearches")}
         </button>
       </div>
     </header>
-  )
+  );
 }
 
-export { ExplorerHeader }
-export type { ExplorerHeaderProps }
+export { ExplorerHeader };
+export type { ExplorerHeaderProps };

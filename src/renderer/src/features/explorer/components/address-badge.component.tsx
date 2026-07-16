@@ -1,12 +1,12 @@
-import { type JSX } from 'react'
-import { useTranslation } from 'react-i18next'
-import { AccountIcon } from '@/components'
-import { IconCopy } from '@/assets/icons'
+import { type JSX } from "react";
+import { useTranslation } from "react-i18next";
+import { AccountIcon } from "@/components";
+import { IconCopy } from "@/assets/icons";
 
 interface AddressBadgeProps {
-  address: string | null
-  leftAligned?: boolean
-  onClick?: (address: string) => void
+  address: string | null;
+  leftAligned?: boolean;
+  onClick?: (address: string) => void;
 }
 
 /**
@@ -18,25 +18,35 @@ interface AddressBadgeProps {
  *        optional navigation handler.
  * @returns The rendered address badge.
  */
-function AddressBadge({ address, leftAligned = false, onClick }: AddressBadgeProps): JSX.Element {
-  const { t } = useTranslation()
+function AddressBadge({
+  address,
+  leftAligned = false,
+  onClick,
+}: AddressBadgeProps): JSX.Element {
+  const { t } = useTranslation();
 
   if (!address) {
-    return <span className="text-sm text-slate-400 font-mono">{t('explorer.addressBadge.contractCreation')}</span>
+    return (
+      <span className="text-sm text-slate-400 font-mono">
+        {t("explorer.addressBadge.contractCreation")}
+      </span>
+    );
   }
 
-  const display = `${address.substring(0, 10)}...${address.substring(address.length - 8)}`
+  const display = `${address.substring(0, 10)}...${address.substring(address.length - 8)}`;
 
   /**
    * Copies the full address to the clipboard without triggering navigation.
    * @returns Nothing.
    */
   const handleCopy = (): void => {
-    navigator.clipboard.writeText(address)
-  }
+    navigator.clipboard.writeText(address);
+  };
 
   return (
-    <div className={`flex items-center gap-1.5 ${leftAligned ? 'justify-start' : 'justify-end'}`}>
+    <div
+      className={`flex items-center gap-1.5 ${leftAligned ? "justify-start" : "justify-end"}`}
+    >
       <div className="flex-shrink-0 rounded-full overflow-hidden">
         <AccountIcon address={address} size={20} />
       </div>
@@ -54,8 +64,8 @@ function AddressBadge({ address, leftAligned = false, onClick }: AddressBadgePro
         onClick={handleCopy}
       />
     </div>
-  )
+  );
 }
 
-export { AddressBadge }
-export type { AddressBadgeProps }
+export { AddressBadge };
+export type { AddressBadgeProps };

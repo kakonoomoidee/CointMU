@@ -1,39 +1,37 @@
-import { type JSX } from 'react'
-import { useTranslation } from 'react-i18next'
-import { type BlockData } from '@/hooks'
-import { useAppStore } from '@/store'
-import { type ActivityData } from '@/views/Wallet/ActivityItem'
-import { Pagination } from '@/components'
-import { AccountIcon, SkeletonTable } from '@/components'
-import { MinerDistribution } from '@/components/explorer/MinerDistribution'
-import { formatTxAge } from '@/utils'
+import { type JSX } from "react";
+import { useTranslation } from "react-i18next";
+import { type BlockData } from "@/hooks";
+import { useAppStore } from "@/store";
+import { type ActivityData } from "@/views/Wallet/ActivityItem";
+import { Pagination } from "@/components";
+import { AccountIcon, SkeletonTable } from "@/components";
+import { MinerDistribution } from "./miner-distribution.component";
+import { formatTxAge } from "../explorer.utils";
 
-type TabState = 'blocks' | 'transactions' | 'accounts'
+type TabState = "blocks" | "transactions" | "accounts";
 
 interface TopAccount {
-  address: string
-  balance: number
-  percentage: number
+  address: string;
+  balance: number;
+  percentage: number;
 }
 
 interface ExplorerDataTabsProps {
-  activeTab: TabState
-  onTabChange: (tab: TabState) => void
-  isConnected: boolean
-  recentBlocks: BlockData[]
-  topAccounts: TopAccount[]
-  isLoadingAccounts: boolean
-  activeWalletAddress: string | null
-  onBlockSelect: (blockNumber: number) => void
-  onAddressSelect: (address: string) => void
-  onTxHashSelect: (hash: string) => void
-  transactions: ActivityData[]
-  txCurrentPage: number
-  txTotalPages: number
-  onTxPageChange: (page: number) => void
+  activeTab: TabState;
+  onTabChange: (tab: TabState) => void;
+  isConnected: boolean;
+  recentBlocks: BlockData[];
+  topAccounts: TopAccount[];
+  isLoadingAccounts: boolean;
+  activeWalletAddress: string | null;
+  onBlockSelect: (blockNumber: number) => void;
+  onAddressSelect: (address: string) => void;
+  onTxHashSelect: (hash: string) => void;
+  transactions: ActivityData[];
+  txCurrentPage: number;
+  txTotalPages: number;
+  onTxPageChange: (page: number) => void;
 }
-
-
 
 /**
  * Abbreviates a hex address or hash for compact table display.
@@ -41,8 +39,8 @@ interface ExplorerDataTabsProps {
  * @returns The shortened representation, or a dash when absent.
  */
 function shortHex(value: string | undefined): string {
-  if (!value) return '--'
-  return `${value.substring(0, 8)}...${value.substring(value.length - 6)}`
+  if (!value) return "--";
+  return `${value.substring(0, 8)}...${value.substring(value.length - 6)}`;
 }
 
 /**
@@ -65,16 +63,21 @@ function ExplorerDataTabs({
   txCurrentPage,
   txTotalPages,
   onTxPageChange,
-  activeWalletAddress
+  activeWalletAddress,
 }: ExplorerDataTabsProps): JSX.Element {
-  const { t } = useTranslation()
-  const balances = useAppStore((s) => s.balances)
+  const { t } = useTranslation();
+  const balances = useAppStore((s) => s.balances);
 
-  const checkIfMinedByMe = (minerAddress: string, balancesMap: Record<string, string>): boolean => {
-    if (!minerAddress || !balancesMap) return false
-    const allMyAddresses = Object.keys(balancesMap).map((addr) => addr.toLowerCase())
-    return allMyAddresses.includes(minerAddress.toLowerCase())
-  }
+  const checkIfMinedByMe = (
+    minerAddress: string,
+    balancesMap: Record<string, string>,
+  ): boolean => {
+    if (!minerAddress || !balancesMap) return false;
+    const allMyAddresses = Object.keys(balancesMap).map((addr) =>
+      addr.toLowerCase(),
+    );
+    return allMyAddresses.includes(minerAddress.toLowerCase());
+  };
 
   return (
     <div className="flex gap-6">
@@ -82,67 +85,74 @@ function ExplorerDataTabs({
         <div className="flex items-center justify-between p-4 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <button
-              onClick={() => onTabChange('blocks')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === 'blocks' ? 'bg-slate-100 text-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}
+              onClick={() => onTabChange("blocks")}
+              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === "blocks" ? "bg-slate-100 text-slate-800" : "text-slate-500 hover:bg-slate-50"}`}
             >
-              {t('explorer.dataTabs.latestBlocks')}
+              {t("explorer.dataTabs.latestBlocks")}
             </button>
             <button
-              onClick={() => onTabChange('transactions')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === 'transactions' ? 'bg-slate-100 text-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}
+              onClick={() => onTabChange("transactions")}
+              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === "transactions" ? "bg-slate-100 text-slate-800" : "text-slate-500 hover:bg-slate-50"}`}
             >
-              {t('explorer.dataTabs.transactions')}
+              {t("explorer.dataTabs.transactions")}
             </button>
             <button
-              onClick={() => onTabChange('accounts')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === 'accounts' ? 'bg-slate-100 text-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}
+              onClick={() => onTabChange("accounts")}
+              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === "accounts" ? "bg-slate-100 text-slate-800" : "text-slate-500 hover:bg-slate-50"}`}
             >
-              {t('explorer.dataTabs.topAccounts')}
+              {t("explorer.dataTabs.topAccounts")}
             </button>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-semibold text-slate-400">{t('explorer.dataTabs.autoRefresh')}</span>
+            <span className="text-[10px] font-semibold text-slate-400">
+              {t("explorer.dataTabs.autoRefresh")}
+            </span>
             <div
-              className={`flex items-center gap-1.5 px-2 py-1 rounded ${isConnected ? 'bg-emerald-50' : 'bg-slate-100'}`}
+              className={`flex items-center gap-1.5 px-2 py-1 rounded ${isConnected ? "bg-emerald-50" : "bg-slate-100"}`}
             >
               {isConnected && (
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               )}
               <span
-                className={`text-[9px] font-bold uppercase ${isConnected ? 'text-emerald-600' : 'text-slate-500'}`}
+                className={`text-[9px] font-bold uppercase ${isConnected ? "text-emerald-600" : "text-slate-500"}`}
               >
-                {isConnected ? t('explorer.dataTabs.live') : t('explorer.dataTabs.off')}
+                {isConnected
+                  ? t("explorer.dataTabs.live")
+                  : t("explorer.dataTabs.off")}
               </span>
             </div>
           </div>
         </div>
 
         <div className="flex-1 overflow-auto">
-          {activeTab === 'blocks' && (
+          {activeTab === "blocks" && (
             <table className="w-full text-left">
               <thead>
                 <tr className="border-b border-slate-100">
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    {t('explorer.dataTabs.tableBlock')}
+                    {t("explorer.dataTabs.tableBlock")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    {t('explorer.dataTabs.tableMinerHash')}
+                    {t("explorer.dataTabs.tableMinerHash")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    {t('explorer.dataTabs.tableTxs')}
+                    {t("explorer.dataTabs.tableTxs")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    {t('explorer.dataTabs.tableReward')}
+                    {t("explorer.dataTabs.tableReward")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
-                    {t('explorer.dataTabs.tableAge')}
+                    {t("explorer.dataTabs.tableAge")}
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {recentBlocks.length > 0 ? (
                   recentBlocks.map((block) => (
-                    <tr key={block.hash} className="hover:bg-slate-50/50 transition-colors">
+                    <tr
+                      key={block.hash}
+                      className="hover:bg-slate-50/50 transition-colors"
+                    >
                       <td className="px-5 py-3.5">
                         <p
                           className="text-sm font-semibold text-blue-600 cursor-pointer hover:underline"
@@ -170,22 +180,30 @@ function ExplorerDataTabs({
                           </div>
                           {checkIfMinedByMe(block.miner, balances) && (
                             <span className="px-1.5 py-0.5 rounded bg-blue-50 text-[9px] font-bold text-blue-600 uppercase tracking-wider">
-                              {t('explorer.dataTabs.you')}
+                              {t("explorer.dataTabs.you")}
                             </span>
                           )}
                         </div>
                       </td>
                       <td className="px-5 py-3.5">
-                        <p className="text-xs font-semibold text-slate-700">{block.txCount}</p>
+                        <p className="text-xs font-semibold text-slate-700">
+                          {block.txCount}
+                        </p>
                       </td>
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-1">
-                          <p className="text-xs font-bold text-slate-800">2.00</p>
-                          <span className="text-[9px] font-semibold text-slate-400">CMU</span>
+                          <p className="text-xs font-bold text-slate-800">
+                            2.00
+                          </p>
+                          <span className="text-[9px] font-semibold text-slate-400">
+                            CMU
+                          </span>
                         </div>
                       </td>
                       <td className="px-5 py-3.5 text-right">
-                        <p className="text-[10px] text-slate-500">{formatTxAge(block.timestamp)}</p>
+                        <p className="text-[10px] text-slate-500">
+                          {formatTxAge(block.timestamp)}
+                        </p>
                       </td>
                     </tr>
                   ))
@@ -198,8 +216,12 @@ function ExplorerDataTabs({
                 ) : (
                   <tr>
                     <td colSpan={5} className="px-5 py-12 text-center">
-                      <p className="text-sm font-medium text-slate-400">{t('explorer.dataTabs.awaitingActivity')}</p>
-                      <p className="text-xs text-slate-400 mt-1">{t('explorer.dataTabs.blockDataRequires')}</p>
+                      <p className="text-sm font-medium text-slate-400">
+                        {t("explorer.dataTabs.awaitingActivity")}
+                      </p>
+                      <p className="text-xs text-slate-400 mt-1">
+                        {t("explorer.dataTabs.blockDataRequires")}
+                      </p>
                     </td>
                   </tr>
                 )}
@@ -207,35 +229,40 @@ function ExplorerDataTabs({
             </table>
           )}
 
-          {activeTab === 'transactions' && (
+          {activeTab === "transactions" && (
             <table className="w-full text-left">
               <thead>
                 <tr className="border-b border-slate-100">
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    {t('explorer.dataTabs.tableHash')}
+                    {t("explorer.dataTabs.tableHash")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    {t('explorer.dataTabs.tableFrom')}
+                    {t("explorer.dataTabs.tableFrom")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    {t('explorer.dataTabs.tableTo')}
+                    {t("explorer.dataTabs.tableTo")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
-                    {t('explorer.dataTabs.tableAmount')}
+                    {t("explorer.dataTabs.tableAmount")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
-                    {t('explorer.dataTabs.tableAge')}
+                    {t("explorer.dataTabs.tableAge")}
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {transactions.length > 0 ? (
                   transactions.map((tx) => (
-                    <tr key={tx.id} className="hover:bg-slate-50/50 transition-colors">
+                    <tr
+                      key={tx.id}
+                      className="hover:bg-slate-50/50 transition-colors"
+                    >
                       <td className="px-5 py-2.5">
-                        <p 
+                        <p
                           className="text-xs font-mono text-blue-600 cursor-pointer hover:underline"
-                          onClick={() => tx.hash && onTxHashSelect(tx.hash as string)}
+                          onClick={() =>
+                            tx.hash && onTxHashSelect(tx.hash as string)
+                          }
                         >
                           {shortHex(tx.hash || tx.id)}
                         </p>
@@ -243,7 +270,7 @@ function ExplorerDataTabs({
                       <td className="px-5 py-2.5">
                         <div className="flex items-center gap-2">
                           <div className="flex-shrink-0 rounded-full overflow-hidden">
-                            <AccountIcon address={tx.from || ''} size={20} />
+                            <AccountIcon address={tx.from || ""} size={20} />
                           </div>
                           <p
                             className="text-xs font-mono text-slate-700 cursor-pointer hover:text-blue-600 hover:underline"
@@ -256,7 +283,7 @@ function ExplorerDataTabs({
                       <td className="px-5 py-2.5">
                         <div className="flex items-center gap-2">
                           <div className="flex-shrink-0 rounded-full overflow-hidden">
-                            <AccountIcon address={tx.to || ''} size={20} />
+                            <AccountIcon address={tx.to || ""} size={20} />
                           </div>
                           <p
                             className="text-xs font-mono text-slate-700 cursor-pointer hover:text-blue-600 hover:underline"
@@ -268,14 +295,22 @@ function ExplorerDataTabs({
                       </td>
                       <td className="px-5 py-2.5 text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <p className="text-xs font-bold text-slate-800">{tx.amount}</p>
-                          <span className="text-[9px] font-semibold text-slate-400">CMU</span>
+                          <p className="text-xs font-bold text-slate-800">
+                            {tx.amount}
+                          </p>
+                          <span className="text-[9px] font-semibold text-slate-400">
+                            CMU
+                          </span>
                         </div>
                       </td>
                       <td className="px-5 py-2.5 text-right">
                         <div className="flex flex-col items-end whitespace-nowrap">
-                          <p className="text-[10px] text-slate-700 font-medium">{formatTxAge(tx.timestamp)}</p>
-                          <p className="text-[9px] text-slate-500 mt-0.5">{tx.timestampStr}</p>
+                          <p className="text-[10px] text-slate-700 font-medium">
+                            {formatTxAge(tx.timestamp)}
+                          </p>
+                          <p className="text-[9px] text-slate-500 mt-0.5">
+                            {tx.timestampStr}
+                          </p>
                         </div>
                       </td>
                     </tr>
@@ -289,9 +324,11 @@ function ExplorerDataTabs({
                 ) : (
                   <tr>
                     <td colSpan={5} className="px-5 py-12 text-center">
-                      <p className="text-sm font-medium text-slate-400">{t('explorer.dataTabs.noTxsFound')}</p>
+                      <p className="text-sm font-medium text-slate-400">
+                        {t("explorer.dataTabs.noTxsFound")}
+                      </p>
                       <p className="text-xs text-slate-400 mt-1">
-                        {t('explorer.dataTabs.noTxsOccurred')}
+                        {t("explorer.dataTabs.noTxsOccurred")}
                       </p>
                     </td>
                   </tr>
@@ -300,7 +337,7 @@ function ExplorerDataTabs({
             </table>
           )}
 
-          {activeTab === 'transactions' && (
+          {activeTab === "transactions" && (
             <div className="px-5 pb-3">
               <Pagination
                 currentPage={txCurrentPage}
@@ -310,24 +347,24 @@ function ExplorerDataTabs({
             </div>
           )}
 
-          {activeTab === 'accounts' && (
+          {activeTab === "accounts" && (
             <table className="w-full text-left">
               <thead>
                 <tr className="border-b border-slate-100">
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    {t('explorer.dataTabs.tableNumber')}
+                    {t("explorer.dataTabs.tableNumber")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    {t('explorer.dataTabs.tableAddress')}
+                    {t("explorer.dataTabs.tableAddress")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
-                    {t('explorer.dataTabs.tableTag')}
+                    {t("explorer.dataTabs.tableTag")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
-                    {t('explorer.dataTabs.tableBalance')}
+                    {t("explorer.dataTabs.tableBalance")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
-                    {t('explorer.dataTabs.tableSupply')}
+                    {t("explorer.dataTabs.tableSupply")}
                   </th>
                 </tr>
               </thead>
@@ -340,9 +377,14 @@ function ExplorerDataTabs({
                   </tr>
                 ) : topAccounts.length > 0 ? (
                   topAccounts.map((acc, i) => (
-                    <tr key={acc.address} className="hover:bg-slate-50/50 transition-colors">
+                    <tr
+                      key={acc.address}
+                      className="hover:bg-slate-50/50 transition-colors"
+                    >
                       <td className="px-5 py-3.5">
-                        <p className="text-xs font-bold text-slate-500">{i + 1}</p>
+                        <p className="text-xs font-bold text-slate-500">
+                          {i + 1}
+                        </p>
                       </td>
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-2.5">
@@ -358,38 +400,45 @@ function ExplorerDataTabs({
                           </p>
                           {checkIfMinedByMe(acc.address, balances) && (
                             <span className="px-1.5 py-0.5 rounded bg-blue-50 text-[9px] font-bold text-blue-600 uppercase tracking-wider">
-                              {t('explorer.dataTabs.you')}
+                              {t("explorer.dataTabs.you")}
                             </span>
                           )}
                         </div>
                       </td>
                       <td className="px-5 py-3.5">
                         <span className="px-2 py-1 rounded bg-slate-100 text-[10px] font-medium text-slate-500">
-                          {t('explorer.dataTabs.miner')}
+                          {t("explorer.dataTabs.miner")}
                         </span>
                       </td>
                       <td className="px-5 py-3.5 text-right">
                         <div className="flex items-center justify-end gap-1">
                           <p className="text-xs font-bold text-slate-800">
                             {acc.balance.toLocaleString(undefined, {
-                              minimumFractionDigits: acc.balance % 1 === 0 ? 1 : 2,
-                              maximumFractionDigits: 2
+                              minimumFractionDigits:
+                                acc.balance % 1 === 0 ? 1 : 2,
+                              maximumFractionDigits: 2,
                             })}
                           </p>
-                          <span className="text-[9px] font-semibold text-slate-400">CMU</span>
+                          <span className="text-[9px] font-semibold text-slate-400">
+                            CMU
+                          </span>
                         </div>
                       </td>
                       <td className="px-5 py-3.5 text-right">
-                        <p className="text-[10px] text-slate-500">{acc.percentage.toFixed(2)} %</p>
+                        <p className="text-[10px] text-slate-500">
+                          {acc.percentage.toFixed(2)} %
+                        </p>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
                     <td colSpan={5} className="px-5 py-12 text-center">
-                      <p className="text-sm font-medium text-slate-400">{t('explorer.dataTabs.awaitingActivity')}</p>
+                      <p className="text-sm font-medium text-slate-400">
+                        {t("explorer.dataTabs.awaitingActivity")}
+                      </p>
                       <p className="text-xs text-slate-400 mt-1">
-                        {t('explorer.dataTabs.accountDataRequires')}
+                        {t("explorer.dataTabs.accountDataRequires")}
                       </p>
                     </td>
                   </tr>
@@ -405,8 +454,8 @@ function ExplorerDataTabs({
         isConnected={isConnected}
       />
     </div>
-  )
+  );
 }
 
-export { ExplorerDataTabs }
-export type { ExplorerDataTabsProps, TabState }
+export { ExplorerDataTabs };
+export type { ExplorerDataTabsProps, TabState };
