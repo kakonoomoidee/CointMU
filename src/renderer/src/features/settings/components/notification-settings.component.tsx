@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { useNotificationStore } from "@/store";
+import { useNotificationStore } from "@/features/notifications";
 
 interface ToggleRowProps {
   title: string;
@@ -114,3 +114,4 @@ export function NotificationSettings(): JSX.Element {
     </div>
   );
 }
+

@@ -1,9 +1,7 @@
+import { MAX_NOTIFICATIONS, NOTIFICATIONS_SETTINGS_KEY, NOTIFICATIONS_HISTORY_KEY } from './notification.constants';
 import { create } from 'zustand'
 import { getSetting, setSetting } from '@/services/settingsService'
 
-const MAX_NOTIFICATIONS = 200
-const SETTINGS_KEY = 'notifications'
-const HISTORY_KEY = 'notificationHistory'
 
 export type NotificationType = 'transaction' | 'mining' | 'security' | 'info'
 
@@ -76,7 +74,7 @@ function createId(): string {
  * @returns Nothing.
  */
 function persistHistory(notifications: NotificationItem[]): void {
-  void setSetting(HISTORY_KEY, notifications).catch((err) => {
+  void setSetting(NOTIFICATIONS_HISTORY_KEY, notifications).catch((err) => {
     console.error('Failed to persist notification history', err)
   })
 }
@@ -95,8 +93,8 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
     if (get().hydrated) return
     try {
       const [storedSettings, storedHistory] = await Promise.all([
-        getSetting<Partial<NotificationSettings> | null>(SETTINGS_KEY),
-        getSetting<NotificationItem[] | null>(HISTORY_KEY)
+        getSetting<Partial<NotificationSettings> | null>(NOTIFICATIONS_SETTINGS_KEY),
+        getSetting<NotificationItem[] | null>(NOTIFICATIONS_HISTORY_KEY)
       ])
       set({
         settings: { ...DEFAULT_SETTINGS, ...(storedSettings ?? {}) },
@@ -148,7 +146,7 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
   updateSettings: (newSettings: Partial<NotificationSettings>) => {
     set((state) => {
       const settings = { ...state.settings, ...newSettings }
-      void setSetting(SETTINGS_KEY, settings).catch((err) => {
+      void setSetting(NOTIFICATIONS_SETTINGS_KEY, settings).catch((err) => {
         console.error('Failed to persist notification settings', err)
       })
       return { settings }
@@ -161,3 +159,4 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
     set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) }))
   }
 }))
+

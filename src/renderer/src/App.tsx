@@ -7,11 +7,11 @@ import { type DerivedAccount, getSetting } from '@/services'
 import { useUpdater, useMiningLogStream } from '@/hooks'
 import {
   useAppStore,
-  useNotificationStore,
 } from '@/store'
 import { useAuthStore } from '@/features/auth'
 
-import { Sidebar, ToastViewport, PairingApprovalModal, CustomTitleBar } from '@/components'
+import { Sidebar, PairingApprovalModal, CustomTitleBar } from '@/components'
+import { ToastViewport, useNotificationStore } from '@/features/notifications'
 import { useDappRequestHandler, useAutoLock } from '@/hooks'
 
 const Miner = lazy(() => import('@/features/mining').then((m) => ({ default: m.MiningView })))
@@ -192,6 +192,8 @@ function App(): JSX.Element {
 }
 
 export default App
+
+
 
 
 

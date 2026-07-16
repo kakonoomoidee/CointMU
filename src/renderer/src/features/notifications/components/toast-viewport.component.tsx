@@ -1,16 +1,10 @@
+import { TOAST_DURATION_MS, NOTIFICATION_COLORS_BY_TYPE } from '../notification.constants';
 import { type JSX, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { useNotificationStore, type NotificationItem, type NotificationType } from '@/store'
+import { useNotificationStore, type NotificationItem, type NotificationType } from '../notification.store'
 import { IconX } from '@/assets/icons'
 
-const TOAST_DURATION_MS = 5000
 
-const ACCENT_BY_TYPE: Record<NotificationType, string> = {
-  transaction: 'bg-blue-500',
-  mining: 'bg-emerald-500',
-  security: 'bg-red-500',
-  info: 'bg-slate-400'
-}
 
 interface ToastCardProps {
   toast: NotificationItem
@@ -31,7 +25,7 @@ function ToastCard({ toast, onDismiss }: ToastCardProps): JSX.Element {
 
   return (
     <div className="flex items-start gap-3 bg-white border border-slate-200 rounded-xl shadow-lg p-4 animate-in fade-in slide-in-from-right-4 duration-200">
-      <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${ACCENT_BY_TYPE[toast.type]}`} />
+      <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${NOTIFICATION_COLORS_BY_TYPE[toast.type]}`} />
       <div className="flex-1 min-w-0">
         <p className="text-sm font-bold text-slate-800">{toast.title}</p>
         <p className="text-xs text-slate-500 mt-0.5 break-words">{toast.message}</p>
@@ -67,3 +61,4 @@ export function ToastViewport(): JSX.Element | null {
     document.body
   )
 }
+

@@ -1,7 +1,4 @@
-import {
-  useNotificationStore,
-  type NotificationType
-} from '@/store/useNotificationStore'
+import { useNotificationStore, type NotificationType } from '@/features/notifications'
 
 /**
  * Maps a notification type to its governing category toggle. The generic 'info'
@@ -111,3 +108,4 @@ export function dispatchNotification(
     playNotificationSound()
   }
 }
+

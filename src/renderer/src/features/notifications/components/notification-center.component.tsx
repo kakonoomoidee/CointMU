@@ -1,14 +1,9 @@
+import { NOTIFICATION_COLORS_BY_TYPE } from '../notification.constants';
 import { type JSX, useState, useRef, useEffect } from 'react'
 import { formatDistanceToNow } from 'date-fns'
-import { useNotificationStore, type NotificationItem, type NotificationType } from '@/store'
+import { useNotificationStore, type NotificationItem, type NotificationType } from '../notification.store'
 import { IconBell } from '@/assets/icons'
 
-const DOT_BY_TYPE: Record<NotificationType, string> = {
-  transaction: 'bg-blue-500',
-  mining: 'bg-emerald-500',
-  security: 'bg-red-500',
-  info: 'bg-slate-400'
-}
 
 interface NotificationRowProps {
   notification: NotificationItem
@@ -29,7 +24,7 @@ function NotificationRow({ notification, onSelect }: NotificationRowProps): JSX.
         notification.isRead ? 'bg-white hover:bg-slate-50' : 'bg-blue-50/60 hover:bg-blue-50'
       }`}
     >
-      <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${DOT_BY_TYPE[notification.type]}`} />
+      <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${NOTIFICATION_COLORS_BY_TYPE[notification.type]}`} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
           <p className="text-sm font-bold text-slate-800 truncate">{notification.title}</p>
@@ -131,3 +126,4 @@ export function NotificationCenter(): JSX.Element {
     </div>
   )
 }
+

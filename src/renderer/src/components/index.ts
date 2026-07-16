@@ -9,8 +9,6 @@ export { Skeleton, SkeletonCard, SkeletonList, SkeletonTable } from './Skeletons
 
 export { ImportKeystoreModal } from './ImportKeystoreModal'
 export type { ImportKeystoreResult } from './ImportKeystoreModal'
-export { NotificationCenter } from './notifications/NotificationCenter'
-export { ToastViewport } from './notifications/ToastViewport'
 export { Sparkline } from './Sparkline'
 export { WalletHistoryFilter } from './WalletHistoryFilter'
 export type { WalletHistoryFilterProps } from './WalletHistoryFilter'
@@ -25,4 +23,5 @@ export { PairingApprovalModal } from './PairingApprovalModal'
 export * from './activity';
 
 export * from './layout';
+
 
