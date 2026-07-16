@@ -1,6 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Badge, StatCard, Sparkline } from "@/components";
+import { Badge, Sparkline } from '@/components'
+import { StatCard } from './stat-card.component'
 
 interface MiningStatsGridProps {
   elapsedTime: string;
@@ -79,3 +80,4 @@ function MiningStatsGrid({
 
 export { MiningStatsGrid };
 export type { MiningStatsGridProps };
+

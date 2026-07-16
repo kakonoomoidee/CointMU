@@ -1,6 +1,6 @@
 import { type JSX, type ReactNode } from 'react'
 import { cn } from '@/utils'
-import { Card } from './Card'
+import { Card } from '@/components'
 
 interface StatCardProps {
   label: string
@@ -48,3 +48,4 @@ function StatCard({
 
 export { StatCard }
 export type { StatCardProps }
+

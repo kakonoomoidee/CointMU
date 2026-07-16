@@ -1,6 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, StatusPill } from "@/components";
+import { Button } from '@/components'
+import { StatusPill } from './status-pill.component'
 import { IconSettings } from "@/assets/icons";
 
 interface MiningHeaderProps {
@@ -65,3 +66,4 @@ function MiningHeader({
 
 export { MiningHeader };
 export type { MiningHeaderProps };
+
