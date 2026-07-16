@@ -42,3 +42,7 @@ export const ACTIVITY_TABS = [
   ACTIVITY_TAB_LOG,
   ACTIVITY_TAB_ACTIVITY,
 ];
+
+export const HEATMAP_INTENSITY_LEGEND = ['bg-slate-100', 'bg-green-200', 'bg-green-400', 'bg-green-600'];
+export const HEATMAP_HALF_YEAR_LENGTH = 182;
+

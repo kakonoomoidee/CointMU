@@ -1,17 +1,12 @@
-import { type JSX } from "react";
-import { format, parseISO, getDay } from "date-fns";
-import { type ActivityContribution } from "@/services/activityService";
+import { type JSX } from 'react';
+import { useTranslation } from 'react-i18next';
+import { format, parseISO, getDay } from 'date-fns';
+import { type ActivityContribution } from '@/services/activityService';
+import { HEATMAP_INTENSITY_LEGEND, HEATMAP_HALF_YEAR_LENGTH } from '../mining.constants';
 
 interface ActivityHeatmapProps {
   contributions: ActivityContribution[];
 }
-
-const INTENSITY_LEGEND = [
-  "bg-slate-100",
-  "bg-green-200",
-  "bg-green-400",
-  "bg-green-600",
-];
 
 /**
  * Maps a day's total activity (validated blocks plus mining operations) to a
@@ -20,10 +15,10 @@ const INTENSITY_LEGEND = [
  * @returns The Tailwind background class for the cell.
  */
 function intensityClass(total: number): string {
-  if (total <= 0) return INTENSITY_LEGEND[0];
-  if (total <= 3) return INTENSITY_LEGEND[1];
-  if (total <= 8) return INTENSITY_LEGEND[2];
-  return INTENSITY_LEGEND[3];
+  if (total <= 0) return HEATMAP_INTENSITY_LEGEND[0];
+  if (total <= 3) return HEATMAP_INTENSITY_LEGEND[1];
+  if (total <= 8) return HEATMAP_INTENSITY_LEGEND[2];
+  return HEATMAP_INTENSITY_LEGEND[3];
 }
 
 interface ContributionCellProps {
@@ -39,8 +34,9 @@ interface ContributionCellProps {
 function ContributionCell({
   contribution,
 }: ContributionCellProps): JSX.Element {
+  const { t } = useTranslation();
   const total = contribution.blocksValidated + contribution.miningOperations;
-  const label = format(parseISO(contribution.date), "MMM d, yyyy");
+  const label = format(parseISO(contribution.date), 'MMM d, yyyy');
 
   return (
     <div className="relative group">
@@ -48,10 +44,10 @@ function ContributionCell({
       <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 whitespace-nowrap rounded-md bg-slate-900 px-2.5 py-1.5 text-[10px] text-white shadow-lg">
         <p className="font-bold">{label}</p>
         <p className="text-slate-300">
-          {contribution.blocksValidated} blocks validated
+          {contribution.blocksValidated} {t('mining.heatmap.blocksValidated')}
         </p>
         <p className="text-slate-300">
-          {contribution.miningOperations} mining operations
+          {contribution.miningOperations} {t('mining.heatmap.miningOperations')}
         </p>
       </div>
     </div>
@@ -89,8 +85,6 @@ function HeatmapGrid({ chunk }: HeatmapGridProps): JSX.Element {
   );
 }
 
-const HALF_YEAR_LENGTH = 182;
-
 /**
  * GitHub-style contribution heatmap rendering a full year of mining and
  * validation activity split into two stacked six-month grids. Each grid lays
@@ -103,8 +97,9 @@ const HALF_YEAR_LENGTH = 182;
 export function ActivityHeatmap({
   contributions,
 }: ActivityHeatmapProps): JSX.Element {
-  const firstHalf = contributions.slice(0, HALF_YEAR_LENGTH);
-  const secondHalf = contributions.slice(HALF_YEAR_LENGTH);
+  const { t } = useTranslation();
+  const firstHalf = contributions.slice(0, HEATMAP_HALF_YEAR_LENGTH);
+  const secondHalf = contributions.slice(HEATMAP_HALF_YEAR_LENGTH);
 
   return (
     <div>
@@ -116,11 +111,11 @@ export function ActivityHeatmap({
       </div>
 
       <div className="flex items-center justify-end gap-1.5 mt-3 text-[10px] font-medium text-slate-400">
-        <span>Less</span>
-        {INTENSITY_LEGEND.map((cls) => (
+        <span>{t('mining.heatmap.less')}</span>
+        {HEATMAP_INTENSITY_LEGEND.map((cls) => (
           <div key={cls} className={`w-3 h-3 rounded-sm ${cls}`} />
         ))}
-        <span>More</span>
+        <span>{t('mining.heatmap.more')}</span>
       </div>
     </div>
   );

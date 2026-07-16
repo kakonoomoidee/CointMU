@@ -1,5 +1,13 @@
 {
   "extension": {
+    "mining": {
+      "heatmap": {
+        "blocksValidated": "blocks validated",
+        "miningOperations": "mining operations",
+        "less": "Less",
+        "more": "More"
+      }
+    },
     "wallet": {
       "setupNetwork": "Setup Network",
       "linkToApp": "Link to CointMU App",
@@ -53,3 +61,4 @@
     }
   }
 }
+
