@@ -1,15 +1,7 @@
-import { type JSX } from 'react'
-import { useTranslation } from 'react-i18next'
-import { CustomDropdown } from '@/components/CustomDropdown'
-
-const LANGUAGE_OPTIONS = [
-  { label: 'English', value: 'en' },
-  { label: 'Bahasa Indonesia', value: 'id' },
-  { label: 'Español', value: 'es' },
-  { label: '中文', value: 'zh' },
-  { label: 'Русский', value: 'ru' },
-  { label: 'Deutsch', value: 'de' }
-]
+import { LANGUAGE_OPTIONS } from "../settings.constants";
+import { type JSX } from "react";
+import { useTranslation } from "react-i18next";
+import { CustomDropdown } from "@/components/CustomDropdown";
 
 /**
  * A UI component that allows users to toggle the application language
@@ -19,11 +11,16 @@ const LANGUAGE_OPTIONS = [
 function LanguageSwitcher(): JSX.Element {
   const { t, i18n } = useTranslation();
 
-  const handleLanguageChange = (option: { label: string; value: string }): void => {
-    void i18n.changeLanguage(option.value)
-  }
+  const handleLanguageChange = (option: {
+    label: string;
+    value: string;
+  }): void => {
+    void i18n.changeLanguage(option.value);
+  };
 
-  const selectedOption = LANGUAGE_OPTIONS.find((opt) => opt.value === i18n.language) || LANGUAGE_OPTIONS[0]
+  const selectedOption =
+    LANGUAGE_OPTIONS.find((opt) => opt.value === i18n.language) ||
+    LANGUAGE_OPTIONS[0];
 
   return (
     <div className="flex items-center justify-between p-4">
@@ -44,7 +41,7 @@ function LanguageSwitcher(): JSX.Element {
         />
       </div>
     </div>
-  )
+  );
 }
 
-export { LanguageSwitcher }
+export { LanguageSwitcher };

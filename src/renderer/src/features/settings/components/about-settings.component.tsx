@@ -1,12 +1,10 @@
+import { UPTIME_REFRESH_MS } from "../settings.constants";
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import ms from "ms";
 import { useUpdater } from "@/hooks";
 import { useAppStore } from "@/store";
 import { EXTERNAL_LINKS } from "@/constants";
 import { IconLayers } from "@/assets/icons";
-
-const UPTIME_REFRESH_MS = ms("1m");
 
 /**
  * Formats raw system uptime seconds into a readable string.
@@ -128,8 +126,10 @@ export function AboutSettings(): JSX.Element {
           <h1 className="text-2xl font-bold text-slate-900">CointMU</h1>
           <p className="text-sm font-medium text-slate-600 mt-1">
             Version {window.systemInfo?.version || "0.0.1"}
-            {window.systemInfo?.codename ? `-${window.systemInfo.codename}` : ""} (build{" "}
-            {window.systemInfo?.build || "00000000"}) {"\u2022"}{" "}
+            {window.systemInfo?.codename
+              ? `-${window.systemInfo.codename}`
+              : ""}{" "}
+            (build {window.systemInfo?.build || "00000000"}) {"\u2022"}{" "}
             {window.systemInfo?.platform || "Unknown"}
           </p>
           <p className="text-sm font-medium text-slate-400 mt-1">
@@ -281,7 +281,8 @@ export function AboutSettings(): JSX.Element {
                 {t("settings.about.nodeVersion")}
               </p>
               <span className="text-sm font-medium font-mono text-slate-600">
-                cointmu/v{sysInfo.version}-{sysInfo.codename || "stable"} (Node v{sysInfo.nodeVersion})
+                cointmu/v{sysInfo.version}-{sysInfo.codename || "stable"} (Node
+                v{sysInfo.nodeVersion})
               </span>
             </div>
 

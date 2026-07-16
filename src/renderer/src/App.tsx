@@ -8,8 +8,6 @@ import { useUpdater, useMiningLogStream } from '@/hooks'
 import {
   useAppStore,
   useNotificationStore,
-  useSecurityStore,
-  useAdvancedStore,
 } from '@/store'
 import { useAuthStore } from '@/features/auth'
 
@@ -18,7 +16,7 @@ import { useDappRequestHandler, useAutoLock } from '@/hooks'
 
 const Miner = lazy(() => import('@/features/mining').then((m) => ({ default: m.MiningView })))
 const Explorer = lazy(() => import('@/features/explorer').then((m) => ({ default: m.ExplorerView })))
-const Settings = lazy(() => import('@/views/Settings').then((m) => ({ default: m.Settings })))
+const Settings = lazy(() => import('@/features/settings').then((m) => ({ default: m.SettingsView })))
 
 const NAV_ITEM_DASHBOARD = 'dashboard'
 const NAV_ITEM_MINER = 'miner'
@@ -194,6 +192,8 @@ function App(): JSX.Element {
 }
 
 export default App
+
+
 
 
 

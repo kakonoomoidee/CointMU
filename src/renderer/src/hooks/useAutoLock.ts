@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import { useSecurityStore, useAppStore } from '@/store'
+import { useAppStore } from '@/store';
+import { useSecurityStore } from '@/features/settings';
 
 const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000 // 5 minutes
 
@@ -69,3 +70,4 @@ export function useAutoLock(onLock: () => void, isActive: boolean): void {
     }
   }, [onLock, isActive])
 }
+

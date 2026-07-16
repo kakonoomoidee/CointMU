@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDappStore, useAppStore } from '@/store';
-import { useConnectedSitesStore } from '@/features/wallet/connected-sites.store';
+import { useConnectedSitesStore } from '@/features/settings';
 import { resolveApprovalResult } from '@/utils/dappRpcResolver'
 
 /**
@@ -68,4 +68,5 @@ export function useDappRequestHandler(): void {
     return unsubscribe
   }, [connectedSites, activeAccount, setPendingDappRequest])
 }
+
 

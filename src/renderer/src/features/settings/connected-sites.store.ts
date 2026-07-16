@@ -1,4 +1,4 @@
-import { CONNECTED_SITES_SETTINGS_KEY } from "./wallet.constants";
+import { CONNECTED_SITES_SETTINGS_KEY } from "./settings.constants";
 import { create } from "zustand";
 import { getSetting, setSetting } from "@/services/settingsService";
 
