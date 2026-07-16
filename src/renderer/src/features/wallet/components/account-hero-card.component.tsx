@@ -1,18 +1,24 @@
-import { type JSX } from 'react'
-import { useTranslation } from 'react-i18next'
-import { QRCodeSVG } from 'qrcode.react'
-import { type DerivedAccount } from '@/services'
-import { AccountIcon } from '@/components'
-import { IconArrowUp, IconArrowDown, IconRefresh, IconCheck, IconCopy } from '@/assets/icons'
+import { type JSX } from "react";
+import { useTranslation } from "react-i18next";
+import { QRCodeSVG } from "qrcode.react";
+import { type DerivedAccount } from "@/services";
+import { AccountIcon } from "@/components";
+import {
+  IconArrowUp,
+  IconArrowDown,
+  IconRefresh,
+  IconCheck,
+  IconCopy,
+} from "@/assets/icons";
 
 interface AccountHeroCardProps {
-  activeAccount: DerivedAccount | undefined
-  activeGradient: string
-  balance: string
-  copied: boolean
-  onReceive: () => void
-  onSend: () => void
-  onCopy: () => void
+  activeAccount: DerivedAccount | undefined;
+  activeGradient: string;
+  balance: string;
+  copied: boolean;
+  onReceive: () => void;
+  onSend: () => void;
+  onCopy: () => void;
 }
 
 /**
@@ -27,9 +33,9 @@ function AccountHeroCard({
   copied,
   onReceive,
   onSend,
-  onCopy
+  onCopy,
 }: AccountHeroCardProps): JSX.Element {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <div className="rounded-2xl bg-gradient-to-br from-slate-800 via-slate-850 to-slate-950 p-7 text-white relative overflow-hidden">
@@ -39,16 +45,20 @@ function AccountHeroCard({
         <div className="flex items-start justify-between mb-5">
           <div className="flex items-center gap-3">
             <div className="flex-shrink-0 rounded-full overflow-hidden w-16 h-16">
-              <AccountIcon address={activeAccount?.address || ''} size={64} />
+              <AccountIcon address={activeAccount?.address || ""} size={64} />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <p className="text-sm font-semibold text-white">{activeAccount?.label}</p>
+                <p className="text-sm font-semibold text-white">
+                  {activeAccount?.label}
+                </p>
                 <span className="text-[9px] font-semibold tracking-wider uppercase text-white/50 bg-white/10 px-1.5 py-0.5 rounded">
                   EOA
                 </span>
               </div>
-              <p className="text-xs text-white/50 font-mono mt-0.5">{activeAccount?.address}</p>
+              <p className="text-xs text-white/50 font-mono mt-0.5">
+                {activeAccount?.address}
+              </p>
             </div>
           </div>
 
@@ -57,7 +67,10 @@ function AccountHeroCard({
             onClick={onReceive}
           >
             {activeAccount?.address ? (
-              <QRCodeSVG value={activeAccount.address} className="w-full h-full" />
+              <QRCodeSVG
+                value={activeAccount.address}
+                className="w-full h-full"
+              />
             ) : (
               <div className="w-full h-full bg-[repeating-conic-gradient(#000_0%_25%,#fff_0%_50%)] bg-[length:6px_6px] rounded-sm" />
             )}
@@ -69,7 +82,9 @@ function AccountHeroCard({
             <span className="text-4xl font-bold tracking-tight">{balance}</span>
             <span className="text-lg font-semibold text-white/60">CMU</span>
           </div>
-          <p className="text-sm text-white/40 mt-1">{t('wallet.balanceFromNode')}</p>
+          <p className="text-sm text-white/40 mt-1">
+            {t("wallet.balanceFromNode")}
+          </p>
         </div>
 
         <div className="flex items-center gap-2.5">
@@ -78,18 +93,18 @@ function AccountHeroCard({
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors"
           >
             <IconArrowUp width={12} height={12} strokeWidth={2.5} />
-            {t('wallet.send')}
+            {t("wallet.send")}
           </button>
           <button
             onClick={onReceive}
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors"
           >
             <IconArrowDown width={12} height={12} strokeWidth={2.5} />
-            {t('wallet.receive')}
+            {t("wallet.receive")}
           </button>
           <button className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors">
             <IconRefresh width={12} height={12} />
-            {t('wallet.swap')}
+            {t("wallet.swap")}
           </button>
           <button
             onClick={onCopy}
@@ -100,13 +115,13 @@ function AccountHeroCard({
             ) : (
               <IconCopy width={12} height={12} />
             )}
-            {copied ? t('wallet.copied') : t('wallet.copyAddress')}
+            {copied ? t("wallet.copied") : t("wallet.copyAddress")}
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export { AccountHeroCard }
-export type { AccountHeroCardProps }
+export { AccountHeroCard };
+export type { AccountHeroCardProps };

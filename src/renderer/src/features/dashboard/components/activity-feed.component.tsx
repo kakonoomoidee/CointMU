@@ -1,6 +1,6 @@
 import { type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityItem, type ActivityData } from '@/views/Wallet/ActivityItem'
+import { ActivityItem, type ActivityData } from '@/components'
 import { WalletHistoryFilter, Pagination } from '@/components'
 import { IconChevronRight, IconClock } from '@/assets/icons'
 import { downloadActivityCsv } from '@/utils'
@@ -95,3 +95,4 @@ function ActivityFeed({
 
 export { ActivityFeed }
 export type { ActivityFeedProps }
+

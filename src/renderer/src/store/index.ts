@@ -4,8 +4,6 @@ export type { AppState, HistoryFilter, PendingTransaction } from './useAppStore'
 export { useMiningStore } from './useMiningStore'
 export type { FoundBlock, MiningLog } from './useMiningStore'
 
-export { useWalletUiStore } from './useWalletUiStore'
-export type { WalletModalState, AddAccountType } from './useWalletUiStore'
 
 export { useNotificationStore } from './useNotificationStore'
 export type {
@@ -23,6 +21,6 @@ export type { AdvancedSettings, StorageInfo } from './useAdvancedStore'
 export { useDappStore } from './useDappStore'
 export type { DappRequest } from './useDappStore'
 
-export { useConnectedSitesStore } from './useConnectedSitesStore'
+
 
 

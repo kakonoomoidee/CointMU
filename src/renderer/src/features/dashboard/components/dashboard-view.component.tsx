@@ -7,11 +7,12 @@ import {
   useMiningControls,
   usePagination,
 } from "@/hooks";
-import { useAppStore, useMiningStore, useWalletUiStore } from "@/store";
+import { useAppStore, useMiningStore } from '@/store';
+import { useWalletUiStore } from '@/features/wallet/wallet-ui.store';
 import { getTransactions } from "@/services/transactionService";
 import { CacheService } from "@/services/cacheService";
 import { type DerivedAccount } from "@/services";
-import { type ActivityData } from "@/views/Wallet/ActivityItem";
+import { type ActivityData } from '@/components';
 import {
   formatBlockNumber,
   formatHashrate,
@@ -303,4 +304,6 @@ function DashboardView({
 }
 
 export { DashboardView };
+
+
 

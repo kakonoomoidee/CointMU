@@ -9,10 +9,14 @@ import { getAddressSummary, type DerivedAccount } from "@/services";
 import { getTransactions } from "@/services/transactionService";
 import { usePagination } from "@/hooks";
 import { formatTxAge } from "../explorer.utils";
-import { Sparkline, Pagination, AccountIcon } from "@/components";
+import {
+  Sparkline,
+  Pagination,
+  AccountIcon,
+  type ActivityData,
+} from "@/components";
 import { IconChevronLeft, IconFile, IconChevronRight } from "@/assets/icons";
 import { AddressBadge } from "./address-badge.component";
-import { type ActivityData } from "@/views/Wallet/ActivityItem";
 
 interface AddressDetailProps {
   address: string;

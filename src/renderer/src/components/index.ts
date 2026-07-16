@@ -23,3 +23,5 @@ export { IconEyeSlash } from '@/assets/icons'
 export type { IconProps } from '@/assets/icons'
 export { PairingApprovalModal } from './PairingApprovalModal'
 export { CustomTitleBar } from './CustomTitleBar'
+
+export * from './activity';

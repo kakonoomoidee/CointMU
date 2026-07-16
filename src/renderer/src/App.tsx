@@ -10,7 +10,6 @@ import {
   useNotificationStore,
   useSecurityStore,
   useAdvancedStore,
-  useConnectedSitesStore
 } from '@/store'
 import { useAuthStore } from '@/features/auth'
 
@@ -195,5 +194,6 @@ function App(): JSX.Element {
 }
 
 export default App
+
 
 

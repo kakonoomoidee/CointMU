@@ -12,7 +12,7 @@ import {
   useRef,
   useMemo,
   type JSX,
-  type FormEvent,
+  type SyntheticEvent,
 } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecentBlocks, usePagination } from "@/hooks";
@@ -25,7 +25,7 @@ import {
   type DerivedAccount,
 } from "@/services";
 import { formatBlockNumber } from "@/utils";
-import { type ActivityData } from "@/views/Wallet/ActivityItem";
+import { type ActivityData } from "@/components";
 import { Insights } from "./insights.component";
 import { ChainTimeline } from "./chain-timeline.component";
 import { Skeleton, SkeletonCard } from "@/components";
@@ -217,7 +217,7 @@ function ExplorerView({
     }
   };
 
-  const handleSearch = async (e: FormEvent): Promise<void> => {
+  const handleSearch = async (e: SyntheticEvent): Promise<void> => {
     e.preventDefault();
     const val = searchValue.trim();
     const type = detectSearchType(val);

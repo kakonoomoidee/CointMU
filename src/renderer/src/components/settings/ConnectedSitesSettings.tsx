@@ -1,6 +1,6 @@
 import { type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useConnectedSitesStore } from '@/store'
+import { useConnectedSitesStore } from '@/features/wallet/connected-sites.store';
 import { IconGlobe, IconLink, IconBox } from '@/assets/icons'
 
 /**
@@ -139,3 +139,4 @@ function ConnectedSitesSettings(): JSX.Element {
 }
 
 export { ConnectedSitesSettings }
+

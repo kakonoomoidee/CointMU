@@ -1,4 +1,4 @@
-import { type JSX, type FormEvent, type RefObject } from "react";
+import { type JSX, type SyntheticEvent, type RefObject } from "react";
 import { useTranslation } from "react-i18next";
 import { IconSearch } from "@/assets/icons";
 
@@ -6,7 +6,7 @@ interface ExplorerSearchProps {
   searchValue: string;
   searchInputRef: RefObject<HTMLInputElement | null>;
   onSearchValueChange: (value: string) => void;
-  onSubmit: (event: FormEvent) => void;
+  onSubmit: (event: SyntheticEvent) => void;
 }
 
 /**
