@@ -11,18 +11,7 @@ import { AdvancedSettings } from "./advanced-settings.component";
 import { AboutSettings } from "./about-settings.component";
 import { NotificationSettings } from "./notification-settings.component";
 import { getAllSettings, setSetting } from '@/features/settings';
-import {
-  IconSun,
-  IconImage,
-  IconBolt,
-  IconLayers,
-  IconLock,
-  IconSettings,
-  IconBox,
-  IconBell,
-  IconGlobe,
-  IconDownload,
-} from "@/assets/icons";
+import { Sun, Image, Zap, Layers, Lock, Settings, Box, Bell, Globe, Download } from 'lucide-react';
 
 export type SettingsCategory =
   | "general"
@@ -41,52 +30,52 @@ const CATEGORIES: { id: SettingsCategory; label: string; icon: JSX.Element }[] =
     {
       id: "general",
       label: "General",
-      icon: <IconSun width={16} height={16} strokeWidth={2.5} />,
+      icon: <Sun width={16} height={16} strokeWidth={2.5} />,
     },
     {
       id: "appearance",
       label: "Appearance",
-      icon: <IconImage width={16} height={16} />,
+      icon: <Image width={16} height={16} />,
     },
     {
       id: "notifications",
       label: "Notifications",
-      icon: <IconBell width={16} height={16} />,
+      icon: <Bell width={16} height={16} />,
     },
     {
       id: "network",
       label: "Network",
-      icon: <IconBolt width={16} height={16} strokeWidth={2.5} />,
+      icon: <Zap width={16} height={16} strokeWidth={2.5} />,
     },
     {
       id: "mining",
       label: "Mining",
-      icon: <IconLayers width={16} height={16} />,
+      icon: <Layers width={16} height={16} />,
     },
     {
       id: "security",
       label: "Security",
-      icon: <IconLock width={16} height={16} />,
+      icon: <Lock width={16} height={16} />,
     },
     {
       id: "connectedSites",
       label: "Connected Sites",
-      icon: <IconGlobe width={16} height={16} />,
+      icon: <Globe width={16} height={16} />,
     },
     {
       id: "externalSources",
       label: "External Sources",
-      icon: <IconDownload width={16} height={16} />,
+      icon: <Download width={16} height={16} />,
     },
     {
       id: "advanced",
       label: "Advanced",
-      icon: <IconSettings width={16} height={16} />,
+      icon: <Settings width={16} height={16} />,
     },
     {
       id: "about",
       label: "About",
-      icon: <IconBox width={16} height={16} />,
+      icon: <Box width={16} height={16} />,
     },
   ];
 

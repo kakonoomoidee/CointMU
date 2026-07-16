@@ -2,7 +2,7 @@ import { NOTIFICATION_COLORS_BY_TYPE } from '../notification.constants';
 import { type JSX, useState, useRef, useEffect } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import { useNotificationStore, type NotificationItem, type NotificationType } from '../notification.store'
-import { IconBell } from '@/assets/icons'
+import { Bell } from 'lucide-react'
 
 
 interface NotificationRowProps {
@@ -74,7 +74,7 @@ export function NotificationCenter(): JSX.Element {
         className="relative w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors focus:outline-none"
         aria-label="Notifications"
       >
-        <IconBell width={18} height={18} />
+        <Bell width={18} height={18} />
         {unreadCount > 0 && (
           <span className="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold text-white bg-red-500 rounded-full">
             {unreadCount > 99 ? '99+' : unreadCount}
@@ -115,7 +115,7 @@ export function NotificationCenter(): JSX.Element {
               ))
             ) : (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <IconBell className="text-slate-300 mb-2" width={28} height={28} strokeWidth={1.5} />
+                <Bell className="text-slate-300 mb-2" width={28} height={28} strokeWidth={1.5} />
                 <p className="text-sm font-medium text-slate-400">No notifications</p>
                 <p className="text-xs text-slate-400 mt-1">Events will appear here as they happen</p>
               </div>

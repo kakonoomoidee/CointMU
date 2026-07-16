@@ -1,7 +1,7 @@
 import { useState, type JSX } from 'react'
 import { ethers } from 'ethers'
 import { TokenService, type TokenInfo } from '@/services/tokenService'
-import { IconAlertCircle } from '@/assets/icons'
+import { AlertCircle } from 'lucide-react'
 
 interface AddTokenFormProps {
   onTokenAdded: () => void
@@ -75,7 +75,7 @@ function AddTokenForm({ onTokenAdded }: AddTokenFormProps): JSX.Element {
 
         {error && (
           <div className="flex items-center gap-2 text-red-500 bg-red-50 px-3 py-2 rounded-lg border border-red-100">
-            <IconAlertCircle width={14} height={14} className="flex-shrink-0" />
+            <AlertCircle width={14} height={14} className="flex-shrink-0" />
             <p className="text-xs font-medium">{error}</p>
           </div>
         )}

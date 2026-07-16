@@ -6,15 +6,7 @@ import {
   type SyntheticEvent,
   type JSX,
 } from "react";
-import {
-  IconKey,
-  IconEye,
-  IconEyeSlash,
-  IconCopy,
-  IconCheck,
-  IconAlertTriangle,
-  IconX,
-} from "@/assets/icons";
+import { Key, Eye, EyeOff, Copy, Check, AlertTriangle, X } from 'lucide-react';
 import { getSetting } from '@/features/settings'
 import { revealPrivateKey, type DerivedAccount } from '@/features/wallet';
 import { useAppStore } from "@/store";
@@ -167,13 +159,13 @@ export function RevealPrivateKeyModal({
           onClick={handleClose}
           className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors"
         >
-          <IconX width={20} height={20} strokeWidth={2.5} />
+          <X width={20} height={20} strokeWidth={2.5} />
         </button>
 
         <div className="p-8">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
-              <IconKey width={20} height={20} />
+              <Key width={20} height={20} />
             </div>
             <h3 className="text-xl font-bold text-slate-800">
               Reveal private key
@@ -184,7 +176,7 @@ export function RevealPrivateKeyModal({
           </p>
 
           <div className="flex items-start gap-3 p-4 mb-6 bg-red-50 border border-red-200 rounded-xl text-red-700">
-            <IconAlertTriangle
+            <AlertTriangle
               width={18}
               height={18}
               className="mt-0.5 shrink-0"
@@ -237,9 +229,9 @@ export function RevealPrivateKeyModal({
                     className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
                   >
                     {showPassword ? (
-                      <IconEyeSlash width={18} height={18} />
+                      <EyeOff width={18} height={18} />
                     ) : (
-                      <IconEye width={18} height={18} />
+                      <Eye width={18} height={18} />
                     )}
                   </button>
                 </div>
@@ -270,9 +262,9 @@ export function RevealPrivateKeyModal({
                     className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-700 transition-colors"
                   >
                     {unmasked ? (
-                      <IconEyeSlash width={14} height={14} />
+                      <EyeOff width={14} height={14} />
                     ) : (
-                      <IconEye width={14} height={14} />
+                      <Eye width={14} height={14} />
                     )}
                     {unmasked ? "Hide" : "Show"}
                   </button>
@@ -288,9 +280,9 @@ export function RevealPrivateKeyModal({
                 className="w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl shadow-sm shadow-blue-200 hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
               >
                 {copied ? (
-                  <IconCheck width={16} height={16} strokeWidth={2.5} />
+                  <Check width={16} height={16} strokeWidth={2.5} />
                 ) : (
-                  <IconCopy width={16} height={16} strokeWidth={2.5} />
+                  <Copy width={16} height={16} strokeWidth={2.5} />
                 )}
                 {copied ? "Copied to clipboard" : "Copy to clipboard"}
               </button>

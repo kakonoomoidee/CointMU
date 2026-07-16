@@ -1,7 +1,7 @@
 import { type JSX } from "react";
 import { type DerivedAccount } from '@/features/wallet';
 import { useWalletUiStore } from "../wallet-ui.store";
-import { IconX } from "@/assets/icons";
+import { X } from 'lucide-react';
 import { ReceiveModal } from "./receive-modal.component";
 import { SendModal } from "./send-modal.component";
 import { AddAccountModal } from "./add-account-modal.component";
@@ -52,7 +52,7 @@ function WalletModals({
           disabled={sendLoading}
           className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          <IconX width={20} height={20} strokeWidth={2.5} />
+          <X width={20} height={20} strokeWidth={2.5} />
         </button>
 
         {modalState === "RECEIVE" && (

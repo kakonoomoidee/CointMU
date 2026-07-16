@@ -1,11 +1,5 @@
 import { useEffect, useState, type SyntheticEvent, type JSX } from "react";
-import {
-  IconFileText,
-  IconEye,
-  IconEyeSlash,
-  IconCheck,
-  IconX,
-} from "@/assets/icons";
+import { FileText, Eye, EyeOff, Check, X } from 'lucide-react';
 import { generateKeystore, type DerivedAccount } from '@/features/wallet'
 import { getSetting } from '@/features/settings';
 import { useAppStore } from "@/store";
@@ -88,13 +82,13 @@ export function ExportKeystoreModal({
           onClick={onClose}
           className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors"
         >
-          <IconX width={20} height={20} strokeWidth={2.5} />
+          <X width={20} height={20} strokeWidth={2.5} />
         </button>
 
         <div className="p-8">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
-              <IconFileText width={20} height={20} />
+              <FileText width={20} height={20} />
             </div>
             <h3 className="text-xl font-bold text-slate-800">
               Export keystore
@@ -126,9 +120,9 @@ export function ExportKeystoreModal({
                     className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
                   >
                     {showPassword ? (
-                      <IconEyeSlash width={18} height={18} />
+                      <EyeOff width={18} height={18} />
                     ) : (
-                      <IconEye width={18} height={18} />
+                      <Eye width={18} height={18} />
                     )}
                   </button>
                 </div>
@@ -149,7 +143,7 @@ export function ExportKeystoreModal({
           ) : (
             <div className="space-y-4">
               <div className="flex items-start gap-3 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700">
-                <IconCheck
+                <Check
                   width={18}
                   height={18}
                   strokeWidth={2.5}

@@ -2,7 +2,7 @@ import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from '@/components'
 import { StatusPill } from './status-pill.component'
-import { IconSettings } from "@/assets/icons";
+import { Settings } from 'lucide-react';
 
 interface MiningHeaderProps {
   isMining: boolean;
@@ -54,7 +54,7 @@ function MiningHeader({
 
         <Button
           variant="secondary"
-          leftIcon={<IconSettings width={14} height={14} />}
+          leftIcon={<Settings width={14} height={14} />}
           onClick={() => onNavigate("settings", "mining")}
         >
           {t("mining.header.preferences")}

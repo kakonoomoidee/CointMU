@@ -1,6 +1,6 @@
 import { type JSX } from 'react'
 import { cn } from '@/utils'
-import { IconChevronDown } from '@/assets/icons'
+import { ChevronDown } from 'lucide-react'
 
 interface SelectOption {
   value: string
@@ -40,7 +40,7 @@ function Select({ value, options, onChange, className, ariaLabel }: SelectProps)
           </option>
         ))}
       </select>
-      <IconChevronDown
+      <ChevronDown
         width={12}
         height={12}
         className="pointer-events-none absolute right-2.5 text-slate-400"

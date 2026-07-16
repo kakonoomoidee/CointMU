@@ -1,5 +1,5 @@
 import { type JSX } from 'react'
-import { IconChevronLeft, IconChevronRight } from '@/assets/icons'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface PaginationProps {
   currentPage: number
@@ -34,7 +34,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps):
           aria-label="Previous page"
           className="flex items-center justify-center w-7 h-7 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          <IconChevronLeft width={14} height={14} strokeWidth={2.5} />
+          <ChevronLeft width={14} height={14} strokeWidth={2.5} />
         </button>
         <button
           onClick={() => onPageChange(currentPage + 1)}
@@ -42,7 +42,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps):
           aria-label="Next page"
           className="flex items-center justify-center w-7 h-7 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          <IconChevronRight width={14} height={14} strokeWidth={2.5} />
+          <ChevronRight width={14} height={14} strokeWidth={2.5} />
         </button>
       </div>
     </div>

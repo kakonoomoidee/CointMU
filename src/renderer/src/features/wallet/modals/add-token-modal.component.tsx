@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, type JSX, type FormEvent } from 'react'
 import { ethers } from 'ethers'
 import { TokenService, type TokenInfo } from '@/services/tokenService'
-import { IconX, IconAlertCircle } from '@/assets/icons'
+import { X, AlertCircle } from 'lucide-react'
 
 interface AddTokenModalProps {
   onClose: () => void
@@ -78,7 +78,7 @@ function AddTokenModal({ onClose, onTokenAdded }: AddTokenModalProps): JSX.Eleme
           disabled={isLoading}
           className='absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed'
         >
-          <IconX width={20} height={20} strokeWidth={2.5} />
+          <X width={20} height={20} strokeWidth={2.5} />
         </button>
 
         <div className='p-8'>
@@ -105,7 +105,7 @@ function AddTokenModal({ onClose, onTokenAdded }: AddTokenModalProps): JSX.Eleme
 
             {error && (
               <div className='flex items-start gap-2 text-red-600 bg-red-50 px-3 py-2.5 rounded-xl border border-red-100'>
-                <IconAlertCircle width={14} height={14} className='flex-shrink-0 mt-0.5' />
+                <AlertCircle width={14} height={14} className='flex-shrink-0 mt-0.5' />
                 <p className='text-xs font-medium leading-relaxed'>{error}</p>
               </div>
             )}

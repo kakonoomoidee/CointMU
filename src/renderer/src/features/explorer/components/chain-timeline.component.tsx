@@ -1,7 +1,7 @@
 import { CHAIN_TIMELINE_TICK_INTERVAL_MS as TICK_INTERVAL_MS } from "../explorer.constants";
 import { type JSX, useEffect, useState } from "react";
 import { useAppStore } from "@/store";
-import { IconX, IconAlertTriangle, IconCheck, IconCube } from "@/assets/icons";
+import { X, AlertTriangle, Check, Cube } from 'lucide-react';
 
 interface BlockItem {
   number: number;
@@ -74,7 +74,7 @@ export function ChainTimeline({
           {isOnline ? (
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
           ) : (
-            <IconX width={10} height={10} strokeWidth={3} />
+            <X width={10} height={10} strokeWidth={3} />
           )}
           <span className="text-[10px] font-bold">
             {isOnline ? "Updating - 3s" : "Offline"}
@@ -85,7 +85,7 @@ export function ChainTimeline({
       <div className="flex items-center gap-3 overflow-x-auto pb-4 pt-2 hide-scrollbar">
         {!isOnline ? (
           <div className="w-full py-8 flex flex-col items-center justify-center text-center">
-            <IconAlertTriangle
+            <AlertTriangle
               className="text-red-300 mb-2"
               width={28}
               height={28}
@@ -133,7 +133,7 @@ export function ChainTimeline({
                 >
                   {isMinedByMe && (
                     <div className="absolute -top-2 -right-2 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-sm border border-emerald-100">
-                      <IconCheck
+                      <Check
                         className="text-emerald-500"
                         width={12}
                         height={12}
@@ -161,7 +161,7 @@ export function ChainTimeline({
           })
         ) : (
           <div className="w-full py-8 flex flex-col items-center justify-center">
-            <IconCube
+            <Cube
               className="text-slate-300 mb-2"
               width={28}
               height={28}

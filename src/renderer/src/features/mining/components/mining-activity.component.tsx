@@ -12,7 +12,7 @@ import { useMemo, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { subDays, format, differenceInMinutes } from "date-fns";
 import { Card, WalletHistoryFilter, Pagination } from "@/components";
-import { IconCheck, IconCube } from "@/assets/icons";
+import { Check, Cube } from 'lucide-react';
 import { formatAge } from '@/utils';
 import { type FoundBlock, type HistoryFilter } from "@/store";
 import { type DerivedAccount } from '@/features/wallet';
@@ -119,7 +119,7 @@ function FoundBlocksPanel({
       <div className="relative z-0 h-[280px] overflow-y-auto pr-1">
         {minedBlocks.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <IconCube className="text-slate-300 mb-3" width={32} height={32} />
+            <Cube className="text-slate-300 mb-3" width={32} height={32} />
             <p className="text-sm font-medium text-slate-400">
               {t("mining.activity.noBlocks")}
             </p>
@@ -136,7 +136,7 @@ function FoundBlocksPanel({
               >
                 <div className="flex items-center gap-4">
                   <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-500">
-                    <IconCheck width={16} height={16} />
+                    <Check width={16} height={16} />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">

@@ -2,7 +2,7 @@ import { TOAST_DURATION_MS, NOTIFICATION_COLORS_BY_TYPE } from '../notification.
 import { type JSX, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useNotificationStore, type NotificationItem, type NotificationType } from '../notification.store'
-import { IconX } from '@/assets/icons'
+import { X } from 'lucide-react'
 
 
 
@@ -34,7 +34,7 @@ function ToastCard({ toast, onDismiss }: ToastCardProps): JSX.Element {
         onClick={() => onDismiss(toast.id)}
         className="text-slate-400 hover:text-slate-600 transition-colors shrink-0"
       >
-        <IconX width={16} height={16} strokeWidth={2.5} />
+        <X width={16} height={16} strokeWidth={2.5} />
       </button>
     </div>
   )

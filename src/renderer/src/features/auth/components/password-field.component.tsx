@@ -1,5 +1,5 @@
 import { type JSX } from 'react'
-import { IconEye, IconEyeSlash } from '@/assets/icons'
+import { Eye, EyeOff } from 'lucide-react'
 
 interface PasswordFieldProps {
   label: string
@@ -42,9 +42,9 @@ function PasswordField({
           className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
         >
           {show ? (
-            <IconEyeSlash width={18} height={18} />
+            <EyeOff width={18} height={18} />
           ) : (
-            <IconEye width={18} height={18} />
+            <Eye width={18} height={18} />
           )}
         </button>
       </div>

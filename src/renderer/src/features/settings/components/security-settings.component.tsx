@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { useSecurityStore } from "../security.store";
 import { useBiometrics, useHardwareDetection } from '@/features/settings';
-import { IconShieldCheck } from "@/assets/icons";
+import { ShieldCheck } from 'lucide-react';
 import { RevealPrivateKeyModal } from "../modals/reveal-private-key-modal.component";
 import { RecoveryPhraseModal } from "../modals/recovery-phrase-modal.component";
 import { ExportKeystoreModal } from "../modals/export-keystore-modal.component";
@@ -124,7 +124,7 @@ export function SecuritySettings(): JSX.Element {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm font-bold text-slate-800 flex items-center gap-2">
-                    <IconShieldCheck
+                    <ShieldCheck
                       className="text-emerald-500"
                       width={16}
                       height={16}

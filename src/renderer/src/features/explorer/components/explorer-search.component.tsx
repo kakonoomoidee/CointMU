@@ -1,6 +1,6 @@
 import { type JSX, type SyntheticEvent, type RefObject } from "react";
 import { useTranslation } from "react-i18next";
-import { IconSearch } from "@/assets/icons";
+import { Search } from 'lucide-react';
 
 interface ExplorerSearchProps {
   searchValue: string;
@@ -34,7 +34,7 @@ function ExplorerSearch({
 
       <form onSubmit={onSubmit} className="relative mb-4">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <IconSearch className="text-slate-400" width={20} height={20} />
+          <Search className="text-slate-400" width={20} height={20} />
         </div>
         <input
           ref={searchInputRef}

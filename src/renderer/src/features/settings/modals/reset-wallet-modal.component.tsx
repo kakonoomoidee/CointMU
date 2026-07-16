@@ -1,11 +1,6 @@
 import { RESET_CONFIRM_WORD } from "../settings.constants";
 import { useState, type SyntheticEvent, type JSX } from "react";
-import {
-  IconAlertTriangle,
-  IconEye,
-  IconEyeSlash,
-  IconX,
-} from "@/assets/icons";
+import { AlertTriangle, Eye, EyeOff, X } from 'lucide-react';
 import { getSetting } from '@/features/settings'
 import { verifyPassword, lockSession } from '@/features/wallet';
 
@@ -70,13 +65,13 @@ export function ResetWalletModal({
           onClick={onClose}
           className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors"
         >
-          <IconX width={20} height={20} strokeWidth={2.5} />
+          <X width={20} height={20} strokeWidth={2.5} />
         </button>
 
         <div className="p-8">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center text-red-600">
-              <IconAlertTriangle width={20} height={20} />
+              <AlertTriangle width={20} height={20} />
             </div>
             <h3 className="text-xl font-bold text-slate-800">Reset wallet</h3>
           </div>
@@ -85,7 +80,7 @@ export function ResetWalletModal({
           </p>
 
           <div className="flex items-start gap-3 p-4 mb-6 bg-red-50 border border-red-200 rounded-xl text-red-700">
-            <IconAlertTriangle
+            <AlertTriangle
               width={18}
               height={18}
               className="mt-0.5 shrink-0"
@@ -130,9 +125,9 @@ export function ResetWalletModal({
                   className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
                 >
                   {showPassword ? (
-                    <IconEyeSlash width={18} height={18} />
+                    <EyeOff width={18} height={18} />
                   ) : (
-                    <IconEye width={18} height={18} />
+                    <Eye width={18} height={18} />
                   )}
                 </button>
               </div>

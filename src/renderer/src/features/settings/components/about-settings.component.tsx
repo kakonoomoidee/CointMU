@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useUpdater } from "@/hooks";
 import { useAppStore } from "@/store";
 import { EXTERNAL_LINKS } from "@/constants";
-import { IconLayers } from "@/assets/icons";
+import { Layers } from 'lucide-react';
 
 /**
  * Formats raw system uptime seconds into a readable string.
@@ -120,7 +120,7 @@ export function AboutSettings(): JSX.Element {
     <div>
       <div className="flex items-start gap-6 mb-12">
         <div className="w-20 h-20 rounded-2xl bg-blue-500 flex items-center justify-center flex-shrink-0 shadow-md">
-          <IconLayers width={40} height={40} className="text-white" />
+          <Layers width={40} height={40} className="text-white" />
         </div>
         <div>
           <h1 className="text-2xl font-bold text-slate-900">CointMU</h1>

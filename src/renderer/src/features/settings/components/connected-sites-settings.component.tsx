@@ -1,7 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { useConnectedSitesStore } from "../connected-sites.store";
-import { IconGlobe, IconLink, IconBox } from "@/assets/icons";
+import { Globe, Link, Box } from 'lucide-react';
 
 /**
  * Settings view panel that displays the list of whitelisted dApp origins.
@@ -42,7 +42,7 @@ function ConnectedSitesSettings(): JSX.Element {
           <div
             className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isExtensionLinked ? "bg-green-100 border border-green-200" : "bg-slate-200 border border-slate-300"}`}
           >
-            <IconBox
+            <Box
               width={20}
               height={20}
               className={
@@ -81,7 +81,7 @@ function ConnectedSitesSettings(): JSX.Element {
         {connectedSites.length === 0 && !isExtensionLinked ? (
           <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
             <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-100">
-              <IconLink width={24} height={24} className="text-slate-300" />
+              <Link width={24} height={24} className="text-slate-300" />
             </div>
             <h3 className="text-sm font-semibold text-slate-700">
               {t("settings.connectedSites.emptyTitle")}
@@ -96,7 +96,7 @@ function ConnectedSitesSettings(): JSX.Element {
               <li className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center flex-shrink-0">
-                    <IconBox
+                    <Box
                       width={20}
                       height={20}
                       className="text-indigo-500"
@@ -140,7 +140,7 @@ function ConnectedSitesSettings(): JSX.Element {
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0">
-                    <IconGlobe
+                    <Globe
                       width={20}
                       height={20}
                       className="text-blue-500"

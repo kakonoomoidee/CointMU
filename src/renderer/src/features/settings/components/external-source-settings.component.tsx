@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { IconDownload, IconBox } from "@/assets/icons";
+import { Download, Box } from 'lucide-react';
 
 /**
  * Settings view panel that allows the user to export the bundled companion
@@ -39,7 +39,7 @@ function ExternalSourceSettings(): JSX.Element {
 
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm p-6 flex items-start gap-4">
         <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0 border border-blue-100">
-          <IconBox width={24} height={24} className="text-blue-500" />
+          <Box width={24} height={24} className="text-blue-500" />
         </div>
         <div className="flex-1">
           <h3 className="text-sm font-bold text-slate-800">
@@ -57,7 +57,7 @@ function ExternalSourceSettings(): JSX.Element {
           disabled={isExporting}
           className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-500 hover:bg-blue-600 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <IconDownload width={16} height={16} />
+          <Download width={16} height={16} />
           {isExporting
             ? t("settings.externalSources.saving")
             : t("settings.externalSources.download")}

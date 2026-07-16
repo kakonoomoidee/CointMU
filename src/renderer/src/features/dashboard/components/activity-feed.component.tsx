@@ -2,7 +2,7 @@ import { type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityItem, type ActivityData } from '@/components'
 import { WalletHistoryFilter, Pagination } from '@/components'
-import { IconChevronRight, IconClock } from '@/assets/icons'
+import { ChevronRight, Clock } from 'lucide-react'
 import { downloadActivityCsv } from '@/utils'
 import { type DerivedAccount } from '@/features/wallet'
 import { type HistoryFilter } from '@/store'
@@ -58,7 +58,7 @@ function ActivityFeed({
           className="text-[11px] font-semibold text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-0.5 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {t('dashboard.activityFeed.export')}
-          <IconChevronRight width={10} height={10} strokeWidth={3} />
+          <ChevronRight width={10} height={10} strokeWidth={3} />
         </button>
       </div>
 
@@ -83,7 +83,7 @@ function ActivityFeed({
           </>
         ) : (
           <div className="py-8 flex flex-col items-center justify-center">
-            <IconClock className="text-slate-300 mb-2" width={28} height={28} strokeWidth={1.5} />
+            <Clock className="text-slate-300 mb-2" width={28} height={28} strokeWidth={1.5} />
             <p className="text-sm font-medium text-slate-400">{t('dashboard.activityFeed.noActivity')}</p>
             <p className="text-[10px] text-slate-400 mt-0.5">{t('dashboard.activityFeed.startMining')}</p>
           </div>

@@ -3,7 +3,7 @@ import { type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../auth.store'
 import { PasswordField } from './password-field.component'
-import { IconLock } from '@/assets/icons'
+import { Lock } from 'lucide-react'
 
 
 interface SecureWalletStepProps {
@@ -74,7 +74,7 @@ function SecureWalletStep({ onSave, onBack }: SecureWalletStepProps): JSX.Elemen
           disabled={!isValid}
           className="flex-[2] py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <IconLock width={16} height={16} strokeWidth={2.5} />
+          <Lock width={16} height={16} strokeWidth={2.5} />
           {t('auth.secureWallet.encryptAndSave')}
         </button>
       </div>

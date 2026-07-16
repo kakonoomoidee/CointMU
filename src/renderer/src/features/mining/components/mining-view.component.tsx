@@ -11,7 +11,7 @@ import { useMiningStore, useAppStore, type FoundBlock } from "@/store";
 import { type DerivedAccount } from '@/features/wallet';
 import { formatMhs, isWithinLastDay, getSafeConcurrency, formatRewards, formatDifficultyLabel } from '@/utils'
 import { resolveHistoryAddresses, filterFoundBlocks } from '@/features/wallet/utils/history.util';
-import { IconAlertCircle } from "@/assets/icons";
+import { AlertCircle } from 'lucide-react';
 import { MiningHeader } from "./mining-header.component";
 import { MiningHeroCard } from './mining-hero-card.component';
 import { useRecentBlocks } from '@/features/explorer';
@@ -168,7 +168,7 @@ function MiningView({ accounts, onNavigate }: MinerProps): JSX.Element {
 
         {error && (
           <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 flex items-center gap-3">
-            <IconAlertCircle
+            <AlertCircle
               className="text-red-500 flex-shrink-0"
               width={16}
               height={16}

@@ -1,7 +1,7 @@
 import { type JSX, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type AuthStep, type ImportMethod } from '../auth.store'
-import { IconBolt } from '@/assets/icons'
+import { Zap } from 'lucide-react'
 
 interface AuthShellProps {
   step: AuthStep
@@ -74,7 +74,7 @@ function AuthShell({ step, importMethod, children }: AuthShellProps): JSX.Elemen
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 text-slate-800">
       <div className="w-full max-w-md p-10 bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col items-center">
         <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-md mb-8">
-          <IconBolt color="white" width={40} height={40} />
+          <Zap color="white" width={40} height={40} />
         </div>
 
         <h1 className="text-2xl font-bold tracking-tight mb-2 text-center">{title}</h1>

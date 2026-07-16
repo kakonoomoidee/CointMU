@@ -2,7 +2,7 @@ import { type JSX, type MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { type DerivedAccount } from '@/features/wallet';
 import { AccountIcon } from '@/features/wallet';
-import { IconPlus, IconEyeSlash } from "@/assets/icons";
+import { Plus, EyeOff } from 'lucide-react';
 
 const WATCH_LIST: never[] = [];
 
@@ -47,7 +47,7 @@ function AccountSidebar({
             onClick={onDeriveAccount}
             className="w-5 h-5 rounded flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
           >
-            <IconPlus width={14} height={14} strokeWidth={2.5} />
+            <Plus width={14} height={14} strokeWidth={2.5} />
           </button>
         </div>
 
@@ -99,7 +99,7 @@ function AccountSidebar({
                       className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-slate-600 bg-white/80 backdrop-blur-sm rounded-full p-1.5 shadow-sm"
                       title={t("wallet.sidebar.hideAccount")}
                     >
-                      <IconEyeSlash width={14} height={14} strokeWidth={2.5} />
+                      <EyeOff width={14} height={14} strokeWidth={2.5} />
                     </div>
                   )}
                 </button>

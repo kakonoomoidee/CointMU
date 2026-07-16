@@ -1,12 +1,6 @@
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  IconBox,
-  IconClock,
-  IconArrowUp,
-  IconUsers,
-  IconZap,
-} from "@/assets/icons";
+import { Box, Clock, ArrowUp, Users, Zap } from 'lucide-react';
 
 interface InsightsProps {
   insights: {
@@ -53,7 +47,7 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
       <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-5 h-5 rounded bg-blue-50 flex items-center justify-center">
-            <IconBox
+            <Box
               className="text-blue-500"
               width={12}
               height={12}
@@ -73,7 +67,7 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
       <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-5 h-5 rounded bg-indigo-50 flex items-center justify-center">
-            <IconClock
+            <Clock
               className="text-indigo-500"
               width={12}
               height={12}
@@ -93,7 +87,7 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
       <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-5 h-5 rounded bg-emerald-50 flex items-center justify-center">
-            <IconArrowUp
+            <ArrowUp
               className="text-emerald-500"
               width={12}
               height={12}
@@ -113,7 +107,7 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
       <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-5 h-5 rounded bg-amber-50 flex items-center justify-center">
-            <IconUsers
+            <Users
               className="text-amber-500"
               width={12}
               height={12}
@@ -133,7 +127,7 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
       <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-5 h-5 rounded bg-fuchsia-50 flex items-center justify-center">
-            <IconZap
+            <Zap
               className="text-fuchsia-500"
               width={12}
               height={12}

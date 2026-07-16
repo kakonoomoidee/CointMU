@@ -1,7 +1,7 @@
 import { type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../auth.store'
-import { IconFileText, IconChevronRight, IconKey, IconDownload } from '@/assets/icons'
+import { FileText, ChevronRight, Key, Download } from 'lucide-react'
 
 interface ImportWalletStepProps {
   mode: 'method' | 'input'
@@ -42,14 +42,14 @@ function ImportWalletStep({
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-colors">
-              <IconFileText width={20} height={20} />
+              <FileText width={20} height={20} />
             </div>
             <div className="text-left">
               <p className="text-sm font-bold text-slate-800">{t('auth.importWallet.seedPhraseTitle')}</p>
               <p className="text-[10px] text-slate-500">{t('auth.importWallet.seedPhraseDesc')}</p>
             </div>
           </div>
-          <IconChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
+          <ChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
         </button>
 
         <button
@@ -58,14 +58,14 @@ function ImportWalletStep({
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
-              <IconKey width={20} height={20} />
+              <Key width={20} height={20} />
             </div>
             <div className="text-left">
               <p className="text-sm font-bold text-slate-800">{t('auth.importWallet.privateKeyTitle')}</p>
               <p className="text-[10px] text-slate-500">{t('auth.importWallet.privateKeyDesc')}</p>
             </div>
           </div>
-          <IconChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
+          <ChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
         </button>
 
         {onSelectKeystore && (
@@ -75,14 +75,14 @@ function ImportWalletStep({
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
-                <IconDownload width={20} height={20} />
+                <Download width={20} height={20} />
               </div>
               <div className="text-left">
                 <p className="text-sm font-bold text-slate-800">{t('auth.importWallet.keystoreTitle')}</p>
                 <p className="text-[10px] text-slate-500">{t('auth.importWallet.keystoreDesc')}</p>
               </div>
             </div>
-            <IconChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
+            <ChevronRight className="text-slate-300 group-hover:text-blue-500 transition-colors" width={20} height={20} strokeWidth={2.5} />
           </button>
         )}
 

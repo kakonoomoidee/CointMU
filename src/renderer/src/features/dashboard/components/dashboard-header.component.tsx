@@ -1,6 +1,6 @@
 import { type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
-import { IconArrowDown, IconArrowUp } from '@/assets/icons'
+import { ArrowDown, ArrowUp } from 'lucide-react'
 
 interface DashboardHeaderProps {
   isConnected: boolean
@@ -43,7 +43,7 @@ function DashboardHeader({ isConnected, onReceive, onSend }: DashboardHeaderProp
           onClick={onReceive}
           className="flex items-center gap-2 px-5 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
         >
-          <IconArrowDown width={14} height={14} />
+          <ArrowDown width={14} height={14} />
           {t('dashboard.header.receive')}
         </button>
 
@@ -51,7 +51,7 @@ function DashboardHeader({ isConnected, onReceive, onSend }: DashboardHeaderProp
           onClick={onSend}
           className="flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200"
         >
-          <IconArrowUp width={14} height={14} strokeWidth={2.5} />
+          <ArrowUp width={14} height={14} strokeWidth={2.5} />
           {t('dashboard.header.send')}
         </button>
       </div>

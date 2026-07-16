@@ -1,7 +1,7 @@
 import { MOCK_USD_RATE } from "../explorer.constants";
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { IconChevronLeft, IconCheck, IconAlertCircle } from "@/assets/icons";
+import { ChevronLeft, Check, AlertCircle } from 'lucide-react';
 import { getTransactionDetail, type TransactionDetailData } from '@/features/explorer';
 import { useAppStore } from "@/store";
 import { AddressBadge } from "./address-badge.component";
@@ -85,7 +85,7 @@ function TransactionDetail({
           onClick={onBack}
           className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors shadow-sm"
         >
-          <IconChevronLeft width={12} height={12} strokeWidth={2.5} />
+          <ChevronLeft width={12} height={12} strokeWidth={2.5} />
           {t("explorer.txDetail.back")}
         </button>
 
@@ -106,9 +106,9 @@ function TransactionDetail({
                 }`}
               >
                 {isSuccess ? (
-                  <IconCheck width={10} height={10} strokeWidth={3} />
+                  <Check width={10} height={10} strokeWidth={3} />
                 ) : (
-                  <IconAlertCircle width={10} height={10} />
+                  <AlertCircle width={10} height={10} />
                 )}
                 {isSuccess
                   ? t("explorer.txDetail.success")
@@ -151,9 +151,9 @@ function TransactionDetail({
                 }`}
               >
                 {isSuccess ? (
-                  <IconCheck width={10} height={10} strokeWidth={3} />
+                  <Check width={10} height={10} strokeWidth={3} />
                 ) : (
-                  <IconAlertCircle width={10} height={10} />
+                  <AlertCircle width={10} height={10} />
                 )}
                 {statusLabel}
               </span>

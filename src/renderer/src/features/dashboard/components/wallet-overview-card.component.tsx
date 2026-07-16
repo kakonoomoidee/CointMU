@@ -1,6 +1,6 @@
 import { type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
-import { IconWallet, IconCopy, IconArrowUp, IconArrowDown, IconLock, IconActivity } from '@/assets/icons'
+import { Wallet, Copy, ArrowUp, ArrowDown, Lock, Activity } from 'lucide-react'
 
 interface WalletOverviewCardProps {
   balance: string
@@ -32,7 +32,7 @@ function WalletOverviewCard({
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-              <IconWallet className="w-5 h-5" />
+              <Wallet className="w-5 h-5" />
             </div>
             <div>
               <p className="text-sm font-semibold text-white/90">{walletLabel}</p>
@@ -46,7 +46,7 @@ function WalletOverviewCard({
           </div>
 
           <button className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-sm text-xs font-medium text-white/90 hover:bg-white/25 transition-colors">
-              <IconCopy className="w-3 h-3" />
+              <Copy className="w-3 h-3" />
             {t('dashboard.walletOverview.copy')}
           </button>
         </div>
@@ -61,19 +61,19 @@ function WalletOverviewCard({
 
         <div className="flex items-center gap-2.5">
           <button className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/25 transition-colors">
-            <IconArrowUp className="w-3 h-3 text-white" strokeWidth={2.5} />
+            <ArrowUp className="w-3 h-3 text-white" strokeWidth={2.5} />
             {t('dashboard.walletOverview.send')}
           </button>
           <button className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/25 transition-colors">
-            <IconArrowDown className="w-3 h-3 text-white" strokeWidth={2.5} />
+            <ArrowDown className="w-3 h-3 text-white" strokeWidth={2.5} />
             {t('dashboard.walletOverview.receive')}
           </button>
           <button className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/25 transition-colors">
-            <IconLock className="w-3 h-3" />
+            <Lock className="w-3 h-3" />
             {t('dashboard.walletOverview.stake')}
           </button>
           <button className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/25 transition-colors">
-            <IconActivity className="w-3 h-3" />
+            <Activity className="w-3 h-3" />
             {t('dashboard.walletOverview.miningLive')}
           </button>
         </div>

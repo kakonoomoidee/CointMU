@@ -2,7 +2,7 @@ import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { type BlockData } from "@/hooks";
 import { useAppStore } from "@/store";
-import { IconChevronRight, IconSquare, IconCube } from "@/assets/icons";
+import { ChevronRight, Square, Cube } from 'lucide-react';
 import { formatRelativeAge } from '../dashboard.utils';
 
 interface LatestBlocksProps {
@@ -47,7 +47,7 @@ function LatestBlocks({
           className="text-[11px] font-semibold text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-0.5"
         >
           {t("dashboard.latestBlocks.viewAll")}
-          <IconChevronRight width={10} height={10} strokeWidth={3} />
+          <ChevronRight width={10} height={10} strokeWidth={3} />
         </button>
       </div>
       <p className="text-[10px] text-slate-400 mb-4">
@@ -62,7 +62,7 @@ function LatestBlocks({
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-                <IconSquare className="text-blue-500" width={14} height={14} />
+                <Square className="text-blue-500" width={14} height={14} />
               </div>
               <div>
                 <div className="flex items-center gap-2">
@@ -95,7 +95,7 @@ function LatestBlocks({
 
         {isConnected && recentBlocks.length === 0 && (
           <div className="py-8 flex flex-col items-center justify-center">
-            <IconCube
+            <Cube
               className="text-slate-300 mb-2"
               width={28}
               height={28}

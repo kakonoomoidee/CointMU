@@ -1,7 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { hexToAscii, formatTxAge } from "../explorer.utils";
-import { IconChevronLeft, IconSquare, IconFile } from "@/assets/icons";
+import { ChevronLeft, Square, File } from 'lucide-react';
 import { AddressBadge } from "./address-badge.component";
 
 interface BlockDetailProps {
@@ -34,7 +34,7 @@ function BlockDetail({
         onClick={onBack}
         className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors shadow-sm"
       >
-        <IconChevronLeft width={12} height={12} strokeWidth={2.5} />
+        <ChevronLeft width={12} height={12} strokeWidth={2.5} />
         {t("explorer.blockDetail.back")}
       </button>
 
@@ -208,7 +208,7 @@ function BlockDetail({
                     <div
                       className={`w-8 h-8 rounded-lg flex items-center justify-center ${isCurrent ? "bg-blue-500 text-white shadow-sm shadow-blue-200" : "bg-slate-100 text-slate-400"}`}
                     >
-                      <IconSquare width={14} height={14} strokeWidth={2.5} />
+                      <Square width={14} height={14} strokeWidth={2.5} />
                     </div>
                     <span
                       className={`text-sm font-mono font-bold cursor-pointer hover:underline ${isCurrent ? "text-blue-700" : "text-slate-500"}`}
@@ -264,7 +264,7 @@ function BlockDetail({
                   <td className="px-2 py-3.5">
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded bg-blue-50 flex items-center justify-center text-blue-500 flex-shrink-0">
-                        <IconFile width={10} height={10} />
+                        <File width={10} height={10} />
                       </div>
                       <span
                         className="text-xs font-mono text-blue-600 cursor-pointer hover:underline"

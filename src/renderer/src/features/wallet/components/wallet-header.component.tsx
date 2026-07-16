@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { IconPlus } from "@/assets/icons";
+import { Plus } from 'lucide-react';
 
 interface WalletHeaderProps {
   onAddAccount: () => void;
@@ -43,7 +43,7 @@ function WalletHeader({ onAddAccount }: WalletHeaderProps): JSX.Element {
           onClick={onAddAccount}
           className="flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200"
         >
-          <IconPlus width={12} height={12} strokeWidth={3} />
+          <Plus width={12} height={12} strokeWidth={3} />
           {t("wallet.header.newAccount")}
         </button>
       </div>

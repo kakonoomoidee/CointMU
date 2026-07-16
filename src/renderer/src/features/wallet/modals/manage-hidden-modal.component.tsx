@@ -1,7 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { type DerivedAccount } from '@/features/wallet';
-import { IconEye } from "@/assets/icons";
+import { Eye } from 'lucide-react';
 
 interface ManageHiddenModalProps {
   accounts: DerivedAccount[];
@@ -54,7 +54,7 @@ function ManageHiddenModal({
                 className="flex-shrink-0 w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all flex items-center justify-center shadow-sm"
                 title={t("wallet.modals.manageHidden.unhideTooltip")}
               >
-                <IconEye width={14} height={14} strokeWidth={2.5} />
+                <Eye width={14} height={14} strokeWidth={2.5} />
               </button>
             </div>
           ))

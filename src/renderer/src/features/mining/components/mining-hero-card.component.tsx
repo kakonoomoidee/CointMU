@@ -2,7 +2,7 @@ import { BLOCK_REWARD_CMU } from "../mining.constants";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components";
-import { IconPlay, IconStop } from "@/assets/icons";
+import { Play, Stop } from 'lucide-react';
 import { NonceCounter } from "./nonce-counter.component";
 
 interface MiningHeroCardProps {
@@ -138,7 +138,7 @@ function MiningHeroCard({
               size="lg"
               onClick={() => onToggle(false)}
               disabled={toggling}
-              leftIcon={<IconStop width={14} height={14} />}
+              leftIcon={<Stop width={14} height={14} />}
             >
               {toggling
                 ? t("mining.hero.stopping")
@@ -261,7 +261,7 @@ function MiningHeroCard({
                   ? t("mining.hero.nodeSyncingTooltip")
                   : ""
             }
-            leftIcon={<IconPlay width={14} height={14} />}
+            leftIcon={<Play width={14} height={14} />}
           >
             {toggling
               ? t("mining.hero.starting")

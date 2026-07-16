@@ -2,7 +2,7 @@ import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { QRCodeSVG } from "qrcode.react";
 import { type DerivedAccount } from '@/features/wallet';
-import { IconCheck, IconCopy } from "@/assets/icons";
+import { Check, Copy } from 'lucide-react';
 
 interface ReceiveModalProps {
   activeAccount: DerivedAccount | undefined;
@@ -52,9 +52,9 @@ function ReceiveModal({
         className="w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl shadow-sm shadow-blue-200 hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
       >
         {copied ? (
-          <IconCheck width={16} height={16} strokeWidth={2.5} />
+          <Check width={16} height={16} strokeWidth={2.5} />
         ) : (
-          <IconCopy width={16} height={16} strokeWidth={2.5} />
+          <Copy width={16} height={16} strokeWidth={2.5} />
         )}
         {copied
           ? t("wallet.modals.receive.copiedBtn")

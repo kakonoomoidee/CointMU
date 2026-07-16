@@ -1,7 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { AccountIcon } from "@/components";
-import { IconCopy } from "@/assets/icons";
+import { Copy } from 'lucide-react';
 
 interface AddressBadgeProps {
   address: string | null;
@@ -57,7 +57,7 @@ function AddressBadge({
       >
         {display}
       </span>
-      <IconCopy
+      <Copy
         className="text-slate-300 ml-0.5 cursor-pointer hover:text-slate-500"
         width={12}
         height={12}

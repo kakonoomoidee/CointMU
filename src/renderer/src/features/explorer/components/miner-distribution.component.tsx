@@ -10,7 +10,7 @@ import {
   type MinerEntry,
 } from "@/utils/minerDistribution";
 import { CacheService } from "@/services/cacheService";
-import { IconActivity } from "@/assets/icons";
+import { Activity } from 'lucide-react';
 
 interface MinerDistributionProps {
   activeWalletAddress: string | null;
@@ -144,7 +144,7 @@ export function MinerDistribution({
         </div>
       ) : isEmpty ? (
         <div className="flex-1 flex flex-col items-center justify-center py-8 text-center">
-          <IconActivity
+          <Activity
             className="text-slate-300 mb-2"
             width={28}
             height={28}

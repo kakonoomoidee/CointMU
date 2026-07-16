@@ -12,7 +12,7 @@ import { CacheService } from "@/services/cacheService";
 import { SkeletonList, SkeletonTable, Pagination } from '@/components'
 import { AddTokenModal, TokenIcon } from '@/features/wallet'
 import { NFTGrid } from '@/features/nft'
-import { IconBolt, IconPlus } from "@/assets/icons";
+import { Zap, Plus } from 'lucide-react';
 import { useAppStore, type PendingTransaction } from "@/store";
 import { useNFTFetcher } from '@/features/nft';
 
@@ -204,7 +204,7 @@ function WalletTabs({
             onClick={() => setIsAddTokenModalOpen(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all duration-150 shadow-sm"
           >
-            <IconPlus width={12} height={12} strokeWidth={2.5} />
+            <Plus width={12} height={12} strokeWidth={2.5} />
             Add Token
           </button>
         )}
@@ -230,7 +230,7 @@ function WalletTabs({
               ))
             ) : (
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <IconBolt
+                <Zap
                   className="text-slate-300 mb-3"
                   width={32}
                   height={32}

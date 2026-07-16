@@ -1,7 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { useWalletUiStore } from "../wallet-ui.store";
-import { IconDownload, IconLock, IconFileText } from "@/assets/icons";
+import { Download, Lock, FileText } from 'lucide-react';
 
 interface AddAccountModalProps {
   onImport: () => void;
@@ -42,7 +42,7 @@ function AddAccountModal({
             className="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50 transition-all text-left"
           >
             <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-500 flex items-center justify-center flex-shrink-0">
-              <IconDownload width={20} height={20} strokeWidth={2.5} />
+              <Download width={20} height={20} strokeWidth={2.5} />
             </div>
             <div>
               <p className="text-sm font-bold text-slate-800">
@@ -58,7 +58,7 @@ function AddAccountModal({
             className="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-purple-300 hover:bg-purple-50 transition-all text-left"
           >
             <div className="w-10 h-10 rounded-full bg-purple-100 text-purple-500 flex items-center justify-center flex-shrink-0">
-              <IconLock width={20} height={20} strokeWidth={2.5} />
+              <Lock width={20} height={20} strokeWidth={2.5} />
             </div>
             <div>
               <p className="text-sm font-bold text-slate-800">
@@ -74,7 +74,7 @@ function AddAccountModal({
             className="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all text-left"
           >
             <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center flex-shrink-0">
-              <IconFileText width={20} height={20} strokeWidth={2.5} />
+              <FileText width={20} height={20} strokeWidth={2.5} />
             </div>
             <div>
               <p className="text-sm font-bold text-slate-800">

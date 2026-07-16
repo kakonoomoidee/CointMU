@@ -16,7 +16,7 @@ import {
   AccountIcon,
   type ActivityData,
 } from "@/components";
-import { IconChevronLeft, IconFile, IconChevronRight } from "@/assets/icons";
+import { ChevronLeft, File, ChevronRight } from 'lucide-react';
 import { AddressBadge } from "./address-badge.component";
 
 interface AddressDetailProps {
@@ -130,7 +130,7 @@ function AddressDetail({
             onClick={onBack}
             className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors shadow-sm"
           >
-            <IconChevronLeft width={12} height={12} strokeWidth={2.5} />
+            <ChevronLeft width={12} height={12} strokeWidth={2.5} />
             {t("explorer.addressDetail.back")}
           </button>
           <div>
@@ -303,7 +303,7 @@ function AddressDetail({
                     <td className="px-2 py-2.5">
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 rounded bg-blue-50 flex items-center justify-center text-blue-500 flex-shrink-0">
-                          <IconFile width={10} height={10} />
+                          <File width={10} height={10} />
                         </div>
                         {tx.hash ? (
                           <span
@@ -329,7 +329,7 @@ function AddressDetail({
                     </td>
                     <td className="px-2 py-2.5">
                       <div className="flex items-center gap-1">
-                        <IconChevronRight
+                        <ChevronRight
                           className="text-slate-300 flex-shrink-0"
                           width={12}
                           height={12}

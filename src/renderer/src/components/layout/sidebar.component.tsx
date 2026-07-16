@@ -4,15 +4,7 @@ import { type DerivedAccount } from '@/features/wallet';
 import { type UpdaterStatus } from "@/hooks";
 import { useAppStore } from "@/store";
 import { NotificationCenter } from "../notifications/NotificationCenter";
-import {
-  IconBolt,
-  IconGrid,
-  IconCpu,
-  IconWallet,
-  IconSearch,
-  IconSettings,
-  IconLockOpen,
-} from "@/assets/icons";
+import { Zap, Grid, Cpu, Wallet, Search, Settings, LockOpen } from 'lucide-react';
 
 interface SidebarProps {
   accounts: DerivedAccount[];
@@ -69,7 +61,7 @@ export function Sidebar({
       <div className="flex items-center justify-between px-5 py-5">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-sm shadow-blue-200">
-            <IconBolt color="white" width={16} height={16} strokeWidth={2.5} />
+            <Zap color="white" width={16} height={16} strokeWidth={2.5} />
           </div>
           <div>
             <p className="text-sm font-bold text-slate-800">CointMU</p>
@@ -113,7 +105,7 @@ export function Sidebar({
               : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
           }`}
         >
-          <IconGrid width={18} height={18} />
+          <Grid width={18} height={18} />
           {t("sidebar.dashboard")}
         </button>
 
@@ -125,7 +117,7 @@ export function Sidebar({
               : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
           }`}
         >
-          <IconCpu width={18} height={18} />
+          <Cpu width={18} height={18} />
           {t("sidebar.mining")}
           <span className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-500" />
         </button>
@@ -138,7 +130,7 @@ export function Sidebar({
               : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
           }`}
         >
-          <IconWallet width={18} height={18} />
+          <Wallet width={18} height={18} />
           {t("sidebar.wallet")}
         </button>
 
@@ -150,7 +142,7 @@ export function Sidebar({
               : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
           }`}
         >
-          <IconSearch width={18} height={18} />
+          <Search width={18} height={18} />
           {t("sidebar.explorer")}
         </button>
 
@@ -168,7 +160,7 @@ export function Sidebar({
               : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
           }`}
         >
-          <IconSettings width={18} height={18} />
+          <Settings width={18} height={18} />
           {t("sidebar.settings")}
           {(updateStatus === "available" ||
             updateStatus === "downloading" ||
@@ -191,7 +183,7 @@ export function Sidebar({
               }}
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors text-left"
             >
-              <IconSettings
+              <Settings
                 className="text-slate-400"
                 width={14}
                 height={14}
@@ -209,7 +201,7 @@ export function Sidebar({
               }}
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-red-50 transition-colors text-left group"
             >
-              <IconLockOpen
+              <LockOpen
                 className="text-red-400 group-hover:text-red-500 transition-colors"
                 width={14}
                 height={14}
@@ -227,7 +219,7 @@ export function Sidebar({
           className="w-full flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-50 transition-colors focus:outline-none"
         >
           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
-            <IconWallet className="text-slate-500" width={16} height={16} />
+            <Wallet className="text-slate-500" width={16} height={16} />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">

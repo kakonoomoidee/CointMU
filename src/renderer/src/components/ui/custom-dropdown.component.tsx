@@ -1,6 +1,6 @@
 import { DROPDOWN_AUTO_SEARCH_THRESHOLD, DROPDOWN_MAX_VISIBLE_ITEMS, DROPDOWN_ITEM_HEIGHT_PX } from './ui.constants';
 import { type JSX, useState, useRef, useEffect } from 'react'
-import { IconChevronDown } from '@/assets/icons'
+import { ChevronDown } from 'lucide-react'
 
 
 /**
@@ -91,7 +91,7 @@ export function CustomDropdown<T>({
         }`}
       >
         <div className='flex items-center gap-2'>{renderSelected(selected)}</div>
-        <IconChevronDown
+        <ChevronDown
           width={16}
           height={16}
           className={`text-slate-400 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`}

@@ -3,13 +3,7 @@ import { useTranslation } from "react-i18next";
 import { QRCodeSVG } from "qrcode.react";
 import { type DerivedAccount } from '@/features/wallet';
 import { AccountIcon } from '@/features/wallet';
-import {
-  IconArrowUp,
-  IconArrowDown,
-  IconRefresh,
-  IconCheck,
-  IconCopy,
-} from "@/assets/icons";
+import { ArrowUp, ArrowDown, RefreshCw, Check, Copy } from 'lucide-react';
 
 interface AccountHeroCardProps {
   activeAccount: DerivedAccount | undefined;
@@ -92,18 +86,18 @@ function AccountHeroCard({
             onClick={onSend}
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors"
           >
-            <IconArrowUp width={12} height={12} strokeWidth={2.5} />
+            <ArrowUp width={12} height={12} strokeWidth={2.5} />
             {t("wallet.send")}
           </button>
           <button
             onClick={onReceive}
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors"
           >
-            <IconArrowDown width={12} height={12} strokeWidth={2.5} />
+            <ArrowDown width={12} height={12} strokeWidth={2.5} />
             {t("wallet.receive")}
           </button>
           <button className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors">
-            <IconRefresh width={12} height={12} />
+            <RefreshCw width={12} height={12} />
             {t("wallet.swap")}
           </button>
           <button
@@ -111,9 +105,9 @@ function AccountHeroCard({
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors"
           >
             {copied ? (
-              <IconCheck width={12} height={12} />
+              <Check width={12} height={12} />
             ) : (
-              <IconCopy width={12} height={12} />
+              <Copy width={12} height={12} />
             )}
             {copied ? t("wallet.copied") : t("wallet.copyAddress")}
           </button>

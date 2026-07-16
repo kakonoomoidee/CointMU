@@ -1,6 +1,6 @@
 import { type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
-import { IconActivity, IconChevronRight, IconGrid, IconGlobe, IconLink } from '@/assets/icons'
+import { Activity, ChevronRight, Grid, Globe, Link } from 'lucide-react'
 
 interface DashboardStatsGridProps {
   isConnected: boolean
@@ -35,7 +35,7 @@ function DashboardStatsGrid({
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
-              <IconActivity className="text-blue-500 w-3.5 h-3.5" />
+              <Activity className="text-blue-500 w-3.5 h-3.5" />
             </div>
             <span className="text-xs font-medium text-slate-500">{t('dashboard.statsGrid.yourMining')}</span>
           </div>
@@ -44,7 +44,7 @@ function DashboardStatsGrid({
             className="text-[11px] font-semibold text-blue-500 hover:text-blue-600 transition-colors flex items-center gap-0.5"
           >
             {t('dashboard.statsGrid.open')}
-            <IconChevronRight className="w-2.5 h-2.5" strokeWidth={3} />
+            <ChevronRight className="w-2.5 h-2.5" strokeWidth={3} />
           </button>
         </div>
         <p className="text-2xl font-bold text-slate-800 tracking-tight">{miningLabel}</p>
@@ -54,7 +54,7 @@ function DashboardStatsGrid({
       <div className="rounded-2xl bg-white border border-slate-200 p-5">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center">
-            <IconGrid className="text-emerald-500 w-3.5 h-3.5" />
+            <Grid className="text-emerald-500 w-3.5 h-3.5" />
           </div>
           <span className="text-xs font-medium text-slate-500">{t('dashboard.statsGrid.minedBlocks')}</span>
         </div>
@@ -69,7 +69,7 @@ function DashboardStatsGrid({
       <div className="rounded-2xl bg-white border border-slate-200 p-5">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-7 h-7 rounded-lg bg-violet-50 flex items-center justify-center">
-            <IconGlobe className="text-violet-500 w-3.5 h-3.5" />
+            <Globe className="text-violet-500 w-3.5 h-3.5" />
           </div>
           <span className="text-xs font-medium text-slate-500">{t('dashboard.statsGrid.networkHashrate')}</span>
         </div>
@@ -80,7 +80,7 @@ function DashboardStatsGrid({
       <div className="rounded-2xl bg-white border border-slate-200 p-5">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center">
-            <IconLink className="text-amber-500 w-3.5 h-3.5" />
+            <Link className="text-amber-500 w-3.5 h-3.5" />
           </div>
           <span className="text-xs font-medium text-slate-500">{t('dashboard.statsGrid.smartContracts')}</span>
         </div>

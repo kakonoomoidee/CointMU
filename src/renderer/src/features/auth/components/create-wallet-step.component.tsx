@@ -1,7 +1,7 @@
 import { type JSX } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../auth.store'
-import { IconCheck, IconCopy, IconAlertTriangle } from '@/assets/icons'
+import { Check, Copy, AlertTriangle } from 'lucide-react'
 
 interface CreateWalletStepProps {
   onCopySeed: () => void
@@ -41,12 +41,12 @@ function CreateWalletStep({ onCopySeed, onContinue, onBack }: CreateWalletStepPr
         >
           {copied ? (
             <>
-              <IconCheck className="text-emerald-500" width={14} height={14} strokeWidth={2.5} />
+              <Check className="text-emerald-500" width={14} height={14} strokeWidth={2.5} />
               {t('auth.createWallet.copied')}
             </>
           ) : (
             <>
-              <IconCopy width={14} height={14} />
+              <Copy width={14} height={14} />
               {t('auth.createWallet.copy')}
             </>
           )}
@@ -54,7 +54,7 @@ function CreateWalletStep({ onCopySeed, onContinue, onBack }: CreateWalletStepPr
       </div>
 
       <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 flex gap-3 items-start">
-        <IconAlertTriangle className="text-amber-500 shrink-0 mt-0.5" width={16} height={16} strokeWidth={2.5} />
+        <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" width={16} height={16} strokeWidth={2.5} />
         <p className="text-xs text-amber-800 font-medium">
           {t('auth.createWallet.warning')}
         </p>

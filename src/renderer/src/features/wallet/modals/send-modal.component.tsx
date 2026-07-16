@@ -24,7 +24,7 @@ import {
 } from "@/services/transferService";
 import { call, waitForTransactionReceipt } from '@/services'
 import { dispatchNotification } from '@/features/notifications';
-import { IconCheck, IconAlertCircle } from "@/assets/icons";
+import { Check, AlertCircle } from 'lucide-react';
 import { CustomDropdown } from '@/components'
 import { TokenIcon } from '@/features/wallet';
 import type { DerivedAccount } from "@/services";
@@ -390,7 +390,7 @@ function SendModal({
       <div className="p-8">
         <div className="text-center py-6">
           <div className="w-16 h-16 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <IconCheck width={32} height={32} strokeWidth={3} />
+            <Check width={32} height={32} strokeWidth={3} />
           </div>
           <p className="text-lg font-bold text-slate-800 mb-2">
             {t("wallet.modals.send.successTitle")}
@@ -579,7 +579,7 @@ function SendModal({
 
         {sendError && (
           <div className="flex items-start gap-2 text-red-600 bg-red-50 px-3 py-2.5 rounded-xl border border-red-100">
-            <IconAlertCircle
+            <AlertCircle
               width={14}
               height={14}
               className="flex-shrink-0 mt-0.5"
