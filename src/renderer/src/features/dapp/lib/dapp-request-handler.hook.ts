@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useAppStore } from "@/store";
 import { useDappStore } from '../model/dapp.store';
-import { useConnectedSitesStore } from "@/features/settings";
+import { useConnectedSitesStore } from '@/features/settings';
 import { resolveApprovalResult } from './dapp-rpc-resolver.util';
 
 /**

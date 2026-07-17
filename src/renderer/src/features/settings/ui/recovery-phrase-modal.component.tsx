@@ -1,4 +1,4 @@
-import { AUTO_HIDE_SECONDS } from "../settings.constants";
+import { AUTO_HIDE_SECONDS } from '../config/settings.constants';
 import {
   useEffect,
   useRef,

@@ -1,16 +1,16 @@
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { GeneralSettings } from "@/features/settings/components/general-settings.component";
-import { AppearanceSettings } from "@/features/settings/components/appearance-settings.component";
-import { NetworkSettings } from "@/features/settings/components/network-settings.component";
-import { MiningSettings } from "@/features/settings/components/mining-settings.component";
-import { SecuritySettings } from "@/features/settings/components/security-settings.component";
-import { ConnectedSitesSettings } from "@/features/settings/components/connected-sites-settings.component";
-import { ExternalSourceSettings } from "@/features/settings/components/external-source-settings.component";
-import { AdvancedSettings } from "@/features/settings/components/advanced-settings.component";
-import { AboutSettings } from "@/features/settings/components/about-settings.component";
-import { NotificationSettings } from "@/features/settings/components/notification-settings.component";
-import { getAllSettings, setSetting } from "@/features/settings";
+import { GeneralSettings } from '@/features/settings';
+import { AppearanceSettings } from '@/features/settings';
+import { NetworkSettings } from '@/features/settings';
+import { MiningSettings } from '@/features/settings';
+import { SecuritySettings } from '@/features/settings';
+import { ConnectedSitesSettings } from '@/features/settings';
+import { ExternalSourceSettings } from '@/features/settings';
+import { AdvancedSettings } from '@/features/settings';
+import { AboutSettings } from '@/features/settings';
+import { NotificationSettings } from '@/features/settings';
+import { getAllSettings, setSetting } from '@/features/settings';
 import {
   Sun,
   Image,

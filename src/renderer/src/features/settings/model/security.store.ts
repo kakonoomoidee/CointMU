@@ -3,7 +3,7 @@ import { create } from "zustand";
 import {
   getSetting,
   setSetting,
-} from "@/features/settings/services/settings.service";
+} from '@/features/settings';
 
 export interface SecuritySettings {
   autoLock: boolean;

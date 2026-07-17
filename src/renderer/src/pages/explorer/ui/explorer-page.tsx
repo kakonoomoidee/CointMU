@@ -19,7 +19,7 @@ import { usePagination, useRecentBlocks } from "@/hooks";
 
 import { useAppStore } from "@/store";
 import { call, fetchBalance } from "@/services";
-import { getNetworkInsights } from "@/features/settings/services/network.service";
+import { getNetworkInsights } from '@/features/settings';
 import { detectSearchType } from '@/features/explorer';
 import { type DerivedAccount } from '@/features/wallet';
 import { formatBlockNumber } from "@/utils";

@@ -3,7 +3,7 @@ import { Wallet, HDNodeWallet } from "ethers";
 import {
   getSetting,
   setSetting,
-} from "@/features/settings/services/settings.service";
+} from '@/features/settings';
 
 export interface DerivedAccount {
   index: number;

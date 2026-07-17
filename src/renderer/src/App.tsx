@@ -9,7 +9,7 @@ import {
   useSecurityStore,
   useAdvancedStore,
   useConnectedSitesStore,
-} from "@/features/settings";
+} from '@/features/settings';
 import { useUpdater } from "@/hooks";
 import { useMiningLogStream } from '@/features/mining';
 import { useAppStore } from "@/store";

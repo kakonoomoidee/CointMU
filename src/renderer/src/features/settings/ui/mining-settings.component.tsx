@@ -2,11 +2,11 @@ import {
   MINING_MODE_OPTIONS,
   MINING_DEBOUNCE_DELAY_MS,
   MAX_CORES,
-} from "../settings.constants";
+} from '../config/settings.constants';
 import { useState, useEffect, useRef, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import type { SettingsStore } from "./settings-view.component";
-import { setSetting } from "@/features/settings";
+import { setSetting } from '@/features/settings';
 import { toggleMiner, setThreads, setPoolAddress } from '@/features/mining';
 import { CustomDropdown } from "@/components";
 

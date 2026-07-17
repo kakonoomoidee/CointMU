@@ -1,4 +1,4 @@
-import { CURRENCY_OPTIONS } from "../settings.constants";
+import { CURRENCY_OPTIONS } from '../config/settings.constants';
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import type { SettingsStore } from "./settings-view.component";

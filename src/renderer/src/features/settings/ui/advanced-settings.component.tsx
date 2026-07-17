@@ -1,7 +1,7 @@
-import { LOG_LEVELS } from "../settings.constants";
+import { LOG_LEVELS } from '../config/settings.constants';
 import { useEffect, useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { useAdvancedStore } from "../advanced.store";
+import { useAdvancedStore } from '../model/advanced.store';
 import { CustomDropdown } from "@/components";
 import { purgeSecondaryAccounts } from '@/features/wallet';
 

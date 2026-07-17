@@ -7,7 +7,7 @@ import { create } from "zustand";
 import {
   getSetting,
   setSetting,
-} from "@/features/settings/services/settings.service";
+} from '@/features/settings';
 
 export type NotificationType = "transaction" | "mining" | "security" | "info";
 

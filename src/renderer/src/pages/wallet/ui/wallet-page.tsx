@@ -10,7 +10,7 @@ import {
   getSessionPassword,
   type DerivedAccount,
 } from '@/features/wallet';
-import { getSetting, setSetting } from "@/features/settings";
+import { getSetting, setSetting } from '@/features/settings';
 import { call } from "@/services";
 import { ethers } from "ethers";
 import { useAppStore } from "@/store";

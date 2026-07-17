@@ -1,7 +1,7 @@
 import {
   getAllSettings,
   setSetting,
-} from "@/features/settings/services/settings.service";
+} from '@/features/settings';
 import { type MiningLog } from '../model/mining.store';
 
 interface MiningStats {

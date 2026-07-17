@@ -1,9 +1,9 @@
-import { UPTIME_REFRESH_MS } from "../settings.constants";
+import { UPTIME_REFRESH_MS } from '../config/settings.constants';
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { useUpdater } from "@/hooks";
 import { useAppStore } from "@/store";
-import { EXTERNAL_LINKS } from "../constants/links.constant";
+import { EXTERNAL_LINKS } from '../config/links.constant';
 import { Layers } from "lucide-react";
 
 /**

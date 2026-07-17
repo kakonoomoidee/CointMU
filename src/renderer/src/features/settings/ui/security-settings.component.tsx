@@ -1,13 +1,13 @@
-import { CONNECT_FEEDBACK_MS } from "../settings.constants";
+import { CONNECT_FEEDBACK_MS } from '../config/settings.constants';
 import { useEffect, useRef, useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { useSecurityStore } from "../security.store";
-import { useBiometrics, useHardwareDetection } from "@/features/settings";
+import { useSecurityStore } from '../model/security.store';
+import { useBiometrics, useHardwareDetection } from '@/features/settings';
 import { ShieldCheck } from "lucide-react";
-import { RevealPrivateKeyModal } from "../modals/reveal-private-key-modal.component";
-import { RecoveryPhraseModal } from "../modals/recovery-phrase-modal.component";
-import { ExportKeystoreModal } from "../modals/export-keystore-modal.component";
-import { ResetWalletModal } from "../modals/reset-wallet-modal.component";
+import { RevealPrivateKeyModal } from './reveal-private-key-modal.component';
+import { RecoveryPhraseModal } from './recovery-phrase-modal.component';
+import { ExportKeystoreModal } from './export-keystore-modal.component';
+import { ResetWalletModal } from './reset-wallet-modal.component';
 
 type HardwareDevice = "ledger" | "trezor";
 
