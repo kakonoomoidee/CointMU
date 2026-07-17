@@ -11,7 +11,7 @@ import {
   useConnectedSitesStore,
 } from "@/features/settings";
 import { useUpdater } from "@/hooks";
-import { useMiningLogStream } from "@/features/mining/hooks";
+import { useMiningLogStream } from '@/features/mining';
 import { useAppStore } from "@/store";
 import { useAuthStore } from "@/features/auth";
 

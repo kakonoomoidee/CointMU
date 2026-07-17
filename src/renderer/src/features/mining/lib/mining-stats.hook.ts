@@ -5,16 +5,16 @@ import {
   STATS_POLL_INTERVAL_SECONDS,
   ESTIMATED_HASHES_PER_THREAD,
   FALLBACK_BASE_LOAD,
-} from "../mining.constants";
+} from '../config/mining.constants';
 import { useState, useEffect } from "react";
 import {
   fetchMiningStats,
   subscribeDagProgress,
   subscribeMiningStatus,
-} from "../services/mining.service";
+} from '../api/mining.service';
 import { getCpuUsage } from "@/services";
 import { fetchHashrate, fetchSyncingStatus } from "@/services/rpc.client";
-import { useMiningStore } from "../mining.store";
+import { useMiningStore } from '../model/mining.store';
 
 interface MiningTelemetry {
   hashrateMhs: number;

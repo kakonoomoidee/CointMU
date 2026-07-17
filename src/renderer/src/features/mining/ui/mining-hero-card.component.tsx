@@ -1,4 +1,4 @@
-import { BLOCK_REWARD_CMU } from "../mining.constants";
+import { BLOCK_REWARD_CMU } from '../config/mining.constants';
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components";

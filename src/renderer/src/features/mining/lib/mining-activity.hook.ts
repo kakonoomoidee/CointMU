@@ -2,10 +2,10 @@ import {
   MAX_LOG_ENTRIES,
   LOG_TIME_FORMAT,
   BLOCK_REWARD_LABEL,
-} from "../mining.constants";
+} from '../config/mining.constants';
 import { useState, useEffect, useRef } from "react";
 import { format } from "date-fns";
-import { useMiningStore } from "../mining.store";
+import { useMiningStore } from '../model/mining.store';
 import { dispatchNotification } from "@/features/notifications";
 import { type BlockData } from "@/hooks";
 

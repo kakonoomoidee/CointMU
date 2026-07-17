@@ -8,8 +8,8 @@ import { AccountIcon } from "@/features/wallet";
 import {
   fetchMinerDistribution,
   type MinerEntry,
-} from "@/features/mining/utils/miner-distribution.util";
-import { MiningCacheService } from "@/features/mining/services/mining-cache.service";
+} from '@/features/mining';
+import { MiningCacheService } from '@/features/mining';
 import { Activity } from "lucide-react";
 
 interface MinerDistributionProps {

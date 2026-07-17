@@ -1,4 +1,4 @@
-import { INTENSITY_OPTIONS } from "../mining.constants";
+import { INTENSITY_OPTIONS } from '../config/mining.constants';
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "@/components";

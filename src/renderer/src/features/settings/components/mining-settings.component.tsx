@@ -7,7 +7,7 @@ import { useState, useEffect, useRef, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import type { SettingsStore } from "./settings-view.component";
 import { setSetting } from "@/features/settings";
-import { toggleMiner, setThreads, setPoolAddress } from "@/features/mining";
+import { toggleMiner, setThreads, setPoolAddress } from '@/features/mining';
 import { CustomDropdown } from "@/components";
 
 interface MiningSettingsProps {

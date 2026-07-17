@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { useMiningStore, type MiningLog } from "../mining.store";
+import { useMiningStore, type MiningLog } from '../model/mining.store';
 
 const LEVEL_TEXT_COLOR: Record<MiningLog["level"], string> = {
   OK: "text-emerald-400",

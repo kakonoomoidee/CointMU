@@ -1,30 +1,30 @@
-import { FOUND_BLOCKS_PAGE_SIZE } from "@/features/mining/mining.constants";
+import { FOUND_BLOCKS_PAGE_SIZE } from '@/features/mining';
 import { useState, useMemo, type JSX } from "react";
 import { useTimer, usePagination, useRecentBlocks } from "@/hooks";
-import { useMiningStats, useMiningControls, useMiningActivity } from "@/features/mining/hooks";
+import { useMiningStats, useMiningControls, useMiningActivity } from '@/features/mining';
 import { useAppStore } from "@/store";
-import { useMiningStore, type FoundBlock } from "@/features/mining/mining.store";
+import { useMiningStore, type FoundBlock } from '@/features/mining';
 import { type DerivedAccount } from "@/features/wallet";
 import { formatMhs, isWithinLastDay } from "@/utils";
 import {
   getSafeConcurrency,
   formatRewards,
   formatDifficultyLabel,
-} from "@/features/mining/mining.utils";
+} from '@/features/mining';
 import {
   resolveHistoryAddresses,
   filterFoundBlocks,
 } from "@/features/wallet/utils/history.util";
 import { AlertCircle } from "lucide-react";
-import { MiningHeader } from "@/features/mining/components/mining-header.component";
-import { MiningHeroCard } from "@/features/mining/components/mining-hero-card.component";
+import { MiningHeader } from '@/features/mining';
+import { MiningHeroCard } from '@/features/mining';
 
-import { MiningStatsGrid } from "@/features/mining/components/mining-stats-grid.component";
-import { WorkerConfiguration } from "@/features/mining/components/worker-configuration.component";
+import { MiningStatsGrid } from '@/features/mining';
+import { WorkerConfiguration } from '@/features/mining';
 import {
   MiningActivity,
   ACTIVITY_TAB_FOUND,
-} from "@/features/mining/components/mining-activity.component";
+} from '@/features/mining';
 import { SkeletonCard, SkeletonList, Skeleton } from "@/components";
 
 interface MinerProps {

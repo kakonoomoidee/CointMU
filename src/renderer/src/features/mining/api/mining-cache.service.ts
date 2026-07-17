@@ -1,5 +1,5 @@
-import { type MinerEntry } from "../utils/miner-distribution.util";
-import { type FoundBlock } from "../mining.store";
+import { type MinerEntry } from '../lib/miner-distribution.util';
+import { type FoundBlock } from '../model/mining.store';
 
 let minerDistributionCache: MinerEntry[] | undefined;
 let foundBlocksCache: FoundBlock[] | undefined;

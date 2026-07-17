@@ -1,4 +1,27 @@
+// Config
+export { FOUND_BLOCKS_PAGE_SIZE } from './config/mining.constants';
 
-export * from "./services/mining.service";
+// Lib (Hooks & Utils)
+export { useMiningStats } from './lib/mining-stats.hook';
+export { useMiningControls } from './lib/mining-controls.hook';
+export { useMiningActivity } from './lib/mining-activity.hook';
+export { useMiningLogStream } from './lib/mining-log-stream.hook';
+export { getSafeConcurrency, formatRewards, formatDifficultyLabel } from './lib/mining.utils';
+export * from './lib/miner-distribution.util';
 
-export * from './services/mining-cache.service';
+// Model
+export { useMiningStore } from './model/mining.store';
+export type { FoundBlock } from './model/mining.store';
+
+// UI
+export { MiningHeader } from './ui/mining-header.component';
+export { MiningHeroCard } from './ui/mining-hero-card.component';
+export { MiningStatsGrid } from './ui/mining-stats-grid.component';
+export { WorkerConfiguration } from './ui/worker-configuration.component';
+export { MiningActivity, ACTIVITY_TAB_FOUND } from './ui/mining-activity.component';
+export { MiningIcon } from './ui/mining-icon.component';
+
+// API (Services)
+export * from './api/mining.service';
+export { MiningCacheService } from './api/mining-cache.service';
+export type { ActivityContribution } from './api/activity.service';

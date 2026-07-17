@@ -10,9 +10,9 @@ import {
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { usePagination, useRecentBlocks } from "@/hooks";
-import { useMiningStats, useMiningControls } from "@/features/mining/hooks";
+import { useMiningStats, useMiningControls } from '@/features/mining';
 import { useAppStore } from "@/store";
-import { useMiningStore } from "@/features/mining/mining.store";
+import { useMiningStore } from '@/features/mining';
 import { useWalletUiStore } from "@/features/wallet/wallet-ui.store";
 import { getTransactions } from "@/features/wallet/services/transaction.service";
 import { ActivityCacheService } from "@/features/wallet/services/activity-cache.service";

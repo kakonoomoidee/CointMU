@@ -2,7 +2,7 @@ import {
   getAllSettings,
   setSetting,
 } from "@/features/settings/services/settings.service";
-import { type MiningLog } from "../mining.store";
+import { type MiningLog } from '../model/mining.store';
 
 interface MiningStats {
   isMining: boolean;
