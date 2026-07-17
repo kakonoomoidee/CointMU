@@ -1,25 +1,25 @@
-import { app, shell, BrowserWindow, ipcMain, powerMonitor, dialog } from "electron";
-import { join } from "path";
-import { existsSync, writeFileSync, rmSync } from "fs";
-import { readdir, stat, readFile, writeFile, rm, mkdir, copyFile } from "fs/promises";
-import { electronApp, optimizer, is } from "@electron-toolkit/utils";
-import { spawn, ChildProcess } from "child_process";
+import { app, shell, BrowserWindow, ipcMain, powerMonitor, dialog } from 'electron';
+import { join } from 'path';
+import { existsSync, writeFileSync, rmSync } from 'fs';
+import { readdir, stat, readFile, writeFile, rm, mkdir, copyFile } from 'fs/promises';
+import { electronApp, optimizer, is } from '@electron-toolkit/utils';
+import { spawn, ChildProcess } from 'child_process';
 import { lookup } from 'node:dns/promises';
 import { isIP } from 'node:net';
-import { config } from "dotenv";
-import detectPort from "detect-port";
-import { registerCryptoHandlers } from "./crypto";
-import { registerSystemHandlers } from "./system";
-import { initUpdater } from './updater';
-import { parseGethLogChunk } from "./gethLogParser";
-import { GENESIS_BLOCK, type GenesisBlock } from './genesis';
-import ms from "ms";
-import { callGethRpc } from './rpcUtils';
-import { scanWalletActivity, fetchNetworkInsights } from './activityScanner';
-import { startDappWsServer } from './dappWsServer';
-import { startExtensionSyncServer, broadcastWalletState } from './extensionSyncServer';
+import { config } from 'dotenv';
+import detectPort from 'detect-port';
+import { registerCryptoHandlers } from './services/crypto';
+import { registerSystemHandlers } from './services/system';
+import { initUpdater } from './services/updater';
+import { parseGethLogChunk } from './utils/gethLogParser';
+import { GENESIS_BLOCK, type GenesisBlock } from './services/genesis';
+import ms from 'ms';
+import { callGethRpc } from './utils/rpcUtils';
+import { scanWalletActivity, fetchNetworkInsights } from './services/activityScanner';
+import { startDappWsServer } from './services/dappWsServer';
+import { startExtensionSyncServer, broadcastWalletState } from './services/extensionSyncServer';
 
-config({ path: join(app.getAppPath(), ".env") });
+config({ path: join(app.getAppPath(), '.env') });
 
 const SESSION_DURATION_MS = ms('7d');
 const NODE_RESTART_DELAY_MS = ms('1s');
@@ -35,7 +35,7 @@ const WINDOW_DEFAULT_HEIGHT = 800;
 const WINDOW_MIN_WIDTH = 900;
 const WINDOW_MIN_HEIGHT = 600;
 
-const DEFAULT_RPC_PORT = parseInt(process.env.GETH_HTTP_PORT || "8585", 10);
+const DEFAULT_RPC_PORT = parseInt(process.env.GETH_HTTP_PORT || '8585', 10);
 let GETH_NETWORK_ID = process.env.GETH_NETWORK_ID || String(GENESIS_BLOCK.config.chainId);
 
 /**
@@ -70,7 +70,7 @@ function buildGenesis(): GenesisBlock {
   };
 }
 const GETH_DATA_DIR = join(app.getPath('userData'), 'cointmu-chaindata');
-const GETH_BOOTNODE_ENODE = process.env.GETH_BOOTNODE_ENODE || "";
+const GETH_BOOTNODE_ENODE = process.env.GETH_BOOTNODE_ENODE || '';
 
 let intentionalGethShutdown = false;
 let isAppQuitting = false;
@@ -114,7 +114,7 @@ async function getDirectorySize(dir: string): Promise<number> {
   }
   return total;
 }
-const GETH_LOG_VERBOSITY = process.env.GETH_LOG_VERBOSITY || "3";
+const GETH_LOG_VERBOSITY = process.env.GETH_LOG_VERBOSITY || '3';
 
 let resolvedRpcPort: number = DEFAULT_RPC_PORT;
 let gethProcess: ChildProcess | null = null;
@@ -130,9 +130,9 @@ function resolveGethBinaryPath(): string {
   const platformDir = process.platform === 'win32' ? 'win' : process.platform === 'darwin' ? 'mac' : 'linux'
   const binaryName = process.platform === 'win32' ? 'geth.exe' : 'geth'
   if (app.isPackaged) {
-    return join(process.resourcesPath, "bin", platformDir, binaryName);
+    return join(process.resourcesPath, 'bin', platformDir, binaryName);
   }
-  return join(app.getAppPath(), "resources", "bin", platformDir, binaryName);
+  return join(app.getAppPath(), 'resources', 'bin', platformDir, binaryName);
 }
 
 /**
@@ -387,49 +387,49 @@ async function spawnGethProcess(store: any): Promise<void> {
     return;
   }
 
-  const isRpcEnabled = store.get("advanced.httpRpc") ?? true;
-  const listenPort = store.get("network.listenPort") || 30303;
+  const isRpcEnabled = store.get('advanced.httpRpc') ?? true;
+  const listenPort = store.get('network.listenPort') || 30303;
 
   const args = [
-    "--networkid",
+    '--networkid',
     GETH_NETWORK_ID,
-    "--datadir",
+    '--datadir',
     resolveDataDir(),
-    "--port",
+    '--port',
     String(listenPort),
-    "--verbosity",
+    '--verbosity',
     GETH_LOG_VERBOSITY,
-    "--syncmode",
-    "full",
+    '--syncmode',
+    'full',
   ];
 
   if (isRpcEnabled) {
     args.push(
-      "--http",
-      "--http.addr",
-      "127.0.0.1",
-      "--http.port",
+      '--http',
+      '--http.addr',
+      '127.0.0.1',
+      '--http.port',
       String(resolvedRpcPort),
-      "--http.api",
-      "eth,net,web3,miner,personal,admin",
-      "--http.corsdomain",
-      "*",
-      "--http.vhosts",
-      "*",
+      '--http.api',
+      'eth,net,web3,miner,personal,admin',
+      '--http.corsdomain',
+      '*',
+      '--http.vhosts',
+      '*',
     );
   }
 
   const hardcodedUbuntuEnode =
-    "enode://ec322d10efbf7a7ffd8baafa97855aa33c7bf412b92fd4b9656868216d14064609d4d0a2c1fed048150bbe38f202d1cd0ab3779a771afbadd5fc85b85a08a849@10.64.24.248:30303";
+    'enode://ec322d10efbf7a7ffd8baafa97855aa33c7bf412b92fd4b9656868216d14064609d4d0a2c1fed048150bbe38f202d1cd0ab3779a771afbadd5fc85b85a08a849@10.64.24.248:30303';
   const configuredEnode = GETH_BOOTNODE_ENODE || hardcodedUbuntuEnode;
   const resolvedEnode = await resolveBootnodeEnode(configuredEnode);
   if (resolvedEnode) {
-    args.push("--bootnodes", resolvedEnode);
+    args.push('--bootnodes', resolvedEnode);
     pendingBootnodeEnode = null;
     stopBootnodeWatcher();
   } else {
     console.warn(
-      "[geth:spawn] Bootnode DNS unresolved; starting without bootnodes in isolated local state",
+      '[geth:spawn] Bootnode DNS unresolved; starting without bootnodes in isolated local state',
     );
     pendingBootnodeEnode = configuredEnode;
     startBootnodeWatcher();
@@ -438,7 +438,7 @@ async function spawnGethProcess(store: any): Promise<void> {
   try {
     intentionalGethShutdown = false;
     gethProcess = spawn(binaryPath, args, {
-      stdio: ["ignore", "pipe", "pipe"],
+      stdio: ['ignore', 'pipe', 'pipe'],
       detached: false,
     });
 
@@ -449,12 +449,12 @@ async function spawnGethProcess(store: any): Promise<void> {
      */
     const broadcastMiningLog = (log: ReturnType<typeof parseGethLogChunk>[number]): void => {
       BrowserWindow.getAllWindows().forEach((win) => {
-        win.webContents.send("mining:log-event", log);
+        win.webContents.send('mining:log-event', log);
       });
     };
 
-    let stdoutBuffer = "";
-    let stderrBuffer = "";
+    let stdoutBuffer = '';
+    let stderrBuffer = '';
 
     /**
      * Scans incoming log chunks for known LevelDB corruption signatures and
@@ -484,7 +484,7 @@ async function spawnGethProcess(store: any): Promise<void> {
      */
     const consumeStream = (buffer: string, data: Buffer): string => {
       const combined = buffer + data.toString();
-      const newlineIndex = combined.lastIndexOf("\n");
+      const newlineIndex = combined.lastIndexOf('\n');
       if (newlineIndex === -1) {
         return combined;
       }
@@ -493,9 +493,9 @@ async function spawnGethProcess(store: any): Promise<void> {
       return combined.slice(newlineIndex + 1);
     };
 
-    gethProcess.stdout?.on("data", (data: Buffer) => {
+    gethProcess.stdout?.on('data', (data: Buffer) => {
       const output = data.toString();
-      console.log("[Geth Log]", output);
+      console.log('[Geth Log]', output);
       checkCorruption(output);
       stdoutBuffer = consumeStream(stdoutBuffer, data);
     });
@@ -508,7 +508,7 @@ async function spawnGethProcess(store: any): Promise<void> {
      */
     const handleGethStderr = (data: Buffer): void => {
       const output = data.toString();
-      console.log("[Geth Log]", output);
+      console.log('[Geth Log]', output);
       checkCorruption(output);
       const dagMatch = output.match(/percentage=(\d+)/);
       if (dagMatch && dagMatch[1]) {
@@ -519,9 +519,9 @@ async function spawnGethProcess(store: any): Promise<void> {
       stderrBuffer = consumeStream(stderrBuffer, data);
     };
 
-    gethProcess.stderr?.on("data", handleGethStderr);
+    gethProcess.stderr?.on('data', handleGethStderr);
 
-    gethProcess.on("error", (err: Error) => {
+    gethProcess.on('error', (err: Error) => {
       console.error(
         `[geth:error] Failed to start geth process: ${err.message}`,
       );
@@ -533,7 +533,7 @@ async function spawnGethProcess(store: any): Promise<void> {
       scheduleGethRestart(store);
     });
 
-    gethProcess.on("close", (code: number | null) => {
+    gethProcess.on('close', (code: number | null) => {
       console.log(`[geth:close] Process exited with code ${code}`);
       gethProcess = null;
       if (intentionalGethShutdown) {
@@ -626,35 +626,35 @@ function createWindow(): BrowserWindow {
     minHeight: WINDOW_MIN_HEIGHT,
     show: false,
     autoHideMenuBar: true,
-    title: "CointMU",
+    title: 'CointMU',
     icon:
-      process.platform === "win32"
-        ? join(__dirname, "../../resources/icon.ico")
-        : join(__dirname, "../../resources/icon.png"),
-    backgroundColor: "#0a0a0f",
+      process.platform === 'win32'
+        ? join(__dirname, '../../resources/icon.ico')
+        : join(__dirname, '../../resources/icon.png'),
+    backgroundColor: '#0a0a0f',
     frame: false,
-    titleBarStyle: "hidden",
+    titleBarStyle: 'hidden',
     webPreferences: {
-      preload: join(__dirname, "../preload/index.js"),
+      preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
       contextIsolation: true,
       nodeIntegration: false,
     },
   });
 
-  mainWindow.on("ready-to-show", () => {
+  mainWindow.on('ready-to-show', () => {
     mainWindow.show();
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
-    return { action: "deny" };
+    return { action: 'deny' };
   });
 
-  if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
-    mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']);
   } else {
-    mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
+    mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
   }
 
   return mainWindow;
@@ -693,19 +693,19 @@ class MiningController {
    * @returns {Promise<void>}
    */
   private async toggleMining(enabled: boolean): Promise<void> {
-    this.store.set("mining.isMiningEnabled", enabled);
+    this.store.set('mining.isMiningEnabled', enabled);
     if (enabled) {
-      const rewardAddress = this.store.get("mining.poolAddress");
+      const rewardAddress = this.store.get('mining.poolAddress');
       if (!rewardAddress) {
-        throw new Error("No mining reward address configured. Set one in Mining Settings.");
+        throw new Error('No mining reward address configured. Set one in Mining Settings.');
       }
 
-      await callGethRpc(this.rpcPort, "miner_setEtherbase", [rewardAddress]);
+      await callGethRpc(this.rpcPort, 'miner_setEtherbase', [rewardAddress]);
 
-      const threads = this.store.get("mining.cpuThreads") || 4;
-      await callGethRpc(this.rpcPort, "miner_start", [Math.floor(threads)]);
+      const threads = this.store.get('mining.cpuThreads') || 4;
+      await callGethRpc(this.rpcPort, 'miner_start', [Math.floor(threads)]);
     } else {
-      await callGethRpc(this.rpcPort, "miner_stop");
+      await callGethRpc(this.rpcPort, 'miner_stop');
     }
   }
 
@@ -716,12 +716,12 @@ class MiningController {
    * @returns {Promise<void>}
    */
   private async updateThreads(cores: number): Promise<void> {
-    this.store.set("mining.cpuThreads", cores);
-    const actuallyMining = await callGethRpc(this.rpcPort, "eth_mining");
+    this.store.set('mining.cpuThreads', cores);
+    const actuallyMining = await callGethRpc(this.rpcPort, 'eth_mining');
 
-    if (actuallyMining === true || actuallyMining === "true") {
-      await callGethRpc(this.rpcPort, "miner_stop");
-      await callGethRpc(this.rpcPort, "miner_start", [Math.floor(cores)]);
+    if (actuallyMining === true || actuallyMining === 'true') {
+      await callGethRpc(this.rpcPort, 'miner_stop');
+      await callGethRpc(this.rpcPort, 'miner_start', [Math.floor(cores)]);
     }
   }
 
@@ -732,49 +732,49 @@ class MiningController {
    * @returns {Promise<void>}
    */
   private async setPoolAddress(address: string): Promise<void> {
-    this.store.set("mining.poolAddress", address);
-    await callGethRpc(this.rpcPort, "miner_setEtherbase", [address]);
+    this.store.set('mining.poolAddress', address);
+    await callGethRpc(this.rpcPort, 'miner_setEtherbase', [address]);
   }
 
   private setupPowerMonitor(): void {
-    powerMonitor.on("on-battery", async () => {
-      const pauseOnBattery = this.store.get("mining.pauseOnBattery");
+    powerMonitor.on('on-battery', async () => {
+      const pauseOnBattery = this.store.get('mining.pauseOnBattery');
       if (pauseOnBattery) {
-        console.log("[power] On battery - pausing miner");
-        await callGethRpc(this.rpcPort, "miner_stop");
+        console.log('[power] On battery - pausing miner');
+        await callGethRpc(this.rpcPort, 'miner_stop');
         if (this.win) {
           this.win.webContents.send(
-            "mining:status-changed",
-            "Paused (Battery)",
+            'mining:status-changed',
+            'Paused (Battery)',
           );
         }
       }
     });
 
-    powerMonitor.on("on-ac", async () => {
-      const isMiningEnabled = this.store.get("mining.isMiningEnabled");
-      const pauseOnBattery = this.store.get("mining.pauseOnBattery");
+    powerMonitor.on('on-ac', async () => {
+      const isMiningEnabled = this.store.get('mining.isMiningEnabled');
+      const pauseOnBattery = this.store.get('mining.pauseOnBattery');
       if (isMiningEnabled && pauseOnBattery) {
-        const threads = this.store.get("mining.cpuThreads") || 4;
-        console.log("[power] On AC - resuming miner with", threads, "threads");
-        await callGethRpc(this.rpcPort, "miner_start", [threads]);
+        const threads = this.store.get('mining.cpuThreads') || 4;
+        console.log('[power] On AC - resuming miner with', threads, 'threads');
+        await callGethRpc(this.rpcPort, 'miner_start', [threads]);
         if (this.win) {
-          this.win.webContents.send("mining:status-changed", "Mining");
+          this.win.webContents.send('mining:status-changed', 'Mining');
         }
       }
     });
   }
 
   private setupIpcHandlers(): void {
-    ipcMain.handle("mining:toggle", async (_, enabled: boolean) => {
+    ipcMain.handle('mining:toggle', async (_, enabled: boolean) => {
       await this.toggleMining(enabled);
     });
 
-    ipcMain.handle("mining:setThreads", async (_, cores: number) => {
+    ipcMain.handle('mining:setThreads', async (_, cores: number) => {
       await this.updateThreads(cores);
     });
 
-    ipcMain.handle("mining:setPoolAddress", async (_, address: string) => {
+    ipcMain.handle('mining:setPoolAddress', async (_, address: string) => {
       await this.setPoolAddress(address);
     });
 
@@ -782,18 +782,18 @@ class MiningController {
      * Retrieves the current mining status, hashrate, block difficulty, and latest block height directly from the Geth node.
      * @returns {Promise<{isMining: boolean, hashrate: number, difficulty: number, blockNumber: number}>} The current stats.
      */
-    ipcMain.handle("mining:getStats", async (): Promise<{isMining: boolean, hashrate: number, difficulty: number, blockNumber: number}> => {
+    ipcMain.handle('mining:getStats', async (): Promise<{isMining: boolean, hashrate: number, difficulty: number, blockNumber: number}> => {
       try {
-        const isMiningHex = await callGethRpc(this.rpcPort, "eth_mining");
-        const hashrateHex = await callGethRpc(this.rpcPort, "eth_hashrate");
-        const latestBlock = await callGethRpc(this.rpcPort, "eth_getBlockByNumber", ["latest", false]);
+        const isMiningHex = await callGethRpc(this.rpcPort, 'eth_mining');
+        const hashrateHex = await callGethRpc(this.rpcPort, 'eth_hashrate');
+        const latestBlock = await callGethRpc(this.rpcPort, 'eth_getBlockByNumber', ['latest', false]);
         const difficulty = latestBlock && latestBlock.difficulty ? parseInt(latestBlock.difficulty, 16) : 0;
         const blockNumber = latestBlock && latestBlock.number ? parseInt(latestBlock.number, 16) : 0;
         const hashrate =
-          typeof hashrateHex === "string"
+          typeof hashrateHex === 'string'
             ? parseInt(hashrateHex, 16) || 0
             : Number(hashrateHex) || 0;
-        const isMining = isMiningHex === true || isMiningHex === "true";
+        const isMining = isMiningHex === true || isMiningHex === 'true';
 
         console.log(
           `[mining:getStats] eth_mining=${isMiningHex} eth_hashrate raw=${hashrateHex} parsed=${hashrate} H/s`,
@@ -821,23 +821,23 @@ class MiningController {
 }
 
 app.whenReady().then(async () => {
-  electronApp.setAppUserModelId("com.cointmu.desktop");
+  electronApp.setAppUserModelId('com.cointmu.desktop');
 
-  app.on("browser-window-created", (_, window) => {
+  app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window);
   });
 
   sessionStartTimestamp = Date.now();
 
-  ipcMain.handle("get-rpc-port", () => resolvedRpcPort);
-  ipcMain.handle("get-node-status", () => ({
+  ipcMain.handle('get-rpc-port', () => resolvedRpcPort);
+  ipcMain.handle('get-node-status', () => ({
     running: gethProcess !== null && !gethProcess.killed,
     port: resolvedRpcPort,
     sessionValid: isSessionValid(),
     networkId: GETH_NETWORK_ID,
   }));
 
-  const { default: Store } = await import("electron-store");
+  const { default: Store } = await import('electron-store');
 
   const store = new Store({
     defaults: {
@@ -849,33 +849,33 @@ app.whenReady().then(async () => {
         openInBackground: false,
         pushNotifications: true,
         notificationSound: false,
-        language: "English",
-        currency: "CMU (native)",
+        language: 'English',
+        currency: 'CMU (native)',
       },
       appearance: {
-        theme: "Light",
-        accentColor: "#3b82f6", // blue-500
-        density: "Comfortable",
+        theme: 'Light',
+        accentColor: '#3b82f6', // blue-500
+        density: 'Comfortable',
         showSidebarColors: true,
         animatedTransitions: true,
       },
       network: {
-        network: "CointMU Mainnet",
-        rpcEndpoint: "https://rpc.cointmu.net",
+        network: 'CointMU Mainnet',
+        rpcEndpoint: 'https://rpc.cointmu.net',
         maxPeers: 14,
         discovery: true,
         listenPort: 30303,
-        syncMode: "Snap (recommended)",
+        syncMode: 'Snap (recommended)',
         pruneOldState: true,
       },
       mining: {
         isMiningEnabled: false,
         startAtLaunch: false,
         cpuThreads: 4,
-        intensity: "Balanced",
+        intensity: 'Balanced',
         pauseOnBattery: true,
-        miningMode: "Solo",
-        poolAddress: "",
+        miningMode: 'Solo',
+        poolAddress: '',
       },
       security: {
         autoLock: true,
@@ -884,8 +884,8 @@ app.whenReady().then(async () => {
       advanced: {
         httpRpc: true,
         wsRpc: false,
-        corsOrigins: "https://*.cointmu.net",
-        logLevel: "Info",
+        corsOrigins: 'https://*.cointmu.net',
+        logLevel: 'Info',
         analytics: false,
       },
       notifications: {
@@ -900,14 +900,14 @@ app.whenReady().then(async () => {
     },
   });
 
-  ipcMain.handle("settings:get", (_, key) => store.get(key));
-  ipcMain.handle("settings:set", (_, key, value) => {
+  ipcMain.handle('settings:get', (_, key) => store.get(key));
+  ipcMain.handle('settings:set', (_, key, value) => {
     store.set(key, value);
     if (key === 'activeWalletAddress' || key === 'network.network') {
       void broadcastWalletState(store, resolvedRpcPort);
     }
   });
-  ipcMain.handle("settings:getAll", () => store.store);
+  ipcMain.handle('settings:getAll', () => store.store);
 
   ipcMain.handle(
     'dialog:saveKeystore',
@@ -1002,11 +1002,11 @@ app.whenReady().then(async () => {
   registerCryptoHandlers();
   registerSystemHandlers();
 
-  ipcMain.handle("network:getGenesisConfig", () => {
+  ipcMain.handle('network:getGenesisConfig', () => {
     return buildGenesis();
   });
 
-  ipcMain.handle("network:setChainId", async (_, newId: number) => {
+  ipcMain.handle('network:setChainId', async (_, newId: number) => {
     try {
       GETH_NETWORK_ID = String(newId);
       store.set('network.chainId', newId);
@@ -1063,7 +1063,7 @@ app.whenReady().then(async () => {
   try {
     await initGethIfNeeded(resolveDataDir());
   } catch (err) {
-    console.error("[geth:init] Fatal error during genesis init:", err);
+    console.error('[geth:init] Fatal error during genesis init:', err);
   }
 
   await spawnGethProcess(store);
@@ -1077,7 +1077,7 @@ app.whenReady().then(async () => {
   const dappServer = startDappWsServer(win);
   const extSyncServer = startExtensionSyncServer(store, resolvedRpcPort, win);
 
-  app.on("activate", function () {
+  app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }

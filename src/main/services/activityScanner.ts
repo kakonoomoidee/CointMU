@@ -1,4 +1,4 @@
-import { callGethRpc, toHex, safeParseHex, formatTimeAgo } from './rpcUtils';
+import { callGethRpc, toHex, safeParseHex, formatTimeAgo } from '../utils/rpcUtils';
 
 const ACTIVITY_BLOCK_SCAN_DEPTH = 500;
 const MINING_BLOCK_REWARD = '2.00';

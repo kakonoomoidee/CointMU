@@ -1,5 +1,5 @@
 import { WebSocketServer, type WebSocket } from 'ws';
-import { callGethRpc } from './rpcUtils';
+import { callGethRpc } from '../utils/rpcUtils';
 import { ipcMain, BrowserWindow } from 'electron';
 
 const EXTENSION_SYNC_PORT = process.env.ELECTRON_WS_PORT ? parseInt(process.env.ELECTRON_WS_PORT) : 8765;
