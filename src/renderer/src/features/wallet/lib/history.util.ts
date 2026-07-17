@@ -1,4 +1,4 @@
-import { HISTORY_FILTER_ALL, type HistoryFilter } from "@/store";
+import { HISTORY_FILTER_ALL, type HistoryFilter } from '@/shared/model';
 
 interface OwnedWallet {
   address: string;

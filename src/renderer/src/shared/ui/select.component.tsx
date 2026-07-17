@@ -1,5 +1,5 @@
 import { type JSX } from "react";
-import { cn } from "@/utils";
+import { cn } from '@/shared/lib';
 import { ChevronDown } from "lucide-react";
 
 interface SelectOption {

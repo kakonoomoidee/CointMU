@@ -15,18 +15,18 @@ import {
   type SyntheticEvent,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { usePagination, useRecentBlocks } from "@/hooks";
+import { usePagination, useRecentBlocks } from '@/shared/lib';
 
-import { useAppStore } from "@/store";
-import { call, fetchBalance } from "@/services";
+import { useAppStore } from '@/shared/model';
+import { call, fetchBalance } from '@/shared/api';
 import { getNetworkInsights } from '@/features/settings';
 import { detectSearchType } from '@/features/explorer';
 import { type DerivedAccount } from '@/features/wallet';
-import { formatBlockNumber } from "@/utils";
-import { type ActivityData } from "@/components";
+import { formatBlockNumber } from '@/shared/lib';
+import { type ActivityData } from '@/shared/ui';
 import { Insights } from '@/features/explorer';
 import { ChainTimeline } from '@/features/explorer';
-import { Skeleton, SkeletonCard } from "@/components";
+import { Skeleton, SkeletonCard } from '@/shared/ui';
 import { ExplorerHeader } from '@/features/explorer';
 import { ExplorerSearch } from "./explorer-search.component";
 import {

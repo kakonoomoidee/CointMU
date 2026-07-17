@@ -10,9 +10,9 @@ import {
   useAdvancedStore,
   useConnectedSitesStore,
 } from '@/features/settings';
-import { useUpdater } from "@/hooks";
+import { useUpdater } from '@/shared/lib';
 import { useMiningLogStream } from '@/features/mining';
-import { useAppStore } from "@/store";
+import { useAppStore } from '@/shared/model';
 import { useAuthStore } from "@/features/auth";
 
 import { Sidebar, CustomTitleBar } from "@/widgets/layout";

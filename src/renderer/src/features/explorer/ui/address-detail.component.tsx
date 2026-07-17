@@ -8,9 +8,9 @@ import { useTranslation } from "react-i18next";
 import { getAddressSummary } from '../api/explorer.service';
 import { AccountIcon, type DerivedAccount } from '@/features/wallet';
 import { getTransactions } from '@/features/wallet';
-import { usePagination } from "@/hooks";
+import { usePagination } from '@/shared/lib';
 import { formatTxAge } from '../lib/explorer.utils';
-import { Sparkline, Pagination, type ActivityData } from "@/components";
+import { Sparkline, Pagination, type ActivityData } from '@/shared/ui';
 import { ChevronLeft, File, ChevronRight } from "lucide-react";
 import { AddressBadge } from "./address-badge.component";
 

@@ -1,7 +1,7 @@
 import { INTENSITY_OPTIONS } from '../config/mining.constants';
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Card } from "@/components";
+import { Card } from '@/shared/ui';
 import { generateIdenticonGradient } from '@/features/wallet';
 
 interface WorkerConfigurationProps {

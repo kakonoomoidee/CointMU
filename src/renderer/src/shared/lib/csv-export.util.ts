@@ -1,4 +1,4 @@
-import { type ActivityData } from "@/components";
+import { type ActivityData } from '@/shared/ui';
 
 const CSV_HEADERS = [
   "Type",

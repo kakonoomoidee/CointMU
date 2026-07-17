@@ -9,22 +9,22 @@ import {
 } from "../dashboard.constants";
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { usePagination, useRecentBlocks } from "@/hooks";
+import { usePagination, useRecentBlocks } from '@/shared/lib';
 import { useMiningStats, useMiningControls } from '@/features/mining';
-import { useAppStore } from "@/store";
+import { useAppStore } from '@/shared/model';
 import { useMiningStore } from '@/features/mining';
 import { useWalletUiStore } from '@/features/wallet';
 import { getTransactions } from '@/features/wallet';
 import { ActivityCacheService } from '@/features/wallet';
 import { type DerivedAccount } from '@/features/wallet';
-import { type ActivityData } from "@/components";
+import { type ActivityData } from '@/shared/ui';
 import {
   formatBlockNumber,
   formatHashrate,
   formatDifficulty,
   formatMhs,
   isWithinLastDay,
-} from "@/utils";
+} from '@/shared/lib';
 import {
   resolveHistoryAddresses,
   filterFoundBlocks,
@@ -36,7 +36,7 @@ import { NetworkHealthPanel } from "./network-health-panel.component";
 import { DashboardStatsGrid } from "./dashboard-stats-grid.component";
 import { LatestBlocks } from "./latest-blocks.component";
 import { ActivityFeed } from "./activity-feed.component";
-import { SkeletonCard, SkeletonList, Skeleton } from "@/components";
+import { SkeletonCard, SkeletonList, Skeleton } from '@/shared/ui';
 
 interface DashboardProps {
   activeWalletAddress: string | null;

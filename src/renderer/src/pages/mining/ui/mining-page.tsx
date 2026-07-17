@@ -1,11 +1,11 @@
 import { FOUND_BLOCKS_PAGE_SIZE } from '@/features/mining';
 import { useState, useMemo, type JSX } from "react";
-import { useTimer, usePagination, useRecentBlocks } from "@/hooks";
+import { useTimer, usePagination, useRecentBlocks } from '@/shared/lib';
 import { useMiningStats, useMiningControls, useMiningActivity } from '@/features/mining';
-import { useAppStore } from "@/store";
+import { useAppStore } from '@/shared/model';
 import { useMiningStore, type FoundBlock } from '@/features/mining';
 import { type DerivedAccount } from '@/features/wallet';
-import { formatMhs, isWithinLastDay } from "@/utils";
+import { formatMhs, isWithinLastDay } from '@/shared/lib';
 import {
   getSafeConcurrency,
   formatRewards,
@@ -25,7 +25,7 @@ import {
   MiningActivity,
   ACTIVITY_TAB_FOUND,
 } from '@/features/mining';
-import { SkeletonCard, SkeletonList, Skeleton } from "@/components";
+import { SkeletonCard, SkeletonList, Skeleton } from '@/shared/ui';
 
 interface MinerProps {
   activeWalletAddress: string | null;

@@ -1,5 +1,5 @@
 import { type HTMLAttributes, type JSX } from "react";
-import { cn } from "@/utils";
+import { cn } from '@/shared/lib';
 
 type CardPadding = "none" | "sm" | "md" | "lg";
 

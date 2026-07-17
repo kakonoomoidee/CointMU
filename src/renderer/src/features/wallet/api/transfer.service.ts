@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { STANDARD_ERC20_ABI } from '@/features/wallet';
-import { call } from "@/services/rpc.client";
+import { call } from '@/shared/api/rpc.client';
 import { getSetting } from '@/features/settings';
 import {
   getSessionPassword,

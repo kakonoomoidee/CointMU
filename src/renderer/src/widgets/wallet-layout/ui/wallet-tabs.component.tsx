@@ -1,7 +1,7 @@
 import { type JSX, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
-import { ActivityItem, type ActivityData } from "@/components";
+import { ActivityItem, type ActivityData } from '@/shared/ui';
 import { getTransactions } from '@/features/wallet';
 import {
   TokenService,
@@ -10,11 +10,11 @@ import {
 } from '@/features/wallet';
 import { WalletCacheService } from "../services/wallet-cache.service";
 import { ActivityCacheService } from "../services/activity-cache.service";
-import { SkeletonList, SkeletonTable, Pagination } from "@/components";
+import { SkeletonList, SkeletonTable, Pagination } from '@/shared/ui';
 import { AddTokenModal, TokenIcon } from '@/features/wallet';
 import { NFTGrid } from '@/features/nft';
 import { Zap, Plus } from "lucide-react";
-import { useAppStore, type PendingTransaction } from "@/store";
+import { useAppStore, type PendingTransaction } from '@/shared/model';
 import { useNFTFetcher } from '@/features/nft';
 
 type WalletTab = "activity" | "tokens" | "nfts";

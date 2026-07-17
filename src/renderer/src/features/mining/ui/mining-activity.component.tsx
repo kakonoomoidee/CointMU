@@ -11,12 +11,12 @@ import {
 import { useMemo, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { subDays, format, differenceInMinutes } from "date-fns";
-import { Card, Pagination } from "@/components";
+import { Card, Pagination } from '@/shared/ui';
 import { WalletHistoryFilter } from '@/features/wallet';
 import { Check, Box } from "lucide-react";
-import { formatAge } from "@/utils";
+import { formatAge } from '@/shared/lib';
 import { type FoundBlock } from '../model/mining.store';
-import { type HistoryFilter } from "@/store";
+import { type HistoryFilter } from '@/shared/model';
 import { type DerivedAccount } from '@/features/wallet';
 import { MiningActivityLogs } from "./mining-activity-logs.component";
 

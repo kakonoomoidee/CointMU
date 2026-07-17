@@ -9,7 +9,7 @@ import {
 import { Key, Eye, EyeOff, Copy, Check, AlertTriangle, X } from "lucide-react";
 import { getSetting } from '@/features/settings';
 import { revealPrivateKey, type DerivedAccount } from '@/features/wallet';
-import { useAppStore } from "@/store";
+import { useAppStore } from '@/shared/model';
 
 interface RevealPrivateKeyModalProps {
   onClose: () => void;

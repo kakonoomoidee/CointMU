@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAppStore } from "@/store";
+import { useAppStore } from '@/shared/model';
 import { useDappStore } from '../model/dapp.store';
 import { useConnectedSitesStore } from '@/features/settings';
 import { resolveApprovalResult } from './dapp-rpc-resolver.util';

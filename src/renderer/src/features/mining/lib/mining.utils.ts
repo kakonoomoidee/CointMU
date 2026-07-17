@@ -1,5 +1,5 @@
 import { DEFAULT_CONCURRENCY } from "./mining.constants";
-import { type BlockData } from "@/hooks";
+import { type BlockData } from '@/shared/lib';
 
 /**
  * Resolves a safe CPU core count from the browser environment, falling back to

@@ -6,7 +6,7 @@ import {
   getTransactionDetail,
   type TransactionDetailData,
 } from '../api/explorer.service';
-import { useAppStore } from "@/store";
+import { useAppStore } from '@/shared/model';
 import { AddressBadge } from "./address-badge.component";
 
 interface TransactionDetailProps {

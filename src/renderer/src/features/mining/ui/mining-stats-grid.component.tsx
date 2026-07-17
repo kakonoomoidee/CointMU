@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Badge, Sparkline } from "@/components";
+import { Badge, Sparkline } from '@/shared/ui';
 import { StatCard } from "./stat-card.component";
 
 interface MiningStatsGridProps {

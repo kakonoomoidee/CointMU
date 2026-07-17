@@ -11,9 +11,9 @@ import {
   type DerivedAccount,
 } from '@/features/wallet';
 import { getSetting, setSetting } from '@/features/settings';
-import { call } from "@/services";
+import { call } from '@/shared/api';
 import { ethers } from "ethers";
-import { useAppStore } from "@/store";
+import { useAppStore } from '@/shared/model';
 import { useWalletUiStore } from '@/features/wallet';
 import { WalletHeader } from "@/widgets/wallet-layout";
 import { AccountSidebar } from '@/features/wallet';

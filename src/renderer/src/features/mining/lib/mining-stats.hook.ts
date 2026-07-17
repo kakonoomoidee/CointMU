@@ -12,8 +12,8 @@ import {
   subscribeDagProgress,
   subscribeMiningStatus,
 } from '../api/mining.service';
-import { getCpuUsage } from "@/services";
-import { fetchHashrate, fetchSyncingStatus } from "@/services/rpc.client";
+import { getCpuUsage } from '@/shared/api';
+import { fetchHashrate, fetchSyncingStatus } from '@/shared/api/rpc.client';
 import { useMiningStore } from '../model/mining.store';
 
 interface MiningTelemetry {

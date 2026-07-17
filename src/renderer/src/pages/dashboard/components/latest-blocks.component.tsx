@@ -1,7 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { type BlockData } from "@/hooks";
-import { useAppStore } from "@/store";
+import { type BlockData } from '@/shared/lib';
+import { useAppStore } from '@/shared/model';
 import { ChevronRight, Square, Box } from 'lucide-react';
 import { formatRelativeAge } from '../dashboard.utils';
 

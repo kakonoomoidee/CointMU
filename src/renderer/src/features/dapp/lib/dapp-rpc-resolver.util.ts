@@ -1,4 +1,4 @@
-import { call } from '@/services/rpc.client'
+import { call } from '@/shared/api/rpc.client'
 
 /**
  * Resolves the correct JSON-RPC result value for a given method.

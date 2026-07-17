@@ -7,7 +7,7 @@ import { type JSX, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { ethers } from "ethers";
 import { useWalletUiStore } from '../model/wallet-ui.store';
-import { useAppStore, type PendingTransaction } from "@/store";
+import { useAppStore, type PendingTransaction } from '@/shared/model';
 import {
   TokenService,
   getTokenBalance,
@@ -22,10 +22,10 @@ import {
   requireSessionPassword,
   parseTransferError,
 } from '@/features/wallet';
-import { call, waitForTransactionReceipt } from "@/services";
+import { call, waitForTransactionReceipt } from '@/shared/api';
 import { dispatchNotification } from '@/features/notifications';
 import { Check, AlertCircle } from "lucide-react";
-import { CustomDropdown } from "@/components";
+import { CustomDropdown } from '@/shared/ui';
 import { TokenIcon } from '@/features/wallet';
 import type { DerivedAccount } from '../api/wallet.service';
 

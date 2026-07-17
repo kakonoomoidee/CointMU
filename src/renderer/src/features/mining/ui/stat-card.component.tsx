@@ -1,6 +1,6 @@
 import { type JSX, type ReactNode } from "react";
-import { cn } from "@/utils";
-import { Card } from "@/components";
+import { cn } from '@/shared/lib';
+import { Card } from '@/shared/ui';
 
 interface StatCardProps {
   label: string;

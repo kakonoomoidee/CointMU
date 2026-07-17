@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Sparkline } from "@/components";
+import { Sparkline } from '@/shared/ui';
 import { CONSENSUS_LABEL } from "../dashboard.constants";
 
 interface NetworkHealthPanelProps {

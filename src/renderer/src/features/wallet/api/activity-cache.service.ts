@@ -1,4 +1,4 @@
-import { type ActivityData } from "@/components";
+import { type ActivityData } from '@/shared/ui';
 
 const activityCache = new Map<string, ActivityData[]>();
 const activityPollingIntervals = new Map<

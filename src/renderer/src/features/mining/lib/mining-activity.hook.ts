@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import { format } from "date-fns";
 import { useMiningStore } from '../model/mining.store';
 import { dispatchNotification } from '@/features/notifications';
-import { type BlockData } from "@/hooks";
+import { type BlockData } from '@/shared/lib';
 
 interface LogEntry {
   id: string;

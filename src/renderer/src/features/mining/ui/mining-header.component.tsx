@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from "@/components";
+import { Button } from '@/shared/ui';
 import { StatusPill } from "./status-pill.component";
 import { Settings } from "lucide-react";
 

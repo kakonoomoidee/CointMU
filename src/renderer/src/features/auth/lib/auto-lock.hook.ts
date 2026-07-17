@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAppStore } from "@/store";
+import { useAppStore } from '@/shared/model';
 import { useSecurityStore } from '@/features/settings';
 import { INACTIVITY_TIMEOUT_MS } from '../config/auth.constants';
 
