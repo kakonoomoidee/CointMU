@@ -2,16 +2,16 @@ import { type JSX, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
 import { ActivityItem, type ActivityData } from "@/components";
-import { getTransactions } from "@/features/wallet/services/transaction.service";
+import { getTransactions } from '@/features/wallet';
 import {
   TokenService,
   getTokenBalance,
   type TokenInfo,
-} from "@/features/wallet/services/token.service";
+} from '@/features/wallet';
 import { WalletCacheService } from "../services/wallet-cache.service";
 import { ActivityCacheService } from "../services/activity-cache.service";
 import { SkeletonList, SkeletonTable, Pagination } from "@/components";
-import { AddTokenModal, TokenIcon } from "@/features/wallet";
+import { AddTokenModal, TokenIcon } from '@/features/wallet';
 import { NFTGrid } from "@/features/nft";
 import { Zap, Plus } from "lucide-react";
 import { useAppStore, type PendingTransaction } from "@/store";

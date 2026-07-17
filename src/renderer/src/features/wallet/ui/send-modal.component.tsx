@@ -2,17 +2,17 @@ import {
   GAS_ESTIMATION_DEBOUNCE_MS,
   GAS_BUFFER_MULTIPLIER,
   GAS_BUFFER_DIVISOR,
-} from "../wallet.constants";
+} from '../config/wallet.constants';
 import { type JSX, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { ethers } from "ethers";
-import { useWalletUiStore } from "../wallet-ui.store";
+import { useWalletUiStore } from '../model/wallet-ui.store';
 import { useAppStore, type PendingTransaction } from "@/store";
 import {
   TokenService,
   getTokenBalance,
   type TokenInfo,
-} from "@/features/wallet/services/token.service";
+} from '@/features/wallet';
 import {
   resolveWallet,
   estimateNativeTransferGas,
@@ -21,13 +21,13 @@ import {
   executeErc20Transfer,
   requireSessionPassword,
   parseTransferError,
-} from "@/features/wallet/services/transfer.service";
+} from '@/features/wallet';
 import { call, waitForTransactionReceipt } from "@/services";
 import { dispatchNotification } from "@/features/notifications";
 import { Check, AlertCircle } from "lucide-react";
 import { CustomDropdown } from "@/components";
-import { TokenIcon } from "@/features/wallet";
-import type { DerivedAccount } from "../services/wallet.service";
+import { TokenIcon } from '@/features/wallet';
+import type { DerivedAccount } from '../api/wallet.service';
 
 interface SendModalProps {
   activeAccount: DerivedAccount | undefined;

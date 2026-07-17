@@ -13,10 +13,10 @@ import { usePagination, useRecentBlocks } from "@/hooks";
 import { useMiningStats, useMiningControls } from '@/features/mining';
 import { useAppStore } from "@/store";
 import { useMiningStore } from '@/features/mining';
-import { useWalletUiStore } from "@/features/wallet/wallet-ui.store";
-import { getTransactions } from "@/features/wallet/services/transaction.service";
-import { ActivityCacheService } from "@/features/wallet/services/activity-cache.service";
-import { type DerivedAccount } from "@/features/wallet";
+import { useWalletUiStore } from '@/features/wallet';
+import { getTransactions } from '@/features/wallet';
+import { ActivityCacheService } from '@/features/wallet';
+import { type DerivedAccount } from '@/features/wallet';
 import { type ActivityData } from "@/components";
 import {
   formatBlockNumber,
@@ -28,7 +28,7 @@ import {
 import {
   resolveHistoryAddresses,
   filterFoundBlocks,
-} from "@/features/wallet/utils/history.util";
+} from '@/features/wallet';
 import { DashboardHeader } from "./dashboard-header.component";
 import { WalletOverviewCard } from "./wallet-overview-card.component";
 

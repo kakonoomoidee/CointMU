@@ -1,4 +1,4 @@
-import { GRADIENTS } from "../wallet.constants";
+import { GRADIENTS } from '../config/wallet.constants';
 import { Wallet, HDNodeWallet } from "ethers";
 import {
   getSetting,

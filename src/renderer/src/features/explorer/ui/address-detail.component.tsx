@@ -6,8 +6,8 @@ import {
 import { useState, useEffect, useMemo, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { getAddressSummary } from '../api/explorer.service';
-import { AccountIcon, type DerivedAccount } from "@/features/wallet";
-import { getTransactions } from "@/features/wallet/services/transaction.service";
+import { AccountIcon, type DerivedAccount } from '@/features/wallet';
+import { getTransactions } from '@/features/wallet';
 import { usePagination } from "@/hooks";
 import { formatTxAge } from '../lib/explorer.utils';
 import { Sparkline, Pagination, type ActivityData } from "@/components";

@@ -4,7 +4,7 @@ import {
   MINER_POLL_INTERVAL_MS,
 } from '../config/explorer.constants';
 import { type JSX, useState, useEffect } from "react";
-import { AccountIcon } from "@/features/wallet";
+import { AccountIcon } from '@/features/wallet';
 import {
   fetchMinerDistribution,
   type MinerEntry,

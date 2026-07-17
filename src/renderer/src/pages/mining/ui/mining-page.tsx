@@ -4,7 +4,7 @@ import { useTimer, usePagination, useRecentBlocks } from "@/hooks";
 import { useMiningStats, useMiningControls, useMiningActivity } from '@/features/mining';
 import { useAppStore } from "@/store";
 import { useMiningStore, type FoundBlock } from '@/features/mining';
-import { type DerivedAccount } from "@/features/wallet";
+import { type DerivedAccount } from '@/features/wallet';
 import { formatMhs, isWithinLastDay } from "@/utils";
 import {
   getSafeConcurrency,
@@ -14,7 +14,7 @@ import {
 import {
   resolveHistoryAddresses,
   filterFoundBlocks,
-} from "@/features/wallet/utils/history.util";
+} from '@/features/wallet';
 import { AlertCircle } from "lucide-react";
 import { MiningHeader } from '@/features/mining';
 import { MiningHeroCard } from '@/features/mining';

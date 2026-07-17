@@ -3,7 +3,7 @@ import ms from "ms";
 import { WalletPage as Wallet } from "@/pages/wallet";
 import { DashboardPage } from "@/pages/dashboard";
 import { AuthFlow } from "@/features/auth";
-import { type DerivedAccount } from "@/features/wallet";
+import { type DerivedAccount } from '@/features/wallet';
 import {
   getSetting,
   useSecurityStore,

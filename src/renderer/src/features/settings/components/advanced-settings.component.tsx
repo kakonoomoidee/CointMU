@@ -3,7 +3,7 @@ import { useEffect, useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { useAdvancedStore } from "../advanced.store";
 import { CustomDropdown } from "@/components";
-import { purgeSecondaryAccounts } from "@/features/wallet/services/wallet.service";
+import { purgeSecondaryAccounts } from '@/features/wallet';
 
 /**
  * Formats a byte count into a compact human-readable size string.

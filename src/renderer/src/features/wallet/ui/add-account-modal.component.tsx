@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { useWalletUiStore } from "../wallet-ui.store";
+import { useWalletUiStore } from '../model/wallet-ui.store';
 import { Download, Lock, FileText } from "lucide-react";
 
 interface AddAccountModalProps {

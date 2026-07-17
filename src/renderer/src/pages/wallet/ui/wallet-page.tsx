@@ -1,4 +1,4 @@
-import { COPY_FEEDBACK_MS } from "@/features/wallet/wallet.constants";
+import { COPY_FEEDBACK_MS } from '@/features/wallet';
 import { useEffect, useState, type JSX, type MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -9,21 +9,21 @@ import {
   decryptSecret,
   getSessionPassword,
   type DerivedAccount,
-} from "@/features/wallet";
+} from '@/features/wallet';
 import { getSetting, setSetting } from "@/features/settings";
 import { call } from "@/services";
 import { ethers } from "ethers";
 import { useAppStore } from "@/store";
-import { useWalletUiStore } from "@/features/wallet/wallet-ui.store";
+import { useWalletUiStore } from '@/features/wallet';
 import { WalletHeader } from "@/widgets/wallet-layout";
-import { AccountSidebar } from "@/features/wallet/components/account-sidebar.component";
-import { AccountHeroCard } from "@/features/wallet/components/account-hero-card.component";
+import { AccountSidebar } from '@/features/wallet';
+import { AccountHeroCard } from '@/features/wallet';
 import { WalletTabs, type WalletTab } from "@/widgets/wallet-layout";
-import { WalletModals } from "@/features/wallet/components/modals/wallet-modals.component";
+import { WalletModals } from '@/features/wallet';
 import {
   ImportKeystoreModal,
   type ImportKeystoreResult,
-} from "@/features/wallet";
+} from '@/features/wallet';
 
 interface WalletProps {
   accounts: DerivedAccount[];
