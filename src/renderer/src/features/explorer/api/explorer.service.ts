@@ -4,7 +4,7 @@ import {
   WEI_PER_CMU,
   WEI_PER_GWEI,
   HEX_RADIX,
-} from "../explorer.constants";
+} from '../config/explorer.constants';
 import { call, fetchBalance } from "@/services/rpc.client";
 
 type SearchType = "block" | "address" | "hash";

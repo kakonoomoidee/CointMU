@@ -5,7 +5,7 @@ import {
   EMPTY_STAT_LABEL,
   INSIGHTS_POLL_INTERVAL_MS,
   EXPLORER_VIEW_TICK_INTERVAL_MS as TICK_INTERVAL_MS,
-} from "@/features/explorer/explorer.constants";
+} from '@/features/explorer';
 import {
   useState,
   useEffect,
@@ -20,14 +20,14 @@ import { usePagination, useRecentBlocks } from "@/hooks";
 import { useAppStore } from "@/store";
 import { call, fetchBalance } from "@/services";
 import { getNetworkInsights } from "@/features/settings/services/network.service";
-import { detectSearchType } from "@/features/explorer/services/explorer.service";
+import { detectSearchType } from '@/features/explorer';
 import { type DerivedAccount } from "@/features/wallet";
 import { formatBlockNumber } from "@/utils";
 import { type ActivityData } from "@/components";
-import { Insights } from "@/features/explorer/components/insights.component";
-import { ChainTimeline } from "@/features/explorer/components/chain-timeline.component";
+import { Insights } from '@/features/explorer';
+import { ChainTimeline } from '@/features/explorer';
 import { Skeleton, SkeletonCard } from "@/components";
-import { ExplorerHeader } from "@/features/explorer/components/explorer-header.component";
+import { ExplorerHeader } from '@/features/explorer';
 import { ExplorerSearch } from "./explorer-search.component";
 import {
   ExplorerDataTabs,

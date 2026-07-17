@@ -2,14 +2,14 @@ import {
   ADDRESS_TX_PAGE_SIZE,
   MOCK_USD_RATE,
   MS_PER_WEEK,
-} from "../explorer.constants";
+} from '../config/explorer.constants';
 import { useState, useEffect, useMemo, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { getAddressSummary } from "../services/explorer.service";
+import { getAddressSummary } from '../api/explorer.service';
 import { AccountIcon, type DerivedAccount } from "@/features/wallet";
 import { getTransactions } from "@/features/wallet/services/transaction.service";
 import { usePagination } from "@/hooks";
-import { formatTxAge } from "../explorer.utils";
+import { formatTxAge } from '../lib/explorer.utils';
 import { Sparkline, Pagination, type ActivityData } from "@/components";
 import { ChevronLeft, File, ChevronRight } from "lucide-react";
 import { AddressBadge } from "./address-badge.component";

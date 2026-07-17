@@ -5,7 +5,7 @@ import { AccountIcon } from "@/features/wallet";
 import { useAppStore } from "@/store";
 import { SkeletonTable, Pagination, type ActivityData } from "@/components";
 import { MinerDistribution } from "./miner-distribution.component";
-import { formatTxAge } from "../explorer.utils";
+import { formatTxAge } from '../lib/explorer.utils';
 
 type TabState = "blocks" | "transactions" | "accounts";
 

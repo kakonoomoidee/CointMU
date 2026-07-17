@@ -1,4 +1,4 @@
-import { CHAIN_TIMELINE_TICK_INTERVAL_MS as TICK_INTERVAL_MS } from "../explorer.constants";
+import { CHAIN_TIMELINE_TICK_INTERVAL_MS as TICK_INTERVAL_MS } from '../config/explorer.constants';
 import { type JSX, useEffect, useState } from "react";
 import { useAppStore } from "@/store";
 import { X, AlertTriangle, Check, Box } from "lucide-react";

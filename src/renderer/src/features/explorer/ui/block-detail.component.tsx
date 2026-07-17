@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { hexToAscii, formatTxAge } from "../explorer.utils";
+import { hexToAscii, formatTxAge } from '../lib/explorer.utils';
 import { ChevronLeft, Square, File } from "lucide-react";
 import { AddressBadge } from "./address-badge.component";
 
