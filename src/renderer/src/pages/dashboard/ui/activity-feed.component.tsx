@@ -7,7 +7,7 @@ import { ChevronRight, Clock } from "lucide-react";
 import { downloadActivityCsv } from '@/shared/lib';
 import { type DerivedAccount } from '@/features/wallet';
 import { type HistoryFilter } from '@/shared/model';
-import { ACTIVITY_CSV_FILENAME } from "../dashboard.constants";
+import { ACTIVITY_CSV_FILENAME } from '../config/dashboard.constants';
 
 interface ActivityFeedProps {
   isConnected: boolean;

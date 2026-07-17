@@ -6,7 +6,7 @@ import {
   SPARKLINE_BUCKET_MS,
   SPARKLINE_WINDOW_MS,
   TARGET_BLOCK_TIME_SECONDS,
-} from "../dashboard.constants";
+} from '../config/dashboard.constants';
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { usePagination, useRecentBlocks } from '@/shared/lib';

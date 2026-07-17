@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { type BlockData } from '@/shared/lib';
 import { useAppStore } from '@/shared/model';
 import { ChevronRight, Square, Box } from 'lucide-react';
-import { formatRelativeAge } from '../dashboard.utils';
+import { formatRelativeAge } from '../lib/dashboard.utils';
 
 interface LatestBlocksProps {
   isConnected: boolean;
