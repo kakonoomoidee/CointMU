@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useAppStore } from "@/store";
-import { useDappStore } from "../dapp.store";
+import { useDappStore } from '../model/dapp.store';
 import { useConnectedSitesStore } from "@/features/settings";
-import { resolveApprovalResult } from "@/features/dapp/utils/dapp-rpc-resolver.util";
+import { resolveApprovalResult } from './dapp-rpc-resolver.util';
 
 /**
  * Custom hook that listens to the main process for incoming dApp JSON-RPC
