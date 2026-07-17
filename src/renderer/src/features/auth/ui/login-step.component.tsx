@@ -1,6 +1,8 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { useAuthStore } from "../auth.store";
+import { useState } from 'react';
+import { Button } from '@/shared/components/ui/button';
+import { useAuthStore } from "../model/auth.store";
 import { PasswordField } from "./password-field.component";
 
 interface LoginStepProps {

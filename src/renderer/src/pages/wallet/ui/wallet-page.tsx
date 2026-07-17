@@ -1,4 +1,4 @@
-import { COPY_FEEDBACK_MS } from "../wallet.constants";
+import { COPY_FEEDBACK_MS } from "@/features/wallet/wallet.constants";
 import { useEffect, useState, type JSX, type MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -14,12 +14,12 @@ import { getSetting, setSetting } from "@/features/settings";
 import { call } from "@/services";
 import { ethers } from "ethers";
 import { useAppStore } from "@/store";
-import { useWalletUiStore } from "../wallet-ui.store";
-import { WalletHeader } from "./wallet-header.component";
-import { AccountSidebar } from "./account-sidebar.component";
-import { AccountHeroCard } from "./account-hero-card.component";
-import { WalletTabs, type WalletTab } from "./wallet-tabs.component";
-import { WalletModals } from "../modals/wallet-modals.component";
+import { useWalletUiStore } from "@/features/wallet/wallet-ui.store";
+import { WalletHeader } from "@/widgets/wallet-layout";
+import { AccountSidebar } from "@/features/wallet/components/account-sidebar.component";
+import { AccountHeroCard } from "@/features/wallet/components/account-hero-card.component";
+import { WalletTabs, type WalletTab } from "@/widgets/wallet-layout";
+import { WalletModals } from "@/features/wallet/components/modals/wallet-modals.component";
 import {
   ImportKeystoreModal,
   type ImportKeystoreResult,
@@ -40,7 +40,7 @@ interface WalletProps {
  * @param props - Account list and setters, and the active address and setter.
  * @returns The complete wallet view with sidebar, hero card, tabs, and modals.
  */
-function WalletView({
+function WalletPage({
   accounts,
   setAccounts,
   activeWalletAddress,
@@ -303,4 +303,4 @@ function WalletView({
   );
 }
 
-export { WalletView };
+export { WalletPage };

@@ -1,7 +1,7 @@
 import { useState, useEffect, Suspense, lazy, type JSX } from "react";
 import ms from "ms";
-import { WalletView as Wallet } from "@/features/wallet";
-import { DashboardView } from "@/features/dashboard";
+import { WalletPage as Wallet } from "@/pages/wallet";
+import { DashboardPage } from "@/pages/dashboard";
 import { AuthFlow } from "@/features/auth";
 import { type DerivedAccount } from "@/features/wallet";
 import {
@@ -15,20 +15,20 @@ import { useMiningLogStream } from "@/features/mining/hooks";
 import { useAppStore } from "@/store";
 import { useAuthStore } from "@/features/auth";
 
-import { Sidebar, CustomTitleBar } from "@/components";
+import { Sidebar, CustomTitleBar } from "@/widgets/layout";
 import { PairingApprovalModal } from "@/features/dapp";
 import { ToastViewport, useNotificationStore } from "@/features/notifications";
 import { useDappRequestHandler } from "@/features/dapp";
 import { useAutoLock } from "@/features/auth";
 
 const Miner = lazy(() =>
-  import("@/features/mining").then((m) => ({ default: m.MiningView })),
+  import("@/pages/mining").then((m) => ({ default: m.MiningPage })),
 );
 const Explorer = lazy(() =>
-  import("@/features/explorer").then((m) => ({ default: m.ExplorerView })),
+  import("@/pages/explorer").then((m) => ({ default: m.ExplorerPage })),
 );
 const Settings = lazy(() =>
-  import("@/features/settings").then((m) => ({ default: m.SettingsView })),
+  import("@/pages/settings").then((m) => ({ default: m.SettingsPage })),
 );
 
 const NAV_ITEM_DASHBOARD = "dashboard";
@@ -189,7 +189,7 @@ function App(): JSX.Element {
             }
           >
             {activeView === NAV_ITEM_DASHBOARD && (
-              <DashboardView
+              <DashboardPage
                 activeWalletAddress={activeWalletAddress}
                 accounts={accounts}
                 onNavigate={handleNavigate}

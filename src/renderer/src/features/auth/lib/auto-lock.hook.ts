@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useAppStore } from "@/store";
 import { useSecurityStore } from "@/features/settings";
-import { INACTIVITY_TIMEOUT_MS } from "../auth.constants";
+import { INACTIVITY_TIMEOUT_MS } from '../config/auth.constants';
 
 /**
  * Tracks user activity (mouse, keyboard, touch, scroll) and automatically

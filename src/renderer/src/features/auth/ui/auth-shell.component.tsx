@@ -1,6 +1,6 @@
 import { type JSX, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { type AuthStep, type ImportMethod } from "../auth.store";
+import { type AuthStep, type ImportMethod } from '../model/auth.store';
 import { Zap } from "lucide-react";
 
 interface AuthShellProps {

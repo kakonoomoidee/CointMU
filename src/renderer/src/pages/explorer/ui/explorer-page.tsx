@@ -5,7 +5,7 @@ import {
   EMPTY_STAT_LABEL,
   INSIGHTS_POLL_INTERVAL_MS,
   EXPLORER_VIEW_TICK_INTERVAL_MS as TICK_INTERVAL_MS,
-} from "../explorer.constants";
+} from "@/features/explorer/explorer.constants";
 import {
   useState,
   useEffect,
@@ -20,14 +20,14 @@ import { usePagination, useRecentBlocks } from "@/hooks";
 import { useAppStore } from "@/store";
 import { call, fetchBalance } from "@/services";
 import { getNetworkInsights } from "@/features/settings/services/network.service";
-import { detectSearchType } from "../services/explorer.service";
+import { detectSearchType } from "@/features/explorer/services/explorer.service";
 import { type DerivedAccount } from "@/features/wallet";
 import { formatBlockNumber } from "@/utils";
 import { type ActivityData } from "@/components";
-import { Insights } from "./insights.component";
-import { ChainTimeline } from "./chain-timeline.component";
+import { Insights } from "@/features/explorer/components/insights.component";
+import { ChainTimeline } from "@/features/explorer/components/chain-timeline.component";
 import { Skeleton, SkeletonCard } from "@/components";
-import { ExplorerHeader } from "./explorer-header.component";
+import { ExplorerHeader } from "@/features/explorer/components/explorer-header.component";
 import { ExplorerSearch } from "./explorer-search.component";
 import {
   ExplorerDataTabs,
@@ -76,7 +76,7 @@ function sumGenesisAllocCmu(
  * @param props - The active wallet address used to flag and seed account data.
  * @returns The complete explorer interface.
  */
-function ExplorerView({
+function ExplorerPage({
   activeWalletAddress,
   accounts,
 }: ExplorerProps): JSX.Element {
@@ -406,4 +406,4 @@ function ExplorerView({
   );
 }
 
-export { ExplorerView };
+export { ExplorerPage };

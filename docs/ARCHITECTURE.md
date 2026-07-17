@@ -2,136 +2,207 @@
 
 ## 1. Core Philosophy
 
-This project strictly follows a Feature-Driven Architecture (Feature-Sliced Design). The goal is to maximize modularity, make the codebase highly scalable, and ensure that modifying one feature does not break another.
+This project follows **canonical Feature-Sliced Design (FSD)**, not a loose approximation of it. The two ideas that make FSD actually work — and that this document enforces strictly — are:
 
-This is an **Electron desktop application**. All rules below assume a strict separation between the `main` process, `preload` bridge, and `renderer` process. Code that blurs this boundary (e.g. `nodeIntegration: true`, direct Node API access from the renderer) is forbidden regardless of convenience.
+1. **Layers have a strict, one-directional import hierarchy.** A layer may only import from layers strictly below it. Never sideways, never upward.
+2. **Every slice exposes a Public API (`index.ts`) and nothing else is importable from outside.** You compose with a slice through its barrel, you never reach into its internals.
 
-## 2. Directory Structure Overview
+This is an **Electron desktop application**. `main`, `preload`, and `renderer` are separate processes with a hard boundary between them — `nodeIntegration: true` or direct Node access from the renderer is forbidden regardless of convenience. FSD rules below apply specifically to the `renderer` app.
 
-```
+## 2. Directory Structure
+
+```text
 src/
-├── main/            # Electron main process (Node context)
-│   ├── ipc/          # ipcMain handlers, grouped by domain
-│   ├── services/     # OS-level, filesystem, secure storage, WS server/client
-│   └── main.ts       # Entry point, window lifecycle
-├── preload/          # contextBridge exposure only, no business logic
-│   └── preload.ts
-├── renderer/         # The actual UI application (React)
-│   ├── app/
-│   ├── assets/
-│   ├── components/
-│   ├── constants/
-│   ├── features/
-│   ├── hooks/
-│   ├── lib/
-│   ├── services/
-│   ├── stores/
-│   ├── types/
-│   └── utils/
-├── shared/           # Types/constants shared between main and renderer
-└── tests/            # Mirrors src/ structure (see §9)
+├── main/                     # Electron main process (Node context)
+│   ├── ipc/                  # ipcMain handlers, grouped by domain
+│   ├── services/             # OS-level, filesystem, secure storage, WS
+│   └── main.ts                # Entry point, window lifecycle
+│
+├── preload/
+│   └── preload.ts            # contextBridge exposure only, no business logic
+│
+├── bridge/                   # Types/channels shared between main <-> renderer
+│   ├── ipc-channels.ts       # IPC channel name constants
+│   └── types.ts              # Payload/response contracts
+│
+├── renderer/
+│   ├── src/
+│   │   ├── app/                       # App-wide init: providers, router, global styles
+│   │   │   ├── providers/
+│   │   │   ├── router/
+│   │   │   ├── styles/
+│   │   │   └── index.tsx
+│   │   │
+│   │   ├── pages/                     # Route-level compositions. THIN — no business logic.
+│   │   │   └── dashboard/
+│   │   │       ├── ui/
+│   │   │       │   └── DashboardPage.tsx
+│   │   │       └── index.ts           # Public API
+│   │   │
+│   │   ├── widgets/                   # Self-contained composite UI blocks (compose features + entities)
+│   │   │   └── sidebar/
+│   │   │       ├── ui/
+│   │   │       │   └── Sidebar.tsx
+│   │   │       ├── model/
+│   │   │       └── index.ts
+│   │   │
+│   │   ├── features/                  # User actions with business value (verbs)
+│   │   │   ├── send-token/
+│   │   │   │   ├── ui/
+│   │   │   │   │   └── SendTokenForm.tsx
+│   │   │   │   ├── model/
+│   │   │   │   │   └── store.ts
+│   │   │   │   ├── api/
+│   │   │   │   │   └── sendTokenApi.ts
+│   │   │   │   ├── lib/
+│   │   │   │   └── index.ts
+│   │   │   └── connect-wallet/
+│   │   │
+│   │   ├── entities/                  # Core business nouns: data + passive display
+│   │   │   ├── token/
+│   │   │   │   ├── ui/
+│   │   │   │   │   └── TokenCard.tsx
+│   │   │   │   ├── model/
+│   │   │   │   │   ├── store.ts
+│   │   │   │   │   └── types.ts
+│   │   │   │   ├── api/
+│   │   │   │   │   └── tokenApi.ts
+│   │   │   │   └── index.ts
+│   │   │   └── user/
+│   │   │
+│   │   └── shared/                    # Domain-agnostic, reusable anywhere
+│   │       ├── ui/                    # Design system: Button, Modal, Input...
+│   │       ├── api/                   # Base HTTP/WS client instance
+│   │       ├── lib/                   # Generic helper functions
+│   │       ├── config/                # Env vars, feature flags
+│   │       └── constants/             # app.constants.ts etc.
+│   │
+│   ├── index.html
+│   └── main.tsx
+│
+└── tests/                    # Mirrors src/ structure (see §11)
 ```
 
-> Rule: `main/` owns anything that touches the OS, filesystem, secure storage, or raw sockets. `renderer/` never does this directly — it always goes through `preload` → IPC → `main`.
+> **Naming note:** the top-level `bridge/` folder (main ↔ renderer contracts) is intentionally _not_ called `shared`, to avoid collision with `renderer/src/shared`, which is the FSD shared layer. Two different concepts, two different names — don't reuse "shared" for both.
 
-## 3. The Features Architecture
+## 3. The Six Layers, in Order
 
-Every core domain of the application (e.g., `auth`, `wallets`, `transactions`) must live inside `renderer/features/`. A feature must be treated as an isolated micro-frontend.
-
-A standard feature folder looks like this:
+Top to bottom = higher-level to lower-level. Import direction only ever flows **downward**:
 
 ```
-features/auth/
-├── auth.api.ts
-├── auth.components.tsx
-├── auth.constants.ts
-├── auth.dto.ts
-├── auth.hooks.ts
-├── auth.schemas.ts
-├── auth.types.ts
-├── auth.store.ts
-└── index.ts
+app → pages → widgets → features → entities → shared
 ```
 
-**Rule of Isolation:** Features are strictly forbidden from importing components, stores, or state from other features directly. If two features need to share logic, that logic must be moved to the global directories (`src/renderer/components`, `src/renderer/hooks`, `src/renderer/utils`).
+| Layer      | Purpose                                                                                                 | Can import from                            |
+| ---------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `app`      | App-wide setup: routing, providers, global styles, entry point                                          | pages, widgets, features, entities, shared |
+| `pages`    | One slice per route. Composes widgets/features/entities. **No business logic lives here.**              | widgets, features, entities, shared        |
+| `widgets`  | Large, self-contained UI blocks composed from multiple features/entities (e.g. sidebar, header)         | features, entities, shared                 |
+| `features` | A single user action with business value — always a verb (`send-token`, `connect-wallet`, `swap-token`) | entities, shared                           |
+| `entities` | A core business noun — data model + passive display (e.g. `token`, `user`, `wallet`)                    | shared only                                |
+| `shared`   | Domain-agnostic reusable code: design system, generic utils, base API client, config                    | nothing above it                           |
 
-**Barrel export rule (`index.ts`):** Each feature's `index.ts` must only re-export what other features/pages are explicitly allowed to consume (typically: the main component, public hooks, and public types). Internal helpers, raw store instances, and DTOs must **not** be exported from the barrel. This is what makes the Rule of Isolation actually enforceable instead of just a convention on paper.
+**A layer never imports from another slice in the same layer.** `features/send-token` must not import from `features/connect-wallet`. `entities/token` must not import from `entities/user`. If two slices in the same layer need to interact, that composition happens one layer up (a widget or page imports both and wires them together).
 
-## 4. The "No Magic Numbers" Rule
+### `entities` vs `features` — the distinction that actually matters
 
-Directly writing hardcoded numbers or static string keys inside components or logic files is strictly forbidden.
+This is the split most teams get wrong, so it's explicit here:
 
-- All application-wide static values must be exported from `src/renderer/constants/` (e.g., `app.constants.ts`).
-- All feature-specific static values must be exported from the feature folder using the strict naming convention (e.g., `auth.constants.ts`).
-- Always use `UPPER_SNAKE_CASE` for constant variable names.
-- IPC channel names and WebSocket event names count as static string keys — see §7 and §8, they must never be inlined as raw strings either.
+- **`entities`** = the noun and its passive representation. `entities/token` owns what a token _is_ (type, store of "current known tokens", a `TokenCard` that just displays balance/name). It does **not** know how to send, swap, or burn a token.
+- **`features`** = the verb. `features/send-token` is the actual user-facing action: form, validation, calling the API/IPC, side effects. It imports `entities/token` to know the shape of a token, but the _action_ itself lives in `features`, never in `entities`.
 
-## 5. Services and Data Transfer Objects (DTOs)
+If you're not sure which layer something belongs in, ask: "is this describing what something _is_, or what a user can _do_?" What-it-is → `entities`. What-a-user-can-do → `features`.
 
-- **Services:** All external HTTP requests and WebSocket listeners must be encapsulated inside `services/` or `features/[name]/`. Components should never call `fetch`, `axios`, or `window.electron.ipcRenderer` directly — always through a service wrapper.
-- **DTOs:** API/IPC responses must not be passed directly into UI components. Use DTO functions to clean, format, and map raw backend data into strict frontend interfaces before it reaches the view layer.
+## 4. Segments — same set of names in every slice
 
-## 6. Security & Sensitive Data Handling
+Every slice, regardless of layer, uses the **same segment names**. No slice invents its own internal structure:
 
-This is a wallet application. Violations in this section are treated as critical bugs, not style issues.
+- `ui/` — components, view logic
+- `model/` — state (Zustand stores), business logic, types
+- `api/` — requests to backend/IPC/WebSocket for this slice
+- `lib/` — slice-local helper functions that don't belong in `shared/lib`
+- `config/` — slice-local constants/config (rare, most config is in `shared/config`)
 
-- **Private keys, seed phrases, and mnemonics must never enter the renderer's persistent storage.** They may only exist transiently in memory in `main`, and must be wiped from memory as soon as the operation using them completes.
-- **Never log sensitive data.** No `console.log`, no error-tracking payloads, no crash reports may contain private keys, mnemonics, passwords, or raw signed transactions.
-- **Encryption at rest:** any sensitive data that must persist (encrypted keystore, session tokens) is encrypted using Node's `crypto` module (AES-256-GCM) in the `main` process — never `localStorage`/`sessionStorage` in the renderer, and never plaintext on disk.
-- **IPC boundary discipline:** the `preload` script exposes only a minimal, explicitly whitelisted API via `contextBridge.exposeInMainWorld`. It must never expose `ipcRenderer` wholesale (no `exposeInMainWorld('ipcRenderer', ipcRenderer)`).
-- **Clipboard hygiene:** if a private key, seed phrase, or address is copied to clipboard, it must be auto-cleared after a fixed timeout (e.g. 30s), and the UI must warn the user this will happen.
-- **Renderer hardening:** `contextIsolation: true`, `nodeIntegration: false`, and `sandbox: true` are mandatory on every `BrowserWindow`. Any exception must be justified in a code comment referencing this rule.
+Not every slice needs every segment — a simple `entities/user` might only have `model/` and `ui/`. But when a segment exists, it uses these names. `components/`, `hooks/`, `store/`, `services/` as segment names (as seen in earlier drafts of this doc) are **deprecated** — migrate them to the segment names above.
 
-## 7. IPC Convention (Main ↔ Preload ↔ Renderer)
+## 5. Public API Rule (barrel `index.ts`)
 
-- Channel names follow `domain:action` format, defined as constants (e.g. `WALLET_CHANNELS.GET_BALANCE = 'wallet:get-balance'`), never inline strings.
-- Every `ipcMain.handle` must have a matching typed wrapper exposed through `preload`, and a corresponding typed function in the renderer's `services/` layer. Components call the service function, never `window.electron.invoke(...)` directly.
-- Request/response payloads crossing the IPC boundary must be validated (e.g. with `zod`) on the `main` side, since renderer input cannot be trusted even in a desktop app.
+Every slice's `index.ts` is the **only** thing another slice is allowed to import. Deep-importing a file inside another slice (e.g. `import { useMiningStore } from '@/features/mining/model/store'` from outside that slice) is forbidden, even if it technically works.
 
-## 8. WebSocket Layer
+- `index.ts` re-exports only what's intentionally public: the main component(s), public hooks, public types.
+- Internal helpers, raw store instances, and DTOs stay unexported unless explicitly needed by consumers.
+- Recommended: enforce this with lint tooling (`eslint-plugin-boundaries`, or the official `@feature-sliced/steiger` linter) instead of relying on code review alone — this is a rule that's very easy to violate accidentally as the codebase grows.
 
-Since this app connects to a paired peer (extension/relay) over WebSocket, this layer needs explicit conventions:
+## 6. The "No Magic Numbers" Rule
 
-- **Reconnection strategy:** exponential backoff with a max retry cap; must be configurable, not hardcoded inline.
-- **Event naming:** `domain:action` format, matching the IPC convention (e.g. `wallet:balance:update`), defined as constants.
-- **Heartbeat:** ping/pong interval and timeout values must be defined in constants, not magic numbers.
-- **Connection state:** must be exposed to the UI through a dedicated store (e.g. `connectionStore`), not inferred ad-hoc from individual feature stores.
+- All application-wide static values live in `shared/constants/` (e.g. `app.constants.ts`).
+- All slice-specific static values live in that slice's `model/` or local `config/` segment.
+- Always `UPPER_SNAKE_CASE` for constant names.
+- IPC channel names (`bridge/ipc-channels.ts`) and WebSocket event names count as static string keys — never inlined (see §9, §10).
 
-## 9. State Management (Zustand)
+## 7. Services and DTOs
 
-- One store per feature, colocated as `[domain].store.ts` inside that feature folder. Cross-cutting state (e.g. connection status, active wallet) lives in `src/renderer/stores/`, not inside a feature.
-- Stores expose actions as named functions on the store itself — components never mutate state directly.
-- If a store needs persistence, use Zustand's `persist` middleware **only for non-sensitive UI state** (e.g. theme, last-opened tab). Anything touching wallet data must go through the `main`-process encrypted storage in §6, never Zustand `persist` to `localStorage`.
+- **API calls** live in each slice's `api/` segment. Components never call `fetch`, `axios`, or `window.electron.ipcRenderer` directly.
+- **DTOs:** raw API/IPC responses are never passed directly into `ui/`. Map them into strict frontend types in `api/` or `model/` before they reach a component.
 
-## 10. Error Handling
+## 8. Security & Sensitive Data Handling
 
-- Define custom error classes per domain (e.g. `WalletError`, `IpcError`) instead of throwing raw strings or generic `Error`.
-- Errors crossing the IPC boundary must be serialized into a consistent shape (`{ code, message }`) — never leak raw Node error objects or stack traces to the renderer.
-- UI-facing error messages are mapped from error codes in a single place per feature (e.g. `auth.errors.ts`), not scattered inline across components.
+This is a wallet application. Violations here are critical bugs, not style issues.
 
-## 11. i18n / Locale Convention
+- **Private keys, seed phrases, and mnemonics never enter the renderer's persistent storage.** They exist only transiently in `main` process memory and are wiped as soon as the operation completes.
+- **Never log sensitive data** — no `console.log`, no crash reports, no error-tracking payloads containing keys, mnemonics, passwords, or signed transactions.
+- **Encryption at rest** uses Node's `crypto` (AES-256-GCM) in `main`. Never `localStorage`/`sessionStorage` for sensitive data, never plaintext on disk.
+- **IPC boundary discipline:** `preload` exposes a minimal, explicitly whitelisted API via `contextBridge.exposeInMainWorld`. Never expose `ipcRenderer` wholesale.
+- **Clipboard hygiene:** copied private keys/seed phrases/addresses auto-clear after a fixed timeout (e.g. 30s); UI warns the user this will happen.
+- **Renderer hardening:** `contextIsolation: true`, `nodeIntegration: false`, `sandbox: true` mandatory on every `BrowserWindow`. Any exception needs a code comment justifying it against this rule.
 
-- Translation keys follow `domain.key` dot notation (e.g. `wallet.balance.label`), matching the feature naming convention.
-- No hardcoded user-facing strings in components — always resolved through the locale layer.
-- New keys must be added to all supported locale files in the same change; a missing key in any locale is a build-blocking issue, not a warning.
+## 9. IPC Convention (Main ↔ Preload ↔ Renderer)
 
-## 12. Testing (forward-looking convention)
+- Channel names live in `bridge/ipc-channels.ts`, format `domain:action` (e.g. `WALLET_CHANNELS.GET_BALANCE = 'wallet:get-balance'`). Never inline strings.
+- Every `ipcMain.handle` has a matching typed wrapper in `preload`, and a typed function in the consuming slice's `api/` segment. Components call that function, never `window.electron.invoke(...)` directly.
+- Payloads crossing the IPC boundary are validated (e.g. with `zod`) on the `main` side — renderer input isn't trusted even in a desktop app.
 
-Testing isn't set up yet, but new code should already follow this convention so adoption later doesn't require a rewrite:
+## 10. WebSocket Layer
 
-- Framework: **Vitest** (fastest fit for a Vite/TS/Zustand stack; swap this line if the project ends up using something else).
-- File naming mirrors the source file: `auth.store.ts` → `auth.store.test.ts`, colocated next to the file it tests.
-- Priority order once testing starts: (1) `main` process IPC handlers and encryption/storage logic — highest risk, (2) Zustand stores, (3) DTO mapping functions, (4) components — lowest priority, UI can be covered last.
-- No formal coverage % requirement yet; the rule for now is "critical wallet logic and IPC handlers are not merged without a test."
+- **Reconnection:** exponential backoff with a max retry cap, configurable via `shared/config`, never hardcoded inline.
+- **Event naming:** `domain:action` format matching the IPC convention (e.g. `wallet:balance:update`), defined as constants.
+- **Heartbeat:** ping/pong interval and timeout defined as constants.
+- **Connection state:** exposed through a dedicated slice (e.g. `entities/connection`), not inferred ad-hoc from individual feature stores.
 
-## 13. Coding Standards & Conventions
+## 11. State Management (Zustand)
 
-- **Language:** TypeScript is mandatory. `any` types are strictly forbidden unless interacting with untyped legacy external libraries.
-- **Imports:** Use ES6 modules. Prefer absolute imports (e.g., `@/components/...`) over relative paths (`../../components/...`).
-- **Documentation:** Use standard English JSDoc formatting strictly at the function, interface, or class level. Inline commenting should be avoided; write self-documenting code instead.
-- **File Naming:** Strictly use the dot-notation pattern `[domain].[type].ts` or `[domain].[type].tsx`.
-  - Allowed examples: `auth.constants.ts`, `user.store.ts`, `wallet.api.ts`, `button.component.tsx`.
-  - Forbidden examples: `auth-constants.ts`, `AuthConstants.ts`, `constants.ts`.
-- **Variable/Function Naming:** camelCase.
-- **Class/Interface Naming:** PascalCase.
-- **Linting/Formatting:** ESLint + Prettier config in the repo root is the source of truth; agent-generated code must conform to it, not introduce a different style.
+- One store per slice, in that slice's `model/` segment.
+- Stores expose actions as named functions on the store — components never mutate state directly.
+- `persist` middleware is allowed **only for non-sensitive UI state** (theme, last-opened tab). Anything touching wallet data goes through the `main`-process encrypted storage in §8 — never Zustand `persist` to `localStorage`.
+
+## 12. Error Handling
+
+- Custom error classes per domain (`WalletError`, `IpcError`) instead of raw strings or generic `Error`.
+- Errors crossing the IPC boundary are serialized into a consistent shape (`{ code, message }`) — never leak raw Node error objects/stack traces to the renderer.
+- UI-facing error messages are mapped from error codes in one place per slice (e.g. `features/send-token/lib/errors.ts`).
+
+## 13. i18n / Locale Convention
+
+- Translation keys use `domain.key` dot notation (e.g. `wallet.balance.label`).
+- No hardcoded user-facing strings in `ui/` — always resolved through the locale layer.
+- New keys are added to all supported locale files in the same change; a missing key in any locale blocks the build, it's not just a warning.
+
+## 14. Testing (forward-looking convention)
+
+Not set up yet, but new code should already follow this so adoption later doesn't require a rewrite:
+
+- Framework: **Vitest**.
+- Test files are colocated inside the segment they test: `model/store.ts` → `model/store.test.ts`.
+- Priority once testing starts: (1) `main` process IPC handlers + encryption/storage — highest risk, (2) `model/` stores, (3) `api/` DTO mapping, (4) `ui/` components — lowest priority.
+- No formal coverage % yet; the rule for now is "critical wallet logic and IPC handlers are not merged without a test."
+
+## 15. Coding Standards & Conventions
+
+- **Language:** TypeScript mandatory. `any` forbidden unless interacting with an untyped legacy external library.
+- **Imports:** ES6 modules, absolute paths (`@/features/send-token`) over relative (`../../features/send-token`).
+- **Documentation:** English JSDoc at function/interface/class level. Avoid inline comments — write self-documenting code.
+- **File naming inside a slice's segment:** name by _responsibility_, not by repeating the domain — the slice folder already gives that context. `model/store.ts`, `model/selectors.ts`, `ui/SendTokenForm.tsx`, `api/sendTokenApi.ts`. If a segment has multiple files of the same kind, disambiguate by purpose, not domain: `model/sessionStore.ts` + `model/settingsStore.ts`, not `auth.store.ts` + `auth.store2.ts`.
+- **File naming inside `shared/`:** since there's no enclosing slice folder to provide context here, keep the domain prefix: `app.constants.ts`, `date.utils.ts`.
+- **Variable/function naming:** camelCase.
+- **Class/interface naming:** PascalCase.
+- **Linting/formatting:** ESLint + Prettier config in the repo root is the source of truth. Strongly recommended: add `eslint-plugin-boundaries` or `steiger` to actually enforce the import hierarchy in §3 and the Public API rule in §5 — without tooling, these two rules erode quietly as the codebase grows.

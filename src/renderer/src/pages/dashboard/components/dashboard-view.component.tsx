@@ -53,7 +53,7 @@ interface DashboardProps {
  * @param props - The active wallet address and the view navigation callback.
  * @returns The complete dashboard layout.
  */
-function DashboardView({
+function DashboardPage({
   activeWalletAddress,
   accounts,
   onNavigate,
@@ -315,4 +315,4 @@ function DashboardView({
   );
 }
 
-export { DashboardView };
+export { DashboardPage };

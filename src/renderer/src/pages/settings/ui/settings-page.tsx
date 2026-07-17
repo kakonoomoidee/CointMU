@@ -1,15 +1,15 @@
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { GeneralSettings } from "./general-settings.component";
-import { AppearanceSettings } from "./appearance-settings.component";
-import { NetworkSettings } from "./network-settings.component";
-import { MiningSettings } from "./mining-settings.component";
-import { SecuritySettings } from "./security-settings.component";
-import { ConnectedSitesSettings } from "./connected-sites-settings.component";
-import { ExternalSourceSettings } from "./external-source-settings.component";
-import { AdvancedSettings } from "./advanced-settings.component";
-import { AboutSettings } from "./about-settings.component";
-import { NotificationSettings } from "./notification-settings.component";
+import { GeneralSettings } from "@/features/settings/components/general-settings.component";
+import { AppearanceSettings } from "@/features/settings/components/appearance-settings.component";
+import { NetworkSettings } from "@/features/settings/components/network-settings.component";
+import { MiningSettings } from "@/features/settings/components/mining-settings.component";
+import { SecuritySettings } from "@/features/settings/components/security-settings.component";
+import { ConnectedSitesSettings } from "@/features/settings/components/connected-sites-settings.component";
+import { ExternalSourceSettings } from "@/features/settings/components/external-source-settings.component";
+import { AdvancedSettings } from "@/features/settings/components/advanced-settings.component";
+import { AboutSettings } from "@/features/settings/components/about-settings.component";
+import { NotificationSettings } from "@/features/settings/components/notification-settings.component";
 import { getAllSettings, setSetting } from "@/features/settings";
 import {
   Sun,
@@ -159,7 +159,7 @@ interface SettingsProps {
  * @param props - Settings configuration.
  * @returns The Settings interface with left navigation and right content area.
  */
-function SettingsView({
+function SettingsPage({
   initialCategory = "general",
 }: SettingsProps = {}): JSX.Element {
   const [activeCategory, setActiveCategory] =
@@ -296,4 +296,4 @@ function SettingsView({
   );
 }
 
-export { SettingsView };
+export { SettingsPage };

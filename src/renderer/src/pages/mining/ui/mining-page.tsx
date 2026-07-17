@@ -1,30 +1,30 @@
-import { FOUND_BLOCKS_PAGE_SIZE } from "../mining.constants";
+import { FOUND_BLOCKS_PAGE_SIZE } from "@/features/mining/mining.constants";
 import { useState, useMemo, type JSX } from "react";
 import { useTimer, usePagination, useRecentBlocks } from "@/hooks";
-import { useMiningStats, useMiningControls, useMiningActivity } from "../hooks";
+import { useMiningStats, useMiningControls, useMiningActivity } from "@/features/mining/hooks";
 import { useAppStore } from "@/store";
-import { useMiningStore, type FoundBlock } from "../mining.store";
+import { useMiningStore, type FoundBlock } from "@/features/mining/mining.store";
 import { type DerivedAccount } from "@/features/wallet";
 import { formatMhs, isWithinLastDay } from "@/utils";
 import {
   getSafeConcurrency,
   formatRewards,
   formatDifficultyLabel,
-} from "../mining.utils";
+} from "@/features/mining/mining.utils";
 import {
   resolveHistoryAddresses,
   filterFoundBlocks,
 } from "@/features/wallet/utils/history.util";
 import { AlertCircle } from "lucide-react";
-import { MiningHeader } from "./mining-header.component";
-import { MiningHeroCard } from "./mining-hero-card.component";
+import { MiningHeader } from "@/features/mining/components/mining-header.component";
+import { MiningHeroCard } from "@/features/mining/components/mining-hero-card.component";
 
-import { MiningStatsGrid } from "./mining-stats-grid.component";
-import { WorkerConfiguration } from "./worker-configuration.component";
+import { MiningStatsGrid } from "@/features/mining/components/mining-stats-grid.component";
+import { WorkerConfiguration } from "@/features/mining/components/worker-configuration.component";
 import {
   MiningActivity,
   ACTIVITY_TAB_FOUND,
-} from "./mining-activity.component";
+} from "@/features/mining/components/mining-activity.component";
 import { SkeletonCard, SkeletonList, Skeleton } from "@/components";
 
 interface MinerProps {
@@ -41,7 +41,7 @@ interface MinerProps {
  * @param props - The active wallet address.
  * @returns The complete mining view with header, hero, KPI grid, and panels.
  */
-function MiningView({ accounts, onNavigate }: MinerProps): JSX.Element {
+function MiningPage({ accounts, onNavigate }: MinerProps): JSX.Element {
   const [maxCores] = useState<number>(getSafeConcurrency());
   const [activeTab, setActiveTab] = useState<string>(ACTIVITY_TAB_FOUND);
 
@@ -216,4 +216,4 @@ function MiningView({ accounts, onNavigate }: MinerProps): JSX.Element {
   );
 }
 
-export { MiningView };
+export { MiningPage };

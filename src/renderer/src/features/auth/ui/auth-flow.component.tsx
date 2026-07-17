@@ -1,4 +1,7 @@
-import { MIN_PASSWORD_LENGTH, COPY_FEEDBACK_MS } from "../auth.constants";
+import {
+  MIN_PASSWORD_LENGTH,
+  COPY_FEEDBACK_MS,
+} from "../config/auth.constants";
 import { useEffect, useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -10,7 +13,7 @@ import {
   unlockSession,
 } from "@/features/wallet";
 import { getSetting, setSetting } from "@/features/settings";
-import { useAuthStore } from "../auth.store";
+import { useAuthStore } from "../model/auth.store";
 import {
   ImportKeystoreModal,
   type ImportKeystoreResult,
