@@ -33,6 +33,7 @@ export const SELF_BLOCK_REWARD = "+2.00";
 export const ACTIVITY_WINDOW_MS = ms("30d");
 export const ACTIVITY_WINDOW_DAYS = 30;
 export const SECONDS_TO_MS = 1000;
+export const YEARLY_WINDOW_DAYS = 365;
 
 export const ACTIVITY_TAB_FOUND = "Found";
 export const ACTIVITY_TAB_LOG = "Log";
@@ -43,6 +44,14 @@ export const ACTIVITY_TABS = [
   ACTIVITY_TAB_ACTIVITY,
 ];
 
-export const HEATMAP_INTENSITY_LEGEND = ['bg-slate-100', 'bg-green-200', 'bg-green-400', 'bg-green-600'];
+export const HEATMAP_INTENSITY_LEGEND = [
+  "bg-slate-100",
+  "bg-green-200",
+  "bg-green-400",
+  "bg-green-600",
+];
 export const HEATMAP_HALF_YEAR_LENGTH = 182;
 
+export const SECONDS_IN_DAY = 86400;
+export const TOP_MINERS_LIMIT = 5;
+export const MAX_BLOCKS_TO_SCAN = 5000;

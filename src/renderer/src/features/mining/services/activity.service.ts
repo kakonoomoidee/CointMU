@@ -1,12 +1,10 @@
-import { subDays, format } from 'date-fns'
-
-const YEARLY_WINDOW_DAYS = 365
-const SECONDS_TO_MS = 1000
+import { subDays, format } from "date-fns";
+import { YEARLY_WINDOW_DAYS, SECONDS_TO_MS } from "../mining.constants";
 
 export interface ActivityContribution {
-  date: string
-  blocksValidated: number
-  miningOperations: number
+  date: string;
+  blocksValidated: number;
+  miningOperations: number;
 }
 
 /**
@@ -18,20 +16,26 @@ export interface ActivityContribution {
  * @param blocks - Found blocks carrying a Unix timestamp in seconds.
  * @returns The ordered list of daily contributions for the last 365 days.
  */
-export function getYearlyActivity(blocks: { timestamp: number }[]): ActivityContribution[] {
-  const countsByDate = new Map<string, number>()
+export function getYearlyActivity(
+  blocks: { timestamp: number }[],
+): ActivityContribution[] {
+  const countsByDate = new Map<string, number>();
   for (const block of blocks) {
-    const key = format(new Date(block.timestamp * SECONDS_TO_MS), 'yyyy-MM-dd')
-    countsByDate.set(key, (countsByDate.get(key) ?? 0) + 1)
+    const key = format(new Date(block.timestamp * SECONDS_TO_MS), "yyyy-MM-dd");
+    countsByDate.set(key, (countsByDate.get(key) ?? 0) + 1);
   }
 
-  const today = new Date()
-  const contributions: ActivityContribution[] = []
+  const today = new Date();
+  const contributions: ActivityContribution[] = [];
   for (let offset = YEARLY_WINDOW_DAYS - 1; offset >= 0; offset--) {
-    const date = format(subDays(today, offset), 'yyyy-MM-dd')
-    const count = countsByDate.get(date) ?? 0
-    contributions.push({ date, blocksValidated: count, miningOperations: count })
+    const date = format(subDays(today, offset), "yyyy-MM-dd");
+    const count = countsByDate.get(date) ?? 0;
+    contributions.push({
+      date,
+      blocksValidated: count,
+      miningOperations: count,
+    });
   }
 
-  return contributions
+  return contributions;
 }

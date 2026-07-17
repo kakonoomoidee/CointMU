@@ -1,7 +1,7 @@
 import { type JSX } from "react";
-import { type DerivedAccount } from '@/features/wallet';
+import { type DerivedAccount } from "@/features/wallet";
 import { useWalletUiStore } from "../wallet-ui.store";
-import { X } from 'lucide-react';
+import { X } from "lucide-react";
 import { ReceiveModal } from "./receive-modal.component";
 import { SendModal } from "./send-modal.component";
 import { AddAccountModal } from "./add-account-modal.component";

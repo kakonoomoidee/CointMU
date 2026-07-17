@@ -1,7 +1,7 @@
 import { LANGUAGE_OPTIONS } from "../settings.constants";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { CustomDropdown } from "@/components/CustomDropdown";
+import { CustomDropdown } from "@/components";
 
 /**
  * A UI component that allows users to toggle the application language

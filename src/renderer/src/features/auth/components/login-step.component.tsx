@@ -1,11 +1,11 @@
-import { type JSX } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useAuthStore } from '../auth.store'
-import { PasswordField } from './password-field.component'
+import { type JSX } from "react";
+import { useTranslation } from "react-i18next";
+import { useAuthStore } from "../auth.store";
+import { PasswordField } from "./password-field.component";
 
 interface LoginStepProps {
-  onUnlock: () => void
-  onBack: () => void
+  onUnlock: () => void;
+  onBack: () => void;
 }
 
 /**
@@ -16,24 +16,24 @@ interface LoginStepProps {
  * @returns The rendered login step.
  */
 function LoginStep({ onUnlock, onBack }: LoginStepProps): JSX.Element {
-  const { t } = useTranslation()
-  const password = useAuthStore((s) => s.password)
-  const showPassword = useAuthStore((s) => s.showPassword)
-  const error = useAuthStore((s) => s.error)
-  const setPassword = useAuthStore((s) => s.setPassword)
-  const setShowPassword = useAuthStore((s) => s.setShowPassword)
-  const setError = useAuthStore((s) => s.setError)
+  const { t } = useTranslation();
+  const password = useAuthStore((s) => s.password);
+  const showPassword = useAuthStore((s) => s.showPassword);
+  const error = useAuthStore((s) => s.error);
+  const setPassword = useAuthStore((s) => s.setPassword);
+  const setShowPassword = useAuthStore((s) => s.setShowPassword);
+  const setError = useAuthStore((s) => s.setError);
 
   return (
     <div className="w-full flex flex-col gap-5">
       <PasswordField
-        label={t('auth.login.enterPassword')}
+        label={t("auth.login.enterPassword")}
         value={password}
-        placeholder={t('auth.login.passwordPlaceholder')}
+        placeholder={t("auth.login.passwordPlaceholder")}
         show={showPassword}
         onChange={(value) => {
-          setPassword(value)
-          setError(null)
+          setPassword(value);
+          setError(null);
         }}
         onToggleShow={() => setShowPassword(!showPassword)}
       />
@@ -43,21 +43,18 @@ function LoginStep({ onUnlock, onBack }: LoginStepProps): JSX.Element {
           onClick={onBack}
           className="flex-1 py-3.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors"
         >
-          {t('auth.login.back')}
+          {t("auth.login.back")}
         </button>
         <button
           onClick={onUnlock}
           className="flex-1 py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm"
         >
-          {t('auth.login.unlock')}
+          {t("auth.login.unlock")}
         </button>
       </div>
     </div>
-  )
+  );
 }
 
-export { LoginStep }
-export type { LoginStepProps }
-
-
-
+export { LoginStep };
+export type { LoginStepProps };

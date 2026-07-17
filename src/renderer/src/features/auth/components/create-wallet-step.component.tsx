@@ -1,12 +1,12 @@
-import { type JSX } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useAuthStore } from '../auth.store'
-import { Check, Copy, AlertTriangle } from 'lucide-react'
+import { type JSX } from "react";
+import { useTranslation } from "react-i18next";
+import { useAuthStore } from "../auth.store";
+import { Check, Copy, AlertTriangle } from "lucide-react";
 
 interface CreateWalletStepProps {
-  onCopySeed: () => void
-  onContinue: () => void
-  onBack: () => void
+  onCopySeed: () => void;
+  onContinue: () => void;
+  onBack: () => void;
 }
 
 /**
@@ -16,22 +16,30 @@ interface CreateWalletStepProps {
  * @param props - The copy, continue, and back navigation handlers.
  * @returns The rendered create wallet step.
  */
-function CreateWalletStep({ onCopySeed, onContinue, onBack }: CreateWalletStepProps): JSX.Element {
-  const { t } = useTranslation()
-  const mnemonic = useAuthStore((s) => s.mnemonic)
-  const copied = useAuthStore((s) => s.copied)
+function CreateWalletStep({
+  onCopySeed,
+  onContinue,
+  onBack,
+}: CreateWalletStepProps): JSX.Element {
+  const { t } = useTranslation();
+  const mnemonic = useAuthStore((s) => s.mnemonic);
+  const copied = useAuthStore((s) => s.copied);
 
   return (
     <div className="w-full flex flex-col gap-6">
       <div className="relative">
         <div className="grid grid-cols-3 gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
-          {mnemonic.split(' ').map((word, index) => (
+          {mnemonic.split(" ").map((word, index) => (
             <div
               key={index}
               className="flex items-center gap-2 px-3 py-2 bg-white rounded shadow-sm border border-slate-100"
             >
-              <span className="text-xs text-slate-400 font-mono select-none w-4">{index + 1}.</span>
-              <span className="text-sm font-semibold text-slate-800 font-mono">{word}</span>
+              <span className="text-xs text-slate-400 font-mono select-none w-4">
+                {index + 1}.
+              </span>
+              <span className="text-sm font-semibold text-slate-800 font-mono">
+                {word}
+              </span>
             </div>
           ))}
         </div>
@@ -41,22 +49,32 @@ function CreateWalletStep({ onCopySeed, onContinue, onBack }: CreateWalletStepPr
         >
           {copied ? (
             <>
-              <Check className="text-emerald-500" width={14} height={14} strokeWidth={2.5} />
-              {t('auth.createWallet.copied')}
+              <Check
+                className="text-emerald-500"
+                width={14}
+                height={14}
+                strokeWidth={2.5}
+              />
+              {t("auth.createWallet.copied")}
             </>
           ) : (
             <>
               <Copy width={14} height={14} />
-              {t('auth.createWallet.copy')}
+              {t("auth.createWallet.copy")}
             </>
           )}
         </button>
       </div>
 
       <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 flex gap-3 items-start">
-        <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" width={16} height={16} strokeWidth={2.5} />
+        <AlertTriangle
+          className="text-amber-500 shrink-0 mt-0.5"
+          width={16}
+          height={16}
+          strokeWidth={2.5}
+        />
         <p className="text-xs text-amber-800 font-medium">
-          {t('auth.createWallet.warning')}
+          {t("auth.createWallet.warning")}
         </p>
       </div>
 
@@ -65,21 +83,18 @@ function CreateWalletStep({ onCopySeed, onContinue, onBack }: CreateWalletStepPr
           onClick={onBack}
           className="flex-1 py-3.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors"
         >
-          {t('auth.createWallet.back')}
+          {t("auth.createWallet.back")}
         </button>
         <button
           onClick={onContinue}
           className="flex-[2] py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm"
         >
-          {t('auth.createWallet.savedWords')}
+          {t("auth.createWallet.savedWords")}
         </button>
       </div>
     </div>
-  )
+  );
 }
 
-export { CreateWalletStep }
-export type { CreateWalletStepProps }
-
-
-
+export { CreateWalletStep };
+export type { CreateWalletStepProps };

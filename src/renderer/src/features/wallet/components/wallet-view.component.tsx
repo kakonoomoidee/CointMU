@@ -1,9 +1,17 @@
 import { COPY_FEEDBACK_MS } from "../wallet.constants";
 import { useEffect, useState, type JSX, type MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { deriveAccount, generateIdenticonGradient, deriveAccountFromPrivateKey, encryptSecret, decryptSecret, getSessionPassword, type DerivedAccount } from '@/features/wallet'
-import { getSetting, setSetting } from '@/features/settings'
-import { call } from '@/services';
+import {
+  deriveAccount,
+  generateIdenticonGradient,
+  deriveAccountFromPrivateKey,
+  encryptSecret,
+  decryptSecret,
+  getSessionPassword,
+  type DerivedAccount,
+} from "@/features/wallet";
+import { getSetting, setSetting } from "@/features/settings";
+import { call } from "@/services";
 import { ethers } from "ethers";
 import { useAppStore } from "@/store";
 import { useWalletUiStore } from "../wallet-ui.store";
@@ -12,7 +20,10 @@ import { AccountSidebar } from "./account-sidebar.component";
 import { AccountHeroCard } from "./account-hero-card.component";
 import { WalletTabs, type WalletTab } from "./wallet-tabs.component";
 import { WalletModals } from "../modals/wallet-modals.component";
-import { ImportKeystoreModal, type ImportKeystoreResult } from '@/features/wallet';
+import {
+  ImportKeystoreModal,
+  type ImportKeystoreResult,
+} from "@/features/wallet";
 
 interface WalletProps {
   accounts: DerivedAccount[];
@@ -293,4 +304,3 @@ function WalletView({
 }
 
 export { WalletView };
-

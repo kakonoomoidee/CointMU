@@ -1,4 +1,6 @@
-import ms from 'ms'
+import ms from "ms";
 
-export const MIN_PASSWORD_LENGTH = 8
-export const COPY_FEEDBACK_MS = ms('2s')
+export const MIN_PASSWORD_LENGTH = 8;
+export const COPY_FEEDBACK_MS = ms("2s");
+
+export const INACTIVITY_TIMEOUT_MS = ms("5m");

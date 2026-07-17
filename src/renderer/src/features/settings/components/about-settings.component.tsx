@@ -3,8 +3,8 @@ import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { useUpdater } from "@/hooks";
 import { useAppStore } from "@/store";
-import { EXTERNAL_LINKS } from "@/constants";
-import { Layers } from 'lucide-react';
+import { EXTERNAL_LINKS } from "../constants/links.constant";
+import { Layers } from "lucide-react";
 
 /**
  * Formats raw system uptime seconds into a readable string.

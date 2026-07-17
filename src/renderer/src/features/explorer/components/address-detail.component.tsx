@@ -5,18 +5,13 @@ import {
 } from "../explorer.constants";
 import { useState, useEffect, useMemo, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { getAddressSummary } from '@/features/explorer'
-import { type DerivedAccount } from '@/features/wallet';
-import { getTransactions } from "@/services/transactionService";
+import { getAddressSummary } from "../services/explorer.service";
+import { AccountIcon, type DerivedAccount } from "@/features/wallet";
+import { getTransactions } from "@/features/wallet/services/transaction.service";
 import { usePagination } from "@/hooks";
 import { formatTxAge } from "../explorer.utils";
-import {
-  Sparkline,
-  Pagination,
-  AccountIcon,
-  type ActivityData,
-} from "@/components";
-import { ChevronLeft, File, ChevronRight } from 'lucide-react';
+import { Sparkline, Pagination, type ActivityData } from "@/components";
+import { ChevronLeft, File, ChevronRight } from "lucide-react";
 import { AddressBadge } from "./address-badge.component";
 
 interface AddressDetailProps {

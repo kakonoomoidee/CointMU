@@ -1,22 +1,22 @@
-import { useEffect, type JSX } from 'react'
-import { CustomDropdown } from './CustomDropdown'
-import { HISTORY_FILTER_ALL, type HistoryFilter } from '@/store'
+import { useEffect, type JSX } from "react";
+import { CustomDropdown } from "@/components";
+import { HISTORY_FILTER_ALL, type HistoryFilter } from "@/store";
 
 interface WalletHistoryFilterOption {
-  address: string
-  label?: string
-  isHidden?: boolean
+  address: string;
+  label?: string;
+  isHidden?: boolean;
 }
 
 interface WalletHistoryFilterProps {
-  accounts: WalletHistoryFilterOption[]
-  value: HistoryFilter
-  onChange: (filter: HistoryFilter) => void
-  className?: string
-  compact?: boolean
+  accounts: WalletHistoryFilterOption[];
+  value: HistoryFilter;
+  onChange: (filter: HistoryFilter) => void;
+  className?: string;
+  compact?: boolean;
 }
 
-const ALL_WALLETS_LABEL = 'All Wallets'
+const ALL_WALLETS_LABEL = "All Wallets";
 
 /**
  * Abbreviates a wallet address for compact display in the filter dropdown.
@@ -24,7 +24,7 @@ const ALL_WALLETS_LABEL = 'All Wallets'
  * @returns {string} The shortened address label.
  */
 function abbreviate(address: string): string {
-  return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
+  return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
 }
 
 /**
@@ -38,28 +38,28 @@ function WalletHistoryFilter({
   value,
   onChange,
   className,
-  compact
+  compact,
 }: WalletHistoryFilterProps): JSX.Element {
   useEffect(() => {
     if (value !== HISTORY_FILTER_ALL) {
-      const activeAccount = accounts.find((acc) => acc.address === value)
+      const activeAccount = accounts.find((acc) => acc.address === value);
       if (!activeAccount || activeAccount.isHidden) {
-        onChange(HISTORY_FILTER_ALL)
+        onChange(HISTORY_FILTER_ALL);
       }
     }
-  }, [value, accounts, onChange])
+  }, [value, accounts, onChange]);
 
-  const visibleAccounts = accounts.filter((account) => !account.isHidden)
+  const visibleAccounts = accounts.filter((account) => !account.isHidden);
 
   const options = [
     { value: HISTORY_FILTER_ALL, label: ALL_WALLETS_LABEL },
     ...visibleAccounts.map((account) => ({
       value: account.address,
-      label: account.label || abbreviate(account.address)
-    }))
-  ]
+      label: account.label || abbreviate(account.address),
+    })),
+  ];
 
-  const selected = options.find((opt) => opt.value === value) ?? options[0]
+  const selected = options.find((opt) => opt.value === value) ?? options[0];
 
   return (
     <CustomDropdown<{ value: HistoryFilter; label: string }>
@@ -71,8 +71,8 @@ function WalletHistoryFilter({
       className={className}
       compact={compact}
     />
-  )
+  );
 }
 
-export { WalletHistoryFilter }
-export type { WalletHistoryFilterProps }
+export { WalletHistoryFilter };
+export type { WalletHistoryFilterProps };

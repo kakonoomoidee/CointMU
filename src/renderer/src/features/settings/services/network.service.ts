@@ -1,20 +1,20 @@
 interface NetworkInsightBlock {
-  number: number
-  hash: string
-  miner: string
-  timestamp: number
-  txCount: number
+  number: number;
+  hash: string;
+  miner: string;
+  timestamp: number;
+  txCount: number;
 }
 
 interface NetworkInsights {
-  isOnline: boolean
-  height: number
-  blockTime: number
-  transactions: number
-  activeAddresses: number
-  difficulty: number
-  blocks: NetworkInsightBlock[]
-  coinbase: string
+  isOnline: boolean;
+  height: number;
+  blockTime: number;
+  transactions: number;
+  activeAddresses: number;
+  difficulty: number;
+  blocks: NetworkInsightBlock[];
+  coinbase: string;
 }
 
 /**
@@ -22,8 +22,8 @@ interface NetworkInsights {
  * @returns The current network insights payload.
  */
 async function getNetworkInsights(): Promise<NetworkInsights> {
-  return window.api.network.getInsights()
+  return window.api.network.getInsights();
 }
 
-export { getNetworkInsights }
-export type { NetworkInsights, NetworkInsightBlock }
+export { getNetworkInsights };
+export type { NetworkInsights, NetworkInsightBlock };

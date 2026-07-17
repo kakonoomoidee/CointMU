@@ -1,23 +1,24 @@
-import { type JSX } from 'react'
-import { useTranslation } from 'react-i18next'
-import { ActivityItem, type ActivityData } from '@/components'
-import { WalletHistoryFilter, Pagination } from '@/components'
-import { ChevronRight, Clock } from 'lucide-react'
-import { downloadActivityCsv } from '@/utils'
-import { type DerivedAccount } from '@/features/wallet'
-import { type HistoryFilter } from '@/store'
-import { ACTIVITY_CSV_FILENAME } from '../dashboard.constants';
+import { type JSX } from "react";
+import { useTranslation } from "react-i18next";
+import { ActivityItem, type ActivityData } from "@/components";
+import { Pagination } from "@/components";
+import { WalletHistoryFilter } from "@/features/wallet";
+import { ChevronRight, Clock } from "lucide-react";
+import { downloadActivityCsv } from "@/utils";
+import { type DerivedAccount } from "@/features/wallet";
+import { type HistoryFilter } from "@/store";
+import { ACTIVITY_CSV_FILENAME } from "../dashboard.constants";
 
 interface ActivityFeedProps {
-  isConnected: boolean
-  activity: ActivityData[]
-  pageItems: ActivityData[]
-  currentPage: number
-  totalPages: number
-  onPageChange: (page: number) => void
-  accounts: DerivedAccount[]
-  historyFilter: HistoryFilter
-  onFilterChange: (filter: HistoryFilter) => void
+  isConnected: boolean;
+  activity: ActivityData[];
+  pageItems: ActivityData[];
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  accounts: DerivedAccount[];
+  historyFilter: HistoryFilter;
+  onFilterChange: (filter: HistoryFilter) => void;
 }
 
 /**
@@ -38,33 +39,44 @@ function ActivityFeed({
   onPageChange,
   accounts,
   historyFilter,
-  onFilterChange
+  onFilterChange,
 }: ActivityFeedProps): JSX.Element {
-  const hasActivity = isConnected && activity.length > 0
-  const { t } = useTranslation()
+  const hasActivity = isConnected && activity.length > 0;
+  const { t } = useTranslation();
 
   /**
    * Exports the full fetched activity history to a CSV download.
    */
-  const handleExport = (): void => downloadActivityCsv(activity, ACTIVITY_CSV_FILENAME)
+  const handleExport = (): void =>
+    downloadActivityCsv(activity, ACTIVITY_CSV_FILENAME);
 
   return (
     <div className="rounded-2xl bg-white border border-slate-200 p-6">
       <div className="flex items-center justify-between mb-1">
-        <h3 className="text-sm font-bold text-slate-800">{t('dashboard.activityFeed.yourActivity')}</h3>
+        <h3 className="text-sm font-bold text-slate-800">
+          {t("dashboard.activityFeed.yourActivity")}
+        </h3>
         <button
           onClick={handleExport}
           disabled={!hasActivity}
           className="text-[11px] font-semibold text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-0.5 disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {t('dashboard.activityFeed.export')}
+          {t("dashboard.activityFeed.export")}
           <ChevronRight width={10} height={10} strokeWidth={3} />
         </button>
       </div>
 
       <div className="flex items-center justify-between mb-4">
-        <p className="text-[10px] text-slate-400 font-mono">{t('dashboard.activityFeed.aggregatedHistory')}</p>
-        <WalletHistoryFilter accounts={accounts} value={historyFilter} onChange={onFilterChange} className='w-32' compact />
+        <p className="text-[10px] text-slate-400 font-mono">
+          {t("dashboard.activityFeed.aggregatedHistory")}
+        </p>
+        <WalletHistoryFilter
+          accounts={accounts}
+          value={historyFilter}
+          onChange={onFilterChange}
+          className="w-32"
+          compact
+        />
       </div>
 
       <div className="space-y-0">
@@ -83,16 +95,24 @@ function ActivityFeed({
           </>
         ) : (
           <div className="py-8 flex flex-col items-center justify-center">
-            <Clock className="text-slate-300 mb-2" width={28} height={28} strokeWidth={1.5} />
-            <p className="text-sm font-medium text-slate-400">{t('dashboard.activityFeed.noActivity')}</p>
-            <p className="text-[10px] text-slate-400 mt-0.5">{t('dashboard.activityFeed.startMining')}</p>
+            <Clock
+              className="text-slate-300 mb-2"
+              width={28}
+              height={28}
+              strokeWidth={1.5}
+            />
+            <p className="text-sm font-medium text-slate-400">
+              {t("dashboard.activityFeed.noActivity")}
+            </p>
+            <p className="text-[10px] text-slate-400 mt-0.5">
+              {t("dashboard.activityFeed.startMining")}
+            </p>
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }
 
-export { ActivityFeed }
-export type { ActivityFeedProps }
-
+export { ActivityFeed };
+export type { ActivityFeedProps };

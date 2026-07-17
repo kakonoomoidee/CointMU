@@ -1,10 +1,18 @@
 import { useState, useRef, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { type DerivedAccount } from '@/features/wallet';
+import { type DerivedAccount } from "@/features/wallet";
 import { type UpdaterStatus } from "@/hooks";
 import { useAppStore } from "@/store";
-import { NotificationCenter } from "../notifications/NotificationCenter";
-import { Zap, Grid, Cpu, Wallet, Search, Settings, LockOpen } from 'lucide-react';
+import { NotificationCenter } from "@/features/notifications";
+import {
+  Zap,
+  Grid,
+  Cpu,
+  Wallet,
+  Search,
+  Settings,
+  LockOpen,
+} from "lucide-react";
 
 interface SidebarProps {
   accounts: DerivedAccount[];
@@ -243,4 +251,3 @@ export function Sidebar({
     </aside>
   );
 }
-

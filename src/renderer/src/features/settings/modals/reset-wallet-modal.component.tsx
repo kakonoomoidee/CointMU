@@ -1,8 +1,8 @@
 import { RESET_CONFIRM_WORD } from "../settings.constants";
 import { useState, type SyntheticEvent, type JSX } from "react";
-import { AlertTriangle, Eye, EyeOff, X } from 'lucide-react';
-import { getSetting } from '@/features/settings'
-import { verifyPassword, lockSession } from '@/features/wallet';
+import { AlertTriangle, Eye, EyeOff, X } from "lucide-react";
+import { getSetting } from "@/features/settings";
+import { verifyPassword, lockSession } from "@/features/wallet";
 
 interface ResetWalletModalProps {
   onClose: () => void;
@@ -80,11 +80,7 @@ export function ResetWalletModal({
           </p>
 
           <div className="flex items-start gap-3 p-4 mb-6 bg-red-50 border border-red-200 rounded-xl text-red-700">
-            <AlertTriangle
-              width={18}
-              height={18}
-              className="mt-0.5 shrink-0"
-            />
+            <AlertTriangle width={18} height={18} className="mt-0.5 shrink-0" />
             <p className="text-xs leading-relaxed font-medium">
               This action is irreversible. If you have not backed up your
               recovery phrase or private keys, your funds will be lost forever.

@@ -1,11 +1,20 @@
-import { useState, useEffect, useRef, type JSX, type FormEvent } from 'react'
-import { ethers } from 'ethers'
-import { TokenService, type TokenInfo } from '@/services/tokenService'
-import { X, AlertCircle } from 'lucide-react'
+import {
+  useState,
+  useEffect,
+  useRef,
+  type JSX,
+  type SyntheticEvent,
+} from "react";
+import { ethers } from "ethers";
+import {
+  TokenService,
+  type TokenInfo,
+} from "@/features/wallet/services/token.service";
+import { X, AlertCircle } from "lucide-react";
 
 interface AddTokenModalProps {
-  onClose: () => void
-  onTokenAdded: () => void
+  onClose: () => void;
+  onTokenAdded: () => void;
 }
 
 /**
@@ -16,113 +25,124 @@ interface AddTokenModalProps {
  * @param props - The close handler and the post-addition refresh callback.
  * @returns The rendered modal overlay.
  */
-function AddTokenModal({ onClose, onTokenAdded }: AddTokenModalProps): JSX.Element {
-  const [address, setAddress] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+function AddTokenModal({
+  onClose,
+  onTokenAdded,
+}: AddTokenModalProps): JSX.Element {
+  const [address, setAddress] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
+    inputRef.current?.focus();
+  }, []);
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>): void => {
     if (e.target === e.currentTarget) {
-      onClose()
+      onClose();
     }
-  }
+  };
 
-  const handleSubmit = async (e: FormEvent): Promise<void> => {
-    e.preventDefault()
-    setError(null)
+  const handleSubmit = async (e: SyntheticEvent): Promise<void> => {
+    e.preventDefault();
+    setError(null);
 
     if (!address) {
-      setError('Please enter a token contract address.')
-      return
+      setError("Please enter a token contract address.");
+      return;
     }
 
     if (!ethers.isAddress(address)) {
-      setError('Invalid Ethereum address format.')
-      return
+      setError("Invalid Ethereum address format.");
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
-      const details = await TokenService.fetchTokenDetails(address)
+      const details = await TokenService.fetchTokenDetails(address);
       if (!details || !details.symbol) {
-        setError('Could not fetch token details. Ensure it is a valid ERC-20 contract on this network.')
-        setIsLoading(false)
-        return
+        setError(
+          "Could not fetch token details. Ensure it is a valid ERC-20 contract on this network.",
+        );
+        setIsLoading(false);
+        return;
       }
 
-      TokenService.addToken(details as TokenInfo)
-      onTokenAdded()
-      onClose()
+      TokenService.addToken(details as TokenInfo);
+      onTokenAdded();
+      onClose();
     } catch {
-      setError('An error occurred while adding the token.')
+      setError("An error occurred while adding the token.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div
-      className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm'
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
-      <div className='bg-white rounded-3xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden relative'>
+      <div className="bg-white rounded-3xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden relative">
         <button
-          type='button'
+          type="button"
           onClick={onClose}
           disabled={isLoading}
-          className='absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed'
+          className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <X width={20} height={20} strokeWidth={2.5} />
         </button>
 
-        <div className='p-8'>
-          <h3 className='text-xl font-bold text-slate-800 mb-1'>Add Custom Token</h3>
-          <p className='text-sm text-slate-500 mb-6'>
+        <div className="p-8">
+          <h3 className="text-xl font-bold text-slate-800 mb-1">
+            Add Custom Token
+          </h3>
+          <p className="text-sm text-slate-500 mb-6">
             Enter the contract address of the ERC-20 token you want to track.
           </p>
 
-          <form onSubmit={handleSubmit} className='space-y-4'>
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className='block text-xs font-semibold text-slate-600 mb-1.5'>
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5">
                 Token Contract Address
               </label>
               <input
                 ref={inputRef}
-                type='text'
+                type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder='0x...'
-                className='w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-mono disabled:opacity-50'
+                placeholder="0x..."
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-mono disabled:opacity-50"
                 disabled={isLoading}
               />
             </div>
 
             {error && (
-              <div className='flex items-start gap-2 text-red-600 bg-red-50 px-3 py-2.5 rounded-xl border border-red-100'>
-                <AlertCircle width={14} height={14} className='flex-shrink-0 mt-0.5' />
-                <p className='text-xs font-medium leading-relaxed'>{error}</p>
+              <div className="flex items-start gap-2 text-red-600 bg-red-50 px-3 py-2.5 rounded-xl border border-red-100">
+                <AlertCircle
+                  width={14}
+                  height={14}
+                  className="flex-shrink-0 mt-0.5"
+                />
+                <p className="text-xs font-medium leading-relaxed">{error}</p>
               </div>
             )}
 
             <button
-              type='submit'
+              type="submit"
               disabled={isLoading || !address}
-              className='w-full py-3.5 bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+              className="w-full py-3.5 bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Verifying...' : 'Add Token'}
+              {isLoading ? "Verifying..." : "Add Token"}
             </button>
           </form>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export { AddTokenModal }
-export type { AddTokenModalProps }
+export { AddTokenModal };
+export type { AddTokenModalProps };

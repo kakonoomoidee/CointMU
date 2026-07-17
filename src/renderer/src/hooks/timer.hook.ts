@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
-import ms from 'ms'
-import { formatElapsed } from '@/utils'
+import { useState, useEffect } from "react";
+import ms from "ms";
+import { formatElapsed } from "@/utils";
 
-const TICK_INTERVAL_MS = ms('1s')
-const IDLE_LABEL = '--'
+const TICK_INTERVAL_MS = ms("1s");
+const IDLE_LABEL = "--";
 
 /**
  * Hook that produces a live-updating elapsed-time label derived from a start
@@ -14,22 +14,22 @@ const IDLE_LABEL = '--'
  * @returns The formatted elapsed duration string.
  */
 function useTimer(startTime: number | null, active: boolean): string {
-  const [label, setLabel] = useState<string>(IDLE_LABEL)
+  const [label, setLabel] = useState<string>(IDLE_LABEL);
 
   useEffect(() => {
     if (startTime === null || !active) {
-      setLabel(IDLE_LABEL)
-      return
+      setLabel(IDLE_LABEL);
+      return;
     }
 
-    const update = (): void => setLabel(formatElapsed(Date.now() - startTime))
-    update()
-    const intervalId = setInterval(update, TICK_INTERVAL_MS)
+    const update = (): void => setLabel(formatElapsed(Date.now() - startTime));
+    update();
+    const intervalId = setInterval(update, TICK_INTERVAL_MS);
 
-    return (): void => clearInterval(intervalId)
-  }, [startTime, active])
+    return (): void => clearInterval(intervalId);
+  }, [startTime, active]);
 
-  return label
+  return label;
 }
 
-export { useTimer }
+export { useTimer };

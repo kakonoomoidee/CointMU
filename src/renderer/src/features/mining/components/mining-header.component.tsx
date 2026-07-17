@@ -1,8 +1,8 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from '@/components'
-import { StatusPill } from './status-pill.component'
-import { Settings } from 'lucide-react';
+import { Button } from "@/components";
+import { StatusPill } from "./status-pill.component";
+import { Settings } from "lucide-react";
 
 interface MiningHeaderProps {
   isMining: boolean;
@@ -66,4 +66,3 @@ function MiningHeader({
 
 export { MiningHeader };
 export type { MiningHeaderProps };
-

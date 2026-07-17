@@ -1,49 +1,55 @@
-import { MAX_NOTIFICATIONS, NOTIFICATIONS_SETTINGS_KEY, NOTIFICATIONS_HISTORY_KEY } from './notification.constants';
-import { create } from 'zustand'
-import { getSetting, setSetting } from '@/services/settingsService'
+import {
+  MAX_NOTIFICATIONS,
+  NOTIFICATIONS_SETTINGS_KEY,
+  NOTIFICATIONS_HISTORY_KEY,
+} from "./notification.constants";
+import { create } from "zustand";
+import {
+  getSetting,
+  setSetting,
+} from "@/features/settings/services/settings.service";
 
-
-export type NotificationType = 'transaction' | 'mining' | 'security' | 'info'
+export type NotificationType = "transaction" | "mining" | "security" | "info";
 
 export interface NotificationItem {
-  id: string
-  type: NotificationType
-  title: string
-  message: string
-  timestamp: number
-  isRead: boolean
-  metaData?: Record<string, unknown>
+  id: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  timestamp: number;
+  isRead: boolean;
+  metaData?: Record<string, unknown>;
 }
 
 export interface NotificationSettings {
-  global: boolean
-  transactions: boolean
-  mining: boolean
-  security: boolean
-  desktopOs: boolean
-  sound: boolean
+  global: boolean;
+  transactions: boolean;
+  mining: boolean;
+  security: boolean;
+  desktopOs: boolean;
+  sound: boolean;
 }
 
 interface AddNotificationPayload {
-  type: NotificationType
-  title: string
-  message: string
-  metaData?: Record<string, unknown>
+  type: NotificationType;
+  title: string;
+  message: string;
+  metaData?: Record<string, unknown>;
 }
 
 interface NotificationStore {
-  notifications: NotificationItem[]
-  settings: NotificationSettings
-  toasts: NotificationItem[]
-  hydrated: boolean
-  hydrate: () => Promise<void>
-  addNotification: (payload: AddNotificationPayload) => NotificationItem
-  markAsRead: (id: string) => void
-  markAllAsRead: () => void
-  clearAll: () => void
-  updateSettings: (newSettings: Partial<NotificationSettings>) => void
-  pushToast: (item: NotificationItem) => void
-  dismissToast: (id: string) => void
+  notifications: NotificationItem[];
+  settings: NotificationSettings;
+  toasts: NotificationItem[];
+  hydrated: boolean;
+  hydrate: () => Promise<void>;
+  addNotification: (payload: AddNotificationPayload) => NotificationItem;
+  markAsRead: (id: string) => void;
+  markAllAsRead: () => void;
+  clearAll: () => void;
+  updateSettings: (newSettings: Partial<NotificationSettings>) => void;
+  pushToast: (item: NotificationItem) => void;
+  dismissToast: (id: string) => void;
 }
 
 const DEFAULT_SETTINGS: NotificationSettings = {
@@ -52,8 +58,8 @@ const DEFAULT_SETTINGS: NotificationSettings = {
   mining: true,
   security: true,
   desktopOs: true,
-  sound: false
-}
+  sound: false,
+};
 
 /**
  * Generates a unique identifier for a notification, preferring the native
@@ -61,10 +67,13 @@ const DEFAULT_SETTINGS: NotificationSettings = {
  * @returns A unique string identifier.
  */
 function createId(): string {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return crypto.randomUUID()
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
+    return crypto.randomUUID();
   }
-  return `${Date.now()}-${Math.floor(Math.random() * 1e9)}`
+  return `${Date.now()}-${Math.floor(Math.random() * 1e9)}`;
 }
 
 /**
@@ -75,8 +84,8 @@ function createId(): string {
  */
 function persistHistory(notifications: NotificationItem[]): void {
   void setSetting(NOTIFICATIONS_HISTORY_KEY, notifications).catch((err) => {
-    console.error('Failed to persist notification history', err)
-  })
+    console.error("Failed to persist notification history", err);
+  });
 }
 
 /**
@@ -90,20 +99,22 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
   toasts: [],
   hydrated: false,
   hydrate: async () => {
-    if (get().hydrated) return
+    if (get().hydrated) return;
     try {
       const [storedSettings, storedHistory] = await Promise.all([
-        getSetting<Partial<NotificationSettings> | null>(NOTIFICATIONS_SETTINGS_KEY),
-        getSetting<NotificationItem[] | null>(NOTIFICATIONS_HISTORY_KEY)
-      ])
+        getSetting<Partial<NotificationSettings> | null>(
+          NOTIFICATIONS_SETTINGS_KEY,
+        ),
+        getSetting<NotificationItem[] | null>(NOTIFICATIONS_HISTORY_KEY),
+      ]);
       set({
         settings: { ...DEFAULT_SETTINGS, ...(storedSettings ?? {}) },
         notifications: Array.isArray(storedHistory) ? storedHistory : [],
-        hydrated: true
-      })
+        hydrated: true,
+      });
     } catch (err) {
-      console.error('Failed to hydrate notification store', err)
-      set({ hydrated: true })
+      console.error("Failed to hydrate notification store", err);
+      set({ hydrated: true });
     }
   },
   addNotification: (payload: AddNotificationPayload) => {
@@ -114,49 +125,54 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
       message: payload.message,
       timestamp: Date.now(),
       isRead: false,
-      metaData: payload.metaData
-    }
+      metaData: payload.metaData,
+    };
     set((state) => {
-      const notifications = [item, ...state.notifications].slice(0, MAX_NOTIFICATIONS)
-      persistHistory(notifications)
-      return { notifications }
-    })
-    return item
+      const notifications = [item, ...state.notifications].slice(
+        0,
+        MAX_NOTIFICATIONS,
+      );
+      persistHistory(notifications);
+      return { notifications };
+    });
+    return item;
   },
   markAsRead: (id: string) => {
     set((state) => {
       const notifications = state.notifications.map((n) =>
-        n.id === id ? { ...n, isRead: true } : n
-      )
-      persistHistory(notifications)
-      return { notifications }
-    })
+        n.id === id ? { ...n, isRead: true } : n,
+      );
+      persistHistory(notifications);
+      return { notifications };
+    });
   },
   markAllAsRead: () => {
     set((state) => {
-      const notifications = state.notifications.map((n) => ({ ...n, isRead: true }))
-      persistHistory(notifications)
-      return { notifications }
-    })
+      const notifications = state.notifications.map((n) => ({
+        ...n,
+        isRead: true,
+      }));
+      persistHistory(notifications);
+      return { notifications };
+    });
   },
   clearAll: () => {
-    persistHistory([])
-    set({ notifications: [] })
+    persistHistory([]);
+    set({ notifications: [] });
   },
   updateSettings: (newSettings: Partial<NotificationSettings>) => {
     set((state) => {
-      const settings = { ...state.settings, ...newSettings }
+      const settings = { ...state.settings, ...newSettings };
       void setSetting(NOTIFICATIONS_SETTINGS_KEY, settings).catch((err) => {
-        console.error('Failed to persist notification settings', err)
-      })
-      return { settings }
-    })
+        console.error("Failed to persist notification settings", err);
+      });
+      return { settings };
+    });
   },
   pushToast: (item: NotificationItem) => {
-    set((state) => ({ toasts: [...state.toasts, item] }))
+    set((state) => ({ toasts: [...state.toasts, item] }));
   },
   dismissToast: (id: string) => {
-    set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) }))
-  }
-}))
-
+    set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) }));
+  },
+}));

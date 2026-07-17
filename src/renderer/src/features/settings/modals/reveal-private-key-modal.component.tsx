@@ -6,9 +6,9 @@ import {
   type SyntheticEvent,
   type JSX,
 } from "react";
-import { Key, Eye, EyeOff, Copy, Check, AlertTriangle, X } from 'lucide-react';
-import { getSetting } from '@/features/settings'
-import { revealPrivateKey, type DerivedAccount } from '@/features/wallet';
+import { Key, Eye, EyeOff, Copy, Check, AlertTriangle, X } from "lucide-react";
+import { getSetting } from "@/features/settings";
+import { revealPrivateKey, type DerivedAccount } from "@/features/wallet";
 import { useAppStore } from "@/store";
 
 interface RevealPrivateKeyModalProps {
@@ -176,11 +176,7 @@ export function RevealPrivateKeyModal({
           </p>
 
           <div className="flex items-start gap-3 p-4 mb-6 bg-red-50 border border-red-200 rounded-xl text-red-700">
-            <AlertTriangle
-              width={18}
-              height={18}
-              className="mt-0.5 shrink-0"
-            />
+            <AlertTriangle width={18} height={18} className="mt-0.5 shrink-0" />
             <p className="text-xs leading-relaxed font-medium">
               Never share your private key. Anyone who has it gains full control
               of this account and can steal all of its funds. CointMU support

@@ -4,7 +4,7 @@
  * account-derivation flows need the password again to decrypt on demand. This is
  * deliberately in-memory only — it is never persisted and is cleared on lock.
  */
-let sessionPassword: string | null = null
+let sessionPassword: string | null = null;
 
 /**
  * Records the password after a successful login, create, or import so later
@@ -13,7 +13,7 @@ let sessionPassword: string | null = null
  * @returns {void}
  */
 export function unlockSession(password: string): void {
-  sessionPassword = password
+  sessionPassword = password;
 }
 
 /**
@@ -21,7 +21,7 @@ export function unlockSession(password: string): void {
  * @returns {string | null} The session password, or null.
  */
 export function getSessionPassword(): string | null {
-  return sessionPassword
+  return sessionPassword;
 }
 
 /**
@@ -29,5 +29,5 @@ export function getSessionPassword(): string | null {
  * @returns {void}
  */
 export function lockSession(): void {
-  sessionPassword = null
+  sessionPassword = null;
 }

@@ -1,25 +1,28 @@
-import { getAllSettings, setSetting } from './settingsService'
-import { type MiningLog } from '@/store'
+import {
+  getAllSettings,
+  setSetting,
+} from "@/features/settings/services/settings.service";
+import { type MiningLog } from "../mining.store";
 
 interface MiningStats {
-  isMining: boolean
-  hashrate: number
-  difficulty: number
-  blockNumber: number
+  isMining: boolean;
+  hashrate: number;
+  difficulty: number;
+  blockNumber: number;
 }
 
 interface MiningConfig {
-  isMiningEnabled: boolean
-  cpuThreads: number
-  intensity: string
-  poolAddress: string
+  isMiningEnabled: boolean;
+  cpuThreads: number;
+  intensity: string;
+  poolAddress: string;
 }
 
-type Unsubscribe = () => void
+type Unsubscribe = () => void;
 
-const SETTINGS_KEY_MINING_ENABLED = 'mining.isMiningEnabled'
-const DEFAULT_CPU_THREADS = 4
-const DEFAULT_INTENSITY = 'Balanced'
+const SETTINGS_KEY_MINING_ENABLED = "mining.isMiningEnabled";
+const DEFAULT_CPU_THREADS = 4;
+const DEFAULT_INTENSITY = "Balanced";
 
 /**
  * Reads the persisted mining configuration from the main process store and
@@ -27,14 +30,21 @@ const DEFAULT_INTENSITY = 'Balanced'
  * @returns The current mining configuration.
  */
 async function getMiningConfig(): Promise<MiningConfig> {
-  const all = await getAllSettings()
-  const config = (all?.mining ?? {}) as Partial<MiningConfig>
+  const all = await getAllSettings();
+  const config = (all?.mining ?? {}) as Partial<MiningConfig>;
   return {
     isMiningEnabled: config.isMiningEnabled === true,
-    cpuThreads: typeof config.cpuThreads === 'number' ? config.cpuThreads : DEFAULT_CPU_THREADS,
-    intensity: typeof config.intensity === 'string' ? config.intensity : DEFAULT_INTENSITY,
-    poolAddress: typeof config.poolAddress === 'string' ? config.poolAddress : ''
-  }
+    cpuThreads:
+      typeof config.cpuThreads === "number"
+        ? config.cpuThreads
+        : DEFAULT_CPU_THREADS,
+    intensity:
+      typeof config.intensity === "string"
+        ? config.intensity
+        : DEFAULT_INTENSITY,
+    poolAddress:
+      typeof config.poolAddress === "string" ? config.poolAddress : "",
+  };
 }
 
 /**
@@ -44,8 +54,8 @@ async function getMiningConfig(): Promise<MiningConfig> {
  * @returns A promise resolving once both operations complete.
  */
 async function setMiningEnabled(enabled: boolean): Promise<void> {
-  await setSetting(SETTINGS_KEY_MINING_ENABLED, enabled)
-  await window.api.mining.toggle(enabled)
+  await setSetting(SETTINGS_KEY_MINING_ENABLED, enabled);
+  await window.api.mining.toggle(enabled);
 }
 
 /**
@@ -55,7 +65,7 @@ async function setMiningEnabled(enabled: boolean): Promise<void> {
  * @returns A promise resolving once the toggle is dispatched.
  */
 async function toggleMiner(enabled: boolean): Promise<void> {
-  return window.api.mining.toggle(enabled)
+  return window.api.mining.toggle(enabled);
 }
 
 /**
@@ -64,7 +74,7 @@ async function toggleMiner(enabled: boolean): Promise<void> {
  * @returns A promise resolving once the change is dispatched.
  */
 async function setThreads(cores: number): Promise<void> {
-  return window.api.mining.setThreads(cores)
+  return window.api.mining.setThreads(cores);
 }
 
 /**
@@ -73,7 +83,7 @@ async function setThreads(cores: number): Promise<void> {
  * @returns A promise resolving once the change is dispatched.
  */
 async function setPoolAddress(address: string): Promise<void> {
-  return window.api.mining.setPoolAddress(address)
+  return window.api.mining.setPoolAddress(address);
 }
 
 /**
@@ -82,9 +92,9 @@ async function setPoolAddress(address: string): Promise<void> {
  */
 async function fetchMiningStats(): Promise<MiningStats | null> {
   try {
-    return await window.api.mining.getStats()
+    return await window.api.mining.getStats();
   } catch {
-    return null
+    return null;
   }
 }
 
@@ -93,8 +103,10 @@ async function fetchMiningStats(): Promise<MiningStats | null> {
  * @param callback - Invoked with the latest human-readable status string.
  * @returns An unsubscribe function that detaches the listener.
  */
-function subscribeMiningStatus(callback: (status: string) => void): Unsubscribe {
-  return window.api.mining.onMiningStatusChanged(callback)
+function subscribeMiningStatus(
+  callback: (status: string) => void,
+): Unsubscribe {
+  return window.api.mining.onMiningStatusChanged(callback);
 }
 
 /**
@@ -102,8 +114,10 @@ function subscribeMiningStatus(callback: (status: string) => void): Unsubscribe 
  * @param callback - Invoked with the latest progress percentage.
  * @returns An unsubscribe function that detaches the listener.
  */
-function subscribeDagProgress(callback: (progress: number) => void): Unsubscribe {
-  return window.api.mining.onDagProgress(callback)
+function subscribeDagProgress(
+  callback: (progress: number) => void,
+): Unsubscribe {
+  return window.api.mining.onDagProgress(callback);
 }
 
 /**
@@ -112,7 +126,7 @@ function subscribeDagProgress(callback: (progress: number) => void): Unsubscribe
  * @returns An unsubscribe function that detaches the listener.
  */
 function subscribeMiningLog(callback: (log: MiningLog) => void): Unsubscribe {
-  return window.api.mining.onMiningLog(callback)
+  return window.api.mining.onMiningLog(callback);
 }
 
 export {
@@ -124,6 +138,6 @@ export {
   fetchMiningStats,
   subscribeMiningStatus,
   subscribeDagProgress,
-  subscribeMiningLog
-}
-export type { MiningStats, MiningConfig }
+  subscribeMiningLog,
+};
+export type { MiningStats, MiningConfig };

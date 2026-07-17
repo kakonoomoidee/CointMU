@@ -15,14 +15,14 @@ import {
   type SyntheticEvent,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { usePagination } from '@/hooks'
-import { useRecentBlocks } from '@/features/explorer';
+import { usePagination, useRecentBlocks } from "@/hooks";
+
 import { useAppStore } from "@/store";
-import { call, fetchBalance } from '@/services'
-import { getNetworkInsights } from '@/features/settings'
-import { detectSearchType } from '@/features/explorer'
-import { type DerivedAccount } from '@/features/wallet';
-import { formatBlockNumber } from '@/utils';
+import { call, fetchBalance } from "@/services";
+import { getNetworkInsights } from "@/features/settings/services/network.service";
+import { detectSearchType } from "../services/explorer.service";
+import { type DerivedAccount } from "@/features/wallet";
+import { formatBlockNumber } from "@/utils";
 import { type ActivityData } from "@/components";
 import { Insights } from "./insights.component";
 import { ChainTimeline } from "./chain-timeline.component";
@@ -407,4 +407,3 @@ function ExplorerView({
 }
 
 export { ExplorerView };
-

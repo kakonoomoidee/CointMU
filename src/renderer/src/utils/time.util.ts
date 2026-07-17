@@ -1,7 +1,12 @@
-import { intervalToDuration, formatDistanceToNowStrict, isAfter, subDays } from 'date-fns'
+import {
+  intervalToDuration,
+  formatDistanceToNowStrict,
+  isAfter,
+  subDays,
+} from "date-fns";
 
-const IDLE_DURATION_PLACEHOLDER = '--'
-const MILLISECONDS_PER_SECOND = 1000
+const IDLE_DURATION_PLACEHOLDER = "--";
+const MILLISECONDS_PER_SECOND = 1000;
 
 /**
  * Left-pads a numeric value to two digits for fixed-width clock display.
@@ -9,7 +14,7 @@ const MILLISECONDS_PER_SECOND = 1000
  * @returns {any} A two-character zero-padded string.
  */
 function padTwo(value: number): string {
-  return value.toString().padStart(2, '0')
+  return value.toString().padStart(2, "0");
 }
 
 /**
@@ -21,20 +26,20 @@ function padTwo(value: number): string {
  */
 function formatElapsed(elapsedMs: number): string {
   if (!Number.isFinite(elapsedMs) || elapsedMs <= 0) {
-    return IDLE_DURATION_PLACEHOLDER
+    return IDLE_DURATION_PLACEHOLDER;
   }
 
-  const duration = intervalToDuration({ start: 0, end: elapsedMs })
-  const hours = duration.hours ?? 0
-  const minutes = duration.minutes ?? 0
-  const seconds = duration.seconds ?? 0
-  const totalHours = (duration.days ?? 0) * 24 + hours
+  const duration = intervalToDuration({ start: 0, end: elapsedMs });
+  const hours = duration.hours ?? 0;
+  const minutes = duration.minutes ?? 0;
+  const seconds = duration.seconds ?? 0;
+  const totalHours = (duration.days ?? 0) * 24 + hours;
 
   if (totalHours > 0) {
-    return `${totalHours}h ${padTwo(minutes)}m ${padTwo(seconds)}s`
+    return `${totalHours}h ${padTwo(minutes)}m ${padTwo(seconds)}s`;
   }
 
-  return `${padTwo(minutes)}m ${padTwo(seconds)}s`
+  return `${padTwo(minutes)}m ${padTwo(seconds)}s`;
 }
 
 /**
@@ -45,12 +50,15 @@ function formatElapsed(elapsedMs: number): string {
  */
 function formatAge(timestampSeconds: number): string {
   if (!Number.isFinite(timestampSeconds) || timestampSeconds <= 0) {
-    return IDLE_DURATION_PLACEHOLDER
+    return IDLE_DURATION_PLACEHOLDER;
   }
 
-  return formatDistanceToNowStrict(new Date(timestampSeconds * MILLISECONDS_PER_SECOND), {
-    addSuffix: true
-  })
+  return formatDistanceToNowStrict(
+    new Date(timestampSeconds * MILLISECONDS_PER_SECOND),
+    {
+      addSuffix: true,
+    },
+  );
 }
 
 /**
@@ -61,12 +69,11 @@ function formatAge(timestampSeconds: number): string {
  */
 function isWithinLastDay(timestampSeconds: number): boolean {
   if (!Number.isFinite(timestampSeconds) || timestampSeconds <= 0) {
-    return false
+    return false;
   }
 
-  const date = new Date(timestampSeconds * MILLISECONDS_PER_SECOND)
-  return isAfter(date, subDays(new Date(), 1))
+  const date = new Date(timestampSeconds * MILLISECONDS_PER_SECOND);
+  return isAfter(date, subDays(new Date(), 1));
 }
 
-export { formatElapsed, formatAge, isWithinLastDay }
-
+export { formatElapsed, formatAge, isWithinLastDay };

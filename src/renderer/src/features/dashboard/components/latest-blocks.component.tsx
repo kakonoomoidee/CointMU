@@ -2,7 +2,7 @@ import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { type BlockData } from "@/hooks";
 import { useAppStore } from "@/store";
-import { ChevronRight, Square, Cube } from 'lucide-react';
+import { ChevronRight, Square, Box } from 'lucide-react';
 import { formatRelativeAge } from '../dashboard.utils';
 
 interface LatestBlocksProps {
@@ -95,7 +95,7 @@ function LatestBlocks({
 
         {isConnected && recentBlocks.length === 0 && (
           <div className="py-8 flex flex-col items-center justify-center">
-            <Cube
+            <Box
               className="text-slate-300 mb-2"
               width={28}
               height={28}
@@ -113,4 +113,5 @@ function LatestBlocks({
 
 export { LatestBlocks };
 export type { LatestBlocksProps };
+
 

@@ -1,22 +1,22 @@
-import { type JSX } from 'react'
-import { cn } from '@/utils'
-import { ChevronDown } from 'lucide-react'
+import { type JSX } from "react";
+import { cn } from "@/utils";
+import { ChevronDown } from "lucide-react";
 
 interface SelectOption {
-  value: string
-  label: string
+  value: string;
+  label: string;
 }
 
 interface SelectProps {
-  value: string
-  options: SelectOption[]
-  onChange: (value: string) => void
-  className?: string
-  ariaLabel?: string
+  value: string;
+  options: SelectOption[];
+  onChange: (value: string) => void;
+  className?: string;
+  ariaLabel?: string;
 }
 
 const BASE_CLASSES =
-  'appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-8 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors cursor-pointer'
+  "appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-8 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors cursor-pointer";
 
 /**
  * Compact styled wrapper around a native select element. Rendering through the
@@ -25,9 +25,15 @@ const BASE_CLASSES =
  * @param props - The current value, option list, change handler, and styling.
  * @returns The rendered select control.
  */
-function Select({ value, options, onChange, className, ariaLabel }: SelectProps): JSX.Element {
+function Select({
+  value,
+  options,
+  onChange,
+  className,
+  ariaLabel,
+}: SelectProps): JSX.Element {
   return (
-    <div className={cn('relative inline-flex items-center', className)}>
+    <div className={cn("relative inline-flex items-center", className)}>
       <select
         aria-label={ariaLabel}
         value={value}
@@ -46,8 +52,8 @@ function Select({ value, options, onChange, className, ariaLabel }: SelectProps)
         className="pointer-events-none absolute right-2.5 text-slate-400"
       />
     </div>
-  )
+  );
 }
 
-export { Select }
-export type { SelectProps, SelectOption }
+export { Select };
+export type { SelectProps, SelectOption };

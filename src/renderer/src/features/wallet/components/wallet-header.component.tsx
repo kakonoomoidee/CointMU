@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Plus } from 'lucide-react';
+import { Plus } from "lucide-react";
 
 interface WalletHeaderProps {
   onAddAccount: () => void;

@@ -1,27 +1,29 @@
-import { call } from './rpcClient'
+import { call } from "@/services/rpc.client";
 
-const ERC721_TRANSFER_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+const ERC721_TRANSFER_TOPIC =
+  "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
 
-const ERC1155_SINGLE_TRANSFER_TOPIC = '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62'
+const ERC1155_SINGLE_TRANSFER_TOPIC =
+  "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62";
 
 const ERC721_ABI_FRAGMENTS = [
-  'function tokenURI(uint256 tokenId) view returns (string)',
-  'function name() view returns (string)',
-  'function ownerOf(uint256 tokenId) view returns (address)'
-]
+  "function tokenURI(uint256 tokenId) view returns (string)",
+  "function name() view returns (string)",
+  "function ownerOf(uint256 tokenId) view returns (address)",
+];
 
 const ERC1155_ABI_FRAGMENTS = [
-  'function uri(uint256 tokenId) view returns (string)',
-  'function balanceOf(address account, uint256 id) view returns (uint256)'
-]
+  "function uri(uint256 tokenId) view returns (string)",
+  "function balanceOf(address account, uint256 id) view returns (uint256)",
+];
 
-const LAST_SCANNED_BLOCK_KEY_PREFIX = 'cmu_nft_scan_block_'
+const LAST_SCANNED_BLOCK_KEY_PREFIX = "cmu_nft_scan_block_";
 
-const NFT_DISCOVERY_CHUNK_SIZE = 5000
+const NFT_DISCOVERY_CHUNK_SIZE = 5000;
 
-const IPFS_GATEWAY = 'https://ipfs.io/ipfs/'
+const IPFS_GATEWAY = "https://ipfs.io/ipfs/";
 
-const NFT_CACHE_KEY_PREFIX = 'cmu_nft_cache_'
+const NFT_CACHE_KEY_PREFIX = "cmu_nft_cache_";
 
 /**
  * Reads the persisted NFT metadata array for a given wallet address from localStorage.
@@ -31,17 +33,19 @@ const NFT_CACHE_KEY_PREFIX = 'cmu_nft_cache_'
  */
 export function readNFTCache(walletAddress: string): NFTMetadata[] {
   try {
-    const stored = localStorage.getItem(NFT_CACHE_KEY_PREFIX + walletAddress.toLowerCase())
+    const stored = localStorage.getItem(
+      NFT_CACHE_KEY_PREFIX + walletAddress.toLowerCase(),
+    );
     if (stored !== null) {
-      const parsed = JSON.parse(stored)
+      const parsed = JSON.parse(stored);
       if (Array.isArray(parsed)) {
-        return parsed as NFTMetadata[]
+        return parsed as NFTMetadata[];
       }
     }
   } catch {
     // Return empty array on parse error
   }
-  return []
+  return [];
 }
 
 /**
@@ -51,36 +55,41 @@ export function readNFTCache(walletAddress: string): NFTMetadata[] {
  * @param {NFTMetadata[]} nfts - The metadata array to persist.
  * @returns {void}
  */
-export function writeNFTCache(walletAddress: string, nfts: NFTMetadata[]): void {
+export function writeNFTCache(
+  walletAddress: string,
+  nfts: NFTMetadata[],
+): void {
   try {
-    localStorage.setItem(NFT_CACHE_KEY_PREFIX + walletAddress.toLowerCase(), JSON.stringify(nfts))
+    localStorage.setItem(
+      NFT_CACHE_KEY_PREFIX + walletAddress.toLowerCase(),
+      JSON.stringify(nfts),
+    );
   } catch {
     // Ignore storage failures
   }
 }
 
-
 export interface NFTMetadata {
-  contractAddress: string
-  tokenId: string
-  name: string
-  description: string
-  image: string
-  standard: 'ERC-721' | 'ERC-1155'
-  collectionName?: string
+  contractAddress: string;
+  tokenId: string;
+  name: string;
+  description: string;
+  image: string;
+  standard: "ERC-721" | "ERC-1155";
+  collectionName?: string;
 }
 
 interface RawTransferLog {
-  address: string
-  topics: string[]
-  data: string
-  blockNumber: string
+  address: string;
+  topics: string[];
+  data: string;
+  blockNumber: string;
 }
 
 interface DiscoveredToken {
-  contractAddress: string
-  tokenId: string
-  standard: 'ERC-721' | 'ERC-1155'
+  contractAddress: string;
+  tokenId: string;
+  standard: "ERC-721" | "ERC-1155";
 }
 
 /**
@@ -89,9 +98,9 @@ interface DiscoveredToken {
  * caller must not overwrite or replace the existing NFT cache.
  */
 interface ScanResult {
-  newTokens: DiscoveredToken[]
-  outboundKeys: Set<string>
-  earlyStopped: boolean
+  newTokens: DiscoveredToken[];
+  outboundKeys: Set<string>;
+  earlyStopped: boolean;
 }
 
 /**
@@ -100,7 +109,7 @@ interface ScanResult {
  * @returns {string} The zero-padded 32-byte topic string.
  */
 function addressToTopic(address: string): string {
-  return '0x000000000000000000000000' + address.replace('0x', '').toLowerCase()
+  return "0x000000000000000000000000" + address.replace("0x", "").toLowerCase();
 }
 
 /**
@@ -111,12 +120,12 @@ function addressToTopic(address: string): string {
  * @returns {string | null} The token ID as a decimal string, or null on failure.
  */
 function safeTopicToTokenId(topic: string | undefined): string | null {
-  if (!topic || topic === '0x') return null
+  if (!topic || topic === "0x") return null;
   try {
-    return BigInt(topic).toString(10)
+    return BigInt(topic).toString(10);
   } catch {
-    console.warn('[NFTService] Failed to parse topic as BigInt:', topic)
-    return null
+    console.warn("[NFTService] Failed to parse topic as BigInt:", topic);
+    return null;
   }
 }
 
@@ -126,11 +135,11 @@ function safeTopicToTokenId(topic: string | undefined): string | null {
  * @returns {string} A fully qualified HTTP URL.
  */
 function normalizeUri(uri: string): string {
-  if (!uri) return ''
-  if (uri.startsWith('ipfs://')) {
-    return uri.replace('ipfs://', IPFS_GATEWAY)
+  if (!uri) return "";
+  if (uri.startsWith("ipfs://")) {
+    return uri.replace("ipfs://", IPFS_GATEWAY);
   }
-  return uri
+  return uri;
 }
 
 /**
@@ -141,14 +150,16 @@ function normalizeUri(uri: string): string {
  */
 function getLastScannedBlock(walletAddress: string): number {
   try {
-    const stored = localStorage.getItem(LAST_SCANNED_BLOCK_KEY_PREFIX + walletAddress.toLowerCase())
+    const stored = localStorage.getItem(
+      LAST_SCANNED_BLOCK_KEY_PREFIX + walletAddress.toLowerCase(),
+    );
     if (stored !== null) {
-      return parseInt(stored, 10)
+      return parseInt(stored, 10);
     }
   } catch {
     // Return 0 on any storage error
   }
-  return 0
+  return 0;
 }
 
 /**
@@ -159,7 +170,10 @@ function getLastScannedBlock(walletAddress: string): number {
  */
 function setLastScannedBlock(walletAddress: string, blockNumber: number): void {
   try {
-    localStorage.setItem(LAST_SCANNED_BLOCK_KEY_PREFIX + walletAddress.toLowerCase(), String(blockNumber))
+    localStorage.setItem(
+      LAST_SCANNED_BLOCK_KEY_PREFIX + walletAddress.toLowerCase(),
+      String(blockNumber),
+    );
   } catch {
     // Ignore storage failures
   }
@@ -178,17 +192,17 @@ async function fetchLogsForTopic(
   topic: string,
   recipientTopic: string,
   fromBlock: string,
-  toBlock: string
+  toBlock: string,
 ): Promise<RawTransferLog[]> {
-  const result = await call('eth_getLogs', [
+  const result = await call("eth_getLogs", [
     {
       fromBlock,
       toBlock,
-      topics: [topic, null, recipientTopic]
-    }
-  ])
-  if (!Array.isArray(result)) return []
-  return result as RawTransferLog[]
+      topics: [topic, null, recipientTopic],
+    },
+  ]);
+  if (!Array.isArray(result)) return [];
+  return result as RawTransferLog[];
 }
 
 /**
@@ -202,81 +216,118 @@ async function fetchLogsForTopic(
  * @param {string} walletAddress - The wallet address to discover NFTs for.
  * @returns {Promise<ScanResult>} The incremental scan result for the new block range.
  */
-export async function discoverUserNFTs(walletAddress: string): Promise<ScanResult> {
-  const currentBlockHex: string | null = await call('eth_blockNumber')
-  if (!currentBlockHex) return { newTokens: [], outboundKeys: new Set(), earlyStopped: true }
+export async function discoverUserNFTs(
+  walletAddress: string,
+): Promise<ScanResult> {
+  const currentBlockHex: string | null = await call("eth_blockNumber");
+  if (!currentBlockHex)
+    return { newTokens: [], outboundKeys: new Set(), earlyStopped: true };
 
-  const currentBlock = parseInt(currentBlockHex, 16)
-  const fromBlock = getLastScannedBlock(walletAddress)
+  const currentBlock = parseInt(currentBlockHex, 16);
+  const fromBlock = getLastScannedBlock(walletAddress);
 
-  if (fromBlock >= currentBlock) return { newTokens: [], outboundKeys: new Set(), earlyStopped: true }
+  if (fromBlock >= currentBlock)
+    return { newTokens: [], outboundKeys: new Set(), earlyStopped: true };
 
-  const recipientTopic = addressToTopic(walletAddress)
-  const senderTopic = addressToTopic(walletAddress)
+  const recipientTopic = addressToTopic(walletAddress);
+  const senderTopic = addressToTopic(walletAddress);
 
-  const inboundErc721: RawTransferLog[] = []
-  const outboundErc721: RawTransferLog[] = []
-  const inboundErc1155Single: RawTransferLog[] = []
-  const outboundErc1155Single: RawTransferLog[] = []
+  const inboundErc721: RawTransferLog[] = [];
+  const outboundErc721: RawTransferLog[] = [];
+  const inboundErc1155Single: RawTransferLog[] = [];
+  const outboundErc1155Single: RawTransferLog[] = [];
 
-  for (let start = fromBlock; start <= currentBlock; start += NFT_DISCOVERY_CHUNK_SIZE) {
-    const end = Math.min(start + NFT_DISCOVERY_CHUNK_SIZE - 1, currentBlock)
-    const fromHex = '0x' + start.toString(16)
-    const toHex = '0x' + end.toString(16)
+  for (
+    let start = fromBlock;
+    start <= currentBlock;
+    start += NFT_DISCOVERY_CHUNK_SIZE
+  ) {
+    const end = Math.min(start + NFT_DISCOVERY_CHUNK_SIZE - 1, currentBlock);
+    const fromHex = "0x" + start.toString(16);
+    const toHex = "0x" + end.toString(16);
 
     const [inErc721, outErc721, inErc1155, outErc1155] = await Promise.all([
       fetchLogsForTopic(ERC721_TRANSFER_TOPIC, recipientTopic, fromHex, toHex),
-      call('eth_getLogs', [{ fromBlock: fromHex, toBlock: toHex, topics: [ERC721_TRANSFER_TOPIC, senderTopic, null] }]).then(r => Array.isArray(r) ? r as RawTransferLog[] : []),
-      fetchLogsForTopic(ERC1155_SINGLE_TRANSFER_TOPIC, recipientTopic, fromHex, toHex),
-      call('eth_getLogs', [{ fromBlock: fromHex, toBlock: toHex, topics: [ERC1155_SINGLE_TRANSFER_TOPIC, null, senderTopic] }]).then(r => Array.isArray(r) ? r as RawTransferLog[] : [])
-    ])
+      call("eth_getLogs", [
+        {
+          fromBlock: fromHex,
+          toBlock: toHex,
+          topics: [ERC721_TRANSFER_TOPIC, senderTopic, null],
+        },
+      ]).then((r) => (Array.isArray(r) ? (r as RawTransferLog[]) : [])),
+      fetchLogsForTopic(
+        ERC1155_SINGLE_TRANSFER_TOPIC,
+        recipientTopic,
+        fromHex,
+        toHex,
+      ),
+      call("eth_getLogs", [
+        {
+          fromBlock: fromHex,
+          toBlock: toHex,
+          topics: [ERC1155_SINGLE_TRANSFER_TOPIC, null, senderTopic],
+        },
+      ]).then((r) => (Array.isArray(r) ? (r as RawTransferLog[]) : [])),
+    ]);
 
-    inboundErc721.push(...inErc721)
-    outboundErc721.push(...outErc721)
-    inboundErc1155Single.push(...inErc1155)
-    outboundErc1155Single.push(...outErc1155)
+    inboundErc721.push(...inErc721);
+    outboundErc721.push(...outErc721);
+    inboundErc1155Single.push(...inErc1155);
+    outboundErc1155Single.push(...outErc1155);
   }
 
   const outboundKeys = new Set<string>([
     ...outboundErc721
       .filter((log) => log.topics.length === 4)
       .flatMap((log) => {
-        const tokenId = safeTopicToTokenId(log.topics[3])
-        return tokenId !== null ? [`${log.address.toLowerCase()}:${tokenId}`] : []
+        const tokenId = safeTopicToTokenId(log.topics[3]);
+        return tokenId !== null
+          ? [`${log.address.toLowerCase()}:${tokenId}`]
+          : [];
       }),
     ...outboundErc1155Single
       .filter((log) => log.topics.length === 4)
       .flatMap((log) => {
-        const tokenId = safeTopicToTokenId(log.topics[3])
-        return tokenId !== null ? [`${log.address.toLowerCase()}:${tokenId}`] : []
-      })
-  ])
+        const tokenId = safeTopicToTokenId(log.topics[3]);
+        return tokenId !== null
+          ? [`${log.address.toLowerCase()}:${tokenId}`]
+          : [];
+      }),
+  ]);
 
-  const newTokens: DiscoveredToken[] = []
+  const newTokens: DiscoveredToken[] = [];
 
   for (const log of inboundErc721) {
-    if (log.topics.length !== 4) continue
-    const tokenId = safeTopicToTokenId(log.topics[3])
-    if (tokenId === null) continue
-    const key = `${log.address.toLowerCase()}:${tokenId}`
+    if (log.topics.length !== 4) continue;
+    const tokenId = safeTopicToTokenId(log.topics[3]);
+    if (tokenId === null) continue;
+    const key = `${log.address.toLowerCase()}:${tokenId}`;
     if (!outboundKeys.has(key)) {
-      newTokens.push({ contractAddress: log.address, tokenId, standard: 'ERC-721' })
+      newTokens.push({
+        contractAddress: log.address,
+        tokenId,
+        standard: "ERC-721",
+      });
     }
   }
 
   for (const log of inboundErc1155Single) {
-    if (log.topics.length !== 4) continue
-    const tokenId = safeTopicToTokenId(log.topics[3])
-    if (tokenId === null) continue
-    const key = `${log.address.toLowerCase()}:${tokenId}`
+    if (log.topics.length !== 4) continue;
+    const tokenId = safeTopicToTokenId(log.topics[3]);
+    if (tokenId === null) continue;
+    const key = `${log.address.toLowerCase()}:${tokenId}`;
     if (!outboundKeys.has(key)) {
-      newTokens.push({ contractAddress: log.address, tokenId, standard: 'ERC-1155' })
+      newTokens.push({
+        contractAddress: log.address,
+        tokenId,
+        standard: "ERC-1155",
+      });
     }
   }
 
-  setLastScannedBlock(walletAddress, currentBlock)
+  setLastScannedBlock(walletAddress, currentBlock);
 
-  return { newTokens, outboundKeys, earlyStopped: false }
+  return { newTokens, outboundKeys, earlyStopped: false };
 }
 
 /**
@@ -293,55 +344,65 @@ export async function discoverUserNFTs(walletAddress: string): Promise<ScanResul
 export async function resolveNFTMetadata(
   contractAddress: string,
   tokenId: string,
-  standard: 'ERC-721' | 'ERC-1155',
-  provider: import('ethers').JsonRpcProvider
+  standard: "ERC-721" | "ERC-1155",
+  provider: import("ethers").JsonRpcProvider,
 ): Promise<NFTMetadata> {
-  const { ethers } = await import('ethers')
+  const { ethers } = await import("ethers");
 
-  const abi = standard === 'ERC-721' ? ERC721_ABI_FRAGMENTS : ERC1155_ABI_FRAGMENTS
-  const contract = new ethers.Contract(contractAddress, abi, provider)
+  const abi =
+    standard === "ERC-721" ? ERC721_ABI_FRAGMENTS : ERC1155_ABI_FRAGMENTS;
+  const contract = new ethers.Contract(contractAddress, abi, provider);
 
-  let collectionName = 'Unknown Collection'
-  let tokenUri = ''
+  let collectionName = "Unknown Collection";
+  let tokenUri = "";
 
   try {
-    if (standard === 'ERC-721') {
-      collectionName = await contract.name()
+    if (standard === "ERC-721") {
+      collectionName = await contract.name();
     }
   } catch {
     // name() is optional
   }
 
   try {
-    const bigTokenId = BigInt(tokenId)
-    tokenUri = standard === 'ERC-721'
-      ? await contract.tokenURI(bigTokenId)
-      : await contract.uri(bigTokenId)
+    const bigTokenId = BigInt(tokenId);
+    tokenUri =
+      standard === "ERC-721"
+        ? await contract.tokenURI(bigTokenId)
+        : await contract.uri(bigTokenId);
   } catch {
     // tokenURI/uri call failed — return fallback
   }
 
-  const resolvedUri = normalizeUri(tokenUri)
+  const resolvedUri = normalizeUri(tokenUri);
 
-  let name = `Token #${tokenId}`
-  let description = ''
-  let image = ''
+  let name = `Token #${tokenId}`;
+  let description = "";
+  let image = "";
 
   if (resolvedUri) {
     try {
-      const response = await fetch(resolvedUri)
+      const response = await fetch(resolvedUri);
       if (response.ok) {
-        const json = await response.json()
-        name = json.name || name
-        description = json.description || ''
-        image = normalizeUri(json.image || '')
+        const json = await response.json();
+        name = json.name || name;
+        description = json.description || "";
+        image = normalizeUri(json.image || "");
       }
     } catch {
       // Metadata fetch failed — use fallbacks
     }
   }
 
-  return { contractAddress, tokenId, name, description, image, standard, collectionName }
+  return {
+    contractAddress,
+    tokenId,
+    name,
+    description,
+    image,
+    standard,
+    collectionName,
+  };
 }
 
 /**
@@ -349,13 +410,15 @@ export async function resolveNFTMetadata(
  * The port is resolved from the Electron IPC bridge with a fallback to 8585.
  * @returns {Promise<import('ethers').JsonRpcProvider>} A configured provider instance.
  */
-export async function buildProvider(): Promise<import('ethers').JsonRpcProvider> {
-  const { ethers } = await import('ethers')
+export async function buildProvider(): Promise<
+  import("ethers").JsonRpcProvider
+> {
+  const { ethers } = await import("ethers");
   try {
-    const port = await window.api.getRpcPort()
-    const url = `http://127.0.0.1:${typeof port === 'number' && port > 0 ? port : 8585}`
-    return new ethers.JsonRpcProvider(url)
+    const port = await window.api.getRpcPort();
+    const url = `http://127.0.0.1:${typeof port === "number" && port > 0 ? port : 8585}`;
+    return new ethers.JsonRpcProvider(url);
   } catch {
-    return new ethers.JsonRpcProvider('http://127.0.0.1:8585')
+    return new ethers.JsonRpcProvider("http://127.0.0.1:8585");
   }
 }

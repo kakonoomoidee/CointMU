@@ -1,26 +1,41 @@
-import { DASHBOARD_TICK_INTERVAL_MS, ACTIVITY_PAGE_SIZE, ACTIVITY_POLL_INTERVAL_MS, PAST_HOUR_MS, SPARKLINE_BUCKET_MS, SPARKLINE_WINDOW_MS, TARGET_BLOCK_TIME_SECONDS } from '../dashboard.constants';
+import {
+  DASHBOARD_TICK_INTERVAL_MS,
+  ACTIVITY_PAGE_SIZE,
+  ACTIVITY_POLL_INTERVAL_MS,
+  PAST_HOUR_MS,
+  SPARKLINE_BUCKET_MS,
+  SPARKLINE_WINDOW_MS,
+  TARGET_BLOCK_TIME_SECONDS,
+} from "../dashboard.constants";
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
+import { usePagination, useRecentBlocks } from "@/hooks";
+import { useMiningStats, useMiningControls } from "@/features/mining/hooks";
+import { useAppStore } from "@/store";
+import { useMiningStore } from "@/features/mining/mining.store";
+import { useWalletUiStore } from "@/features/wallet/wallet-ui.store";
+import { getTransactions } from "@/features/wallet/services/transaction.service";
+import { ActivityCacheService } from "@/features/wallet/services/activity-cache.service";
+import { type DerivedAccount } from "@/features/wallet";
+import { type ActivityData } from "@/components";
 import {
-  useMiningStats,
-  useMiningControls,
-  usePagination,
-} from "@/hooks";
-import { useAppStore, useMiningStore } from '@/store';
-import { useWalletUiStore } from '@/features/wallet/wallet-ui.store';
-import { getTransactions } from "@/services/transactionService";
-import { CacheService } from "@/services/cacheService";
-import { type DerivedAccount } from '@/features/wallet';
-import { type ActivityData } from '@/components';
-import { formatBlockNumber, formatHashrate, formatDifficulty, formatMhs, isWithinLastDay } from '@/utils'
-import { resolveHistoryAddresses, filterFoundBlocks } from '@/features/wallet/utils/history.util';
-import { DashboardHeader } from './dashboard-header.component';
-import { WalletOverviewCard } from './wallet-overview-card.component';
-import { useRecentBlocks } from '@/features/explorer';
-import { NetworkHealthPanel } from './network-health-panel.component';
-import { DashboardStatsGrid } from './dashboard-stats-grid.component';
-import { LatestBlocks } from './latest-blocks.component';
-import { ActivityFeed } from './activity-feed.component';
+  formatBlockNumber,
+  formatHashrate,
+  formatDifficulty,
+  formatMhs,
+  isWithinLastDay,
+} from "@/utils";
+import {
+  resolveHistoryAddresses,
+  filterFoundBlocks,
+} from "@/features/wallet/utils/history.util";
+import { DashboardHeader } from "./dashboard-header.component";
+import { WalletOverviewCard } from "./wallet-overview-card.component";
+
+import { NetworkHealthPanel } from "./network-health-panel.component";
+import { DashboardStatsGrid } from "./dashboard-stats-grid.component";
+import { LatestBlocks } from "./latest-blocks.component";
+import { ActivityFeed } from "./activity-feed.component";
 import { SkeletonCard, SkeletonList, Skeleton } from "@/components";
 
 interface DashboardProps {
@@ -71,7 +86,7 @@ function DashboardView({
     }
 
     const combinedKey = addresses.join(",");
-    const cached = CacheService.getActivity(combinedKey);
+    const cached = ActivityCacheService.getActivity(combinedKey);
     if (cached) {
       setActivity(cached);
     }
@@ -79,7 +94,7 @@ function DashboardView({
     const fetcher = (): Promise<ActivityData[]> => getTransactions(addresses);
     const onData = (data: ActivityData[]): void => setActivity(data);
 
-    CacheService.startActivityPolling(
+    ActivityCacheService.startActivityPolling(
       combinedKey,
       fetcher,
       onData,
@@ -87,7 +102,7 @@ function DashboardView({
     );
 
     return () => {
-      CacheService.stopActivityPolling(combinedKey);
+      ActivityCacheService.stopActivityPolling(combinedKey);
     };
   }, [historyKey]);
 
@@ -147,7 +162,9 @@ function DashboardView({
     : "0.00 H/s";
 
   const miningUptimeLabel =
-    isConnected && telemetry.isMining ? t("dashboard.index.activelyMining") : t("dashboard.index.minerIdle");
+    isConnected && telemetry.isMining
+      ? t("dashboard.index.activelyMining")
+      : t("dashboard.index.minerIdle");
 
   const difficultyDisplay = isConnected ? formatDifficulty(difficulty) : "--";
   const gasDisplay = isConnected && gasPriceGwei !== null ? gasPriceGwei : "0";
@@ -168,9 +185,11 @@ function DashboardView({
     : "--";
 
   const activeAccount = accounts.find(
-    (account) => account.address.toLowerCase() === (activeWalletAddress ?? '').toLowerCase()
-  )
-  const walletLabel = activeAccount?.label ?? 'Wallet'
+    (account) =>
+      account.address.toLowerCase() ===
+      (activeWalletAddress ?? "").toLowerCase(),
+  );
+  const walletLabel = activeAccount?.label ?? "Wallet";
 
   /**
    * Opens the wallet receive flow by priming the wallet modal state and routing
@@ -297,7 +316,3 @@ function DashboardView({
 }
 
 export { DashboardView };
-
-
-
-

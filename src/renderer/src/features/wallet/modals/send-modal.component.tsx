@@ -12,7 +12,7 @@ import {
   TokenService,
   getTokenBalance,
   type TokenInfo,
-} from "@/services/tokenService";
+} from "@/features/wallet/services/token.service";
 import {
   resolveWallet,
   estimateNativeTransferGas,
@@ -21,13 +21,13 @@ import {
   executeErc20Transfer,
   requireSessionPassword,
   parseTransferError,
-} from "@/services/transferService";
-import { call, waitForTransactionReceipt } from '@/services'
-import { dispatchNotification } from '@/features/notifications';
-import { Check, AlertCircle } from 'lucide-react';
-import { CustomDropdown } from '@/components'
-import { TokenIcon } from '@/features/wallet';
-import type { DerivedAccount } from "@/services";
+} from "@/features/wallet/services/transfer.service";
+import { call, waitForTransactionReceipt } from "@/services";
+import { dispatchNotification } from "@/features/notifications";
+import { Check, AlertCircle } from "lucide-react";
+import { CustomDropdown } from "@/components";
+import { TokenIcon } from "@/features/wallet";
+import type { DerivedAccount } from "../services/wallet.service";
 
 interface SendModalProps {
   activeAccount: DerivedAccount | undefined;
@@ -604,4 +604,3 @@ function SendModal({
 
 export { SendModal };
 export type { SendModalProps };
-

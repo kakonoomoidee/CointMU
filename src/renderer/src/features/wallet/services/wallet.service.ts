@@ -1,13 +1,16 @@
-import { GRADIENTS } from '../wallet.constants';
-import { Wallet, HDNodeWallet } from 'ethers'
-import { getSetting, setSetting } from './settingsService'
+import { GRADIENTS } from "../wallet.constants";
+import { Wallet, HDNodeWallet } from "ethers";
+import {
+  getSetting,
+  setSetting,
+} from "@/features/settings/services/settings.service";
 
 export interface DerivedAccount {
-  index: number
-  address: string
-  label: string
-  encryptedKey?: string
-  isHidden?: boolean
+  index: number;
+  address: string;
+  label: string;
+  encryptedKey?: string;
+  isHidden?: boolean;
 }
 
 /**
@@ -15,8 +18,8 @@ export interface DerivedAccount {
  * @returns The mnemonic phrase string.
  */
 export function generateMnemonic(): string {
-  const wallet = Wallet.createRandom()
-  return wallet.mnemonic!.phrase
+  const wallet = Wallet.createRandom();
+  return wallet.mnemonic!.phrase;
 }
 
 /**
@@ -27,15 +30,19 @@ export function generateMnemonic(): string {
  * @param label - A user-friendly label for the account.
  * @returns The derived account details.
  */
-export function deriveAccount(mnemonic: string, index: number, label: string): DerivedAccount {
-  const path = `m/44'/60'/0'/0/${index}`
-  const hdNode = HDNodeWallet.fromPhrase(mnemonic, undefined, path)
-  
+export function deriveAccount(
+  mnemonic: string,
+  index: number,
+  label: string,
+): DerivedAccount {
+  const path = `m/44'/60'/0'/0/${index}`;
+  const hdNode = HDNodeWallet.fromPhrase(mnemonic, undefined, path);
+
   return {
     index,
     address: hdNode.address,
-    label
-  }
+    label,
+  };
 }
 
 /**
@@ -44,14 +51,17 @@ export function deriveAccount(mnemonic: string, index: number, label: string): D
  * @param label - A user-friendly label for the account.
  * @returns The derived account details.
  */
-export function deriveAccountFromPrivateKey(privateKey: string, label: string): DerivedAccount {
-  const wallet = new Wallet(privateKey)
-  
+export function deriveAccountFromPrivateKey(
+  privateKey: string,
+  label: string,
+): DerivedAccount {
+  const wallet = new Wallet(privateKey);
+
   return {
     index: 0,
     address: wallet.address,
-    label
-  }
+    label,
+  };
 }
 
 /**
@@ -61,8 +71,11 @@ export function deriveAccountFromPrivateKey(privateKey: string, label: string): 
  * @param password - The password used to derive the encryption key.
  * @returns The serialized encrypted payload to persist.
  */
-export function encryptSecret(secret: string, password: string): Promise<string> {
-  return window.api.wallet.encrypt(secret, password)
+export function encryptSecret(
+  secret: string,
+  password: string,
+): Promise<string> {
+  return window.api.wallet.encrypt(secret, password);
 }
 
 /**
@@ -72,8 +85,11 @@ export function encryptSecret(secret: string, password: string): Promise<string>
  * @param password - The password used to derive the decryption key.
  * @returns The recovered plaintext secret.
  */
-export function decryptSecret(payload: string, password: string): Promise<string> {
-  return window.api.wallet.decrypt(payload, password)
+export function decryptSecret(
+  payload: string,
+  password: string,
+): Promise<string> {
+  return window.api.wallet.decrypt(payload, password);
 }
 
 /**
@@ -82,8 +98,11 @@ export function decryptSecret(payload: string, password: string): Promise<string
  * @param password - The password to check.
  * @returns True if the password decrypts the payload.
  */
-export function verifyPassword(payload: string, password: string): Promise<boolean> {
-  return window.api.wallet.verify(payload, password)
+export function verifyPassword(
+  payload: string,
+  password: string,
+): Promise<boolean> {
+  return window.api.wallet.verify(payload, password);
 }
 
 /**
@@ -99,25 +118,31 @@ export function verifyPassword(payload: string, password: string): Promise<boole
  */
 export async function revealPrivateKey(
   account: DerivedAccount,
-  password: string
+  password: string,
 ): Promise<string> {
-  let secret: string
+  let secret: string;
   if (account.encryptedKey) {
-    secret = await decryptSecret(account.encryptedKey, password)
+    secret = await decryptSecret(account.encryptedKey, password);
   } else {
-    const encryptedPayload = await getSetting<string | null>('encryptedPayload')
+    const encryptedPayload = await getSetting<string | null>(
+      "encryptedPayload",
+    );
     if (!encryptedPayload) {
-      throw new Error('Wallet is not unlocked')
+      throw new Error("Wallet is not unlocked");
     }
-    secret = await decryptSecret(encryptedPayload, password)
+    secret = await decryptSecret(encryptedPayload, password);
   }
 
   const wallet =
-    secret.split(' ').length === 12
-      ? HDNodeWallet.fromPhrase(secret, undefined, `m/44'/60'/0'/0/${account.index}`)
-      : new Wallet(secret)
+    secret.split(" ").length === 12
+      ? HDNodeWallet.fromPhrase(
+          secret,
+          undefined,
+          `m/44'/60'/0'/0/${account.index}`,
+        )
+      : new Wallet(secret);
 
-  return wallet.privateKey
+  return wallet.privateKey;
 }
 
 /**
@@ -129,15 +154,15 @@ export async function revealPrivateKey(
  * @returns The space-separated 12-word recovery phrase.
  */
 export async function revealRecoveryPhrase(password: string): Promise<string> {
-  const encryptedPayload = await getSetting<string | null>('encryptedPayload')
+  const encryptedPayload = await getSetting<string | null>("encryptedPayload");
   if (!encryptedPayload) {
-    throw new Error('Wallet is not unlocked')
+    throw new Error("Wallet is not unlocked");
   }
-  const secret = await decryptSecret(encryptedPayload, password)
-  if (secret.split(' ').length !== 12) {
-    throw new Error('This wallet has no recovery phrase.')
+  const secret = await decryptSecret(encryptedPayload, password);
+  if (secret.split(" ").length !== 12) {
+    throw new Error("This wallet has no recovery phrase.");
   }
-  return secret
+  return secret;
 }
 
 /**
@@ -151,10 +176,10 @@ export async function revealRecoveryPhrase(password: string): Promise<string> {
  */
 export async function importKeystore(
   keystoreJson: string,
-  password: string
+  password: string,
 ): Promise<{ privateKey: string; address: string }> {
-  const wallet = await Wallet.fromEncryptedJson(keystoreJson, password)
-  return { privateKey: wallet.privateKey, address: wallet.address }
+  const wallet = await Wallet.fromEncryptedJson(keystoreJson, password);
+  return { privateKey: wallet.privateKey, address: wallet.address };
 }
 
 /**
@@ -167,11 +192,11 @@ export async function importKeystore(
  */
 export async function generateKeystore(
   account: DerivedAccount,
-  password: string
+  password: string,
 ): Promise<string> {
-  const privateKey = await revealPrivateKey(account, password)
-  const wallet = new Wallet(privateKey)
-  return wallet.encrypt(password)
+  const privateKey = await revealPrivateKey(account, password);
+  const wallet = new Wallet(privateKey);
+  return wallet.encrypt(password);
 }
 
 /**
@@ -179,16 +204,16 @@ export async function generateKeystore(
  * @param address - The Ethereum address.
  * @returns A Tailwind gradient class string.
  */
-export function generateIdenticonGradient(address: string): string {
+export function generateIdenticonGradient(address: string): string[] {
   // Simple hash of the address string to pick a gradient
-  let hash = 0
+  let hash = 0;
   for (let i = 0; i < address.length; i++) {
-    hash = address.charCodeAt(i) + ((hash << 5) - hash)
+    hash = address.charCodeAt(i) + ((hash << 5) - hash);
   }
-  
+
   // Ensure positive index
-  const index = Math.abs(hash) % GRADIENTS.length
-  return GRADIENTS[index]
+  const index = Math.abs(hash) % GRADIENTS.length;
+  return GRADIENTS[index];
 }
 
 /**
@@ -196,9 +221,8 @@ export function generateIdenticonGradient(address: string): string {
  * @returns A promise that resolves when the secondary accounts are removed.
  */
 export async function purgeSecondaryAccounts(): Promise<void> {
-  const accounts = await getSetting<DerivedAccount[]>('accounts')
+  const accounts = await getSetting<DerivedAccount[]>("accounts");
   if (accounts && accounts.length > 0) {
-    await setSetting('accounts', [accounts[0]])
+    await setSetting("accounts", [accounts[0]]);
   }
 }
-

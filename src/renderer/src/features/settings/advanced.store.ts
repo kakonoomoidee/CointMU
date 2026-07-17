@@ -1,6 +1,6 @@
 import { ADVANCED_SETTINGS_KEY } from "./settings.constants";
 import { create } from "zustand";
-import { getSetting, setSetting } from "@/services/settingsService";
+import { getSetting, setSetting } from "./services/settings.service";
 
 export interface AdvancedSettings {
   httpRpc: boolean;

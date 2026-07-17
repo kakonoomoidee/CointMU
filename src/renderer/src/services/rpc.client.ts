@@ -1,15 +1,15 @@
-const RPC_HOST = '127.0.0.1'
-const RPC_FALLBACK_PORT = 8585
-const JSON_RPC_VERSION = '2.0'
-const HEX_RADIX = 16
-const WEI_PER_GWEI = 1_000_000_000
-const WEI_PER_CMU = 1e18
-const BALANCE_DECIMAL_PLACES = 2
-const LATEST_BLOCK_TAG = 'latest'
+const RPC_HOST = "127.0.0.1";
+const RPC_FALLBACK_PORT = 8585;
+const JSON_RPC_VERSION = "2.0";
+const HEX_RADIX = 16;
+const WEI_PER_GWEI = 1_000_000_000;
+const WEI_PER_CMU = 1e18;
+const BALANCE_DECIMAL_PLACES = 2;
+const LATEST_BLOCK_TAG = "latest";
 
-let requestCounter = 0
-let cachedRpcUrl: string | null = null
-let pendingPortResolution: Promise<string> | null = null
+let requestCounter = 0;
+let cachedRpcUrl: string | null = null;
+let pendingPortResolution: Promise<string> | null = null;
 
 /**
  * Resolves the JSON-RPC base URL of the locally running Core-geth node. The
@@ -21,36 +21,39 @@ let pendingPortResolution: Promise<string> | null = null
  */
 async function resolveRpcUrl(): Promise<string> {
   if (cachedRpcUrl !== null) {
-    return cachedRpcUrl
+    return cachedRpcUrl;
   }
 
   if (pendingPortResolution === null) {
     pendingPortResolution = window.api
       .getRpcPort()
       .then((resolved) => {
-        const port = typeof resolved === 'number' && resolved > 0 ? resolved : RPC_FALLBACK_PORT
-        cachedRpcUrl = `http://${RPC_HOST}:${port}`
-        return cachedRpcUrl
+        const port =
+          typeof resolved === "number" && resolved > 0
+            ? resolved
+            : RPC_FALLBACK_PORT;
+        cachedRpcUrl = `http://${RPC_HOST}:${port}`;
+        return cachedRpcUrl;
       })
       .catch(() => {
-        pendingPortResolution = null
-        return `http://${RPC_HOST}:${RPC_FALLBACK_PORT}`
-      })
+        pendingPortResolution = null;
+        return `http://${RPC_HOST}:${RPC_FALLBACK_PORT}`;
+      });
   }
 
-  return pendingPortResolution
+  return pendingPortResolution;
 }
 
 interface RpcResponse {
-  result: any
-  hasError: boolean
-  errorMessage: string | null
+  result: any;
+  hasError: boolean;
+  errorMessage: string | null;
 }
 
-const RPC_SUCCESS_NO_ERROR: Pick<RpcResponse, 'hasError' | 'errorMessage'> = {
+const RPC_SUCCESS_NO_ERROR: Pick<RpcResponse, "hasError" | "errorMessage"> = {
   hasError: false,
-  errorMessage: null
-}
+  errorMessage: null,
+};
 
 /**
  * Performs a single JSON-RPC 2.0 call to the remote Core-geth node using the
@@ -61,41 +64,48 @@ const RPC_SUCCESS_NO_ERROR: Pick<RpcResponse, 'hasError' | 'errorMessage'> = {
  * @param params - The ordered parameter array for the method.
  * @returns An RpcResponse object with the result, error flag, and error message.
  */
-async function callRaw(method: string, params: unknown[] = []): Promise<RpcResponse> {
-  requestCounter += 1
+async function callRaw(
+  method: string,
+  params: unknown[] = [],
+): Promise<RpcResponse> {
+  requestCounter += 1;
 
   const body = JSON.stringify({
     jsonrpc: JSON_RPC_VERSION,
     method,
     params,
-    id: requestCounter
-  })
+    id: requestCounter,
+  });
 
   try {
-    const baseUrl = await resolveRpcUrl()
+    const baseUrl = await resolveRpcUrl();
     const response = await fetch(baseUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body
-    })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body,
+    });
 
     if (!response.ok) {
-      return { result: null, hasError: true, errorMessage: `HTTP ${response.status}` }
+      return {
+        result: null,
+        hasError: true,
+        errorMessage: `HTTP ${response.status}`,
+      };
     }
 
-    const json = await response.json()
+    const json = await response.json();
 
     if (json.error) {
       return {
         result: null,
         hasError: true,
-        errorMessage: json.error.message || 'Unknown RPC error'
-      }
+        errorMessage: json.error.message || "Unknown RPC error",
+      };
     }
 
-    return { result: json.result, ...RPC_SUCCESS_NO_ERROR }
+    return { result: json.result, ...RPC_SUCCESS_NO_ERROR };
   } catch {
-    return { result: null, hasError: true, errorMessage: 'Node unreachable' }
+    return { result: null, hasError: true, errorMessage: "Node unreachable" };
   }
 }
 
@@ -108,9 +118,9 @@ async function callRaw(method: string, params: unknown[] = []): Promise<RpcRespo
  * @returns The raw result value, or null on failure.
  */
 async function call(method: string, params: unknown[] = []): Promise<any> {
-  const response = await callRaw(method, params)
-  if (response.hasError) return null
-  return response.result
+  const response = await callRaw(method, params);
+  if (response.hasError) return null;
+  return response.result;
 }
 
 /**
@@ -119,9 +129,9 @@ async function call(method: string, params: unknown[] = []): Promise<any> {
  * @returns The block height as a number, or null on failure.
  */
 async function fetchBlockNumber(): Promise<number | null> {
-  const result = await call('eth_blockNumber')
-  if (result === null) return null
-  return parseInt(result, HEX_RADIX)
+  const result = await call("eth_blockNumber");
+  if (result === null) return null;
+  return parseInt(result, HEX_RADIX);
 }
 
 /**
@@ -129,9 +139,9 @@ async function fetchBlockNumber(): Promise<number | null> {
  * @returns The peer count as a number, or null on failure.
  */
 async function fetchPeerCount(): Promise<number | null> {
-  const result = await call('net_peerCount')
-  if (result === null) return null
-  return parseInt(result, HEX_RADIX)
+  const result = await call("net_peerCount");
+  if (result === null) return null;
+  return parseInt(result, HEX_RADIX);
 }
 
 /**
@@ -140,11 +150,11 @@ async function fetchPeerCount(): Promise<number | null> {
  * @returns The gas price in gwei as a formatted string, or null on failure.
  */
 async function fetchGasPrice(): Promise<string | null> {
-  const result = await call('eth_gasPrice')
-  if (result === null) return null
-  const wei = parseInt(result, HEX_RADIX)
-  const gwei = Math.round(wei / WEI_PER_GWEI)
-  return gwei.toString()
+  const result = await call("eth_gasPrice");
+  if (result === null) return null;
+  const wei = parseInt(result, HEX_RADIX);
+  const gwei = Math.round(wei / WEI_PER_GWEI);
+  return gwei.toString();
 }
 
 /**
@@ -152,7 +162,7 @@ async function fetchGasPrice(): Promise<string | null> {
  * @returns True if mining, false if idle, or null on failure.
  */
 async function fetchMiningStatus(): Promise<boolean | null> {
-  return await call('eth_mining')
+  return await call("eth_mining");
 }
 
 /**
@@ -161,9 +171,9 @@ async function fetchMiningStatus(): Promise<boolean | null> {
  * @returns The hashrate in H/s, or null on failure.
  */
 async function fetchHashrate(): Promise<number | null> {
-  const result = await call('eth_hashrate')
-  if (result === null) return null
-  return parseInt(result, HEX_RADIX)
+  const result = await call("eth_hashrate");
+  if (result === null) return null;
+  return parseInt(result, HEX_RADIX);
 }
 
 /**
@@ -172,9 +182,9 @@ async function fetchHashrate(): Promise<number | null> {
  * @returns The difficulty as a number, or null on failure.
  */
 async function fetchDifficulty(): Promise<number | null> {
-  const result = await call('eth_getBlockByNumber', [LATEST_BLOCK_TAG, false])
-  if (result === null || result.difficulty === undefined) return null
-  return parseInt(result.difficulty, HEX_RADIX)
+  const result = await call("eth_getBlockByNumber", [LATEST_BLOCK_TAG, false]);
+  if (result === null || result.difficulty === undefined) return null;
+  return parseInt(result.difficulty, HEX_RADIX);
 }
 
 /**
@@ -182,7 +192,7 @@ async function fetchDifficulty(): Promise<number | null> {
  * @returns An object if syncing, false if fully synced, or null on failure.
  */
 async function fetchSyncingStatus(): Promise<any | boolean | null> {
-  return await call('eth_syncing')
+  return await call("eth_syncing");
 }
 
 /**
@@ -192,10 +202,10 @@ async function fetchSyncingStatus(): Promise<any | boolean | null> {
  * @returns The formatted CMU string (e.g. "1,284.67").
  */
 function formatBalance(cmuValue: number): string {
-  return cmuValue.toLocaleString('en-US', {
+  return cmuValue.toLocaleString("en-US", {
     minimumFractionDigits: BALANCE_DECIMAL_PLACES,
-    maximumFractionDigits: BALANCE_DECIMAL_PLACES
-  })
+    maximumFractionDigits: BALANCE_DECIMAL_PLACES,
+  });
 }
 
 /**
@@ -206,11 +216,11 @@ function formatBalance(cmuValue: number): string {
  * @returns The balance as a formatted CMU string (e.g. "1,284.67"), or null on failure.
  */
 async function fetchBalance(address: string): Promise<string | null> {
-  const result = await call('eth_getBalance', [address, LATEST_BLOCK_TAG])
-  if (result === null) return null
-  const weiValue = parseInt(result, HEX_RADIX)
-  const cmuValue = weiValue / WEI_PER_CMU
-  return formatBalance(cmuValue)
+  const result = await call("eth_getBalance", [address, LATEST_BLOCK_TAG]);
+  if (result === null) return null;
+  const weiValue = parseInt(result, HEX_RADIX);
+  const cmuValue = weiValue / WEI_PER_CMU;
+  return formatBalance(cmuValue);
 }
 
 /**
@@ -222,9 +232,11 @@ async function fetchBalance(address: string): Promise<string | null> {
  * @throws Error if the RPC call fails or the node rejects the address.
  */
 async function setEtherbase(address: string): Promise<void> {
-  const response = await callRaw('miner_setEtherbase', [address])
+  const response = await callRaw("miner_setEtherbase", [address]);
   if (response.hasError) {
-    throw new Error(response.errorMessage || 'Failed to set etherbase address on the node')
+    throw new Error(
+      response.errorMessage || "Failed to set etherbase address on the node",
+    );
   }
 }
 
@@ -237,9 +249,11 @@ async function setEtherbase(address: string): Promise<void> {
  * @throws Error if the RPC call fails or the node rejects the start command.
  */
 async function startMiner(threads: number): Promise<void> {
-  const response = await callRaw('miner_start', [Math.floor(threads)])
+  const response = await callRaw("miner_start", [Math.floor(threads)]);
   if (response.hasError) {
-    throw new Error(response.errorMessage || 'Failed to start miner on the node')
+    throw new Error(
+      response.errorMessage || "Failed to start miner on the node",
+    );
   }
 }
 
@@ -249,9 +263,11 @@ async function startMiner(threads: number): Promise<void> {
  * @throws Error if the RPC call fails or the node rejects the stop command.
  */
 async function stopMiner(): Promise<void> {
-  const response = await callRaw('miner_stop')
+  const response = await callRaw("miner_stop");
   if (response.hasError) {
-    throw new Error(response.errorMessage || 'Failed to stop miner on the node')
+    throw new Error(
+      response.errorMessage || "Failed to stop miner on the node",
+    );
   }
 }
 
@@ -261,19 +277,19 @@ async function stopMiner(): Promise<void> {
  * @returns A promise that resolves once the delay elapses.
  */
 function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms))
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 interface WaitForReceiptOptions {
-  confirmations?: number
-  timeoutMs?: number
-  pollIntervalMs?: number
+  confirmations?: number;
+  timeoutMs?: number;
+  pollIntervalMs?: number;
 }
 
-const DEFAULT_CONFIRMATIONS = 1
-const DEFAULT_RECEIPT_TIMEOUT_MS = 120_000
-const DEFAULT_RECEIPT_POLL_INTERVAL_MS = 2_000
-const TX_STATUS_FAILED = '0x0'
+const DEFAULT_CONFIRMATIONS = 1;
+const DEFAULT_RECEIPT_TIMEOUT_MS = 120_000;
+const DEFAULT_RECEIPT_POLL_INTERVAL_MS = 2_000;
+const TX_STATUS_FAILED = "0x0";
 
 /**
  * Polls eth_getTransactionReceipt until the transaction is mined and has reached
@@ -286,36 +302,44 @@ const TX_STATUS_FAILED = '0x0'
  */
 async function waitForTransactionReceipt(
   txHash: string,
-  options: WaitForReceiptOptions = {}
+  options: WaitForReceiptOptions = {},
 ): Promise<any> {
-  const confirmations = options.confirmations ?? DEFAULT_CONFIRMATIONS
-  const timeoutMs = options.timeoutMs ?? DEFAULT_RECEIPT_TIMEOUT_MS
-  const pollIntervalMs = options.pollIntervalMs ?? DEFAULT_RECEIPT_POLL_INTERVAL_MS
-  const deadline = Date.now() + timeoutMs
+  const confirmations = options.confirmations ?? DEFAULT_CONFIRMATIONS;
+  const timeoutMs = options.timeoutMs ?? DEFAULT_RECEIPT_TIMEOUT_MS;
+  const pollIntervalMs =
+    options.pollIntervalMs ?? DEFAULT_RECEIPT_POLL_INTERVAL_MS;
+  const deadline = Date.now() + timeoutMs;
 
   while (Date.now() < deadline) {
-    const receipt = await call('eth_getTransactionReceipt', [txHash])
+    const receipt = await call("eth_getTransactionReceipt", [txHash]);
 
-    if (receipt !== null && receipt.blockNumber !== undefined && receipt.blockNumber !== null) {
+    if (
+      receipt !== null &&
+      receipt.blockNumber !== undefined &&
+      receipt.blockNumber !== null
+    ) {
       if (receipt.status === TX_STATUS_FAILED) {
-        throw new Error('Transaction reverted on-chain.')
+        throw new Error("Transaction reverted on-chain.");
       }
 
       if (confirmations <= DEFAULT_CONFIRMATIONS) {
-        return receipt
+        return receipt;
       }
 
-      const receiptBlock = parseInt(receipt.blockNumber, HEX_RADIX)
-      const currentBlock = await fetchBlockNumber()
-      if (currentBlock !== null && currentBlock - receiptBlock + 1 >= confirmations) {
-        return receipt
+      const receiptBlock = parseInt(receipt.blockNumber, HEX_RADIX);
+      const currentBlock = await fetchBlockNumber();
+      if (
+        currentBlock !== null &&
+        currentBlock - receiptBlock + 1 >= confirmations
+      ) {
+        return receipt;
       }
     }
 
-    await delay(pollIntervalMs)
+    await delay(pollIntervalMs);
   }
 
-  throw new Error('Timed out waiting for confirmation.')
+  throw new Error("Timed out waiting for confirmation.");
 }
 
 export {
@@ -332,5 +356,5 @@ export {
   waitForTransactionReceipt,
   setEtherbase,
   startMiner,
-  stopMiner
-}
+  stopMiner,
+};

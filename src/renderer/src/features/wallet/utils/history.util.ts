@@ -1,7 +1,7 @@
-import { HISTORY_FILTER_ALL, type HistoryFilter } from '@/store'
+import { HISTORY_FILTER_ALL, type HistoryFilter } from "@/store";
 
 interface OwnedWallet {
-  address: string
+  address: string;
 }
 
 /**
@@ -13,13 +13,16 @@ interface OwnedWallet {
  * @param {any} accounts - The wallets currently owned by the user.
  * @returns {any} The lowercased addresses to aggregate history across.
  */
-function resolveHistoryAddresses(filter: HistoryFilter, accounts: OwnedWallet[]): string[] {
-  const owned = accounts.map((account) => account.address.toLowerCase())
+function resolveHistoryAddresses(
+  filter: HistoryFilter,
+  accounts: OwnedWallet[],
+): string[] {
+  const owned = accounts.map((account) => account.address.toLowerCase());
   if (filter === HISTORY_FILTER_ALL) {
-    return owned
+    return owned;
   }
-  const selected = filter.toLowerCase()
-  return owned.includes(selected) ? [selected] : owned
+  const selected = filter.toLowerCase();
+  return owned.includes(selected) ? [selected] : owned;
 }
 
 /**
@@ -30,10 +33,12 @@ function resolveHistoryAddresses(filter: HistoryFilter, accounts: OwnedWallet[])
  * @param {any} addresses - The lowercased addresses to keep.
  * @returns {any} The blocks mined by one of the supplied addresses.
  */
-function filterFoundBlocks<T extends { miner: string }>(blocks: T[], addresses: string[]): T[] {
-  const targets = new Set(addresses.map((address) => address.toLowerCase()))
-  return blocks.filter((block) => targets.has(block.miner.toLowerCase()))
+function filterFoundBlocks<T extends { miner: string }>(
+  blocks: T[],
+  addresses: string[],
+): T[] {
+  const targets = new Set(addresses.map((address) => address.toLowerCase()));
+  return blocks.filter((block) => targets.has(block.miner.toLowerCase()));
 }
 
-export { resolveHistoryAddresses, filterFoundBlocks }
-
+export { resolveHistoryAddresses, filterFoundBlocks };

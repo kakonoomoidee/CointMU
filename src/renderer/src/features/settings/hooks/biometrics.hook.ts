@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
 interface Biometrics {
-  isSupported: boolean
+  isSupported: boolean;
 }
 
 /**
@@ -11,25 +11,25 @@ interface Biometrics {
  * @returns An object with the resolved isSupported flag.
  */
 export function useBiometrics(): Biometrics {
-  const [isSupported, setIsSupported] = useState(false)
+  const [isSupported, setIsSupported] = useState(false);
 
   useEffect(() => {
-    let active = true
+    let active = true;
     const check = async (): Promise<void> => {
       try {
         const supported = window.PublicKeyCredential
           ? await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()
-          : false
-        if (active) setIsSupported(supported)
+          : false;
+        if (active) setIsSupported(supported);
       } catch {
-        if (active) setIsSupported(false)
+        if (active) setIsSupported(false);
       }
-    }
-    void check()
+    };
+    void check();
     return () => {
-      active = false
-    }
-  }, [])
+      active = false;
+    };
+  }, []);
 
-  return { isSupported }
+  return { isSupported };
 }

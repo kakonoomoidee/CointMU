@@ -2,7 +2,7 @@ import { INTENSITY_OPTIONS } from "../mining.constants";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "@/components";
-import { generateIdenticonGradient } from '@/features/wallet';
+import { generateIdenticonGradient } from "@/features/wallet/services/wallet.service";
 
 interface WorkerConfigurationProps {
   cpuThreads: number;

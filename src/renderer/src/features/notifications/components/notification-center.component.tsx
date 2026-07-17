@@ -1,13 +1,15 @@
-import { NOTIFICATION_COLORS_BY_TYPE } from '../notification.constants';
-import { type JSX, useState, useRef, useEffect } from 'react'
-import { formatDistanceToNow } from 'date-fns'
-import { useNotificationStore, type NotificationItem, type NotificationType } from '../notification.store'
-import { Bell } from 'lucide-react'
-
+import { NOTIFICATION_COLORS_BY_TYPE } from "../notification.constants";
+import { type JSX, useState, useRef, useEffect } from "react";
+import { formatDistanceToNow } from "date-fns";
+import {
+  useNotificationStore,
+  type NotificationItem,
+} from "../notification.store";
+import { Bell } from "lucide-react";
 
 interface NotificationRowProps {
-  notification: NotificationItem
-  onSelect: (id: string) => void
+  notification: NotificationItem;
+  onSelect: (id: string) => void;
 }
 
 /**
@@ -16,27 +18,40 @@ interface NotificationRowProps {
  * @param props - The notification item and the select handler.
  * @returns The rendered notification row.
  */
-function NotificationRow({ notification, onSelect }: NotificationRowProps): JSX.Element {
+function NotificationRow({
+  notification,
+  onSelect,
+}: NotificationRowProps): JSX.Element {
   return (
     <button
       onClick={() => onSelect(notification.id)}
       className={`w-full flex items-start gap-3 p-3 text-left transition-colors ${
-        notification.isRead ? 'bg-white hover:bg-slate-50' : 'bg-blue-50/60 hover:bg-blue-50'
+        notification.isRead
+          ? "bg-white hover:bg-slate-50"
+          : "bg-blue-50/60 hover:bg-blue-50"
       }`}
     >
-      <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${NOTIFICATION_COLORS_BY_TYPE[notification.type]}`} />
+      <span
+        className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${NOTIFICATION_COLORS_BY_TYPE[notification.type]}`}
+      />
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
-          <p className="text-sm font-bold text-slate-800 truncate">{notification.title}</p>
-          {!notification.isRead && <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />}
+          <p className="text-sm font-bold text-slate-800 truncate">
+            {notification.title}
+          </p>
+          {!notification.isRead && (
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+          )}
         </div>
-        <p className="text-xs text-slate-500 mt-0.5 break-words">{notification.message}</p>
+        <p className="text-xs text-slate-500 mt-0.5 break-words">
+          {notification.message}
+        </p>
         <p className="text-[10px] text-slate-400 mt-1">
           {formatDistanceToNow(notification.timestamp, { addSuffix: true })}
         </p>
       </div>
     </button>
-  )
+  );
 }
 
 /**
@@ -47,25 +62,28 @@ function NotificationRow({ notification, onSelect }: NotificationRowProps): JSX.
  * @returns The notification center control.
  */
 export function NotificationCenter(): JSX.Element {
-  const notifications = useNotificationStore((s) => s.notifications)
-  const markAsRead = useNotificationStore((s) => s.markAsRead)
-  const markAllAsRead = useNotificationStore((s) => s.markAllAsRead)
-  const clearAll = useNotificationStore((s) => s.clearAll)
+  const notifications = useNotificationStore((s) => s.notifications);
+  const markAsRead = useNotificationStore((s) => s.markAsRead);
+  const markAllAsRead = useNotificationStore((s) => s.markAllAsRead);
+  const clearAll = useNotificationStore((s) => s.clearAll);
 
-  const [isOpen, setIsOpen] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const unreadCount = notifications.filter((n) => !n.isRead).length
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent): void {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div className="relative" ref={containerRef}>
@@ -77,7 +95,7 @@ export function NotificationCenter(): JSX.Element {
         <Bell width={18} height={18} />
         {unreadCount > 0 && (
           <span className="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold text-white bg-red-500 rounded-full">
-            {unreadCount > 99 ? '99+' : unreadCount}
+            {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
       </button>
@@ -115,15 +133,23 @@ export function NotificationCenter(): JSX.Element {
               ))
             ) : (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <Bell className="text-slate-300 mb-2" width={28} height={28} strokeWidth={1.5} />
-                <p className="text-sm font-medium text-slate-400">No notifications</p>
-                <p className="text-xs text-slate-400 mt-1">Events will appear here as they happen</p>
+                <Bell
+                  className="text-slate-300 mb-2"
+                  width={28}
+                  height={28}
+                  strokeWidth={1.5}
+                />
+                <p className="text-sm font-medium text-slate-400">
+                  No notifications
+                </p>
+                <p className="text-xs text-slate-400 mt-1">
+                  Events will appear here as they happen
+                </p>
               </div>
             )}
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
-

@@ -1,20 +1,24 @@
 import { FOUND_BLOCKS_PAGE_SIZE } from "../mining.constants";
 import { useState, useMemo, type JSX } from "react";
+import { useTimer, usePagination, useRecentBlocks } from "@/hooks";
+import { useMiningStats, useMiningControls, useMiningActivity } from "../hooks";
+import { useAppStore } from "@/store";
+import { useMiningStore, type FoundBlock } from "../mining.store";
+import { type DerivedAccount } from "@/features/wallet";
+import { formatMhs, isWithinLastDay } from "@/utils";
 import {
-  useMiningStats,
-  useMiningControls,
-  useMiningActivity,
-  useTimer,
-  usePagination,
-} from "@/hooks";
-import { useMiningStore, useAppStore, type FoundBlock } from "@/store";
-import { type DerivedAccount } from '@/features/wallet';
-import { formatMhs, isWithinLastDay, getSafeConcurrency, formatRewards, formatDifficultyLabel } from '@/utils'
-import { resolveHistoryAddresses, filterFoundBlocks } from '@/features/wallet/utils/history.util';
-import { AlertCircle } from 'lucide-react';
+  getSafeConcurrency,
+  formatRewards,
+  formatDifficultyLabel,
+} from "../mining.utils";
+import {
+  resolveHistoryAddresses,
+  filterFoundBlocks,
+} from "@/features/wallet/utils/history.util";
+import { AlertCircle } from "lucide-react";
 import { MiningHeader } from "./mining-header.component";
-import { MiningHeroCard } from './mining-hero-card.component';
-import { useRecentBlocks } from '@/features/explorer';
+import { MiningHeroCard } from "./mining-hero-card.component";
+
 import { MiningStatsGrid } from "./mining-stats-grid.component";
 import { WorkerConfiguration } from "./worker-configuration.component";
 import {
@@ -213,4 +217,3 @@ function MiningView({ accounts, onNavigate }: MinerProps): JSX.Element {
 }
 
 export { MiningView };
-

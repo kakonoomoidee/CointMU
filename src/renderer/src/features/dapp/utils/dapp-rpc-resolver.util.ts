@@ -1,4 +1,4 @@
-import { call } from '@/services/rpcClient'
+import { call } from '@/services/rpc.client'
 
 /**
  * Resolves the correct JSON-RPC result value for a given method.
@@ -64,4 +64,5 @@ export async function resolveApprovalResult(
     }
   }
 }
+
 

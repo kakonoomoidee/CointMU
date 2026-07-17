@@ -1,24 +1,24 @@
-import { create } from 'zustand'
+import { create } from "zustand";
 
 /**
  * Represents a single pending JSON-RPC request forwarded from the browser
  * extension to the Electron renderer for user approval.
  */
 interface DappRequest {
-  id: number
-  method: string
-  params: unknown[]
-  tabId: number
-  origin: string
+  id: number;
+  method: string;
+  params: unknown[];
+  tabId: number;
+  origin: string;
 }
 
 /**
  * State and actions managed by the dApp approval store.
  */
 interface DappStore {
-  pendingDappRequest: DappRequest | null
-  setPendingDappRequest: (request: DappRequest) => void
-  clearPendingDappRequest: () => void
+  pendingDappRequest: DappRequest | null;
+  setPendingDappRequest: (request: DappRequest) => void;
+  clearPendingDappRequest: () => void;
 }
 
 /**
@@ -35,14 +35,15 @@ export const useDappStore = create<DappStore>((set) => ({
    * @param {DappRequest} request - The JSON-RPC request payload from the extension.
    * @returns {void}
    */
-  setPendingDappRequest: (request: DappRequest): void => set({ pendingDappRequest: request }),
+  setPendingDappRequest: (request: DappRequest): void =>
+    set({ pendingDappRequest: request }),
 
   /**
    * Clears the pending request after the user has approved or rejected it,
    * causing the approval modal to be dismissed.
    * @returns {void}
    */
-  clearPendingDappRequest: (): void => set({ pendingDappRequest: null })
-}))
+  clearPendingDappRequest: (): void => set({ pendingDappRequest: null }),
+}));
 
-export type { DappRequest }
+export type { DappRequest };

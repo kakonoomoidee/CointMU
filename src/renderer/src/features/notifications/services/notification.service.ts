@@ -1,4 +1,7 @@
-import { useNotificationStore, type NotificationType } from '@/features/notifications'
+import {
+  useNotificationStore,
+  type NotificationType,
+} from "@/features/notifications";
 
 /**
  * Maps a notification type to its governing category toggle. The generic 'info'
@@ -9,12 +12,12 @@ import { useNotificationStore, type NotificationType } from '@/features/notifica
  */
 function isCategoryEnabled(
   type: NotificationType,
-  settings: { transactions: boolean; mining: boolean; security: boolean }
+  settings: { transactions: boolean; mining: boolean; security: boolean },
 ): boolean {
-  if (type === 'transaction') return settings.transactions
-  if (type === 'mining') return settings.mining
-  if (type === 'security') return settings.security
-  return true
+  if (type === "transaction") return settings.transactions;
+  if (type === "mining") return settings.mining;
+  if (type === "security") return settings.security;
+  return true;
 }
 
 /**
@@ -26,19 +29,19 @@ function isCategoryEnabled(
  * @returns Nothing.
  */
 function fireDesktopNotification(title: string, message: string): void {
-  if (typeof Notification === 'undefined') return
+  if (typeof Notification === "undefined") return;
   try {
-    if (Notification.permission === 'granted') {
-      new Notification(title, { body: message })
-    } else if (Notification.permission !== 'denied') {
+    if (Notification.permission === "granted") {
+      new Notification(title, { body: message });
+    } else if (Notification.permission !== "denied") {
       void Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          new Notification(title, { body: message })
+        if (permission === "granted") {
+          new Notification(title, { body: message });
         }
-      })
+      });
     }
   } catch (err) {
-    console.error('Failed to show desktop notification', err)
+    console.error("Failed to show desktop notification", err);
   }
 }
 
@@ -49,25 +52,28 @@ function fireDesktopNotification(title: string, message: string): void {
  */
 function playNotificationSound(): void {
   try {
-    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
-    if (!AudioCtx) return
-    const ctx = new AudioCtx()
-    const oscillator = ctx.createOscillator()
-    const gain = ctx.createGain()
-    oscillator.type = 'sine'
-    oscillator.frequency.value = 880
-    gain.gain.setValueAtTime(0.0001, ctx.currentTime)
-    gain.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.02)
-    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25)
-    oscillator.connect(gain)
-    gain.connect(ctx.destination)
-    oscillator.start()
-    oscillator.stop(ctx.currentTime + 0.26)
+    const AudioCtx =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext?: typeof AudioContext })
+        .webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+    oscillator.type = "sine";
+    oscillator.frequency.value = 880;
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+    oscillator.start();
+    oscillator.stop(ctx.currentTime + 0.26);
     oscillator.onended = (): void => {
-      void ctx.close()
-    }
+      void ctx.close();
+    };
   } catch (err) {
-    console.error('Failed to play notification sound', err)
+    console.error("Failed to play notification sound", err);
   }
 }
 
@@ -87,25 +93,25 @@ export function dispatchNotification(
   type: NotificationType,
   title: string,
   message: string,
-  metaData?: Record<string, unknown>
+  metaData?: Record<string, unknown>,
 ): void {
-  const { settings, addNotification, pushToast } = useNotificationStore.getState()
+  const { settings, addNotification, pushToast } =
+    useNotificationStore.getState();
 
-  if (!settings.global) return
-  if (!isCategoryEnabled(type, settings)) return
+  if (!settings.global) return;
+  if (!isCategoryEnabled(type, settings)) return;
 
-  const item = addNotification({ type, title, message, metaData })
+  const item = addNotification({ type, title, message, metaData });
 
   if (settings.desktopOs) {
-    fireDesktopNotification(title, message)
+    fireDesktopNotification(title, message);
   }
 
-  if (typeof document !== 'undefined' && document.hasFocus()) {
-    pushToast(item)
+  if (typeof document !== "undefined" && document.hasFocus()) {
+    pushToast(item);
   }
 
   if (settings.sound) {
-    playNotificationSound()
+    playNotificationSound();
   }
 }
-

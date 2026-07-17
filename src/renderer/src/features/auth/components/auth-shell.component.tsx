@@ -1,17 +1,17 @@
-import { type JSX, type ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
-import { type AuthStep, type ImportMethod } from '../auth.store'
-import { Zap } from 'lucide-react'
+import { type JSX, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
+import { type AuthStep, type ImportMethod } from "../auth.store";
+import { Zap } from "lucide-react";
 
 interface AuthShellProps {
-  step: AuthStep
-  importMethod: ImportMethod
-  children: ReactNode
+  step: AuthStep;
+  importMethod: ImportMethod;
+  children: ReactNode;
 }
 
 interface StepCopy {
-  title: string
-  subtitle: string
+  title: string;
+  subtitle: string;
 }
 
 /**
@@ -21,41 +21,51 @@ interface StepCopy {
  * @param importMethod - The selected import method, used to vary import copy.
  * @returns The title and subtitle strings for the step.
  */
-function getStepCopy(t: any, step: AuthStep, importMethod: ImportMethod): StepCopy {
+function getStepCopy(
+  t: any,
+  step: AuthStep,
+  importMethod: ImportMethod,
+): StepCopy {
   switch (step) {
-    case 'initial':
+    case "initial":
       return {
-        title: t('auth.shell.welcomeTitle'),
-        subtitle: t('auth.shell.welcomeSubtitle')
-      }
-    case 'login':
-      return { title: t('auth.shell.welcomeBackTitle'), subtitle: t('auth.shell.welcomeBackSubtitle') }
-    case 'create-seed':
+        title: t("auth.shell.welcomeTitle"),
+        subtitle: t("auth.shell.welcomeSubtitle"),
+      };
+    case "login":
       return {
-        title: t('auth.shell.secretRecoveryTitle'),
-        subtitle: t('auth.shell.secretRecoverySubtitle')
-      }
-    case 'create-password':
-    case 'import-password':
+        title: t("auth.shell.welcomeBackTitle"),
+        subtitle: t("auth.shell.welcomeBackSubtitle"),
+      };
+    case "create-seed":
       return {
-        title: t('auth.shell.createPasswordTitle'),
-        subtitle: t('auth.shell.createPasswordSubtitle')
-      }
-    case 'import-method':
+        title: t("auth.shell.secretRecoveryTitle"),
+        subtitle: t("auth.shell.secretRecoverySubtitle"),
+      };
+    case "create-password":
+    case "import-password":
       return {
-        title: t('auth.shell.importWalletTitle'),
-        subtitle: t('auth.shell.importWalletSubtitle')
-      }
-    case 'import-input':
+        title: t("auth.shell.createPasswordTitle"),
+        subtitle: t("auth.shell.createPasswordSubtitle"),
+      };
+    case "import-method":
       return {
-        title: importMethod === 'seed' ? t('auth.shell.enterSeedTitle') : t('auth.shell.enterPrivateKeyTitle'),
+        title: t("auth.shell.importWalletTitle"),
+        subtitle: t("auth.shell.importWalletSubtitle"),
+      };
+    case "import-input":
+      return {
+        title:
+          importMethod === "seed"
+            ? t("auth.shell.enterSeedTitle")
+            : t("auth.shell.enterPrivateKeyTitle"),
         subtitle:
-          importMethod === 'seed'
-            ? t('auth.shell.enterSeedSubtitle')
-            : t('auth.shell.enterPrivateKeySubtitle')
-      }
+          importMethod === "seed"
+            ? t("auth.shell.enterSeedSubtitle")
+            : t("auth.shell.enterPrivateKeySubtitle"),
+      };
     default:
-      return { title: '', subtitle: '' }
+      return { title: "", subtitle: "" };
   }
 }
 
@@ -66,9 +76,13 @@ function getStepCopy(t: any, step: AuthStep, importMethod: ImportMethod): StepCo
  * @param props - The current step, import method, and the active step content.
  * @returns The rendered AuthFlow shell.
  */
-function AuthShell({ step, importMethod, children }: AuthShellProps): JSX.Element {
-  const { t } = useTranslation()
-  const { title, subtitle } = getStepCopy(t, step, importMethod)
+function AuthShell({
+  step,
+  importMethod,
+  children,
+}: AuthShellProps): JSX.Element {
+  const { t } = useTranslation();
+  const { title, subtitle } = getStepCopy(t, step, importMethod);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 text-slate-800">
@@ -77,7 +91,9 @@ function AuthShell({ step, importMethod, children }: AuthShellProps): JSX.Elemen
           <Zap color="white" width={40} height={40} />
         </div>
 
-        <h1 className="text-2xl font-bold tracking-tight mb-2 text-center">{title}</h1>
+        <h1 className="text-2xl font-bold tracking-tight mb-2 text-center">
+          {title}
+        </h1>
         <p className="text-center text-sm font-medium text-slate-500 mb-8 leading-relaxed">
           {subtitle}
         </p>
@@ -85,11 +101,8 @@ function AuthShell({ step, importMethod, children }: AuthShellProps): JSX.Elemen
         {children}
       </div>
     </div>
-  )
+  );
 }
 
-export { AuthShell, getStepCopy }
-export type { AuthShellProps, StepCopy }
-
-
-
+export { AuthShell, getStepCopy };
+export type { AuthShellProps, StepCopy };

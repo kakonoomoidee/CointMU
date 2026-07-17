@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+import { create } from "zustand";
 import {
   fetchBlockNumber,
   fetchPeerCount,
@@ -7,44 +7,46 @@ import {
   fetchHashrate,
   fetchDifficulty,
   fetchBalance,
-  formatBalance
-} from '@/services/rpcClient'
+  formatBalance,
+} from "@/services/rpc.client";
 
+const DISCONNECTED_BALANCE = "0.00";
 
-const DISCONNECTED_BALANCE = '0.00'
+const HISTORY_FILTER_ALL = "ALL";
 
-const HISTORY_FILTER_ALL = 'ALL'
-
-type HistoryFilter = typeof HISTORY_FILTER_ALL | string
+type HistoryFilter = typeof HISTORY_FILTER_ALL | string;
 
 interface PendingTransaction {
-  hash: string
-  from: string
-  to: string
-  amount: number
-  timestamp: number
-  gas: number
+  hash: string;
+  from: string;
+  to: string;
+  amount: number;
+  timestamp: number;
+  gas: number;
 }
 
 interface AppState {
-  blockHeight: number | null
-  peerCount: number | null
-  gasPriceGwei: string | null
-  isMining: boolean | null
-  hashrate: number | null
-  difficulty: number | null
-  isConnected: boolean
-  loading: boolean
-  activeAccount: string | null
-  balance: string
-  balances: Record<string, string>
-  pendingTransactions: PendingTransaction[]
-  historyFilter: HistoryFilter
-  setActiveAccount: (address: string | null) => void
-  addPendingTransaction: (tx: PendingTransaction) => void
-  removePendingTransaction: (hash: string) => void
-  setHistoryFilter: (filter: HistoryFilter) => void
-  fetchGlobalStats: (address: string | null, addresses: string[]) => Promise<void>
+  blockHeight: number | null;
+  peerCount: number | null;
+  gasPriceGwei: string | null;
+  isMining: boolean | null;
+  hashrate: number | null;
+  difficulty: number | null;
+  isConnected: boolean;
+  loading: boolean;
+  activeAccount: string | null;
+  balance: string;
+  balances: Record<string, string>;
+  pendingTransactions: PendingTransaction[];
+  historyFilter: HistoryFilter;
+  setActiveAccount: (address: string | null) => void;
+  addPendingTransaction: (tx: PendingTransaction) => void;
+  removePendingTransaction: (hash: string) => void;
+  setHistoryFilter: (filter: HistoryFilter) => void;
+  fetchGlobalStats: (
+    address: string | null,
+    addresses: string[],
+  ) => Promise<void>;
 }
 
 /**
@@ -56,9 +58,9 @@ interface AppState {
  */
 function buildEmptyBalances(addresses: string[]): Record<string, string> {
   return addresses.reduce<Record<string, string>>((acc, addr) => {
-    acc[addr] = DISCONNECTED_BALANCE
-    return acc
-  }, {})
+    acc[addr] = DISCONNECTED_BALANCE;
+    return acc;
+  }, {});
 }
 
 /**
@@ -85,15 +87,19 @@ export const useAppStore = create<AppState>((set, get) => ({
   historyFilter: HISTORY_FILTER_ALL,
   setActiveAccount: (address: string | null) => set({ activeAccount: address }),
   addPendingTransaction: (tx: PendingTransaction) =>
-    set((state) => ({ pendingTransactions: [...state.pendingTransactions, tx] })),
+    set((state) => ({
+      pendingTransactions: [...state.pendingTransactions, tx],
+    })),
   removePendingTransaction: (hash: string) =>
     set((state) => ({
-      pendingTransactions: state.pendingTransactions.filter((tx) => tx.hash !== hash)
+      pendingTransactions: state.pendingTransactions.filter(
+        (tx) => tx.hash !== hash,
+      ),
     })),
   setHistoryFilter: (filter: HistoryFilter) => set({ historyFilter: filter }),
   fetchGlobalStats: async (address: string | null, addresses: string[]) => {
     try {
-      const blockResult = await fetchBlockNumber()
+      const blockResult = await fetchBlockNumber();
 
       if (blockResult === null) {
         set({
@@ -106,54 +112,58 @@ export const useAppStore = create<AppState>((set, get) => ({
           isConnected: false,
           loading: false,
           balance: DISCONNECTED_BALANCE,
-          balances: buildEmptyBalances(addresses)
-        })
-        return
+          balances: buildEmptyBalances(addresses),
+        });
+        return;
       }
 
-      const [peers, gas, mining, hash, diff, singleBalance, balanceEntries] = await Promise.all([
-        fetchPeerCount(),
-        fetchGasPrice(),
-        fetchMiningStatus(),
-        fetchHashrate(),
-        fetchDifficulty(),
-        address !== null ? fetchBalance(address) : Promise.resolve(null),
-        Promise.all(
-          addresses.map(async (addr) => {
-            const res = await fetchBalance(addr)
-            return [addr, res !== null ? res : DISCONNECTED_BALANCE] as const
-          })
-        )
-      ])
+      const [peers, gas, mining, hash, diff, singleBalance, balanceEntries] =
+        await Promise.all([
+          fetchPeerCount(),
+          fetchGasPrice(),
+          fetchMiningStatus(),
+          fetchHashrate(),
+          fetchDifficulty(),
+          address !== null ? fetchBalance(address) : Promise.resolve(null),
+          Promise.all(
+            addresses.map(async (addr) => {
+              const res = await fetchBalance(addr);
+              return [addr, res !== null ? res : DISCONNECTED_BALANCE] as const;
+            }),
+          ),
+        ]);
 
-      const balances = balanceEntries.reduce<Record<string, string>>((acc, [addr, value]) => {
-        acc[addr] = value
-        return acc
-      }, {})
-
-      let displayBalance = singleBalance !== null ? singleBalance : DISCONNECTED_BALANCE
-
-      const pendingByAddress = get().pendingTransactions.reduce<Record<string, number>>(
-        (acc, tx) => {
-          acc[tx.from] = (acc[tx.from] ?? 0) + tx.amount + tx.gas
-          return acc
+      const balances = balanceEntries.reduce<Record<string, string>>(
+        (acc, [addr, value]) => {
+          acc[addr] = value;
+          return acc;
         },
-        {}
-      )
+        {},
+      );
+
+      let displayBalance =
+        singleBalance !== null ? singleBalance : DISCONNECTED_BALANCE;
+
+      const pendingByAddress = get().pendingTransactions.reduce<
+        Record<string, number>
+      >((acc, tx) => {
+        acc[tx.from] = (acc[tx.from] ?? 0) + tx.amount + tx.gas;
+        return acc;
+      }, {});
 
       const applyPending = (formatted: string, addr: string): string => {
-        const total = pendingByAddress[addr]
-        if (!total) return formatted
-        const numeric = parseFloat(formatted.replace(/,/g, '')) - total
-        return formatBalance(numeric < 0 ? 0 : numeric)
-      }
+        const total = pendingByAddress[addr];
+        if (!total) return formatted;
+        const numeric = parseFloat(formatted.replace(/,/g, "")) - total;
+        return formatBalance(numeric < 0 ? 0 : numeric);
+      };
 
       Object.keys(balances).forEach((addr) => {
-        balances[addr] = applyPending(balances[addr], addr)
-      })
+        balances[addr] = applyPending(balances[addr], addr);
+      });
 
       if (address !== null) {
-        displayBalance = applyPending(displayBalance, address)
+        displayBalance = applyPending(displayBalance, address);
       }
 
       set({
@@ -166,8 +176,8 @@ export const useAppStore = create<AppState>((set, get) => ({
         isConnected: true,
         loading: false,
         balance: displayBalance,
-        balances
-      })
+        balances,
+      });
     } catch {
       set({
         blockHeight: null,
@@ -179,11 +189,11 @@ export const useAppStore = create<AppState>((set, get) => ({
         isConnected: false,
         loading: false,
         balance: DISCONNECTED_BALANCE,
-        balances: buildEmptyBalances(addresses)
-      })
+        balances: buildEmptyBalances(addresses),
+      });
     }
-  }
-}))
+  },
+}));
 
-export { HISTORY_FILTER_ALL }
-export type { AppState, HistoryFilter, PendingTransaction }
+export { HISTORY_FILTER_ALL };
+export type { AppState, HistoryFilter, PendingTransaction };

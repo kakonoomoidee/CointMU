@@ -1,6 +1,6 @@
 import { type JSX, type SyntheticEvent, type RefObject } from "react";
 import { useTranslation } from "react-i18next";
-import { Search } from 'lucide-react';
+import { Search } from "lucide-react";
 
 interface ExplorerSearchProps {
   searchValue: string;

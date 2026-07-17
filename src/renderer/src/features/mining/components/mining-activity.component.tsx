@@ -11,11 +11,13 @@ import {
 import { useMemo, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { subDays, format, differenceInMinutes } from "date-fns";
-import { Card, WalletHistoryFilter, Pagination } from "@/components";
-import { Check, Cube } from 'lucide-react';
-import { formatAge } from '@/utils';
-import { type FoundBlock, type HistoryFilter } from "@/store";
-import { type DerivedAccount } from '@/features/wallet';
+import { Card, Pagination } from "@/components";
+import { WalletHistoryFilter } from "@/features/wallet";
+import { Check, Box } from "lucide-react";
+import { formatAge } from "@/utils";
+import { type FoundBlock } from "../mining.store";
+import { type HistoryFilter } from "@/store";
+import { type DerivedAccount } from "@/features/wallet";
 import { MiningActivityLogs } from "./mining-activity-logs.component";
 
 export interface DayContribution {
@@ -119,7 +121,7 @@ function FoundBlocksPanel({
       <div className="relative z-0 h-[280px] overflow-y-auto pr-1">
         {minedBlocks.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Cube className="text-slate-300 mb-3" width={32} height={32} />
+            <Box className="text-slate-300 mb-3" width={32} height={32} />
             <p className="text-sm font-medium text-slate-400">
               {t("mining.activity.noBlocks")}
             </p>

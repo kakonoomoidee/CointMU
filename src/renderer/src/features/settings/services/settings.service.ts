@@ -10,7 +10,7 @@
  * @returns The stored value, or undefined when unset.
  */
 async function getSetting<T = unknown>(key: string): Promise<T> {
-  return window.api.settings.get(key) as Promise<T>
+  return window.api.settings.get(key) as Promise<T>;
 }
 
 /**
@@ -20,7 +20,7 @@ async function getSetting<T = unknown>(key: string): Promise<T> {
  * @returns A promise resolving once the value is written.
  */
 async function setSetting(key: string, value: unknown): Promise<void> {
-  return window.api.settings.set(key, value)
+  return window.api.settings.set(key, value);
 }
 
 /**
@@ -28,7 +28,7 @@ async function setSetting(key: string, value: unknown): Promise<void> {
  * @returns The full settings object.
  */
 async function getAllSettings(): Promise<Record<string, any>> {
-  return window.api.settings.getAll()
+  return window.api.settings.getAll();
 }
 
-export { getSetting, setSetting, getAllSettings }
+export { getSetting, setSetting, getAllSettings };

@@ -1,6 +1,13 @@
-import { type ActivityData } from '@/views/Wallet/ActivityItem'
+import { type ActivityData } from "@/components";
 
-const CSV_HEADERS = ['Type', 'Title', 'Detail', 'Amount (CMU)', 'Reference', 'When']
+const CSV_HEADERS = [
+  "Type",
+  "Title",
+  "Detail",
+  "Amount (CMU)",
+  "Reference",
+  "When",
+];
 
 /**
  * Escapes a single CSV field by wrapping it in double quotes and doubling any
@@ -10,7 +17,7 @@ const CSV_HEADERS = ['Type', 'Title', 'Detail', 'Amount (CMU)', 'Reference', 'Wh
  * @returns {string} The CSV-safe field string.
  */
 function escapeCsvField(value: string): string {
-  return `"${value.replace(/"/g, '""')}"`
+  return `"${value.replace(/"/g, '""')}"`;
 }
 
 /**
@@ -20,8 +27,11 @@ function escapeCsvField(value: string): string {
  * @param {ActivityData[]} history - The array of wallet activity records to export.
  * @param {string} filename - The desired output filename.
  */
-export function downloadActivityCsv(history: ActivityData[], filename: string): void {
-  if (!history || history.length === 0) return
+export function downloadActivityCsv(
+  history: ActivityData[],
+  filename: string,
+): void {
+  if (!history || history.length === 0) return;
 
   const rows = history.map((item) => [
     item.type,
@@ -29,23 +39,23 @@ export function downloadActivityCsv(history: ActivityData[], filename: string): 
     item.subtitle,
     item.amount,
     item.id,
-    item.timestampStr
-  ])
+    item.timestampStr,
+  ]);
 
   const csvContent = [CSV_HEADERS, ...rows]
-    .map((columns) => columns.map((field) => escapeCsvField(String(field))).join(','))
-    .join('\n')
+    .map((columns) =>
+      columns.map((field) => escapeCsvField(String(field))).join(","),
+    )
+    .join("\n");
 
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
 
-  link.href = url
-  link.setAttribute('download', filename)
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-  URL.revokeObjectURL(url)
+  link.href = url;
+  link.setAttribute("download", filename);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
-
-

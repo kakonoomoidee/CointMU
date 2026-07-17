@@ -1,11 +1,10 @@
-import { AVATAR_PALETTE } from '../wallet.constants';
-import { type JSX } from 'react'
-import Avatar from 'boring-avatars'
-
+import { AVATAR_PALETTE } from "../wallet.constants";
+import { type JSX } from "react";
+import Avatar from "boring-avatars";
 
 interface AccountIconProps {
-  address: string
-  size?: number
+  address: string;
+  size?: number;
 }
 
 /**
@@ -17,17 +16,16 @@ interface AccountIconProps {
  * @returns The generated SVG avatar element.
  */
 function AccountIcon({ address, size = 20 }: AccountIconProps): JSX.Element {
-  const seed = address ? address.toLowerCase() : '0x0'
+  const seed = address ? address.toLowerCase() : "0x0";
   return (
     <Avatar
       size={size}
       name={seed}
       // you can use: beam, bauhaus, marble, moon, pixel, ring
-      variant='beam'
+      variant="beam"
       colors={AVATAR_PALETTE}
     />
-  )
+  );
 }
 
-export { AccountIcon }
-
+export { AccountIcon };

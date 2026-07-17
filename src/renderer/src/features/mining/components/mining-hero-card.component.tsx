@@ -2,7 +2,7 @@ import { BLOCK_REWARD_CMU } from "../mining.constants";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components";
-import { Play, Stop } from 'lucide-react';
+import { Play, Square } from "lucide-react";
 import { NonceCounter } from "./nonce-counter.component";
 
 interface MiningHeroCardProps {
@@ -133,16 +133,16 @@ function MiningHeroCard({
           <div className="flex items-center gap-4">
             <RewardsBadge value={`+${formattedRewards}`} />
             <Button
-              id="miner-stop-button"
+              id="miner-Square-button"
               variant="danger"
               size="lg"
               onClick={() => onToggle(false)}
               disabled={toggling}
-              leftIcon={<Stop width={14} height={14} />}
+              leftIcon={<Square width={14} height={14} />}
             >
               {toggling
-                ? t("mining.hero.stopping")
-                : t("mining.hero.stopMining")}
+                ? t("mining.hero.Squareping")
+                : t("mining.hero.SquareMining")}
             </Button>
           </div>
         </div>

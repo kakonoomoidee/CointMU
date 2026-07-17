@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo } from "react";
 
 interface Pagination<T> {
-  pageItems: T[]
-  currentPage: number
-  totalPages: number
-  setPage: (page: number) => void
+  pageItems: T[];
+  currentPage: number;
+  totalPages: number;
+  setPage: (page: number) => void;
 }
 
 /**
@@ -17,25 +17,25 @@ interface Pagination<T> {
  * @returns The current page slice, page state, total page count, and a setter.
  */
 function usePagination<T>(items: T[], pageSize: number): Pagination<T> {
-  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const totalPages = Math.max(1, Math.ceil(items.length / pageSize))
+  const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
 
   useEffect(() => {
-    setCurrentPage((prev) => Math.min(prev, totalPages))
-  }, [totalPages])
+    setCurrentPage((prev) => Math.min(prev, totalPages));
+  }, [totalPages]);
 
   const pageItems = useMemo(() => {
-    const start = (currentPage - 1) * pageSize
-    return items.slice(start, start + pageSize)
-  }, [items, currentPage, pageSize])
+    const start = (currentPage - 1) * pageSize;
+    return items.slice(start, start + pageSize);
+  }, [items, currentPage, pageSize]);
 
   const setPage = (page: number): void => {
-    setCurrentPage(Math.min(Math.max(1, page), totalPages))
-  }
+    setCurrentPage(Math.min(Math.max(1, page), totalPages));
+  };
 
-  return { pageItems, currentPage, totalPages, setPage }
+  return { pageItems, currentPage, totalPages, setPage };
 }
 
-export { usePagination }
-export type { Pagination }
+export { usePagination };
+export type { Pagination };

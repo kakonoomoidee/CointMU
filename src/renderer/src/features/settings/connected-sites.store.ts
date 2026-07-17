@@ -1,6 +1,9 @@
 import { CONNECTED_SITES_SETTINGS_KEY } from "./settings.constants";
 import { create } from "zustand";
-import { getSetting, setSetting } from "@/services/settingsService";
+import {
+  getSetting,
+  setSetting,
+} from "@/features/settings/services/settings.service";
 
 export interface ConnectedSite {
   origin: string;

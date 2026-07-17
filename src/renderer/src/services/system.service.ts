@@ -6,10 +6,10 @@
  */
 async function getCpuUsage(): Promise<number> {
   try {
-    return await window.api.getCpuUsage()
+    return await window.api.getCpuUsage();
   } catch {
-    return 0
+    return 0;
   }
 }
 
-export { getCpuUsage }
+export { getCpuUsage };

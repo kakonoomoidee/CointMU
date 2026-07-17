@@ -1,13 +1,9 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { type BlockData } from "@/hooks";
+import { AccountIcon } from "@/features/wallet";
 import { useAppStore } from "@/store";
-import {
-  AccountIcon,
-  SkeletonTable,
-  Pagination,
-  type ActivityData,
-} from "@/components";
+import { SkeletonTable, Pagination, type ActivityData } from "@/components";
 import { MinerDistribution } from "./miner-distribution.component";
 import { formatTxAge } from "../explorer.utils";
 

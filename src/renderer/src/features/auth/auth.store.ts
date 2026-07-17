@@ -1,40 +1,40 @@
-import { create } from 'zustand'
+import { create } from "zustand";
 
 type AuthStep =
-  | 'initial'
-  | 'login'
-  | 'create-seed'
-  | 'create-password'
-  | 'import-method'
-  | 'import-input'
-  | 'import-password'
+  | "initial"
+  | "login"
+  | "create-seed"
+  | "create-password"
+  | "import-method"
+  | "import-input"
+  | "import-password";
 
-type ImportMethod = 'seed' | 'privateKey'
+type ImportMethod = "seed" | "privateKey";
 
 interface AuthStore {
-  step: AuthStep
-  hasExistingWallet: boolean
-  mnemonic: string
-  copied: boolean
-  importMethod: ImportMethod
-  inputValue: string
-  password: string
-  confirmPassword: string
-  showPassword: boolean
-  showConfirmPassword: boolean
-  error: string | null
-  setStep: (step: AuthStep) => void
-  setHasExistingWallet: (value: boolean) => void
-  setMnemonic: (value: string) => void
-  setCopied: (value: boolean) => void
-  setImportMethod: (value: ImportMethod) => void
-  setInputValue: (value: string) => void
-  setPassword: (value: string) => void
-  setConfirmPassword: (value: string) => void
-  setShowPassword: (value: boolean) => void
-  setShowConfirmPassword: (value: boolean) => void
-  setError: (value: string | null) => void
-  reset: () => void
+  step: AuthStep;
+  hasExistingWallet: boolean;
+  mnemonic: string;
+  copied: boolean;
+  importMethod: ImportMethod;
+  inputValue: string;
+  password: string;
+  confirmPassword: string;
+  showPassword: boolean;
+  showConfirmPassword: boolean;
+  error: string | null;
+  setStep: (step: AuthStep) => void;
+  setHasExistingWallet: (value: boolean) => void;
+  setMnemonic: (value: string) => void;
+  setCopied: (value: boolean) => void;
+  setImportMethod: (value: ImportMethod) => void;
+  setInputValue: (value: string) => void;
+  setPassword: (value: string) => void;
+  setConfirmPassword: (value: string) => void;
+  setShowPassword: (value: boolean) => void;
+  setShowConfirmPassword: (value: boolean) => void;
+  setError: (value: string | null) => void;
+  reset: () => void;
 }
 
 /**
@@ -45,14 +45,14 @@ interface AuthStore {
  * setup-only and intentionally separate from the wallet UI store.
  */
 export const useAuthStore = create<AuthStore>((set) => ({
-  step: 'initial',
+  step: "initial",
   hasExistingWallet: false,
-  mnemonic: '',
+  mnemonic: "",
   copied: false,
-  importMethod: 'seed',
-  inputValue: '',
-  password: '',
-  confirmPassword: '',
+  importMethod: "seed",
+  inputValue: "",
+  password: "",
+  confirmPassword: "",
   showPassword: false,
   showConfirmPassword: false,
   error: null,
@@ -69,19 +69,17 @@ export const useAuthStore = create<AuthStore>((set) => ({
   setError: (error) => set({ error }),
   reset: () =>
     set({
-      step: 'initial',
-      mnemonic: '',
+      step: "initial",
+      mnemonic: "",
       copied: false,
-      importMethod: 'seed',
-      inputValue: '',
-      password: '',
-      confirmPassword: '',
+      importMethod: "seed",
+      inputValue: "",
+      password: "",
+      confirmPassword: "",
       showPassword: false,
       showConfirmPassword: false,
-      error: null
-    })
-}))
+      error: null,
+    }),
+}));
 
-export type { AuthStep, ImportMethod }
-
-
+export type { AuthStep, ImportMethod };

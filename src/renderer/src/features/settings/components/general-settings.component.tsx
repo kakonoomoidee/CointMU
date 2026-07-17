@@ -3,7 +3,7 @@ import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import type { SettingsStore } from "./settings-view.component";
 import { LanguageSwitcher } from "./language-switcher.component";
-import { CustomDropdown } from "@/components/CustomDropdown";
+import { CustomDropdown } from "@/components";
 
 interface GeneralSettingsProps {
   config: SettingsStore["general"];

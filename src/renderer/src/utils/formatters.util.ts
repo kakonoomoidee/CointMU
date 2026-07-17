@@ -1,7 +1,7 @@
-const LOCALE_DEFAULT = 'en-US'
-const PORT_DISPLAY_PREFIX = ':'
-const PEER_SINGULAR = 'peer'
-const PEER_PLURAL = 'peers'
+const LOCALE_DEFAULT = "en-US";
+const PORT_DISPLAY_PREFIX = ":";
+const PEER_SINGULAR = "peer";
+const PEER_PLURAL = "peers";
 
 /**
  * Formats a block number into a locale-aware string with thousands separators.
@@ -10,9 +10,9 @@ const PEER_PLURAL = 'peers'
  */
 function formatBlockNumber(blockNumber: number | null): string {
   if (blockNumber === null) {
-    return '--'
+    return "--";
   }
-  return blockNumber.toLocaleString(LOCALE_DEFAULT)
+  return blockNumber.toLocaleString(LOCALE_DEFAULT);
 }
 
 /**
@@ -22,9 +22,9 @@ function formatBlockNumber(blockNumber: number | null): string {
  */
 function formatPortDisplay(port: number | null): string {
   if (port === null) {
-    return '--'
+    return "--";
   }
-  return `${PORT_DISPLAY_PREFIX}${port}`
+  return `${PORT_DISPLAY_PREFIX}${port}`;
 }
 
 /**
@@ -34,10 +34,10 @@ function formatPortDisplay(port: number | null): string {
  */
 function formatPeerCount(count: number | null): string {
   if (count === null) {
-    return '--'
+    return "--";
   }
-  const label = count === 1 ? PEER_SINGULAR : PEER_PLURAL
-  return `${count} ${label}`
+  const label = count === 1 ? PEER_SINGULAR : PEER_PLURAL;
+  return `${count} ${label}`;
 }
 
 /**
@@ -47,9 +47,9 @@ function formatPeerCount(count: number | null): string {
  */
 function formatChainId(chainId: bigint | null): string {
   if (chainId === null) {
-    return '--'
+    return "--";
   }
-  return chainId.toString()
+  return chainId.toString();
 }
 
 /**
@@ -59,14 +59,14 @@ function formatChainId(chainId: bigint | null): string {
  */
 function formatTimestamp(timestamp: number | null): string {
   if (timestamp === null) {
-    return '--:--:--'
+    return "--:--:--";
   }
-  return new Date(timestamp).toLocaleTimeString(LOCALE_DEFAULT)
+  return new Date(timestamp).toLocaleTimeString(LOCALE_DEFAULT);
 }
 
-const HASHRATE_UNIT_THRESHOLD = 1000
-const HASHRATE_DECIMAL_PLACES = 2
-const HASHRATE_UNITS = ['H/s', 'KH/s', 'MH/s', 'GH/s', 'TH/s']
+const HASHRATE_UNIT_THRESHOLD = 1000;
+const HASHRATE_DECIMAL_PLACES = 2;
+const HASHRATE_UNITS = ["H/s", "KH/s", "MH/s", "GH/s", "TH/s"];
 
 /**
  * Formats a raw hashrate value into a human-readable string with automatic
@@ -76,27 +76,31 @@ const HASHRATE_UNITS = ['H/s', 'KH/s', 'MH/s', 'GH/s', 'TH/s']
  */
 function formatHashrate(hashrate: number | null): string {
   if (hashrate === null || hashrate === 0) {
-    return '0 H/s'
+    return "0 H/s";
   }
 
-  let scaled = hashrate
-  let unitIndex = 0
+  let scaled = hashrate;
+  let unitIndex = 0;
 
-  while (scaled >= HASHRATE_UNIT_THRESHOLD && unitIndex < HASHRATE_UNITS.length - 1) {
-    scaled = scaled / HASHRATE_UNIT_THRESHOLD
-    unitIndex++
+  while (
+    scaled >= HASHRATE_UNIT_THRESHOLD &&
+    unitIndex < HASHRATE_UNITS.length - 1
+  ) {
+    scaled = scaled / HASHRATE_UNIT_THRESHOLD;
+    unitIndex++;
   }
 
-  const formatted = unitIndex === 0
-    ? scaled.toString()
-    : scaled.toFixed(HASHRATE_DECIMAL_PLACES)
+  const formatted =
+    unitIndex === 0
+      ? scaled.toString()
+      : scaled.toFixed(HASHRATE_DECIMAL_PLACES);
 
-  return `${formatted} ${HASHRATE_UNITS[unitIndex]}`
+  return `${formatted} ${HASHRATE_UNITS[unitIndex]}`;
 }
 
-const DIFFICULTY_UNITS = ['', 'K', 'M', 'G', 'T', 'P']
-const DIFFICULTY_THRESHOLD = 1000
-const DIFFICULTY_DECIMAL_PLACES = 1
+const DIFFICULTY_UNITS = ["", "K", "M", "G", "T", "P"];
+const DIFFICULTY_THRESHOLD = 1000;
+const DIFFICULTY_DECIMAL_PLACES = 1;
 
 /**
  * Formats a raw difficulty value into a human-readable string with automatic
@@ -106,25 +110,29 @@ const DIFFICULTY_DECIMAL_PLACES = 1
  */
 function formatDifficulty(difficulty: number | null): string {
   if (difficulty === null || difficulty === 0) {
-    return '--'
+    return "--";
   }
 
-  let scaled = difficulty
-  let unitIndex = 0
+  let scaled = difficulty;
+  let unitIndex = 0;
 
-  while (scaled >= DIFFICULTY_THRESHOLD && unitIndex < DIFFICULTY_UNITS.length - 1) {
-    scaled = scaled / DIFFICULTY_THRESHOLD
-    unitIndex++
+  while (
+    scaled >= DIFFICULTY_THRESHOLD &&
+    unitIndex < DIFFICULTY_UNITS.length - 1
+  ) {
+    scaled = scaled / DIFFICULTY_THRESHOLD;
+    unitIndex++;
   }
 
-  const formatted = unitIndex === 0
-    ? scaled.toString()
-    : scaled.toFixed(DIFFICULTY_DECIMAL_PLACES)
+  const formatted =
+    unitIndex === 0
+      ? scaled.toString()
+      : scaled.toFixed(DIFFICULTY_DECIMAL_PLACES);
 
-  return `${formatted}${DIFFICULTY_UNITS[unitIndex]}`
+  return `${formatted}${DIFFICULTY_UNITS[unitIndex]}`;
 }
 
-const MHS_DECIMAL_PLACES = 2
+const MHS_DECIMAL_PLACES = 2;
 
 /**
  * Formats a hashrate already expressed in megahashes per second into a fixed
@@ -134,10 +142,18 @@ const MHS_DECIMAL_PLACES = 2
  */
 function formatMhs(megahashes: number): string {
   if (!Number.isFinite(megahashes) || megahashes <= 0) {
-    return '0.00'
+    return "0.00";
   }
-  return megahashes.toFixed(MHS_DECIMAL_PLACES)
+  return megahashes.toFixed(MHS_DECIMAL_PLACES);
 }
 
-export { formatBlockNumber, formatPortDisplay, formatPeerCount, formatChainId, formatTimestamp, formatHashrate, formatDifficulty, formatMhs }
-
+export {
+  formatBlockNumber,
+  formatPortDisplay,
+  formatPeerCount,
+  formatChainId,
+  formatTimestamp,
+  formatHashrate,
+  formatDifficulty,
+  formatMhs,
+};

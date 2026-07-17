@@ -1,6 +1,6 @@
-import { type ActivityData } from '@/views/Wallet/ActivityItem'
-import { call } from './rpcClient'
-import { format } from 'date-fns'
+import { type ActivityData } from "@/components";
+import { call } from "@/services/rpc.client";
+import { format } from "date-fns";
 
 /**
  * Retrieves the aggregated local transaction history across the supplied wallet
@@ -10,14 +10,16 @@ import { format } from 'date-fns'
  * @param addresses - The wallet addresses to aggregate history across.
  * @returns A promise resolving to the combined, timestamp-sorted activities.
  */
-export async function getTransactions(addresses: string[]): Promise<ActivityData[]> {
-  if (!addresses || addresses.length === 0) return []
+export async function getTransactions(
+  addresses: string[],
+): Promise<ActivityData[]> {
+  if (!addresses || addresses.length === 0) return [];
   try {
-    const activities = await window.api.wallet.getActivity(addresses)
-    return activities.slice(0, 50)
+    const activities = await window.api.wallet.getActivity(addresses);
+    return activities.slice(0, 50);
   } catch (error) {
-    console.error('Failed to get transactions from IPC:', error)
-    return []
+    console.error("Failed to get transactions from IPC:", error);
+    return [];
   }
 }
 
@@ -29,48 +31,51 @@ export async function getTransactions(addresses: string[]): Promise<ActivityData
  * @param count - The number of trailing blocks to scan.
  * @returns A promise resolving to the combined, timestamp-sorted global activities.
  */
-export async function getGlobalTransactions(currentBlockHeight: number, count: number = 12): Promise<ActivityData[]> {
-  if (currentBlockHeight == null || currentBlockHeight < 0) return []
-  
-  const promises: Promise<any>[] = []
-  const start = currentBlockHeight
-  const end = Math.max(0, currentBlockHeight - count + 1)
-  
+export async function getGlobalTransactions(
+  currentBlockHeight: number,
+  count: number = 12,
+): Promise<ActivityData[]> {
+  if (currentBlockHeight == null || currentBlockHeight < 0) return [];
+
+  const promises: Promise<any>[] = [];
+  const start = currentBlockHeight;
+  const end = Math.max(0, currentBlockHeight - count + 1);
+
   for (let i = start; i >= end; i--) {
-    promises.push(call('eth_getBlockByNumber', ['0x' + i.toString(16), true]))
+    promises.push(call("eth_getBlockByNumber", ["0x" + i.toString(16), true]));
   }
-  
+
   try {
-    const blocks = await Promise.all(promises)
-    const txs: ActivityData[] = []
-    
+    const blocks = await Promise.all(promises);
+    const txs: ActivityData[] = [];
+
     for (const block of blocks) {
-      if (!block || !block.transactions) continue
-      const timestamp = parseInt(block.timestamp, 16)
-      
+      if (!block || !block.transactions) continue;
+      const timestamp = parseInt(block.timestamp, 16);
+
       for (const tx of block.transactions) {
-        if (!tx || typeof tx !== 'object') continue
-        const amountCmu = (parseInt(tx.value, 16) / 1e18).toFixed(4)
-        
+        if (!tx || typeof tx !== "object") continue;
+        const amountCmu = (parseInt(tx.value, 16) / 1e18).toFixed(4);
+
         txs.push({
           id: tx.hash,
-          type: tx.to ? 'send' : 'contract',
-          title: tx.to ? 'Transaction' : 'Contract Creation',
-          subtitle: '',
+          type: tx.to ? "send" : "contract",
+          title: tx.to ? "Transaction" : "Contract Creation",
+          subtitle: "",
           amount: amountCmu,
           timestamp: timestamp,
-          timestampStr: format(timestamp * 1000, 'MMM d, yyyy, h:mm a'),
+          timestampStr: format(timestamp * 1000, "MMM d, yyyy, h:mm a"),
           blockNumber: parseInt(tx.blockNumber, 16),
           hash: tx.hash,
           from: tx.from,
-          to: tx.to
-        })
+          to: tx.to,
+        });
       }
     }
-    
-    return txs.sort((a, b) => b.timestamp - a.timestamp)
+
+    return txs.sort((a, b) => b.timestamp - a.timestamp);
   } catch (err) {
-    console.error('Failed to get global transactions from RPC:', err)
-    return []
+    console.error("Failed to get global transactions from RPC:", err);
+    return [];
   }
 }

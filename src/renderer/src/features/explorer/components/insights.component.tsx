@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Box, Clock, ArrowUp, Users, Zap } from 'lucide-react';
+import { Box, Clock, ArrowUp, Users, Zap } from "lucide-react";
 
 interface InsightsProps {
   insights: {

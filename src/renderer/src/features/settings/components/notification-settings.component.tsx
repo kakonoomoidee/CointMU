@@ -114,4 +114,3 @@ export function NotificationSettings(): JSX.Element {
     </div>
   );
 }
-

@@ -1,7 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { AccountIcon } from "@/components";
-import { Copy } from 'lucide-react';
+import { AccountIcon } from "@/features/wallet";
+import { Copy } from "lucide-react";
 
 interface AddressBadgeProps {
   address: string | null;

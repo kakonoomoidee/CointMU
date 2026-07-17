@@ -1,8 +1,11 @@
 import { MOCK_USD_RATE } from "../explorer.constants";
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronLeft, Check, AlertCircle } from 'lucide-react';
-import { getTransactionDetail, type TransactionDetailData } from '@/features/explorer';
+import { ChevronLeft, Check, AlertCircle } from "lucide-react";
+import {
+  getTransactionDetail,
+  type TransactionDetailData,
+} from "../services/explorer.service";
 import { useAppStore } from "@/store";
 import { AddressBadge } from "./address-badge.component";
 

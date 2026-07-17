@@ -1,7 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { useConnectedSitesStore } from "../connected-sites.store";
-import { Globe, Link, Box } from 'lucide-react';
+import { Globe, Link, Box } from "lucide-react";
 
 /**
  * Settings view panel that displays the list of whitelisted dApp origins.
@@ -96,11 +96,7 @@ function ConnectedSitesSettings(): JSX.Element {
               <li className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center flex-shrink-0">
-                    <Box
-                      width={20}
-                      height={20}
-                      className="text-indigo-500"
-                    />
+                    <Box width={20} height={20} className="text-indigo-500" />
                   </div>
                   <div className="overflow-hidden">
                     <p
@@ -140,11 +136,7 @@ function ConnectedSitesSettings(): JSX.Element {
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0">
-                    <Globe
-                      width={20}
-                      height={20}
-                      className="text-blue-500"
-                    />
+                    <Globe width={20} height={20} className="text-blue-500" />
                   </div>
                   <div className="overflow-hidden">
                     <p

@@ -1,8 +1,7 @@
-import { useEffect } from 'react'
-import { useAppStore } from '@/store';
-import { useSecurityStore } from '@/features/settings';
-
-const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000 // 5 minutes
+import { useEffect } from "react";
+import { useAppStore } from "@/store";
+import { useSecurityStore } from "@/features/settings";
+import { INACTIVITY_TIMEOUT_MS } from "../auth.constants";
 
 /**
  * Tracks user activity (mouse, keyboard, touch, scroll) and automatically
@@ -16,58 +15,63 @@ export function useAutoLock(onLock: () => void, isActive: boolean): void {
   useEffect(() => {
     // If not active (e.g. at onboarding/login screen), do nothing.
     if (!isActive) {
-      return
+      return;
     }
 
-    let timeoutId: ReturnType<typeof setTimeout>
+    let timeoutId: ReturnType<typeof setTimeout>;
 
     const resetTimer = (): void => {
-      clearTimeout(timeoutId)
+      clearTimeout(timeoutId);
 
       // Fetch latest states from stores directly so we don't need to re-bind
       // the event listeners every time the state changes.
-      const autoLock = useSecurityStore.getState().settings.autoLock
-      const isMining = useAppStore.getState().isMining
+      const autoLock = useSecurityStore.getState().settings.autoLock;
+      const isMining = useAppStore.getState().isMining;
 
       // If auto-lock is disabled or mining is active, do not set the timer
       if (!autoLock || isMining) {
-        return
+        return;
       }
 
       timeoutId = setTimeout(() => {
-        onLock()
-      }, INACTIVITY_TIMEOUT_MS)
-    }
+        onLock();
+      }, INACTIVITY_TIMEOUT_MS);
+    };
 
-    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart']
-    const handleActivity = (): void => resetTimer()
+    const events = [
+      "mousedown",
+      "mousemove",
+      "keypress",
+      "scroll",
+      "touchstart",
+    ];
+    const handleActivity = (): void => resetTimer();
 
     events.forEach((event) => {
-      document.addEventListener(event, handleActivity)
-    })
+      document.addEventListener(event, handleActivity);
+    });
 
     // Subscribe to store changes so the timer resets/pauses immediately
     // when the user toggles autoLock or starts/stops mining.
     const unsubscribeSecurity = useSecurityStore.subscribe(() => {
-      resetTimer()
-    })
+      resetTimer();
+    });
     const unsubscribeApp = useAppStore.subscribe((state, prevState) => {
       if (state.isMining !== prevState.isMining) {
-        resetTimer()
+        resetTimer();
       }
-    })
+    });
 
     // Initial setup
-    resetTimer()
+    resetTimer();
 
     return (): void => {
-      clearTimeout(timeoutId)
+      clearTimeout(timeoutId);
       events.forEach((event) => {
-        document.removeEventListener(event, handleActivity)
-      })
-      unsubscribeSecurity()
-      unsubscribeApp()
-    }
-  }, [onLock, isActive])
+        document.removeEventListener(event, handleActivity);
+      });
+      unsubscribeSecurity();
+      unsubscribeApp();
+    };
+  }, [onLock, isActive]);
 }
-

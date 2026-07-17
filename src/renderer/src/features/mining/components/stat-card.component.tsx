@@ -1,15 +1,15 @@
-import { type JSX, type ReactNode } from 'react'
-import { cn } from '@/utils'
-import { Card } from '@/components'
+import { type JSX, type ReactNode } from "react";
+import { cn } from "@/utils";
+import { Card } from "@/components";
 
 interface StatCardProps {
-  label: string
-  value: ReactNode
-  hint?: ReactNode
-  icon?: ReactNode
-  action?: ReactNode
-  valueClassName?: string
-  className?: string
+  label: string;
+  value: ReactNode;
+  hint?: ReactNode;
+  icon?: ReactNode;
+  action?: ReactNode;
+  valueClassName?: string;
+  className?: string;
 }
 
 /**
@@ -25,7 +25,7 @@ function StatCard({
   icon,
   action,
   valueClassName,
-  className
+  className,
 }: StatCardProps): JSX.Element {
   return (
     <Card padding="sm" className={className}>
@@ -38,14 +38,20 @@ function StatCard({
         </div>
         {action}
       </div>
-      <p className={cn('text-2xl font-bold text-slate-800 tracking-tight', valueClassName)}>
+      <p
+        className={cn(
+          "text-2xl font-bold text-slate-800 tracking-tight",
+          valueClassName,
+        )}
+      >
         {value}
       </p>
-      {hint !== undefined && <p className="text-xs text-slate-400 mt-1">{hint}</p>}
+      {hint !== undefined && (
+        <p className="text-xs text-slate-400 mt-1">{hint}</p>
+      )}
     </Card>
-  )
+  );
 }
 
-export { StatCard }
-export type { StatCardProps }
-
+export { StatCard };
+export type { StatCardProps };

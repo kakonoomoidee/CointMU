@@ -6,7 +6,7 @@ import {
 import { useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import type { CustomNetwork, SettingsStore } from "./settings-view.component";
-import { CustomDropdown } from "@/components/CustomDropdown";
+import { CustomDropdown } from "@/components";
 import { AddNetworkModal } from "../modals/add-network-modal.component";
 
 interface NetworkSettingsProps {

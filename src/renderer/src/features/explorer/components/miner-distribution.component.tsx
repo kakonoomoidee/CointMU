@@ -4,13 +4,13 @@ import {
   MINER_POLL_INTERVAL_MS,
 } from "../explorer.constants";
 import { type JSX, useState, useEffect } from "react";
-import { AccountIcon } from "@/components/AccountIcon";
+import { AccountIcon } from "@/features/wallet";
 import {
   fetchMinerDistribution,
   type MinerEntry,
-} from "@/utils/minerDistribution";
-import { CacheService } from "@/services/cacheService";
-import { Activity } from 'lucide-react';
+} from "@/features/mining/utils/miner-distribution.util";
+import { MiningCacheService } from "@/features/mining/services/mining-cache.service";
+import { Activity } from "lucide-react";
 
 interface MinerDistributionProps {
   activeWalletAddress: string | null;
@@ -95,7 +95,7 @@ export function MinerDistribution({
   activeWalletAddress,
   isConnected,
 }: MinerDistributionProps): JSX.Element {
-  const cached = CacheService.getMinerDistribution();
+  const cached = MiningCacheService.getMinerDistribution();
   const [entries, setEntries] = useState<MinerEntry[]>(cached ?? []);
   const [isLoading, setIsLoading] = useState(cached === undefined);
 
@@ -110,14 +110,14 @@ export function MinerDistribution({
       setIsLoading(false);
     };
 
-    CacheService.startMinerDistributionPolling(
+    MiningCacheService.startMinerDistributionPolling(
       fetchMinerDistribution,
       onData,
       MINER_POLL_INTERVAL_MS,
     );
 
     return () => {
-      CacheService.stopMinerDistributionPolling();
+      MiningCacheService.stopMinerDistributionPolling();
     };
   }, [isConnected]);
 

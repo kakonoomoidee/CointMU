@@ -1,14 +1,18 @@
-import { TOAST_DURATION_MS, NOTIFICATION_COLORS_BY_TYPE } from '../notification.constants';
-import { type JSX, useEffect } from 'react'
-import { createPortal } from 'react-dom'
-import { useNotificationStore, type NotificationItem, type NotificationType } from '../notification.store'
-import { X } from 'lucide-react'
-
-
+import {
+  TOAST_DURATION_MS,
+  NOTIFICATION_COLORS_BY_TYPE,
+} from "../notification.constants";
+import { type JSX, useEffect } from "react";
+import { createPortal } from "react-dom";
+import {
+  useNotificationStore,
+  type NotificationItem,
+} from "../notification.store";
+import { X } from "lucide-react";
 
 interface ToastCardProps {
-  toast: NotificationItem
-  onDismiss: (id: string) => void
+  toast: NotificationItem;
+  onDismiss: (id: string) => void;
 }
 
 /**
@@ -19,16 +23,20 @@ interface ToastCardProps {
  */
 function ToastCard({ toast, onDismiss }: ToastCardProps): JSX.Element {
   useEffect(() => {
-    const timer = setTimeout(() => onDismiss(toast.id), TOAST_DURATION_MS)
-    return () => clearTimeout(timer)
-  }, [toast.id, onDismiss])
+    const timer = setTimeout(() => onDismiss(toast.id), TOAST_DURATION_MS);
+    return () => clearTimeout(timer);
+  }, [toast.id, onDismiss]);
 
   return (
     <div className="flex items-start gap-3 bg-white border border-slate-200 rounded-xl shadow-lg p-4 animate-in fade-in slide-in-from-right-4 duration-200">
-      <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${NOTIFICATION_COLORS_BY_TYPE[toast.type]}`} />
+      <span
+        className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${NOTIFICATION_COLORS_BY_TYPE[toast.type]}`}
+      />
       <div className="flex-1 min-w-0">
         <p className="text-sm font-bold text-slate-800">{toast.title}</p>
-        <p className="text-xs text-slate-500 mt-0.5 break-words">{toast.message}</p>
+        <p className="text-xs text-slate-500 mt-0.5 break-words">
+          {toast.message}
+        </p>
       </div>
       <button
         onClick={() => onDismiss(toast.id)}
@@ -37,7 +45,7 @@ function ToastCard({ toast, onDismiss }: ToastCardProps): JSX.Element {
         <X width={16} height={16} strokeWidth={2.5} />
       </button>
     </div>
-  )
+  );
 }
 
 /**
@@ -47,10 +55,10 @@ function ToastCard({ toast, onDismiss }: ToastCardProps): JSX.Element {
  * @returns The toast portal, or null when there are no toasts.
  */
 export function ToastViewport(): JSX.Element | null {
-  const toasts = useNotificationStore((s) => s.toasts)
-  const dismissToast = useNotificationStore((s) => s.dismissToast)
+  const toasts = useNotificationStore((s) => s.toasts);
+  const dismissToast = useNotificationStore((s) => s.dismissToast);
 
-  if (toasts.length === 0) return null
+  if (toasts.length === 0) return null;
 
   return createPortal(
     <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2 w-80">
@@ -58,7 +66,6 @@ export function ToastViewport(): JSX.Element | null {
         <ToastCard key={toast.id} toast={toast} onDismiss={dismissToast} />
       ))}
     </div>,
-    document.body
-  )
+    document.body,
+  );
 }
-

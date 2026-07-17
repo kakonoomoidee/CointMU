@@ -6,8 +6,8 @@ import {
   type SyntheticEvent,
   type JSX,
 } from "react";
-import { Key, Eye, EyeOff, Copy, Check, AlertTriangle, X } from 'lucide-react';
-import { revealRecoveryPhrase } from '@/features/wallet';
+import { Key, Eye, EyeOff, Copy, Check, AlertTriangle, X } from "lucide-react";
+import { revealRecoveryPhrase } from "@/features/wallet";
 
 interface RecoveryPhraseModalProps {
   onClose: () => void;
@@ -136,11 +136,7 @@ export function RecoveryPhraseModal({
           </p>
 
           <div className="flex items-start gap-3 p-4 mb-6 bg-red-50 border border-red-200 rounded-xl text-red-700">
-            <AlertTriangle
-              width={18}
-              height={18}
-              className="mt-0.5 shrink-0"
-            />
+            <AlertTriangle width={18} height={18} className="mt-0.5 shrink-0" />
             <p className="text-xs leading-relaxed font-medium">
               Never share your recovery phrase. Anyone who has it can take full
               control of your wallet and steal all of your funds. Store it

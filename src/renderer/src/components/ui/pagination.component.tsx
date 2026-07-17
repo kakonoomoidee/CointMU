@@ -1,10 +1,10 @@
-import { type JSX } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { type JSX } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginationProps {
-  currentPage: number
-  totalPages: number
-  onPageChange: (page: number) => void
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 /**
@@ -14,13 +14,17 @@ interface PaginationProps {
  * @param props - The current page, total page count, and change handler.
  * @returns The rendered pagination control, or null when unnecessary.
  */
-function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps): JSX.Element | null {
+function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: PaginationProps): JSX.Element | null {
   if (totalPages <= 1) {
-    return null
+    return null;
   }
 
-  const canPrev = currentPage > 1
-  const canNext = currentPage < totalPages
+  const canPrev = currentPage > 1;
+  const canNext = currentPage < totalPages;
 
   return (
     <div className="flex items-center justify-between pt-3">
@@ -46,8 +50,8 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps):
         </button>
       </div>
     </div>
-  )
+  );
 }
 
-export { Pagination }
-export type { PaginationProps }
+export { Pagination };
+export type { PaginationProps };

@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Download, Box } from 'lucide-react';
+import { Download, Box } from "lucide-react";
 
 /**
  * Settings view panel that allows the user to export the bundled companion

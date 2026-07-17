@@ -1,13 +1,13 @@
-import { type JSX } from 'react'
-import { Eye, EyeOff } from 'lucide-react'
+import { type JSX } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 interface PasswordFieldProps {
-  label: string
-  value: string
-  placeholder: string
-  show: boolean
-  onChange: (value: string) => void
-  onToggleShow: () => void
+  label: string;
+  value: string;
+  placeholder: string;
+  show: boolean;
+  onChange: (value: string) => void;
+  onToggleShow: () => void;
 }
 
 /**
@@ -23,14 +23,16 @@ function PasswordField({
   placeholder,
   show,
   onChange,
-  onToggleShow
+  onToggleShow,
 }: PasswordFieldProps): JSX.Element {
   return (
     <div>
-      <label className="block text-xs font-semibold text-slate-600 mb-1.5">{label}</label>
+      <label className="block text-xs font-semibold text-slate-600 mb-1.5">
+        {label}
+      </label>
       <div className="relative">
         <input
-          type={show ? 'text' : 'password'}
+          type={show ? "text" : "password"}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           className="w-full px-4 py-3 pr-12 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
@@ -49,11 +51,8 @@ function PasswordField({
         </button>
       </div>
     </div>
-  )
+  );
 }
 
-export { PasswordField }
-export type { PasswordFieldProps }
-
-
-
+export { PasswordField };
+export type { PasswordFieldProps };

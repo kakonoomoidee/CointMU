@@ -1,7 +1,7 @@
 import { useEffect, useState, type SyntheticEvent, type JSX } from "react";
-import { FileText, Eye, EyeOff, Check, X } from 'lucide-react';
-import { generateKeystore, type DerivedAccount } from '@/features/wallet'
-import { getSetting } from '@/features/settings';
+import { FileText, Eye, EyeOff, Check, X } from "lucide-react";
+import { generateKeystore, type DerivedAccount } from "@/features/wallet";
+import { getSetting } from "@/features/settings";
 import { useAppStore } from "@/store";
 
 interface ExportKeystoreModalProps {

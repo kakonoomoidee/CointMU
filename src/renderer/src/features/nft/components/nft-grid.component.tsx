@@ -1,9 +1,9 @@
-import { type JSX } from 'react'
-import { NFTCard } from './nft-card.component'
-import { type NFTMetadata } from '@/services/nftService'
+import { type JSX } from "react";
+import { NFTCard } from "./nft-card.component";
+import { type NFTMetadata } from "../services/nft.service";
 
 interface NFTGridProps {
-  nfts: NFTMetadata[]
+  nfts: NFTMetadata[];
 }
 
 /**
@@ -13,7 +13,7 @@ interface NFTGridProps {
  */
 function NFTGrid({ nfts }: NFTGridProps): JSX.Element {
   return (
-    <div className='grid grid-cols-3 gap-4'>
+    <div className="grid grid-cols-3 gap-4">
       {nfts.map((nft) => (
         <NFTCard
           key={`${nft.contractAddress}-${nft.tokenId}`}
@@ -25,8 +25,7 @@ function NFTGrid({ nfts }: NFTGridProps): JSX.Element {
         />
       ))}
     </div>
-  )
+  );
 }
 
-export { NFTGrid }
-
+export { NFTGrid };

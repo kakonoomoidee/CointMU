@@ -2,19 +2,20 @@ import { type JSX, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
 import { ActivityItem, type ActivityData } from "@/components";
-import { getTransactions } from "@/services/transactionService";
+import { getTransactions } from "@/features/wallet/services/transaction.service";
 import {
   TokenService,
   getTokenBalance,
   type TokenInfo,
-} from "@/services/tokenService";
-import { CacheService } from "@/services/cacheService";
-import { SkeletonList, SkeletonTable, Pagination } from '@/components'
-import { AddTokenModal, TokenIcon } from '@/features/wallet'
-import { NFTGrid } from '@/features/nft'
-import { Zap, Plus } from 'lucide-react';
+} from "@/features/wallet/services/token.service";
+import { WalletCacheService } from "../services/wallet-cache.service";
+import { ActivityCacheService } from "../services/activity-cache.service";
+import { SkeletonList, SkeletonTable, Pagination } from "@/components";
+import { AddTokenModal, TokenIcon } from "@/features/wallet";
+import { NFTGrid } from "@/features/nft";
+import { Zap, Plus } from "lucide-react";
 import { useAppStore, type PendingTransaction } from "@/store";
-import { useNFTFetcher } from '@/features/nft';
+import { useNFTFetcher } from "@/features/nft";
 
 type WalletTab = "activity" | "tokens" | "nfts";
 
@@ -130,7 +131,7 @@ function WalletTabs({
 
   useEffect(() => {
     if (!activeWalletAddress) return;
-    const cached = CacheService.getActivity(activeWalletAddress);
+    const cached = ActivityCacheService.getActivity(activeWalletAddress);
     if (cached) {
       setTransactions(cached);
       setIsFetchingActivity(false);
@@ -142,7 +143,7 @@ function WalletTabs({
     getTransactions([activeWalletAddress]).then((results) => {
       const filtered = filterActivitiesForAddress(results, activeWalletAddress);
       setTransactions(filtered);
-      CacheService.setActivity(activeWalletAddress, filtered);
+      ActivityCacheService.setActivity(activeWalletAddress, filtered);
       setIsFetchingActivity(false);
     });
   }, [activeWalletAddress]);
@@ -150,7 +151,7 @@ function WalletTabs({
   useEffect(() => {
     if (activeTab === "tokens" && activeWalletAddress) {
       const fetchTokens = async (): Promise<void> => {
-        const cached = CacheService.getTokenBalances(activeWalletAddress);
+        const cached = WalletCacheService.getTokenBalances(activeWalletAddress);
         if (cached) {
           setTokenBalances(cached);
           setIsFetchingTokens(false);
@@ -168,7 +169,7 @@ function WalletTabs({
           );
         }
         setTokenBalances(balances);
-        CacheService.setTokenBalances(activeWalletAddress, balances);
+        WalletCacheService.setTokenBalances(activeWalletAddress, balances);
         setIsFetchingTokens(false);
       };
       fetchTokens();
@@ -369,5 +370,3 @@ function WalletTabs({
 
 export { WalletTabs };
 export type { WalletTabsProps, WalletTab };
-
-

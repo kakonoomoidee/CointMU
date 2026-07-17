@@ -1,4 +1,4 @@
-type ClassValue = string | number | false | null | undefined
+type ClassValue = string | number | false | null | undefined;
 
 /**
  * Joins truthy class name fragments into a single space-delimited string.
@@ -6,9 +6,7 @@ type ClassValue = string | number | false | null | undefined
  * @returns {string} The combined class name string.
  */
 function cn(...values: ClassValue[]): string {
-  return values.filter(Boolean).join(' ')
+  return values.filter(Boolean).join(" ");
 }
 
-export { cn }
-
-
+export { cn };

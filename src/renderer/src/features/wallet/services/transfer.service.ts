@@ -1,10 +1,14 @@
-import { ethers } from 'ethers'
-import { STANDARD_ERC20_ABI } from './tokenService'
-import { call } from './rpcClient'
-import { getSetting } from '@/features/settings'
-import { getSessionPassword, decryptSecret, type DerivedAccount } from '@/features/wallet'
+import { ethers } from "ethers";
+import { STANDARD_ERC20_ABI } from "@/features/wallet/services/token.service";
+import { call } from "@/services/rpc.client";
+import { getSetting } from "@/features/settings";
+import {
+  getSessionPassword,
+  decryptSecret,
+  type DerivedAccount,
+} from "@/features/wallet";
 
-const RPC_URL = 'http://127.0.0.1:8585'
+const RPC_URL = "http://127.0.0.1:8585";
 
 /**
  * Resolves the active local JSON-RPC provider, falling back to the hard-coded
@@ -12,7 +16,7 @@ const RPC_URL = 'http://127.0.0.1:8585'
  * @returns A configured ethers JsonRpcProvider instance.
  */
 function getProvider(): ethers.JsonRpcProvider {
-  return new ethers.JsonRpcProvider(RPC_URL)
+  return new ethers.JsonRpcProvider(RPC_URL);
 }
 
 /**
@@ -25,29 +29,29 @@ function getProvider(): ethers.JsonRpcProvider {
  */
 export async function resolveWallet(
   activeAccount: DerivedAccount,
-  password: string
+  password: string,
 ): Promise<ethers.Wallet | ethers.HDNodeWallet> {
-  const provider = getProvider()
+  const provider = getProvider();
 
   if (activeAccount.encryptedKey) {
-    const secret = await decryptSecret(activeAccount.encryptedKey, password)
-    return new ethers.Wallet(secret, provider)
+    const secret = await decryptSecret(activeAccount.encryptedKey, password);
+    return new ethers.Wallet(secret, provider);
   }
 
-  const encryptedPayload = await getSetting<string | null>('encryptedPayload')
-  if (!encryptedPayload) throw new Error('Wallet is not unlocked.')
+  const encryptedPayload = await getSetting<string | null>("encryptedPayload");
+  if (!encryptedPayload) throw new Error("Wallet is not unlocked.");
 
-  const secretKey = await decryptSecret(encryptedPayload, password)
+  const secretKey = await decryptSecret(encryptedPayload, password);
 
-  if (secretKey.split(' ').length === 12) {
+  if (secretKey.split(" ").length === 12) {
     return ethers.HDNodeWallet.fromPhrase(
       secretKey,
       undefined,
-      `m/44'/60'/0'/0/${activeAccount.index}`
-    ).connect(provider)
+      `m/44'/60'/0'/0/${activeAccount.index}`,
+    ).connect(provider);
   }
 
-  return new ethers.Wallet(secretKey, provider)
+  return new ethers.Wallet(secretKey, provider);
 }
 
 /**
@@ -60,10 +64,10 @@ export async function resolveWallet(
 export async function estimateNativeTransferGas(
   from: string,
   to: string,
-  value: bigint
+  value: bigint,
 ): Promise<bigint> {
-  const provider = getProvider()
-  return provider.estimateGas({ from, to, value })
+  const provider = getProvider();
+  return provider.estimateGas({ from, to, value });
 }
 
 /**
@@ -80,15 +84,15 @@ export async function estimateErc20TransferGas(
   from: string,
   to: string,
   amount: string,
-  decimals: number
+  decimals: number,
 ): Promise<bigint> {
-  const provider = getProvider()
-  const iface = new ethers.Interface(STANDARD_ERC20_ABI)
-  const data = iface.encodeFunctionData('transfer', [
+  const provider = getProvider();
+  const iface = new ethers.Interface(STANDARD_ERC20_ABI);
+  const data = iface.encodeFunctionData("transfer", [
     to,
-    ethers.parseUnits(amount, decimals)
-  ])
-  return provider.estimateGas({ from, to: contractAddress, data })
+    ethers.parseUnits(amount, decimals),
+  ]);
+  return provider.estimateGas({ from, to: contractAddress, data });
 }
 
 /**
@@ -110,7 +114,7 @@ export async function executeNativeTransfer(
   gasLimit: bigint,
   gasPrice: string,
   nonce: number,
-  chainId: number
+  chainId: number,
 ): Promise<string> {
   const tx = {
     to,
@@ -118,17 +122,17 @@ export async function executeNativeTransfer(
     gasLimit,
     gasPrice: BigInt(gasPrice),
     nonce,
-    chainId
+    chainId,
+  };
+
+  const signedTx = await wallet.signTransaction(tx);
+  const txHash = await call("eth_sendRawTransaction", [signedTx]);
+
+  if (!txHash || !txHash.startsWith("0x")) {
+    throw new Error("Node returned an invalid transaction hash.");
   }
 
-  const signedTx = await wallet.signTransaction(tx)
-  const txHash = await call('eth_sendRawTransaction', [signedTx])
-
-  if (!txHash || !txHash.startsWith('0x')) {
-    throw new Error('Node returned an invalid transaction hash.')
-  }
-
-  return txHash
+  return txHash;
 }
 
 /**
@@ -154,13 +158,13 @@ export async function executeErc20Transfer(
   gasLimit: bigint,
   gasPrice: string,
   nonce: number,
-  chainId: number
+  chainId: number,
 ): Promise<string> {
-  const iface = new ethers.Interface(STANDARD_ERC20_ABI)
-  const data = iface.encodeFunctionData('transfer', [
+  const iface = new ethers.Interface(STANDARD_ERC20_ABI);
+  const data = iface.encodeFunctionData("transfer", [
     to,
-    ethers.parseUnits(amount, decimals)
-  ])
+    ethers.parseUnits(amount, decimals),
+  ]);
 
   const tx = {
     to: contractAddress,
@@ -169,17 +173,17 @@ export async function executeErc20Transfer(
     gasLimit,
     gasPrice: BigInt(gasPrice),
     nonce,
-    chainId
+    chainId,
+  };
+
+  const signedTx = await wallet.signTransaction(tx);
+  const txHash = await call("eth_sendRawTransaction", [signedTx]);
+
+  if (!txHash || !txHash.startsWith("0x")) {
+    throw new Error("Node returned an invalid transaction hash.");
   }
 
-  const signedTx = await wallet.signTransaction(tx)
-  const txHash = await call('eth_sendRawTransaction', [signedTx])
-
-  if (!txHash || !txHash.startsWith('0x')) {
-    throw new Error('Node returned an invalid transaction hash.')
-  }
-
-  return txHash
+  return txHash;
 }
 
 /**
@@ -188,9 +192,9 @@ export async function executeErc20Transfer(
  * @throws Error when no active session password is found.
  */
 export function requireSessionPassword(): string {
-  const password = getSessionPassword()
-  if (!password) throw new Error('Wallet is locked. Please log in again.')
-  return password
+  const password = getSessionPassword();
+  if (!password) throw new Error("Wallet is locked. Please log in again.");
+  return password;
 }
 
 /**
@@ -200,16 +204,21 @@ export function requireSessionPassword(): string {
  * @returns A concise, user-facing error string.
  */
 export function parseTransferError(error: unknown): string {
-  if (!(error instanceof Error)) return 'An unexpected error occurred.'
+  if (!(error instanceof Error)) return "An unexpected error occurred.";
 
-  const msg = error.message.toLowerCase()
+  const msg = error.message.toLowerCase();
 
-  if (msg.includes('insufficient funds')) return 'Insufficient funds to cover amount and network fee.'
-  if (msg.includes('out of gas')) return 'Transaction ran out of gas. Try increasing the gas limit.'
-  if (msg.includes('nonce too low')) return 'Nonce conflict. Please wait for pending transactions to settle.'
-  if (msg.includes('revert')) return 'Transaction reverted by the contract.'
-  if (msg.includes('user rejected') || msg.includes('user denied')) return 'Transaction rejected.'
-  if (msg.includes('invalid transaction hash')) return 'Node rejected the transaction. Check the recipient address.'
+  if (msg.includes("insufficient funds"))
+    return "Insufficient funds to cover amount and network fee.";
+  if (msg.includes("out of gas"))
+    return "Transaction ran out of gas. Try increasing the gas limit.";
+  if (msg.includes("nonce too low"))
+    return "Nonce conflict. Please wait for pending transactions to settle.";
+  if (msg.includes("revert")) return "Transaction reverted by the contract.";
+  if (msg.includes("user rejected") || msg.includes("user denied"))
+    return "Transaction rejected.";
+  if (msg.includes("invalid transaction hash"))
+    return "Node rejected the transaction. Check the recipient address.";
 
-  return error.message
+  return error.message;
 }

@@ -1,11 +1,11 @@
-const NATIVE_GRADIENT = 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)'
+const NATIVE_GRADIENT = "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)";
 
-const HEX_BYTE_LENGTH = 2
-const COLOR_CHANNEL_MAX = 255
-const HUE_FULL_CIRCLE = 360
-const SATURATION_PERCENT = 70
-const LIGHTNESS_PERCENT = 55
-const LIGHTNESS_SHIFT = 30
+const HEX_BYTE_LENGTH = 2;
+const COLOR_CHANNEL_MAX = 255;
+const HUE_FULL_CIRCLE = 360;
+const SATURATION_PERCENT = 70;
+const LIGHTNESS_PERCENT = 55;
+const LIGHTNESS_SHIFT = 30;
 
 /**
  * Converts an HSL colour description to a CSS hex colour string.
@@ -15,19 +15,19 @@ const LIGHTNESS_SHIFT = 30
  * @returns {any} A six-character CSS hex colour string prefixed with '#'.
  */
 function hslToHex(h: number, s: number, l: number): string {
-  const sNorm = s / 100
-  const lNorm = l / 100
-  const a = sNorm * Math.min(lNorm, 1 - lNorm)
+  const sNorm = s / 100;
+  const lNorm = l / 100;
+  const a = sNorm * Math.min(lNorm, 1 - lNorm);
 
   const channel = (n: number): string => {
-    const k = (n + h / 30) % 12
-    const value = lNorm - a * Math.max(-1, Math.min(k - 3, 9 - k, 1))
+    const k = (n + h / 30) % 12;
+    const value = lNorm - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
     return Math.round(value * COLOR_CHANNEL_MAX)
       .toString(16)
-      .padStart(HEX_BYTE_LENGTH, '0')
-  }
+      .padStart(HEX_BYTE_LENGTH, "0");
+  };
 
-  return `#${channel(0)}${channel(8)}${channel(4)}`
+  return `#${channel(0)}${channel(8)}${channel(4)}`;
 }
 
 /**
@@ -38,11 +38,11 @@ function hslToHex(h: number, s: number, l: number): string {
  * @returns {any} An unsigned 32-bit integer.
  */
 function hashString(input: string): number {
-  let hash = 5381
+  let hash = 5381;
   for (let i = 0; i < input.length; i++) {
-    hash = (hash * 33) ^ input.charCodeAt(i)
+    hash = (hash * 33) ^ input.charCodeAt(i);
   }
-  return hash >>> 0
+  return hash >>> 0;
 }
 
 /**
@@ -55,20 +55,20 @@ function hashString(input: string): number {
  * @returns {any} A ready-to-use CSS `linear-gradient(...)` string.
  */
 export function getTokenGradient(address: string): string {
-  if (address === 'native') {
-    return NATIVE_GRADIENT
+  if (address === "native") {
+    return NATIVE_GRADIENT;
   }
 
-  const seed = hashString(address.toLowerCase())
-  const hue = seed % HUE_FULL_CIRCLE
-  const colorA = hslToHex(hue, SATURATION_PERCENT, LIGHTNESS_PERCENT)
+  const seed = hashString(address.toLowerCase());
+  const hue = seed % HUE_FULL_CIRCLE;
+  const colorA = hslToHex(hue, SATURATION_PERCENT, LIGHTNESS_PERCENT);
   const colorB = hslToHex(
     (hue + LIGHTNESS_SHIFT) % HUE_FULL_CIRCLE,
     SATURATION_PERCENT,
-    LIGHTNESS_PERCENT - LIGHTNESS_SHIFT
-  )
+    LIGHTNESS_PERCENT - LIGHTNESS_SHIFT,
+  );
 
-  return `linear-gradient(135deg, ${colorA} 0%, ${colorB} 100%)`
+  return `linear-gradient(135deg, ${colorA} 0%, ${colorB} 100%)`;
 }
 
 /**
@@ -79,8 +79,7 @@ export function getTokenGradient(address: string): string {
  * @returns {any} One or two upper-cased characters suitable for an avatar label.
  */
 export function getTokenInitials(symbol: string): string {
-  if (!symbol) return '?'
-  const upper = symbol.toUpperCase()
-  return upper.length > 2 ? upper.slice(0, 2) : upper
+  if (!symbol) return "?";
+  const upper = symbol.toUpperCase();
+  return upper.length > 2 ? upper.slice(0, 2) : upper;
 }
-

@@ -3,7 +3,7 @@
  * @returns A promise resolving once the check has been dispatched.
  */
 async function checkForUpdates(): Promise<void> {
-  await window.api?.updater?.check()
+  await window.api?.updater?.check();
 }
 
 /**
@@ -11,7 +11,7 @@ async function checkForUpdates(): Promise<void> {
  * @returns A promise resolving once the download has been dispatched.
  */
 async function downloadUpdate(): Promise<void> {
-  await window.api?.updater?.download()
+  await window.api?.updater?.download();
 }
 
 /**
@@ -19,7 +19,7 @@ async function downloadUpdate(): Promise<void> {
  * @returns A promise resolving once the install has been dispatched.
  */
 async function installUpdate(): Promise<void> {
-  await window.api?.updater?.install()
+  await window.api?.updater?.install();
 }
 
-export { checkForUpdates, downloadUpdate, installUpdate }
+export { checkForUpdates, downloadUpdate, installUpdate };

@@ -1,9 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
 interface UsbLike {
-  getDevices: () => Promise<unknown[]>
-  addEventListener: (type: 'connect' | 'disconnect', listener: () => void) => void
-  removeEventListener: (type: 'connect' | 'disconnect', listener: () => void) => void
+  getDevices: () => Promise<unknown[]>;
+  addEventListener: (
+    type: "connect" | "disconnect",
+    listener: () => void,
+  ) => void;
+  removeEventListener: (
+    type: "connect" | "disconnect",
+    listener: () => void,
+  ) => void;
 }
 
 /**
@@ -13,8 +19,8 @@ interface UsbLike {
  * @returns The WebUSB-like object, or null when WebUSB is unsupported.
  */
 function getUsb(): UsbLike | null {
-  const candidate = (navigator as Navigator & { usb?: UsbLike }).usb
-  return candidate ?? null
+  const candidate = (navigator as Navigator & { usb?: UsbLike }).usb;
+  return candidate ?? null;
 }
 
 /**
@@ -24,40 +30,40 @@ function getUsb(): UsbLike | null {
  * @returns The current hasDevice flag.
  */
 export function useHardwareDetection(): boolean {
-  const [hasDevice, setHasDevice] = useState(false)
+  const [hasDevice, setHasDevice] = useState(false);
 
   useEffect(() => {
-    const usb = getUsb()
-    if (!usb) return
+    const usb = getUsb();
+    if (!usb) return;
 
-    let active = true
+    let active = true;
 
     const refresh = async (): Promise<void> => {
       try {
-        const devices = await usb.getDevices()
-        if (active) setHasDevice(devices.length > 0)
+        const devices = await usb.getDevices();
+        if (active) setHasDevice(devices.length > 0);
       } catch {
-        if (active) setHasDevice(false)
+        if (active) setHasDevice(false);
       }
-    }
+    };
 
     const handleConnect = (): void => {
-      if (active) setHasDevice(true)
-    }
+      if (active) setHasDevice(true);
+    };
     const handleDisconnect = (): void => {
-      void refresh()
-    }
+      void refresh();
+    };
 
-    void refresh()
-    usb.addEventListener('connect', handleConnect)
-    usb.addEventListener('disconnect', handleDisconnect)
+    void refresh();
+    usb.addEventListener("connect", handleConnect);
+    usb.addEventListener("disconnect", handleDisconnect);
 
     return () => {
-      active = false
-      usb.removeEventListener('connect', handleConnect)
-      usb.removeEventListener('disconnect', handleDisconnect)
-    }
-  }, [])
+      active = false;
+      usb.removeEventListener("connect", handleConnect);
+      usb.removeEventListener("disconnect", handleDisconnect);
+    };
+  }, []);
 
-  return hasDevice
+  return hasDevice;
 }

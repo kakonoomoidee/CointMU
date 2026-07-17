@@ -1,7 +1,7 @@
 import { CHAIN_TIMELINE_TICK_INTERVAL_MS as TICK_INTERVAL_MS } from "../explorer.constants";
 import { type JSX, useEffect, useState } from "react";
 import { useAppStore } from "@/store";
-import { X, AlertTriangle, Check, Cube } from 'lucide-react';
+import { X, AlertTriangle, Check, Box } from "lucide-react";
 
 interface BlockItem {
   number: number;
@@ -161,7 +161,7 @@ export function ChainTimeline({
           })
         ) : (
           <div className="w-full py-8 flex flex-col items-center justify-center">
-            <Cube
+            <Box
               className="text-slate-300 mb-2"
               width={28}
               height={28}
