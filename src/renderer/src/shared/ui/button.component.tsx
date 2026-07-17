@@ -1,5 +1,5 @@
 import { type ButtonHTMLAttributes, type JSX, type ReactNode } from "react";
-import { cn } from '@/shared/lib';
+import { cn } from "@/shared/lib";
 
 type ButtonVariant = "primary" | "danger" | "success" | "secondary" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";

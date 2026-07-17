@@ -1,13 +1,12 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { QRCodeSVG } from "qrcode.react";
-import { type DerivedAccount } from '@/features/wallet';
-import { AccountIcon } from '@/features/wallet';
+import { type DerivedAccount } from "@/features/wallet";
+import { AccountIcon } from "@/features/wallet";
 import { ArrowUp, ArrowDown, RefreshCw, Check, Copy } from "lucide-react";
 
 interface AccountHeroCardProps {
   activeAccount: DerivedAccount | undefined;
-  activeGradient: string;
   balance: string;
   copied: boolean;
   onReceive: () => void;

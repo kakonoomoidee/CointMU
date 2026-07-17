@@ -1,10 +1,10 @@
-import { NOTIFICATION_COLORS_BY_TYPE } from '../config/notification.constants';
+import { NOTIFICATION_COLORS_BY_TYPE } from "../config/notification.constants";
 import { type JSX, useState, useRef, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
 import {
   useNotificationStore,
   type NotificationItem,
-} from '../model/notification.store';
+} from "../model/notification.store";
 import { Bell } from "lucide-react";
 
 interface NotificationRowProps {

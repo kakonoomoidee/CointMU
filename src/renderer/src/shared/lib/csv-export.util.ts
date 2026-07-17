@@ -1,4 +1,4 @@
-import { type ActivityData } from '@/shared/ui';
+import { type ActivityData } from "@/shared/ui";
 
 const CSV_HEADERS = [
   "Type",

@@ -2,12 +2,12 @@ import {
   NETWORK_OPTIONS,
   MAX_PEERS_OPTIONS,
   SYNC_MODE_OPTIONS,
-} from '../config/settings.constants';
+} from "../config/settings.constants";
 import { useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import type { CustomNetwork, SettingsStore } from "./settings-view.component";
-import { CustomDropdown } from '@/shared/ui';
-import { AddNetworkModal } from './add-network-modal.component';
+import type { CustomNetwork, SettingsStore } from "@/features/settings";
+import { CustomDropdown } from "@/shared/ui";
+import { AddNetworkModal } from "./add-network-modal.component";
 
 interface NetworkSettingsProps {
   config: SettingsStore["network"];

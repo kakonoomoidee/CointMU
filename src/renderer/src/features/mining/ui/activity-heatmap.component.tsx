@@ -1,11 +1,11 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { format, parseISO, getDay } from "date-fns";
-import { type ActivityContribution } from '../api/activity.service';
+import { type ActivityContribution } from "../api/activity.service";
 import {
   HEATMAP_INTENSITY_LEGEND,
   HEATMAP_HALF_YEAR_LENGTH,
-} from '../config/mining.constants';
+} from "../config/mining.constants";
 
 interface ActivityHeatmapProps {
   contributions: ActivityContribution[];

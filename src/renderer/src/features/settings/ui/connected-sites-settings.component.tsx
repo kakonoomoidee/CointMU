@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { useConnectedSitesStore } from '../model/connected-sites.store';
+import { useConnectedSitesStore } from "../model/connected-sites.store";
 import { Globe, Link, Box } from "lucide-react";
 
 /**

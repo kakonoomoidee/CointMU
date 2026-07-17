@@ -1,13 +1,13 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityItem, type ActivityData } from '@/shared/ui';
-import { Pagination } from '@/shared/ui';
-import { WalletHistoryFilter } from '@/features/wallet';
+import { ActivityItem, type ActivityData } from "@/shared/ui";
+import { Pagination } from "@/shared/ui";
+import { WalletHistoryFilter } from "@/features/wallet";
 import { ChevronRight, Clock } from "lucide-react";
-import { downloadActivityCsv } from '@/shared/lib';
-import { type DerivedAccount } from '@/features/wallet';
-import { type HistoryFilter } from '@/shared/model';
-import { ACTIVITY_CSV_FILENAME } from '../config/dashboard.constants';
+import { downloadActivityCsv } from "@/shared/lib";
+import { type DerivedAccount } from "@/features/wallet";
+import { type HistoryFilter } from "@/shared/model";
+import { ACTIVITY_CSV_FILENAME } from "../config/dashboard.constants";
 
 interface ActivityFeedProps {
   isConnected: boolean;

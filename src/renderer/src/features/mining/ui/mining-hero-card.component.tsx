@@ -1,7 +1,7 @@
-import { BLOCK_REWARD_CMU } from '../config/mining.constants';
+import { BLOCK_REWARD_CMU } from "../config/mining.constants";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from '@/shared/ui';
+import { Button } from "@/shared/ui";
 import { Play, Square } from "lucide-react";
 import { NonceCounter } from "./nonce-counter.component";
 

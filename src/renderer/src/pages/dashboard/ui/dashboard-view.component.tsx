@@ -6,29 +6,26 @@ import {
   SPARKLINE_BUCKET_MS,
   SPARKLINE_WINDOW_MS,
   TARGET_BLOCK_TIME_SECONDS,
-} from '../config/dashboard.constants';
+} from "../config/dashboard.constants";
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { usePagination, useRecentBlocks } from '@/shared/lib';
-import { useMiningStats, useMiningControls } from '@/features/mining';
-import { useAppStore } from '@/shared/model';
-import { useMiningStore } from '@/features/mining';
-import { useWalletUiStore } from '@/features/wallet';
-import { getTransactions } from '@/features/wallet';
-import { ActivityCacheService } from '@/features/wallet';
-import { type DerivedAccount } from '@/features/wallet';
-import { type ActivityData } from '@/shared/ui';
+import { usePagination, useRecentBlocks } from "@/shared/lib";
+import { useMiningStats, useMiningControls } from "@/features/mining";
+import { useAppStore } from "@/shared/model";
+import { useMiningStore } from "@/features/mining";
+import { useWalletUiStore } from "@/features/wallet";
+import { getTransactions } from "@/features/wallet";
+import { ActivityCacheService } from "@/features/wallet";
+import { type DerivedAccount } from "@/features/wallet";
+import { type ActivityData } from "@/shared/ui";
 import {
   formatBlockNumber,
   formatHashrate,
   formatDifficulty,
   formatMhs,
   isWithinLastDay,
-} from '@/shared/lib';
-import {
-  resolveHistoryAddresses,
-  filterFoundBlocks,
-} from '@/features/wallet';
+} from "@/shared/lib";
+import { resolveHistoryAddresses, filterFoundBlocks } from "@/features/wallet";
 import { DashboardHeader } from "./dashboard-header.component";
 import { WalletOverviewCard } from "./wallet-overview-card.component";
 
@@ -36,7 +33,7 @@ import { NetworkHealthPanel } from "./network-health-panel.component";
 import { DashboardStatsGrid } from "./dashboard-stats-grid.component";
 import { LatestBlocks } from "./latest-blocks.component";
 import { ActivityFeed } from "./activity-feed.component";
-import { SkeletonCard, SkeletonList, Skeleton } from '@/shared/ui';
+import { SkeletonCard, SkeletonList, Skeleton } from "@/shared/ui";
 
 interface DashboardProps {
   activeWalletAddress: string | null;

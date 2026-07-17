@@ -1,8 +1,8 @@
-import { INTENSITY_OPTIONS } from '../config/mining.constants';
+import { INTENSITY_OPTIONS } from "../config/mining.constants";
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Card } from '@/shared/ui';
-import { generateIdenticonGradient } from '@/features/wallet';
+import { Card } from "@/shared/ui";
+import { generateIdenticonGradient } from "@/features/wallet";
 
 interface WorkerConfigurationProps {
   cpuThreads: number;

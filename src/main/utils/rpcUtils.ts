@@ -18,9 +18,9 @@ export async function callGethRpc(
 ): Promise<any> {
   try {
     const response = await fetch(`http://127.0.0.1:${rpcPort}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jsonrpc: '2.0', method, params, id: Date.now() }),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", method, params, id: Date.now() }),
     });
     const json = await response.json();
     if (json.error) {
@@ -40,7 +40,7 @@ export async function callGethRpc(
  * @returns {string} The hex string representation.
  */
 export function toHex(num: number): string {
-  return '0x' + Math.max(0, Math.floor(num)).toString(16);
+  return "0x" + Math.max(0, Math.floor(num)).toString(16);
 }
 
 /**
@@ -49,7 +49,7 @@ export function toHex(num: number): string {
  * @returns {number} The parsed integer, or 0 when the value is missing or unparseable.
  */
 export function safeParseHex(val: string | undefined | null): number {
-  if (!val || typeof val !== 'string') return 0;
+  if (!val || typeof val !== "string") return 0;
   const parsed = parseInt(val, 16);
   return isNaN(parsed) ? 0 : parsed;
 }
@@ -64,7 +64,9 @@ export function formatTimeAgo(timestamp: number): string {
   const now = Math.floor(Date.now() / 1000);
   const diff = now - timestamp;
   if (diff < SECONDS_PER_MINUTE) return `${Math.max(1, diff)}s ago`;
-  if (diff < SECONDS_PER_HOUR) return `${Math.floor(diff / SECONDS_PER_MINUTE)}m ago`;
-  if (diff < SECONDS_PER_DAY) return `${Math.floor(diff / SECONDS_PER_HOUR)}h ago`;
+  if (diff < SECONDS_PER_HOUR)
+    return `${Math.floor(diff / SECONDS_PER_MINUTE)}m ago`;
+  if (diff < SECONDS_PER_DAY)
+    return `${Math.floor(diff / SECONDS_PER_HOUR)}h ago`;
   return `${Math.floor(diff / SECONDS_PER_DAY)}d ago`;
 }

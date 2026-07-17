@@ -5,7 +5,7 @@ import {
   ASCII_PRINTABLE_MAX,
   HEX_RADIX,
   HEX_CHARS_PER_BYTE,
-} from "./explorer.constants";
+} from "../config/explorer.constants";
 
 /**
  * Formats a unix timestamp as a coarse relative age string for explorer tables,

@@ -5,10 +5,10 @@
  */
 export interface GenesisBlock {
   config: {
-    chainId: number
-    [key: string]: unknown
-  }
-  [key: string]: unknown
+    chainId: number;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
 }
 
 /**
@@ -31,21 +31,22 @@ export const GENESIS_BLOCK: GenesisBlock = {
     muirGlacierBlock: 0,
     berlinBlock: 0,
     londonBlock: 0,
-    ethash: {}
+    ethash: {},
   },
-  nonce: '0x0000000000000042',
-  timestamp: '0x00',
-  extraData: '0x485721206172696573206174204d7568616d6d61646979616820556e6976',
-  gasLimit: '0x1C9C380',
-  difficulty: '0x400000',
-  mixHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
-  coinbase: '0x0000000000000000000000000000000000000000',
-  number: '0x0',
-  gasUsed: '0x0',
-  parentHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
+  nonce: "0x0000000000000042",
+  timestamp: "0x00",
+  extraData: "0x485721206172696573206174204d7568616d6d61646979616820556e6976",
+  gasLimit: "0x1C9C380",
+  difficulty: "0x400000",
+  mixHash: "0x0000000000000000000000000000000000000000000000000000000000000000",
+  coinbase: "0x0000000000000000000000000000000000000000",
+  number: "0x0",
+  gasUsed: "0x0",
+  parentHash:
+    "0x0000000000000000000000000000000000000000000000000000000000000000",
   alloc: {
-    '0x1e8207B59dd0888803f4d12466E0b2538C66766f': {
-      balance: '1000000000000000000000000'
-    }
-  }
-}
+    "0x1e8207B59dd0888803f4d12466E0b2538C66766f": {
+      balance: "1000000000000000000000000",
+    },
+  },
+};

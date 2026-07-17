@@ -1,7 +1,7 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Sparkline } from '@/shared/ui';
-import { CONSENSUS_LABEL } from '../config/dashboard.constants';
+import { Sparkline } from "@/shared/ui";
+import { CONSENSUS_LABEL } from "../config/dashboard.constants";
 
 interface NetworkHealthPanelProps {
   isConnected: boolean;

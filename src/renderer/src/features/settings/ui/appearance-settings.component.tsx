@@ -1,7 +1,7 @@
-import { COLORS } from '../config/settings.constants';
+import { COLORS } from "../config/settings.constants";
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
-import type { SettingsStore } from "./settings-view.component";
+import type { SettingsStore } from "@/features/settings";
 
 interface AppearanceSettingsProps {
   config: SettingsStore["appearance"];

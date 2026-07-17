@@ -1,9 +1,6 @@
 import { useState, type JSX } from "react";
 import { ethers } from "ethers";
-import {
-  TokenService,
-  type TokenInfo,
-} from '@/features/wallet';
+import { TokenService, type TokenInfo } from "@/features/wallet";
 import { AlertCircle } from "lucide-react";
 
 interface AddTokenFormProps {

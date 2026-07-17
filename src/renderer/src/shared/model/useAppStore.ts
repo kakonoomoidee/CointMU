@@ -8,7 +8,7 @@ import {
   fetchDifficulty,
   fetchBalance,
   formatBalance,
-} from '@/shared/api/rpc.client';
+} from "@/shared/api/rpc.client";
 
 const DISCONNECTED_BALANCE = "0.00";
 

@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import type { CustomNetwork } from './settings-view.component';
+import type { CustomNetwork } from "@/features/settings";
 
 interface AddNetworkModalProps {
   isOpen: boolean;

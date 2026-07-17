@@ -1,7 +1,12 @@
-import { callGethRpc, toHex, safeParseHex, formatTimeAgo } from '../utils/rpcUtils';
+import {
+  callGethRpc,
+  toHex,
+  safeParseHex,
+  formatTimeAgo,
+} from "../utils/rpcUtils";
 
 const ACTIVITY_BLOCK_SCAN_DEPTH = 500;
-const MINING_BLOCK_REWARD = '2.00';
+const MINING_BLOCK_REWARD = "2.00";
 const INSIGHTS_BLOCK_WINDOW = 12;
 const BLOCK_TIME_REFERENCE_DEPTH = 100;
 
@@ -11,7 +16,7 @@ const BLOCK_TIME_REFERENCE_DEPTH = 100;
  */
 interface ActivityItem {
   id: string;
-  type: 'mining' | 'contract' | 'send' | 'receive';
+  type: "mining" | "contract" | "send" | "receive";
   title: string;
   subtitle: string;
   amount: string;
@@ -56,7 +61,7 @@ const OFFLINE_INSIGHTS: NetworkInsights = {
   activeAddresses: 0,
   difficulty: 0,
   blocks: [],
-  coinbase: '',
+  coinbase: "",
 };
 
 /**
@@ -81,7 +86,7 @@ function classifyTransaction(
   const isTo = tx.to && targets.has(tx.to.toLowerCase());
   if (!isFrom && !isTo) return null;
 
-  let amount = '0.00';
+  let amount = "0.00";
   if (tx.value) {
     amount = (parseInt(tx.value, 16) / 1e18).toFixed(2);
   }
@@ -89,8 +94,8 @@ function classifyTransaction(
   if (isFrom && !tx.to) {
     return {
       id: tx.hash,
-      type: 'contract',
-      title: 'Contract deployment',
+      type: "contract",
+      title: "Contract deployment",
       subtitle: `Hash ${tx.hash.substring(0, 8)}...`,
       amount,
       timestamp,
@@ -98,15 +103,15 @@ function classifyTransaction(
       timestampStr,
       hash: tx.hash,
       from: tx.from,
-      to: '',
+      to: "",
     };
   }
 
-  if (isFrom && tx.to && tx.input && tx.input !== '0x') {
+  if (isFrom && tx.to && tx.input && tx.input !== "0x") {
     return {
       id: tx.hash,
-      type: 'contract',
-      title: 'Contract call',
+      type: "contract",
+      title: "Contract call",
       subtitle: `To ${tx.to.substring(0, 6)}...${tx.to.substring(tx.to.length - 4)}`,
       amount,
       timestamp,
@@ -121,8 +126,8 @@ function classifyTransaction(
   if (isFrom) {
     return {
       id: tx.hash,
-      type: 'send',
-      title: 'Sent CMU',
+      type: "send",
+      title: "Sent CMU",
       subtitle: `To ${tx.to.substring(0, 6)}...${tx.to.substring(tx.to.length - 4)}`,
       amount,
       timestamp,
@@ -136,8 +141,8 @@ function classifyTransaction(
 
   return {
     id: tx.hash,
-    type: 'receive',
-    title: 'Received CMU',
+    type: "receive",
+    title: "Received CMU",
     subtitle: `From ${tx.from.substring(0, 6)}...${tx.from.substring(tx.from.length - 4)}`,
     amount,
     timestamp,
@@ -165,7 +170,7 @@ export async function scanWalletActivity(
     if (!Array.isArray(addresses) || addresses.length === 0) return [];
     const targets = new Set(addresses.map((addr) => addr.toLowerCase()));
 
-    const latestBlockHex = await callGethRpc(rpcPort, 'eth_blockNumber');
+    const latestBlockHex = await callGethRpc(rpcPort, "eth_blockNumber");
     if (!latestBlockHex) return [];
     const latest = parseInt(latestBlockHex, 16);
     const start = Math.max(0, latest - ACTIVITY_BLOCK_SCAN_DEPTH);
@@ -173,7 +178,10 @@ export async function scanWalletActivity(
     const activities: ActivityItem[] = [];
 
     for (let i = latest; i > start; i--) {
-      const block = await callGethRpc(rpcPort, 'eth_getBlockByNumber', [toHex(i), true]);
+      const block = await callGethRpc(rpcPort, "eth_getBlockByNumber", [
+        toHex(i),
+        true,
+      ]);
       if (!block) continue;
 
       const blockNum = parseInt(block.number, 16);
@@ -184,8 +192,8 @@ export async function scanWalletActivity(
       if (block.miner && targets.has(block.miner.toLowerCase())) {
         activities.push({
           id: `block-${block.number}`,
-          type: 'mining',
-          title: 'Mining reward',
+          type: "mining",
+          title: "Mining reward",
           subtitle: `From mining pool · block #${blockNum}`,
           amount: MINING_BLOCK_REWARD,
           timestamp,
@@ -197,7 +205,13 @@ export async function scanWalletActivity(
 
       if (block.transactions && Array.isArray(block.transactions)) {
         for (const tx of block.transactions) {
-          const item = classifyTransaction(tx, targets, timestamp, blockNum, timestampStr);
+          const item = classifyTransaction(
+            tx,
+            targets,
+            timestamp,
+            blockNum,
+            timestampStr,
+          );
           if (item) activities.push(item);
         }
       }
@@ -206,7 +220,7 @@ export async function scanWalletActivity(
     activities.sort((a, b) => b.timestamp - a.timestamp);
     return activities;
   } catch (err) {
-    console.error('[activity] Failed to scan wallet activity:', err);
+    console.error("[activity] Failed to scan wallet activity:", err);
     return [];
   }
 }
@@ -219,10 +233,12 @@ export async function scanWalletActivity(
  * @param {number} rpcPort - The resolved RPC port of the running Geth node.
  * @returns {Promise<NetworkInsights>} The aggregated network statistics payload.
  */
-export async function fetchNetworkInsights(rpcPort: number): Promise<NetworkInsights> {
+export async function fetchNetworkInsights(
+  rpcPort: number,
+): Promise<NetworkInsights> {
   try {
-    const heightHex = await callGethRpc(rpcPort, 'eth_blockNumber');
-    if (!heightHex || typeof heightHex !== 'string') {
+    const heightHex = await callGethRpc(rpcPort, "eth_blockNumber");
+    if (!heightHex || typeof heightHex !== "string") {
       return { ...OFFLINE_INSIGHTS };
     }
 
@@ -234,19 +250,20 @@ export async function fetchNetworkInsights(rpcPort: number): Promise<NetworkInsi
     const blockSettled = await Promise.allSettled(
       Array.from({ length: INSIGHTS_BLOCK_WINDOW }, (_, i) => {
         const blockNum = Math.max(0, height - i);
-        return callGethRpc(rpcPort, 'eth_getBlockByNumber', [toHex(blockNum), true]);
+        return callGethRpc(rpcPort, "eth_getBlockByNumber", [
+          toHex(blockNum),
+          true,
+        ]);
       }),
     );
 
     const latest12Blocks = blockSettled
       .filter(
         (r): r is PromiseFulfilledResult<any> =>
-          r.status === 'fulfilled' &&
-          r.value !== null &&
-          r.value !== undefined,
+          r.status === "fulfilled" && r.value !== null && r.value !== undefined,
       )
       .map((r) => r.value)
-      .filter((b) => b && typeof b.number === 'string');
+      .filter((b) => b && typeof b.number === "string");
 
     if (latest12Blocks.length === 0) {
       return {
@@ -257,20 +274,20 @@ export async function fetchNetworkInsights(rpcPort: number): Promise<NetworkInsi
         activeAddresses: 0,
         difficulty: 0,
         blocks: [],
-        coinbase: '',
+        coinbase: "",
       };
     }
 
     const past100Block =
       height >= BLOCK_TIME_REFERENCE_DEPTH
-        ? await callGethRpc(rpcPort, 'eth_getBlockByNumber', [
+        ? await callGethRpc(rpcPort, "eth_getBlockByNumber", [
             toHex(height - BLOCK_TIME_REFERENCE_DEPTH),
             false,
           ])
         : null;
 
-    const coinbaseResult = await callGethRpc(rpcPort, 'eth_coinbase');
-    const coinbase = coinbaseResult || '';
+    const coinbaseResult = await callGethRpc(rpcPort, "eth_coinbase");
+    const coinbase = coinbaseResult || "";
 
     let totalTxs = 0;
     const activeAddrs = new Set<string>();
@@ -280,11 +297,11 @@ export async function fetchNetworkInsights(rpcPort: number): Promise<NetworkInsi
       if (block.transactions && Array.isArray(block.transactions)) {
         totalTxs += block.transactions.length;
         for (const tx of block.transactions) {
-          if (tx && typeof tx === 'object') {
-            if (tx.from && typeof tx.from === 'string') {
+          if (tx && typeof tx === "object") {
+            if (tx.from && typeof tx.from === "string") {
               activeAddrs.add(tx.from.toLowerCase());
             }
-            if (tx.to && typeof tx.to === 'string') {
+            if (tx.to && typeof tx.to === "string") {
               activeAddrs.add(tx.to.toLowerCase());
             }
           }
@@ -296,10 +313,10 @@ export async function fetchNetworkInsights(rpcPort: number): Promise<NetworkInsi
     if (
       past100Block !== null &&
       past100Block !== undefined &&
-      typeof past100Block.timestamp === 'string' &&
+      typeof past100Block.timestamp === "string" &&
       latest12Blocks[0] !== null &&
       latest12Blocks[0] !== undefined &&
-      typeof latest12Blocks[0].timestamp === 'string'
+      typeof latest12Blocks[0].timestamp === "string"
     ) {
       const latestTime = safeParseHex(latest12Blocks[0].timestamp);
       const pastTime = safeParseHex(past100Block.timestamp);
@@ -314,10 +331,10 @@ export async function fetchNetworkInsights(rpcPort: number): Promise<NetworkInsi
       if (
         newest !== null &&
         newest !== undefined &&
-        typeof newest.timestamp === 'string' &&
+        typeof newest.timestamp === "string" &&
         oldest !== null &&
         oldest !== undefined &&
-        typeof oldest.timestamp === 'string'
+        typeof oldest.timestamp === "string"
       ) {
         const latestTime = safeParseHex(newest.timestamp);
         const oldestTime = safeParseHex(oldest.timestamp);
@@ -339,8 +356,8 @@ export async function fetchNetworkInsights(rpcPort: number): Promise<NetworkInsi
         : 0,
       blocks: latest12Blocks.map((b) => ({
         number: safeParseHex(b.number),
-        hash: b.hash || '',
-        miner: b.miner || '',
+        hash: b.hash || "",
+        miner: b.miner || "",
         timestamp: safeParseHex(b.timestamp),
         txCount:
           b.transactions && Array.isArray(b.transactions)
@@ -350,7 +367,7 @@ export async function fetchNetworkInsights(rpcPort: number): Promise<NetworkInsi
       coinbase,
     };
   } catch (err) {
-    console.error('[insights] Fatal error:', err);
+    console.error("[insights] Fatal error:", err);
     return { ...OFFLINE_INSIGHTS };
   }
 }

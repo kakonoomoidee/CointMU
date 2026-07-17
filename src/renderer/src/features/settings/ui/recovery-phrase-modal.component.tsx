@@ -1,4 +1,4 @@
-import { AUTO_HIDE_SECONDS } from '../config/settings.constants';
+import { AUTO_HIDE_SECONDS } from "../config/settings.constants";
 import {
   useEffect,
   useRef,
@@ -7,7 +7,7 @@ import {
   type JSX,
 } from "react";
 import { Key, Eye, EyeOff, Copy, Check, AlertTriangle, X } from "lucide-react";
-import { revealRecoveryPhrase } from '@/features/wallet';
+import { revealRecoveryPhrase } from "@/features/wallet";
 
 interface RecoveryPhraseModalProps {
   onClose: () => void;

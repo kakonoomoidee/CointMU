@@ -1,6 +1,6 @@
 import { useEffect, type JSX } from "react";
-import { CustomDropdown } from '@/shared/ui';
-import { HISTORY_FILTER_ALL, type HistoryFilter } from '@/shared/model';
+import { CustomDropdown } from "@/shared/ui";
+import { HISTORY_FILTER_ALL, type HistoryFilter } from "@/shared/model";
 
 interface WalletHistoryFilterOption {
   address: string;

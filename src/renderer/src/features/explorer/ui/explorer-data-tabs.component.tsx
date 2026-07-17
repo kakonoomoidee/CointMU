@@ -1,11 +1,11 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { type BlockData } from '@/shared/lib';
-import { AccountIcon } from '@/features/wallet';
-import { useAppStore } from '@/shared/model';
-import { SkeletonTable, Pagination, type ActivityData } from '@/shared/ui';
+import { type BlockData } from "@/shared/lib";
+import { AccountIcon } from "@/features/wallet";
+import { useAppStore } from "@/shared/model";
+import { SkeletonTable, Pagination, type ActivityData } from "@/shared/ui";
 import { MinerDistribution } from "./miner-distribution.component";
-import { formatTxAge } from '../lib/explorer.utils';
+import { formatTxAge } from "../lib/explorer.utils";
 
 type TabState = "blocks" | "transactions" | "accounts";
 

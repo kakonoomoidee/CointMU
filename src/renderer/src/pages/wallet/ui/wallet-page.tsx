@@ -1,29 +1,28 @@
-import { COPY_FEEDBACK_MS } from '@/features/wallet';
+import { COPY_FEEDBACK_MS } from "@/features/wallet";
 import { useEffect, useState, type JSX, type MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import {
   deriveAccount,
-  generateIdenticonGradient,
   deriveAccountFromPrivateKey,
   encryptSecret,
   decryptSecret,
   getSessionPassword,
   type DerivedAccount,
-} from '@/features/wallet';
-import { getSetting, setSetting } from '@/features/settings';
-import { call } from '@/shared/api';
+} from "@/features/wallet";
+import { getSetting, setSetting } from "@/features/settings";
+import { call } from "@/shared/api";
 import { ethers } from "ethers";
-import { useAppStore } from '@/shared/model';
-import { useWalletUiStore } from '@/features/wallet';
+import { useAppStore } from "@/shared/model";
+import { useWalletUiStore } from "@/features/wallet";
 import { WalletHeader } from "@/widgets/wallet-layout";
-import { AccountSidebar } from '@/features/wallet';
-import { AccountHeroCard } from '@/features/wallet';
+import { AccountSidebar } from "@/features/wallet";
+import { AccountHeroCard } from "@/features/wallet";
 import { WalletTabs, type WalletTab } from "@/widgets/wallet-layout";
-import { WalletModals } from '@/features/wallet';
+import { WalletModals } from "@/features/wallet";
 import {
   ImportKeystoreModal,
   type ImportKeystoreResult,
-} from '@/features/wallet';
+} from "@/features/wallet";
 
 interface WalletProps {
   accounts: DerivedAccount[];
@@ -65,9 +64,6 @@ function WalletPage({
 
   const activeAccount =
     accounts.find((a) => a.address === activeWalletAddress) || accounts[0];
-  const activeGradient = activeAccount
-    ? generateIdenticonGradient(activeAccount.address)
-    : "from-slate-400 to-slate-500";
 
   useEffect(() => {
     if (modalState === "SEND") {
@@ -263,7 +259,6 @@ function WalletPage({
           <div className="flex-1 min-w-0 space-y-5">
             <AccountHeroCard
               activeAccount={activeAccount}
-              activeGradient={activeGradient}
               balance={balance}
               copied={copied}
               onReceive={() => setModalState("RECEIVE")}

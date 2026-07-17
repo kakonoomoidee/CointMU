@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { NFTCard } from "./nft-card.component";
-import { type NFTMetadata } from '../api/nft.service';
+import { type NFTMetadata } from "../api/nft.service";
 
 interface NFTGridProps {
   nfts: NFTMetadata[];

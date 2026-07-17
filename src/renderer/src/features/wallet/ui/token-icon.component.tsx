@@ -1,5 +1,5 @@
 import { type JSX } from "react";
-import { getTokenGradient, getTokenInitials } from '../lib/token-icon.util';
+import { getTokenGradient, getTokenInitials } from "../lib/token-icon.util";
 
 interface TokenIconProps {
   address: string;

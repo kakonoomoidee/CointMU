@@ -7,17 +7,17 @@ import {
   ACTIVITY_TAB_LOG,
   ACTIVITY_TAB_ACTIVITY,
   ACTIVITY_TABS,
-} from '../config/mining.constants';
+} from "../config/mining.constants";
 import { useMemo, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { subDays, format, differenceInMinutes } from "date-fns";
-import { Card, Pagination } from '@/shared/ui';
-import { WalletHistoryFilter } from '@/features/wallet';
+import { Card, Pagination } from "@/shared/ui";
+import { WalletHistoryFilter } from "@/features/wallet";
 import { Check, Box } from "lucide-react";
-import { formatAge } from '@/shared/lib';
-import { type FoundBlock } from '../model/mining.store';
-import { type HistoryFilter } from '@/shared/model';
-import { type DerivedAccount } from '@/features/wallet';
+import { formatAge } from "@/shared/lib";
+import { type FoundBlock } from "../model/mining.store";
+import { type HistoryFilter } from "@/shared/model";
+import { type DerivedAccount } from "@/features/wallet";
 import { MiningActivityLogs } from "./mining-activity-logs.component";
 
 export interface DayContribution {

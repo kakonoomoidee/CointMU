@@ -11,13 +11,13 @@ import {
   encryptSecret,
   verifyPassword,
   unlockSession,
-} from '@/features/wallet';
-import { getSetting, setSetting } from '@/features/settings';
+} from "@/features/wallet";
+import { getSetting, setSetting } from "@/features/settings";
 import { useAuthStore } from "../model/auth.store";
 import {
   ImportKeystoreModal,
   type ImportKeystoreResult,
-} from '@/features/wallet';
+} from "@/features/wallet";
 import { AuthShell } from "./auth-shell.component";
 import { WelcomeStep } from "./welcome-step.component";
 import { LoginStep } from "./login-step.component";

@@ -1,16 +1,17 @@
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { GeneralSettings } from '@/features/settings';
-import { AppearanceSettings } from '@/features/settings';
-import { NetworkSettings } from '@/features/settings';
-import { MiningSettings } from '@/features/settings';
-import { SecuritySettings } from '@/features/settings';
-import { ConnectedSitesSettings } from '@/features/settings';
-import { ExternalSourceSettings } from '@/features/settings';
-import { AdvancedSettings } from '@/features/settings';
-import { AboutSettings } from '@/features/settings';
-import { NotificationSettings } from '@/features/settings';
-import { getAllSettings, setSetting } from '@/features/settings';
+import { type SettingsStore } from "@/features/settings";
+import { GeneralSettings } from "@/features/settings";
+import { AppearanceSettings } from "@/features/settings";
+import { NetworkSettings } from "@/features/settings";
+import { MiningSettings } from "@/features/settings";
+import { SecuritySettings } from "@/features/settings";
+import { ConnectedSitesSettings } from "@/features/settings";
+import { ExternalSourceSettings } from "@/features/settings";
+import { AdvancedSettings } from "@/features/settings";
+import { AboutSettings } from "@/features/settings";
+import { NotificationSettings } from "@/features/settings";
+import { getAllSettings, setSetting } from "@/features/settings";
 import {
   Sun,
   Image,
@@ -89,64 +90,6 @@ const CATEGORIES: { id: SettingsCategory; label: string; icon: JSX.Element }[] =
       icon: <Box width={16} height={16} />,
     },
   ];
-
-export interface CustomNetwork {
-  name: string;
-  rpcUrl: string;
-  chainId: number;
-  symbol: string;
-}
-
-export interface SettingsStore {
-  mnemonic: string | null;
-  activeWalletAddress: string | null;
-  accounts: { address: string; label: string }[];
-  general: {
-    launchAtLogin: boolean;
-    openInBackground: boolean;
-    pushNotifications: boolean;
-    notificationSound: boolean;
-    language: string;
-    currency: string;
-  };
-  appearance: {
-    theme: string;
-    accentColor: string;
-    density: string;
-    showSidebarColors: boolean;
-    animatedTransitions: boolean;
-  };
-  network: {
-    network: string;
-    rpcEndpoint: string;
-    maxPeers: number;
-    discovery: boolean;
-    listenPort: number;
-    syncMode: string;
-    pruneOldState: boolean;
-    customNetworks?: CustomNetwork[];
-  };
-  mining: {
-    isMiningEnabled: boolean;
-    startAtLaunch: boolean;
-    cpuThreads: number;
-    intensity: string;
-    pauseOnBattery: boolean;
-    miningMode: string;
-    poolAddress: string;
-  };
-  security: {
-    autoLock: boolean;
-    requireBiometrics: boolean;
-  };
-  advanced: {
-    httpRpc: boolean;
-    wsRpc: boolean;
-    corsOrigins: string;
-    logLevel: string;
-    analytics: boolean;
-  };
-}
 
 interface SettingsProps {
   initialCategory?: SettingsCategory;

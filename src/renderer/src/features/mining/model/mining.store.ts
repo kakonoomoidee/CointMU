@@ -2,7 +2,7 @@ import {
   MAX_FOUND_BLOCKS,
   MAX_HASHRATE_HISTORY,
   MAX_MINING_LOGS,
-} from "./mining.constants";
+} from "../config/mining.constants";
 import { create } from "zustand";
 
 interface FoundBlock {

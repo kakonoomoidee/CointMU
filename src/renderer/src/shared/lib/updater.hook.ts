@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { checkForUpdates, downloadUpdate, installUpdate } from '@/shared/api';
+import { checkForUpdates, downloadUpdate, installUpdate } from "@/shared/api";
 
 export type UpdaterStatus =
   | "idle"

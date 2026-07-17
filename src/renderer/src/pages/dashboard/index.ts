@@ -1,1 +1,1 @@
-export { DashboardPage } from './ui/dashboard-view.component';
+export { DashboardPage } from "./ui/dashboard-view.component";

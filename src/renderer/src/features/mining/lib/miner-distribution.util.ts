@@ -1,9 +1,9 @@
-import { call } from '@/shared/api/rpc.client';
+import { call } from "@/shared/api/rpc.client";
 import {
   SECONDS_IN_DAY,
   TOP_MINERS_LIMIT,
   MAX_BLOCKS_TO_SCAN,
-} from '../config/mining.constants';
+} from "../config/mining.constants";
 
 /**
  * Represents a single entry in the miner distribution report.

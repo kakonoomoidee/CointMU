@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { useAuthStore } from '../model/auth.store';
+import { useAuthStore } from "../model/auth.store";
 import { Check, Copy, AlertTriangle } from "lucide-react";
 
 interface CreateWalletStepProps {

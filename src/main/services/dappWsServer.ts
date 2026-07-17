@@ -1,20 +1,20 @@
-import { WebSocketServer, type WebSocket, type RawData } from 'ws'
-import { ipcMain, type BrowserWindow } from 'electron'
+import { WebSocketServer, type WebSocket, type RawData } from "ws";
+import { ipcMain, type BrowserWindow } from "electron";
 
-const DAPP_WS_PORT = 8546
-const JSON_RPC_VERSION = '2.0'
+const DAPP_WS_PORT = 8546;
+const JSON_RPC_VERSION = "2.0";
 
 /**
  * Represents a single JSON-RPC request received from the browser extension,
  * augmented with the tab context needed to route the response back.
  */
 interface PendingDappRequest {
-  id: number
-  method: string
-  params: unknown[]
-  tabId: number
-  origin: string
-  socket: WebSocket
+  id: number;
+  method: string;
+  params: unknown[];
+  tabId: number;
+  origin: string;
+  socket: WebSocket;
 }
 
 /**
@@ -22,7 +22,7 @@ interface PendingDappRequest {
  * user approval or rejection. Keyed by the composite tabId:requestId string.
  * @type {Map<string, PendingDappRequest>}
  */
-const pendingRequests = new Map<string, PendingDappRequest>()
+const pendingRequests = new Map<string, PendingDappRequest>();
 
 /**
  * Builds the composite pending-map key from a tab ID and request ID.
@@ -31,7 +31,7 @@ const pendingRequests = new Map<string, PendingDappRequest>()
  * @returns {string} The composite key string.
  */
 function pendingKey(tabId: number, requestId: number): string {
-  return `${tabId}:${requestId}`
+  return `${tabId}:${requestId}`;
 }
 
 /**
@@ -42,8 +42,15 @@ function pendingKey(tabId: number, requestId: number): string {
  * @param {unknown} result - The result value to include in the response.
  * @returns {void}
  */
-function sendResult(socket: WebSocket, id: number, tabId: number, result: unknown): void {
-  socket.send(JSON.stringify({ jsonrpc: JSON_RPC_VERSION, id, result, __tabId: tabId }))
+function sendResult(
+  socket: WebSocket,
+  id: number,
+  tabId: number,
+  result: unknown,
+): void {
+  socket.send(
+    JSON.stringify({ jsonrpc: JSON_RPC_VERSION, id, result, __tabId: tabId }),
+  );
 }
 
 /**
@@ -55,8 +62,21 @@ function sendResult(socket: WebSocket, id: number, tabId: number, result: unknow
  * @param {string} message - A human-readable description of the error.
  * @returns {void}
  */
-function sendError(socket: WebSocket, id: number, tabId: number, code: number, message: string): void {
-  socket.send(JSON.stringify({ jsonrpc: JSON_RPC_VERSION, id, error: { code, message }, __tabId: tabId }))
+function sendError(
+  socket: WebSocket,
+  id: number,
+  tabId: number,
+  code: number,
+  message: string,
+): void {
+  socket.send(
+    JSON.stringify({
+      jsonrpc: JSON_RPC_VERSION,
+      id,
+      error: { code, message },
+      __tabId: tabId,
+    }),
+  );
 }
 
 /**
@@ -69,30 +89,41 @@ function sendError(socket: WebSocket, id: number, tabId: number, code: number, m
  * @param {BrowserWindow} win - The main Electron BrowserWindow for IPC dispatch.
  * @returns {void}
  */
-function handleExtensionMessage(socket: WebSocket, raw: RawData, win: BrowserWindow): void {
-  let payload: Record<string, unknown>
+function handleExtensionMessage(
+  socket: WebSocket,
+  raw: RawData,
+  win: BrowserWindow,
+): void {
+  let payload: Record<string, unknown>;
   try {
-    payload = JSON.parse(raw.toString()) as Record<string, unknown>
+    payload = JSON.parse(raw.toString()) as Record<string, unknown>;
   } catch {
-    console.error('[dapp-ws] Received malformed JSON from extension')
-    return
+    console.error("[dapp-ws] Received malformed JSON from extension");
+    return;
   }
 
-  const id = payload.id as number
-  const method = payload.method as string
-  const params = (payload.params as unknown[]) || []
-  const tabId = payload.__tabId as number
-  const origin = payload.origin as string || `Tab ${tabId}`
+  const id = payload.id as number;
+  const method = payload.method as string;
+  const params = (payload.params as unknown[]) || [];
+  const tabId = payload.__tabId as number;
+  const origin = (payload.origin as string) || `Tab ${tabId}`;
 
-  if (typeof id !== 'number' || typeof method !== 'string' || typeof tabId !== 'number') {
-    console.warn('[dapp-ws] Ignoring request with missing required fields:', payload)
-    return
+  if (
+    typeof id !== "number" ||
+    typeof method !== "string" ||
+    typeof tabId !== "number"
+  ) {
+    console.warn(
+      "[dapp-ws] Ignoring request with missing required fields:",
+      payload,
+    );
+    return;
   }
 
-  const key = pendingKey(tabId, id)
-  pendingRequests.set(key, { id, method, params, tabId, origin, socket })
+  const key = pendingKey(tabId, id);
+  pendingRequests.set(key, { id, method, params, tabId, origin, socket });
 
-  win.webContents.send('dapp:request', { id, method, params, tabId, origin })
+  win.webContents.send("dapp:request", { id, method, params, tabId, origin });
 }
 
 /**
@@ -103,24 +134,43 @@ function handleExtensionMessage(socket: WebSocket, raw: RawData, win: BrowserWin
  */
 function registerApprovalHandler(): void {
   ipcMain.on(
-    'dapp:response',
-    (_event, payload: { id: number; tabId: number; approved: boolean; result?: unknown }) => {
-      const key = pendingKey(payload.tabId, payload.id)
-      const request = pendingRequests.get(key)
+    "dapp:response",
+    (
+      _event,
+      payload: {
+        id: number;
+        tabId: number;
+        approved: boolean;
+        result?: unknown;
+      },
+    ) => {
+      const key = pendingKey(payload.tabId, payload.id);
+      const request = pendingRequests.get(key);
       if (!request) {
-        console.warn('[dapp-ws] Received response for unknown request:', key)
-        return
+        console.warn("[dapp-ws] Received response for unknown request:", key);
+        return;
       }
-      pendingRequests.delete(key)
+      pendingRequests.delete(key);
 
       if (!payload.approved) {
-        sendError(request.socket, request.id, request.tabId, 4001, 'User rejected the request.')
-        return
+        sendError(
+          request.socket,
+          request.id,
+          request.tabId,
+          4001,
+          "User rejected the request.",
+        );
+        return;
       }
 
-      sendResult(request.socket, request.id, request.tabId, payload.result ?? null)
-    }
-  )
+      sendResult(
+        request.socket,
+        request.id,
+        request.tabId,
+        payload.result ?? null,
+      );
+    },
+  );
 }
 
 /**
@@ -133,48 +183,54 @@ function registerApprovalHandler(): void {
  * @returns {{ close: () => void }} An object with a close method for cleanup.
  */
 function startDappWsServer(win: BrowserWindow): { close: () => void } {
-  const wss = new WebSocketServer({ host: '127.0.0.1', port: DAPP_WS_PORT })
+  const wss = new WebSocketServer({ host: "127.0.0.1", port: DAPP_WS_PORT });
 
-  wss.on('listening', () => {
-    console.log(`[dapp-ws] Listening on ws://127.0.0.1:${DAPP_WS_PORT}`)
-  })
+  wss.on("listening", () => {
+    console.log(`[dapp-ws] Listening on ws://127.0.0.1:${DAPP_WS_PORT}`);
+  });
 
-  wss.on('connection', (socket: WebSocket) => {
-    console.log('[dapp-ws] Browser extension connected.')
+  wss.on("connection", (socket: WebSocket) => {
+    console.log("[dapp-ws] Browser extension connected.");
 
-    socket.on('message', (raw: RawData) => {
-      handleExtensionMessage(socket, raw, win)
-    })
+    socket.on("message", (raw: RawData) => {
+      handleExtensionMessage(socket, raw, win);
+    });
 
-    socket.on('close', () => {
-      console.log('[dapp-ws] Browser extension disconnected.')
+    socket.on("close", () => {
+      console.log("[dapp-ws] Browser extension disconnected.");
       pendingRequests.forEach((request, key) => {
         if (request.socket === socket) {
-          sendError(socket, request.id, request.tabId, -32000, 'Extension disconnected.')
-          pendingRequests.delete(key)
+          sendError(
+            socket,
+            request.id,
+            request.tabId,
+            -32000,
+            "Extension disconnected.",
+          );
+          pendingRequests.delete(key);
         }
-      })
-    })
+      });
+    });
 
-    socket.on('error', (err: Error) => {
-      console.error('[dapp-ws] Socket error:', err.message)
-    })
-  })
+    socket.on("error", (err: Error) => {
+      console.error("[dapp-ws] Socket error:", err.message);
+    });
+  });
 
-  wss.on('error', (err: Error) => {
-    console.error('[dapp-ws] Server error:', err.message)
-  })
+  wss.on("error", (err: Error) => {
+    console.error("[dapp-ws] Server error:", err.message);
+  });
 
-  registerApprovalHandler()
+  registerApprovalHandler();
 
   return {
     close(): void {
-      ipcMain.removeAllListeners('dapp:response')
-      pendingRequests.clear()
-      wss.close()
-    }
-  }
+      ipcMain.removeAllListeners("dapp:response");
+      pendingRequests.clear();
+      wss.close();
+    },
+  };
 }
 
-export { startDappWsServer, DAPP_WS_PORT }
-export type { PendingDappRequest }
+export { startDappWsServer, DAPP_WS_PORT };
+export type { PendingDappRequest };

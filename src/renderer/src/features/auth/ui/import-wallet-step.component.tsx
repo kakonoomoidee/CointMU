@@ -2,7 +2,6 @@ import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../model/auth.store";
 import { FileText, ChevronRight, Key, Download } from "lucide-react";
-import { Button } from "@/shared/components/ui/button";
 
 interface ImportWalletStepProps {
   mode: "method" | "input";

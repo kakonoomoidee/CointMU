@@ -1,5 +1,5 @@
 import { useState, type SyntheticEvent, type JSX } from "react";
-import { importKeystore } from '@/features/wallet';
+import { importKeystore } from "@/features/wallet";
 import { FileText, Eye, EyeOff, X } from "lucide-react";
 
 interface ImportKeystoreResult {

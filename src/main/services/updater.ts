@@ -1,6 +1,10 @@
-import { app, ipcMain, type BrowserWindow } from 'electron'
-import { autoUpdater, type UpdateInfo, type ProgressInfo } from 'electron-updater'
-import { is } from '@electron-toolkit/utils'
+import { app, ipcMain, type BrowserWindow } from "electron";
+import {
+  autoUpdater,
+  type UpdateInfo,
+  type ProgressInfo,
+} from "electron-updater";
+import { is } from "@electron-toolkit/utils";
 
 /**
  * Structured update lifecycle payload forwarded to the renderer over the
@@ -8,10 +12,21 @@ import { is } from '@electron-toolkit/utils'
  * populated so the renderer can normalize them into its reactive state.
  */
 interface UpdaterStatePayload {
-  status: 'checking' | 'available' | 'not-available' | 'downloading' | 'downloaded' | 'error'
-  info?: { version: string }
-  progress?: { percent: number; transferred: number; total: number; bytesPerSecond: number }
-  error?: string
+  status:
+    | "checking"
+    | "available"
+    | "not-available"
+    | "downloading"
+    | "downloaded"
+    | "error";
+  info?: { version: string };
+  progress?: {
+    percent: number;
+    transferred: number;
+    total: number;
+    bytesPerSecond: number;
+  };
+  error?: string;
 }
 
 /**
@@ -23,10 +38,10 @@ interface UpdaterStatePayload {
  * @returns {void}
  */
 function initUpdater(mainWindow: BrowserWindow): void {
-  autoUpdater.autoDownload = true
-  autoUpdater.logger = console
-  autoUpdater.allowPrerelease = true
-  autoUpdater.allowDowngrade = false
+  autoUpdater.autoDownload = true;
+  autoUpdater.logger = console;
+  autoUpdater.allowPrerelease = true;
+  autoUpdater.allowDowngrade = false;
 
   /**
    * Sends a structured updater state payload to the renderer process.
@@ -35,92 +50,99 @@ function initUpdater(mainWindow: BrowserWindow): void {
    */
   const send = (payload: UpdaterStatePayload): void => {
     if (!mainWindow.isDestroyed()) {
-      mainWindow.webContents.send('updater:state', payload)
+      mainWindow.webContents.send("updater:state", payload);
     }
-  }
+  };
 
-  autoUpdater.on('checking-for-update', () => {
-    console.log('[updater] Checking for update...')
-    send({ status: 'checking' })
-  })
+  autoUpdater.on("checking-for-update", () => {
+    console.log("[updater] Checking for update...");
+    send({ status: "checking" });
+  });
 
-  autoUpdater.on('update-available', (info: UpdateInfo) => {
-    console.log(`[updater] Update available: ${info.version}`)
-    send({ status: 'available', info: { version: info.version } })
-  })
+  autoUpdater.on("update-available", (info: UpdateInfo) => {
+    console.log(`[updater] Update available: ${info.version}`);
+    send({ status: "available", info: { version: info.version } });
+  });
 
-  autoUpdater.on('update-not-available', (info: UpdateInfo) => {
-    console.log(`[updater] Update not available. Current version: ${info.version}`)
-    send({ status: 'not-available' })
-  })
-
-  autoUpdater.on('download-progress', (progress: ProgressInfo) => {
+  autoUpdater.on("update-not-available", (info: UpdateInfo) => {
     console.log(
-      `[updater] Download progress: ${progress.percent.toFixed(1)}% at ${progress.bytesPerSecond} B/s`
-    )
+      `[updater] Update not available. Current version: ${info.version}`,
+    );
+    send({ status: "not-available" });
+  });
+
+  autoUpdater.on("download-progress", (progress: ProgressInfo) => {
+    console.log(
+      `[updater] Download progress: ${progress.percent.toFixed(1)}% at ${progress.bytesPerSecond} B/s`,
+    );
     send({
-      status: 'downloading',
+      status: "downloading",
       progress: {
         percent: progress.percent,
         transferred: progress.transferred,
         total: progress.total,
-        bytesPerSecond: progress.bytesPerSecond
-      }
-    })
-  })
+        bytesPerSecond: progress.bytesPerSecond,
+      },
+    });
+  });
 
-  autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
-    console.log(`[updater] Update downloaded: ${info.version}. Restarting to apply update.`)
-    send({ status: 'downloaded', info: { version: info.version } })
-    autoUpdater.quitAndInstall()
-  })
+  autoUpdater.on("update-downloaded", (info: UpdateInfo) => {
+    console.log(
+      `[updater] Update downloaded: ${info.version}. Restarting to apply update.`,
+    );
+    send({ status: "downloaded", info: { version: info.version } });
+    autoUpdater.quitAndInstall();
+  });
 
-  autoUpdater.on('error', (err: Error) => {
-    const message = err == null ? 'Unknown update error' : err.message
-    console.error(`[updater] Error: ${message}`)
-    send({ status: 'error', error: message })
-  })
+  autoUpdater.on("error", (err: Error) => {
+    const message = err == null ? "Unknown update error" : err.message;
+    console.error(`[updater] Error: ${message}`);
+    send({ status: "error", error: message });
+  });
 
-  ipcMain.handle('updater:check', async () => {
+  ipcMain.handle("updater:check", async () => {
     if (!app.isPackaged && !is.dev) {
-      console.warn('[updater] Skipping update check in development mode.')
-      send({ status: 'not-available' })
-      return
+      console.warn("[updater] Skipping update check in development mode.");
+      send({ status: "not-available" });
+      return;
     }
     try {
       if (is.dev) {
-        autoUpdater.forceDevUpdateConfig = true
+        autoUpdater.forceDevUpdateConfig = true;
       }
-      await autoUpdater.checkForUpdates()
+      await autoUpdater.checkForUpdates();
     } catch (err) {
-      send({ status: 'error', error: (err as Error).message })
+      send({ status: "error", error: (err as Error).message });
     }
-  })
+  });
 
-  ipcMain.handle('updater:download', async () => {
+  ipcMain.handle("updater:download", async () => {
     try {
-      await autoUpdater.downloadUpdate()
+      await autoUpdater.downloadUpdate();
     } catch (err) {
-      send({ status: 'error', error: (err as Error).message })
+      send({ status: "error", error: (err as Error).message });
     }
-  })
+  });
 
-  ipcMain.handle('updater:install', () => {
-    autoUpdater.quitAndInstall()
-  })
+  ipcMain.handle("updater:install", () => {
+    autoUpdater.quitAndInstall();
+  });
 
   if (app.isPackaged) {
     autoUpdater.checkForUpdatesAndNotify().catch((err: Error) => {
-      console.error('[updater] Initial update check failed:', err.message)
-    })
+      console.error("[updater] Initial update check failed:", err.message);
+    });
   } else if (is.dev) {
-    autoUpdater.forceDevUpdateConfig = true
+    autoUpdater.forceDevUpdateConfig = true;
     autoUpdater.checkForUpdatesAndNotify().catch((err: Error) => {
-      console.error('[updater] Initial development update check failed:', err.message)
-    })
+      console.error(
+        "[updater] Initial development update check failed:",
+        err.message,
+      );
+    });
   } else {
-    console.warn('[updater] Development mode: automatic update check skipped.')
+    console.warn("[updater] Development mode: automatic update check skipped.");
   }
 }
 
-export { initUpdater }
+export { initUpdater };

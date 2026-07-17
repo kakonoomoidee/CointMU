@@ -1,31 +1,29 @@
-import { FOUND_BLOCKS_PAGE_SIZE } from '@/features/mining';
+import { FOUND_BLOCKS_PAGE_SIZE } from "@/features/mining";
 import { useState, useMemo, type JSX } from "react";
-import { useTimer, usePagination, useRecentBlocks } from '@/shared/lib';
-import { useMiningStats, useMiningControls, useMiningActivity } from '@/features/mining';
-import { useAppStore } from '@/shared/model';
-import { useMiningStore, type FoundBlock } from '@/features/mining';
-import { type DerivedAccount } from '@/features/wallet';
-import { formatMhs, isWithinLastDay } from '@/shared/lib';
+import { useTimer, usePagination, useRecentBlocks } from "@/shared/lib";
+import {
+  useMiningStats,
+  useMiningControls,
+  useMiningActivity,
+} from "@/features/mining";
+import { useAppStore } from "@/shared/model";
+import { useMiningStore, type FoundBlock } from "@/features/mining";
+import { type DerivedAccount } from "@/features/wallet";
+import { formatMhs, isWithinLastDay } from "@/shared/lib";
 import {
   getSafeConcurrency,
   formatRewards,
   formatDifficultyLabel,
-} from '@/features/mining';
-import {
-  resolveHistoryAddresses,
-  filterFoundBlocks,
-} from '@/features/wallet';
+} from "@/features/mining";
+import { resolveHistoryAddresses, filterFoundBlocks } from "@/features/wallet";
 import { AlertCircle } from "lucide-react";
-import { MiningHeader } from '@/features/mining';
-import { MiningHeroCard } from '@/features/mining';
+import { MiningHeader } from "@/features/mining";
+import { MiningHeroCard } from "@/features/mining";
 
-import { MiningStatsGrid } from '@/features/mining';
-import { WorkerConfiguration } from '@/features/mining';
-import {
-  MiningActivity,
-  ACTIVITY_TAB_FOUND,
-} from '@/features/mining';
-import { SkeletonCard, SkeletonList, Skeleton } from '@/shared/ui';
+import { MiningStatsGrid } from "@/features/mining";
+import { WorkerConfiguration } from "@/features/mining";
+import { MiningActivity, ACTIVITY_TAB_FOUND } from "@/features/mining";
+import { SkeletonCard, SkeletonList, Skeleton } from "@/shared/ui";
 
 interface MinerProps {
   activeWalletAddress: string | null;

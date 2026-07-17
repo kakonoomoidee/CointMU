@@ -1,13 +1,13 @@
 import {
   TOAST_DURATION_MS,
   NOTIFICATION_COLORS_BY_TYPE,
-} from '../config/notification.constants';
+} from "../config/notification.constants";
 import { type JSX, useEffect } from "react";
 import { createPortal } from "react-dom";
 import {
   useNotificationStore,
   type NotificationItem,
-} from '../model/notification.store';
+} from "../model/notification.store";
 import { X } from "lucide-react";
 
 interface ToastCardProps {

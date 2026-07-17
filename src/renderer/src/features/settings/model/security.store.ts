@@ -1,9 +1,6 @@
-import { SECURITY_SETTINGS_KEY } from "./settings.constants";
+import { SECURITY_SETTINGS_KEY } from "../config/settings.constants";
 import { create } from "zustand";
-import {
-  getSetting,
-  setSetting,
-} from '@/features/settings';
+import { getSetting, setSetting } from "@/features/settings";
 
 export interface SecuritySettings {
   autoLock: boolean;

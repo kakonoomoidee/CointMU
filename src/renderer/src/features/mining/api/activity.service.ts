@@ -1,5 +1,5 @@
 import { subDays, format } from "date-fns";
-import { YEARLY_WINDOW_DAYS, SECONDS_TO_MS } from '../config/mining.constants';
+import { YEARLY_WINDOW_DAYS, SECONDS_TO_MS } from "../config/mining.constants";
 
 export interface ActivityContribution {
   date: string;

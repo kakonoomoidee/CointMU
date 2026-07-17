@@ -2,14 +2,11 @@ import {
   BAR_COLORS,
   BAR_SEGMENT_COLORS,
   MINER_POLL_INTERVAL_MS,
-} from '../config/explorer.constants';
+} from "../config/explorer.constants";
 import { type JSX, useState, useEffect } from "react";
-import { AccountIcon } from '@/features/wallet';
-import {
-  fetchMinerDistribution,
-  type MinerEntry,
-} from '@/features/mining';
-import { MiningCacheService } from '@/features/mining';
+import { AccountIcon } from "@/features/wallet";
+import { fetchMinerDistribution, type MinerEntry } from "@/features/mining";
+import { MiningCacheService } from "@/features/mining";
 import { Activity } from "lucide-react";
 
 interface MinerDistributionProps {

@@ -1,4 +1,4 @@
-import { type NotificationType } from "./notification.store";
+import { type NotificationType } from "../model/notification.store";
 
 export const TOAST_DURATION_MS = 5000;
 export const MAX_NOTIFICATIONS = 200;

@@ -5,7 +5,7 @@ import {
   EMPTY_STAT_LABEL,
   INSIGHTS_POLL_INTERVAL_MS,
   EXPLORER_VIEW_TICK_INTERVAL_MS as TICK_INTERVAL_MS,
-} from '@/features/explorer';
+} from "@/features/explorer";
 import {
   useState,
   useEffect,
@@ -15,27 +15,24 @@ import {
   type SyntheticEvent,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { usePagination, useRecentBlocks } from '@/shared/lib';
+import { usePagination, useRecentBlocks } from "@/shared/lib";
 
-import { useAppStore } from '@/shared/model';
-import { call, fetchBalance } from '@/shared/api';
-import { getNetworkInsights } from '@/features/settings';
-import { detectSearchType } from '@/features/explorer';
-import { type DerivedAccount } from '@/features/wallet';
-import { formatBlockNumber } from '@/shared/lib';
-import { type ActivityData } from '@/shared/ui';
-import { Insights } from '@/features/explorer';
-import { ChainTimeline } from '@/features/explorer';
-import { Skeleton, SkeletonCard } from '@/shared/ui';
-import { ExplorerHeader } from '@/features/explorer';
-import { ExplorerSearch } from "./explorer-search.component";
-import {
-  ExplorerDataTabs,
-  type TabState,
-} from "./explorer-data-tabs.component";
-import { BlockDetail } from "./block-detail.component";
-import { TransactionDetail } from "./transaction-detail.component";
-import { AddressDetail } from "./address-detail.component";
+import { useAppStore } from "@/shared/model";
+import { call, fetchBalance } from "@/shared/api";
+import { getNetworkInsights } from "@/features/settings";
+import { detectSearchType } from "@/features/explorer";
+import { type DerivedAccount } from "@/features/wallet";
+import { formatBlockNumber } from "@/shared/lib";
+import { type ActivityData } from "@/shared/ui";
+import { Insights } from "@/features/explorer";
+import { ChainTimeline } from "@/features/explorer";
+import { Skeleton, SkeletonCard } from "@/shared/ui";
+import { ExplorerHeader } from "@/features/explorer";
+import { ExplorerSearch } from "@/features/explorer";
+import { ExplorerDataTabs, type TabState } from "@/features/explorer";
+import { BlockDetail } from "@/features/explorer";
+import { TransactionDetail } from "@/features/explorer";
+import { AddressDetail } from "@/features/explorer";
 
 interface ExplorerProps {
   activeWalletAddress: string | null;

@@ -10,8 +10,8 @@ export const MAX_CORES = navigator.hardwareConcurrency || 8;
 export const UPTIME_REFRESH_MS = ms("1m");
 
 export const NETWORK_OPTIONS = [
-  "CointMU Mainnet · chain ID 1912",
-  "CointMU Testnet · chain ID 7013",
+  "CointMU Mainnet ï¿½ chain ID 1912",
+  "CointMU Testnet ï¿½ chain ID 7013",
   "Localhost 8545",
 ];
 
@@ -29,13 +29,13 @@ export const MINING_MODE_OPTIONS = ["Solo", "campuspool.cmu", "Custom pool..."];
 export const LANGUAGE_OPTIONS = [
   { label: "English", value: "en" },
   { label: "Bahasa Indonesia", value: "id" },
-  { label: "Español", value: "es" },
+  { label: "Espaï¿½ol", value: "es" },
   { label: "??", value: "zh" },
   { label: "???????", value: "ru" },
   { label: "Deutsch", value: "de" },
 ];
 
-export const CURRENCY_OPTIONS = ["CMU (native)", "USD ($)", "EUR (€)"];
+export const CURRENCY_OPTIONS = ["CMU (native)", "USD ($)", "EUR (ï¿½)"];
 
 export const COLORS = [
   { id: "#3b82f6", color: "bg-blue-500", name: "blue" },

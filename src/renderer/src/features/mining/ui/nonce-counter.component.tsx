@@ -1,6 +1,6 @@
 import { useState, useEffect, type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { useMiningStore } from '../model/mining.store';
+import { useMiningStore } from "../model/mining.store";
 
 /**
  * Isolated component that renders the live nonce counter and progress bar.

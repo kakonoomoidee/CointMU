@@ -2,7 +2,7 @@ import {
   SECONDS_PER_MINUTE,
   SECONDS_PER_HOUR,
   CMU_PER_MINED_BLOCK,
-} from "./dashboard.constants";
+} from "../config/dashboard.constants";
 
 /**
  * Formats a unix timestamp as a coarse relative age string using seconds,

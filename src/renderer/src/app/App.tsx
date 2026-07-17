@@ -1,43 +1,43 @@
-import { useState, useEffect, Suspense, lazy, type JSX } from 'react';
-import ms from 'ms';
-import { WalletPage as Wallet } from '@/pages/wallet';
-import { DashboardPage } from '@/pages/dashboard';
-import { AuthFlow } from '@/features/auth';
-import { type DerivedAccount } from '@/features/wallet';
+import { useState, useEffect, Suspense, lazy, type JSX } from "react";
+import ms from "ms";
+import { WalletPage as Wallet } from "@/pages/wallet";
+import { DashboardPage } from "@/pages/dashboard";
+import { AuthFlow } from "@/features/auth";
+import { type DerivedAccount } from "@/features/wallet";
 import {
   getSetting,
   useSecurityStore,
   useAdvancedStore,
   useConnectedSitesStore,
-} from '@/features/settings';
-import { useUpdater } from '@/shared/lib';
-import { useMiningLogStream } from '@/features/mining';
-import { useAppStore } from '@/shared/model';
-import { useAuthStore } from '@/features/auth';
+} from "@/features/settings";
+import { useUpdater } from "@/shared/lib";
+import { useMiningLogStream } from "@/features/mining";
+import { useAppStore } from "@/shared/model";
+import { useAuthStore } from "@/features/auth";
 
-import { Sidebar, CustomTitleBar } from '@/widgets/layout';
-import { PairingApprovalModal } from '@/features/dapp';
-import { ToastViewport, useNotificationStore } from '@/features/notifications';
-import { useDappRequestHandler } from '@/features/dapp';
-import { useAutoLock } from '@/features/auth';
+import { Sidebar, CustomTitleBar } from "@/widgets/layout";
+import { PairingApprovalModal } from "@/features/dapp";
+import { ToastViewport, useNotificationStore } from "@/features/notifications";
+import { useDappRequestHandler } from "@/features/dapp";
+import { useAutoLock } from "@/features/auth";
 
 const Miner = lazy(() =>
-  import('@/pages/mining').then((m) => ({ default: m.MiningPage })),
+  import("@/pages/mining").then((m) => ({ default: m.MiningPage })),
 );
 const Explorer = lazy(() =>
-  import('@/pages/explorer').then((m) => ({ default: m.ExplorerPage })),
+  import("@/pages/explorer").then((m) => ({ default: m.ExplorerPage })),
 );
 const Settings = lazy(() =>
-  import('@/pages/settings').then((m) => ({ default: m.SettingsPage })),
+  import("@/pages/settings").then((m) => ({ default: m.SettingsPage })),
 );
 
-const NAV_ITEM_DASHBOARD = 'dashboard';
-const NAV_ITEM_MINER = 'miner';
-const NAV_ITEM_WALLET = 'wallet';
-const NAV_ITEM_EXPLORER = 'explorer';
-const NAV_ITEM_SETTINGS = 'settings';
+const NAV_ITEM_DASHBOARD = "dashboard";
+const NAV_ITEM_MINER = "miner";
+const NAV_ITEM_WALLET = "wallet";
+const NAV_ITEM_EXPLORER = "explorer";
+const NAV_ITEM_SETTINGS = "settings";
 const WALLET_LOAD_DELAY_MS = 300;
-const GLOBAL_POLL_INTERVAL_MS = ms('3s');
+const GLOBAL_POLL_INTERVAL_MS = ms("3s");
 type ActiveView =
   | typeof NAV_ITEM_DASHBOARD
   | typeof NAV_ITEM_MINER
@@ -59,7 +59,7 @@ function App(): JSX.Element {
   const [accounts, setAccounts] = useState<DerivedAccount[]>([]);
   const [isLoadingWallet, setIsLoadingWallet] = useState<boolean>(true);
   const [activeView, setActiveView] = useState<ActiveView>(NAV_ITEM_DASHBOARD);
-  const [settingsTab, setSettingsTab] = useState<string>('general');
+  const [settingsTab, setSettingsTab] = useState<string>("general");
   const updater = useUpdater();
   useMiningLogStream();
 
@@ -104,7 +104,7 @@ function App(): JSX.Element {
     }
   };
 
-  const accountsKey = accounts.map((a) => a.address).join(',');
+  const accountsKey = accounts.map((a) => a.address).join(",");
 
   useEffect(() => {
     const loadingTimer = setTimeout(
@@ -119,7 +119,7 @@ function App(): JSX.Element {
   }, [activeWalletAddress]);
 
   useEffect(() => {
-    const addresses = accountsKey.length > 0 ? accountsKey.split(',') : [];
+    const addresses = accountsKey.length > 0 ? accountsKey.split(",") : [];
     const runPoll = (): void => {
       void useAppStore
         .getState()
@@ -146,8 +146,8 @@ function App(): JSX.Element {
 
   if (isLoadingWallet) {
     return (
-      <div className='flex items-center justify-center h-screen bg-slate-50'>
-        <div className='w-8 h-8 rounded-full border-2 border-slate-200 border-t-blue-500 animate-spin' />
+      <div className="flex items-center justify-center h-screen bg-slate-50">
+        <div className="w-8 h-8 rounded-full border-2 border-slate-200 border-t-blue-500 animate-spin" />
       </div>
     );
   }
@@ -155,7 +155,7 @@ function App(): JSX.Element {
   if (!activeWalletAddress) {
     const handleOnboardingComplete = async (address: string): Promise<void> => {
       const storedAccounts =
-        (await getSetting<DerivedAccount[]>('accounts')) || [];
+        (await getSetting<DerivedAccount[]>("accounts")) || [];
       setAccounts(storedAccounts);
       setActiveWalletAddress(address);
     };
@@ -166,9 +166,9 @@ function App(): JSX.Element {
   }
 
   return (
-    <div className='flex flex-col h-full bg-slate-50 overflow-hidden'>
+    <div className="flex flex-col h-full bg-slate-50 overflow-hidden">
       <CustomTitleBar />
-      <div className='flex flex-1 overflow-hidden'>
+      <div className="flex flex-1 overflow-hidden">
         <PairingApprovalModal />
         <ToastViewport />
         <Sidebar
@@ -180,11 +180,11 @@ function App(): JSX.Element {
           updateStatus={updater.status}
         />
 
-        <main className='flex-1 overflow-hidden'>
+        <main className="flex-1 overflow-hidden">
           <Suspense
             fallback={
-              <div className='flex items-center justify-center h-full w-full'>
-                <div className='w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin' />
+              <div className="flex items-center justify-center h-full w-full">
+                <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
               </div>
             }
           >

@@ -1,12 +1,12 @@
 import { ethers } from "ethers";
-import { STANDARD_ERC20_ABI } from '@/features/wallet';
-import { call } from '@/shared/api/rpc.client';
-import { getSetting } from '@/features/settings';
+import { STANDARD_ERC20_ABI } from "@/features/wallet";
+import { call } from "@/shared/api/rpc.client";
+import { getSetting } from "@/features/settings";
 import {
   getSessionPassword,
   decryptSecret,
   type DerivedAccount,
-} from '@/features/wallet';
+} from "@/features/wallet";
 
 const RPC_URL = "http://127.0.0.1:8585";
 

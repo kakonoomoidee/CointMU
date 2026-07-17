@@ -1,30 +1,31 @@
-type MiningLogLevel = 'INFO' | 'OK' | 'WARN' | 'ERROR'
+type MiningLogLevel = "INFO" | "OK" | "WARN" | "ERROR";
 
 interface MiningLog {
-  id: string
-  timestamp: string
-  level: MiningLogLevel
-  message: string
+  id: string;
+  timestamp: string;
+  level: MiningLogLevel;
+  message: string;
 }
 
-const GETH_LINE_PATTERN = /^(INFO|WARN|ERROR|CRIT|DEBUG|TRACE)\s+\[[^\]]*\]\s+(.*)$/
+const GETH_LINE_PATTERN =
+  /^(INFO|WARN|ERROR|CRIT|DEBUG|TRACE)\s+\[[^\]]*\]\s+(.*)$/;
 
 interface EventRule {
-  pattern: RegExp
-  level: MiningLogLevel
+  pattern: RegExp;
+  level: MiningLogLevel;
 }
 
 const EVENT_RULES: EventRule[] = [
-  { pattern: /successfully sealed new block/i, level: 'OK' },
-  { pattern: /mined potential block/i, level: 'OK' },
-  { pattern: /commit new (mining|sealing) work/i, level: 'INFO' },
-  { pattern: /block reached canonical chain/i, level: 'INFO' },
-  { pattern: /imported new chain segment/i, level: 'INFO' },
-  { pattern: /generating dag|generated ethash/i, level: 'INFO' },
-  { pattern: /reorg/i, level: 'WARN' }
-]
+  { pattern: /successfully sealed new block/i, level: "OK" },
+  { pattern: /mined potential block/i, level: "OK" },
+  { pattern: /commit new (mining|sealing) work/i, level: "INFO" },
+  { pattern: /block reached canonical chain/i, level: "INFO" },
+  { pattern: /imported new chain segment/i, level: "INFO" },
+  { pattern: /generating dag|generated ethash/i, level: "INFO" },
+  { pattern: /reorg/i, level: "WARN" },
+];
 
-let logSequence = 0
+let logSequence = 0;
 
 /**
  * Pads a number to two digits for fixed-width clock display.
@@ -32,7 +33,7 @@ let logSequence = 0
  * @returns The two-character zero-padded string.
  */
 function padTwo(value: number): string {
-  return value.toString().padStart(2, '0')
+  return value.toString().padStart(2, "0");
 }
 
 /**
@@ -40,8 +41,8 @@ function padTwo(value: number): string {
  * @returns The formatted current time string.
  */
 function currentTimestamp(): string {
-  const now = new Date()
-  return `${padTwo(now.getHours())}:${padTwo(now.getMinutes())}:${padTwo(now.getSeconds())}`
+  const now = new Date();
+  return `${padTwo(now.getHours())}:${padTwo(now.getMinutes())}:${padTwo(now.getSeconds())}`;
 }
 
 /**
@@ -53,19 +54,22 @@ function currentTimestamp(): string {
  * @param message - The human-readable portion of the Geth line.
  * @returns The normalized level, or null to skip the line.
  */
-function resolveLevel(gethLevel: string, message: string): MiningLogLevel | null {
+function resolveLevel(
+  gethLevel: string,
+  message: string,
+): MiningLogLevel | null {
   for (const rule of EVENT_RULES) {
     if (rule.pattern.test(message)) {
-      return rule.level
+      return rule.level;
     }
   }
-  if (gethLevel === 'ERROR' || gethLevel === 'CRIT') {
-    return 'ERROR'
+  if (gethLevel === "ERROR" || gethLevel === "CRIT") {
+    return "ERROR";
   }
-  if (gethLevel === 'WARN') {
-    return 'WARN'
+  if (gethLevel === "WARN") {
+    return "WARN";
   }
-  return null
+  return null;
 }
 
 /**
@@ -77,38 +81,38 @@ function resolveLevel(gethLevel: string, message: string): MiningLogLevel | null
  * @returns The mining log entries extracted from the chunk, in stream order.
  */
 function parseGethLogChunk(chunk: string): MiningLog[] {
-  const logs: MiningLog[] = []
-  const lines = chunk.split('\n')
+  const logs: MiningLog[] = [];
+  const lines = chunk.split("\n");
 
   for (const line of lines) {
-    const trimmed = line.trim()
+    const trimmed = line.trim();
     if (trimmed.length === 0) {
-      continue
+      continue;
     }
 
-    const match = trimmed.match(GETH_LINE_PATTERN)
+    const match = trimmed.match(GETH_LINE_PATTERN);
     if (!match) {
-      continue
+      continue;
     }
 
-    const gethLevel = match[1]
-    const rawMessage = match[2].replace(/\s{2,}/g, ' ').trim()
-    const level = resolveLevel(gethLevel, rawMessage)
+    const gethLevel = match[1];
+    const rawMessage = match[2].replace(/\s{2,}/g, " ").trim();
+    const level = resolveLevel(gethLevel, rawMessage);
     if (level === null) {
-      continue
+      continue;
     }
 
-    logSequence += 1
+    logSequence += 1;
     logs.push({
       id: `${Date.now()}-${logSequence}`,
       timestamp: currentTimestamp(),
       level,
-      message: rawMessage
-    })
+      message: rawMessage,
+    });
   }
 
-  return logs
+  return logs;
 }
 
-export { parseGethLogChunk }
-export type { MiningLog, MiningLogLevel }
+export { parseGethLogChunk };
+export type { MiningLog, MiningLogLevel };

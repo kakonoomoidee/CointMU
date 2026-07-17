@@ -2,12 +2,9 @@ import {
   MAX_NOTIFICATIONS,
   NOTIFICATIONS_SETTINGS_KEY,
   NOTIFICATIONS_HISTORY_KEY,
-} from "./notification.constants";
+} from "../config/notification.constants";
 import { create } from "zustand";
-import {
-  getSetting,
-  setSetting,
-} from '@/features/settings';
+import { getSetting, setSetting } from "@/features/settings";
 
 export type NotificationType = "transaction" | "mining" | "security" | "info";
 

@@ -1,5 +1,5 @@
-import { type ActivityData } from '@/shared/ui';
-import { call } from '@/shared/api/rpc.client';
+import { type ActivityData } from "@/shared/ui";
+import { call } from "@/shared/api/rpc.client";
 import { format } from "date-fns";
 
 /**

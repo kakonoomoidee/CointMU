@@ -1,8 +1,5 @@
-import {
-  getAllSettings,
-  setSetting,
-} from '@/features/settings';
-import { type MiningLog } from '../model/mining.store';
+import { getAllSettings, setSetting } from "@/features/settings";
+import { type MiningLog } from "../model/mining.store";
 
 interface MiningStats {
   isMining: boolean;

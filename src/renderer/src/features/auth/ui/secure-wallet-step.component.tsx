@@ -1,7 +1,6 @@
-import { MIN_PASSWORD_LENGTH } from '../config/auth.constants';
-import { type JSX, useState } from "react";
+import { MIN_PASSWORD_LENGTH } from "../config/auth.constants";
+import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from '@/shared/components/ui/button';
 import { useAuthStore } from "../model/auth.store";
 import { PasswordField } from "./password-field.component";
 import { Lock } from "lucide-react";

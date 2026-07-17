@@ -1,6 +1,6 @@
-import { CHAIN_TIMELINE_TICK_INTERVAL_MS as TICK_INTERVAL_MS } from '../config/explorer.constants';
+import { CHAIN_TIMELINE_TICK_INTERVAL_MS as TICK_INTERVAL_MS } from "../config/explorer.constants";
 import { type JSX, useEffect, useState } from "react";
-import { useAppStore } from '@/shared/model';
+import { useAppStore } from "@/shared/model";
 import { X, AlertTriangle, Check, Box } from "lucide-react";
 
 interface BlockItem {

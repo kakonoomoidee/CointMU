@@ -1,9 +1,9 @@
-import { CURRENCY_OPTIONS } from '../config/settings.constants';
+import { CURRENCY_OPTIONS } from "../config/settings.constants";
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
-import type { SettingsStore } from "./settings-view.component";
+import type { SettingsStore } from "@/features/settings";
 import { LanguageSwitcher } from "./language-switcher.component";
-import { CustomDropdown } from '@/shared/ui';
+import { CustomDropdown } from "@/shared/ui";
 
 interface GeneralSettingsProps {
   config: SettingsStore["general"];

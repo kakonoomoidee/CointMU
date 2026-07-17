@@ -1,9 +1,9 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
-import { type BlockData } from '@/shared/lib';
-import { useAppStore } from '@/shared/model';
-import { ChevronRight, Square, Box } from 'lucide-react';
-import { formatRelativeAge } from '../lib/dashboard.utils';
+import { type BlockData } from "@/shared/lib";
+import { useAppStore } from "@/shared/model";
+import { ChevronRight, Square, Box } from "lucide-react";
+import { formatRelativeAge } from "../lib/dashboard.utils";
 
 interface LatestBlocksProps {
   isConnected: boolean;
@@ -41,7 +41,9 @@ function LatestBlocks({
   return (
     <div className="rounded-2xl bg-white border border-slate-200 p-6">
       <div className="flex items-center justify-between mb-1">
-        <h3 className="text-sm font-bold text-slate-800">{t("dashboard.latestBlocks.title")}</h3>
+        <h3 className="text-sm font-bold text-slate-800">
+          {t("dashboard.latestBlocks.title")}
+        </h3>
         <button
           onClick={onViewAll}
           className="text-[11px] font-semibold text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-0.5"
@@ -113,5 +115,3 @@ function LatestBlocks({
 
 export { LatestBlocks };
 export type { LatestBlocksProps };
-
-

@@ -6,10 +6,7 @@ import {
   type SyntheticEvent,
 } from "react";
 import { ethers } from "ethers";
-import {
-  TokenService,
-  type TokenInfo,
-} from '@/features/wallet';
+import { TokenService, type TokenInfo } from "@/features/wallet";
 import { X, AlertCircle } from "lucide-react";
 
 interface AddTokenModalProps {
