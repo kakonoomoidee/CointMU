@@ -6,7 +6,7 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { format } from "date-fns";
 import { useMiningStore } from '../model/mining.store';
-import { dispatchNotification } from "@/features/notifications";
+import { dispatchNotification } from '@/features/notifications';
 import { type BlockData } from "@/hooks";
 
 interface LogEntry {

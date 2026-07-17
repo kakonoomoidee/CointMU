@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { type DerivedAccount } from '@/features/wallet';
 import { type UpdaterStatus } from "@/hooks";
 import { useAppStore } from "@/store";
-import { NotificationCenter } from "@/features/notifications";
+import { NotificationCenter } from '@/features/notifications';
 import {
   Zap,
   Grid,

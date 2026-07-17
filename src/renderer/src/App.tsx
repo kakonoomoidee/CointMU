@@ -17,7 +17,7 @@ import { useAuthStore } from "@/features/auth";
 
 import { Sidebar, CustomTitleBar } from "@/widgets/layout";
 import { PairingApprovalModal } from "@/features/dapp";
-import { ToastViewport, useNotificationStore } from "@/features/notifications";
+import { ToastViewport, useNotificationStore } from '@/features/notifications';
 import { useDappRequestHandler } from "@/features/dapp";
 import { useAutoLock } from "@/features/auth";
 

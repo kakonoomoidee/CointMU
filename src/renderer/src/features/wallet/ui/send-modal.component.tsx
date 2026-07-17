@@ -23,7 +23,7 @@ import {
   parseTransferError,
 } from '@/features/wallet';
 import { call, waitForTransactionReceipt } from "@/services";
-import { dispatchNotification } from "@/features/notifications";
+import { dispatchNotification } from '@/features/notifications';
 import { Check, AlertCircle } from "lucide-react";
 import { CustomDropdown } from "@/components";
 import { TokenIcon } from '@/features/wallet';
