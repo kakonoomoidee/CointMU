@@ -1,29 +1,29 @@
-const fs = require('fs')
-const path = require('path')
-const { execSync } = require('child_process')
+const fs = require("fs");
+const path = require("path");
+const { execSync } = require("child_process");
 
-const PACKAGE_JSON_PATH = path.resolve(__dirname, '../package.json')
-const MAKEFILE_PATH = path.resolve(__dirname, '../Makefile')
-const ENCODING_UTF8 = 'utf8'
+const PACKAGE_JSON_PATH = path.resolve(__dirname, "../package.json");
+const MAKEFILE_PATH = path.resolve(__dirname, "../Makefile");
+const ENCODING_UTF8 = "utf8";
 
-const ARG_POSITION_BUMP_TYPE = 2
-const ARG_POSITION_CODENAME = 3
-const ARG_POSITION_PRERELEASE = 4
-const VERSION_PARTS_LENGTH = 3
-const PART_MAJOR_INDEX = 0
-const PART_MINOR_INDEX = 1
-const PART_PATCH_INDEX = 2
-const INDENT_SPACES = 2
+const ARG_POSITION_BUMP_TYPE = 2;
+const ARG_POSITION_CODENAME = 3;
+const ARG_POSITION_PRERELEASE = 4;
+const VERSION_PARTS_LENGTH = 3;
+const PART_MAJOR_INDEX = 0;
+const PART_MINOR_INDEX = 1;
+const PART_PATCH_INDEX = 2;
+const INDENT_SPACES = 2;
 
-const EXIT_CODE_ERROR = 1
+const EXIT_CODE_ERROR = 1;
 
 /**
  * Reads and parses the package.json file.
  * @returns {Object} The parsed package.json object.
  */
 function readPackageJson() {
-  const content = fs.readFileSync(PACKAGE_JSON_PATH, ENCODING_UTF8)
-  return JSON.parse(content)
+  const content = fs.readFileSync(PACKAGE_JSON_PATH, ENCODING_UTF8);
+  return JSON.parse(content);
 }
 
 /**
@@ -32,8 +32,8 @@ function readPackageJson() {
  * @returns {void}
  */
 function writePackageJson(pkg) {
-  const content = JSON.stringify(pkg, null, INDENT_SPACES) + '\n'
-  fs.writeFileSync(PACKAGE_JSON_PATH, content, ENCODING_UTF8)
+  const content = JSON.stringify(pkg, null, INDENT_SPACES) + "\n";
+  fs.writeFileSync(PACKAGE_JSON_PATH, content, ENCODING_UTF8);
 }
 
 /**
@@ -41,7 +41,7 @@ function writePackageJson(pkg) {
  * @returns {string} The content of the Makefile.
  */
 function readMakefile() {
-  return fs.readFileSync(MAKEFILE_PATH, ENCODING_UTF8)
+  return fs.readFileSync(MAKEFILE_PATH, ENCODING_UTF8);
 }
 
 /**
@@ -50,7 +50,7 @@ function readMakefile() {
  * @returns {void}
  */
 function writeMakefile(content) {
-  fs.writeFileSync(MAKEFILE_PATH, content, ENCODING_UTF8)
+  fs.writeFileSync(MAKEFILE_PATH, content, ENCODING_UTF8);
 }
 
 /**
@@ -61,37 +61,37 @@ function writeMakefile(content) {
  * @returns {string} The new version string.
  */
 function calculateNewVersion(currentVersion, bumpType, prereleaseTag) {
-  const versionCore = currentVersion.split('-')[0]
-  const parts = versionCore.split('.').map(Number)
+  const versionCore = currentVersion.split("-")[0];
+  const parts = versionCore.split(".").map(Number);
 
   if (parts.length !== VERSION_PARTS_LENGTH) {
-    throw new Error('Invalid version format in package.json')
+    throw new Error("Invalid version format in package.json");
   }
 
-  let major = parts[PART_MAJOR_INDEX]
-  let minor = parts[PART_MINOR_INDEX]
-  let patch = parts[PART_PATCH_INDEX]
+  let major = parts[PART_MAJOR_INDEX];
+  let minor = parts[PART_MINOR_INDEX];
+  let patch = parts[PART_PATCH_INDEX];
 
-  if (bumpType === 'major') {
-    major += 1
-    minor = 0
-    patch = 0
-  } else if (bumpType === 'minor') {
-    minor += 1
-    patch = 0
-  } else if (bumpType === 'patch') {
-    patch += 1
+  if (bumpType === "major") {
+    major += 1;
+    minor = 0;
+    patch = 0;
+  } else if (bumpType === "minor") {
+    minor += 1;
+    patch = 0;
+  } else if (bumpType === "patch") {
+    patch += 1;
   } else {
-    throw new Error('Invalid bump type. Use major, minor, or patch.')
+    throw new Error("Invalid bump type. Use major, minor, or patch.");
   }
 
-  let newVersion = `${major}.${minor}.${patch}`
+  let newVersion = `${major}.${minor}.${patch}`;
 
   if (prereleaseTag) {
-    newVersion += `-${prereleaseTag}`
+    newVersion += `-${prereleaseTag}`;
   }
 
-  return newVersion
+  return newVersion;
 }
 
 /**
@@ -102,15 +102,27 @@ function calculateNewVersion(currentVersion, bumpType, prereleaseTag) {
  * @returns {string} The updated Makefile content.
  */
 function updateMakefileVersion(makefileContent, newVersion, codename) {
-  const versionCore = newVersion.split('-')[0]
-  const parts = versionCore.split('.').map(Number)
+  const versionCore = newVersion.split("-")[0];
+  const parts = versionCore.split(".").map(Number);
 
-  let updated = makefileContent.replace(/^VERSION\s*=\s*.*$/m, `VERSION = ${parts[PART_MAJOR_INDEX]}`)
-  updated = updated.replace(/^PATCHLEVEL\s*=\s*.*$/m, `PATCHLEVEL = ${parts[PART_MINOR_INDEX]}`)
-  updated = updated.replace(/^SUBLEVEL\s*=\s*.*$/m, `SUBLEVEL = ${parts[PART_PATCH_INDEX]}`)
-  updated = updated.replace(/^EXTRAVERSION\s*=\s*.*$/m, `EXTRAVERSION = -${codename}`)
-  
-  return updated
+  let updated = makefileContent.replace(
+    /^VERSION\s*=\s*.*$/m,
+    `VERSION = ${parts[PART_MAJOR_INDEX]}`,
+  );
+  updated = updated.replace(
+    /^PATCHLEVEL\s*=\s*.*$/m,
+    `PATCHLEVEL = ${parts[PART_MINOR_INDEX]}`,
+  );
+  updated = updated.replace(
+    /^SUBLEVEL\s*=\s*.*$/m,
+    `SUBLEVEL = ${parts[PART_PATCH_INDEX]}`,
+  );
+  updated = updated.replace(
+    /^EXTRAVERSION\s*=\s*.*$/m,
+    `EXTRAVERSION = ${codename}`,
+  );
+
+  return updated;
 }
 
 /**
@@ -119,8 +131,8 @@ function updateMakefileVersion(makefileContent, newVersion, codename) {
  * @returns {void}
  */
 function runCommand(command) {
-  console.log(`Executing: ${command}`)
-  execSync(command, { stdio: 'inherit', cwd: path.resolve(__dirname, '..') })
+  console.log(`Executing: ${command}`);
+  execSync(command, { stdio: "inherit", cwd: path.resolve(__dirname, "..") });
 }
 
 /**
@@ -128,39 +140,51 @@ function runCommand(command) {
  * @returns {void}
  */
 function main() {
-  const args = process.argv
-  const bumpType = args[ARG_POSITION_BUMP_TYPE]
-  const newCodename = args[ARG_POSITION_CODENAME]
-  const prereleaseTag = args[ARG_POSITION_PRERELEASE]
+  const args = process.argv;
+  const bumpType = args[ARG_POSITION_BUMP_TYPE];
+  const newCodename = args[ARG_POSITION_CODENAME];
+  const prereleaseTag = args[ARG_POSITION_PRERELEASE];
 
   if (!bumpType || !newCodename) {
-    console.error('Usage: node scripts/bump-version.js <major|minor|patch> <codename> [prerelease-tag]')
-    process.exit(EXIT_CODE_ERROR)
+    console.error(
+      "Usage: node scripts/bump-version.js <major|minor|patch> <codename> [prerelease-tag]",
+    );
+    process.exit(EXIT_CODE_ERROR);
   }
 
-  const pkg = readPackageJson()
-  const currentVersion = pkg.version
-  const newVersion = calculateNewVersion(currentVersion, bumpType, prereleaseTag)
+  const pkg = readPackageJson();
+  const currentVersion = pkg.version;
+  const newVersion = calculateNewVersion(
+    currentVersion,
+    bumpType,
+    prereleaseTag,
+  );
 
-  console.log(`Bumping version from ${currentVersion} to ${newVersion} with codename ${newCodename}`)
+  console.log(
+    `Bumping version from ${currentVersion} to ${newVersion} with codename ${newCodename}`,
+  );
 
-  pkg.version = newVersion
-  pkg.codename = newCodename
-  writePackageJson(pkg)
+  pkg.version = newVersion;
+  pkg.codename = newCodename;
+  writePackageJson(pkg);
 
-  const makefileContent = readMakefile()
-  const updatedMakefile = updateMakefileVersion(makefileContent, newVersion, newCodename)
-  writeMakefile(updatedMakefile)
+  const makefileContent = readMakefile();
+  const updatedMakefile = updateMakefileVersion(
+    makefileContent,
+    newVersion,
+    newCodename,
+  );
+  writeMakefile(updatedMakefile);
 
-  runCommand('npm install')
-  runCommand('git add .')
-  const fullVersionString = `${newVersion}-${newCodename}`
-  runCommand(`git commit -m "chore: release version ${fullVersionString}"`)
-  runCommand(`git tag -a v${newVersion} -m "Release v${newVersion}"`)
-  runCommand('git push origin main')
-  runCommand('git push origin --tags')
+  runCommand("npm install");
+  runCommand("git add .");
+  const fullVersionString = `${newVersion}-${newCodename}`;
+  runCommand(`git commit -m "chore: release version ${fullVersionString}"`);
+  runCommand(`git tag -a v${newVersion} -m "Release v${newVersion}"`);
+  runCommand("git push origin main");
+  runCommand("git push origin --tags");
 
-  console.log(`Successfully released version ${fullVersionString}`)
+  console.log(`Successfully released version ${fullVersionString}`);
 }
 
-main()
+main();

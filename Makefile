@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 6
-SUBLEVEL = 10
-EXTRAVERSION = -Hera
+SUBLEVEL = 11
+EXTRAVERSION = Nike
 
 help:
 	@echo "============================================="
