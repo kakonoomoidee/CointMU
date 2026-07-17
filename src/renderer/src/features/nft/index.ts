@@ -1,4 +1,4 @@
-export { NFTCard } from "./components/nft-card.component";
-export { NFTGrid } from "./components/nft-grid.component";
+export { NFTCard } from './ui/nft-card.component';
+export { NFTGrid } from './ui/nft-grid.component';
 
-export { useNFTFetcher } from "./hooks/nft-fetcher.hook";
+export { useNFTFetcher } from './lib/nft-fetcher.hook';

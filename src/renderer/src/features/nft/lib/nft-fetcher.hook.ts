@@ -7,7 +7,7 @@ import {
   readNFTCache,
   writeNFTCache,
   type NFTMetadata,
-} from "../services/nft.service";
+} from '../api/nft.service';
 
 const POLL_INTERVAL_MS = ms("30s");
 

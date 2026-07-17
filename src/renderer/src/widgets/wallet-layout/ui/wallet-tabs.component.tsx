@@ -12,10 +12,10 @@ import { WalletCacheService } from "../services/wallet-cache.service";
 import { ActivityCacheService } from "../services/activity-cache.service";
 import { SkeletonList, SkeletonTable, Pagination } from "@/components";
 import { AddTokenModal, TokenIcon } from '@/features/wallet';
-import { NFTGrid } from "@/features/nft";
+import { NFTGrid } from '@/features/nft';
 import { Zap, Plus } from "lucide-react";
 import { useAppStore, type PendingTransaction } from "@/store";
-import { useNFTFetcher } from "@/features/nft";
+import { useNFTFetcher } from '@/features/nft';
 
 type WalletTab = "activity" | "tokens" | "nfts";
 
