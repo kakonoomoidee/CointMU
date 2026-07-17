@@ -1,2 +1,2 @@
-export { Sidebar } from "./sidebar.component";
-export { CustomTitleBar } from "./custom-title-bar.component";
+export { Sidebar } from './ui/sidebar.component';
+export { CustomTitleBar } from './ui/custom-title-bar.component';
