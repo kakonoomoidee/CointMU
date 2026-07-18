@@ -1,8 +1,12 @@
-'use strict';
+"use strict";
 
-import '../lib/ethers.umd.min.js';
-import { handleContentMessage, handleInternalMessage, connectionMode } from '../shared/wallet.js';
-import { connect } from '../shared/socket.js';
+import "../lib/ethers.umd.min.js";
+import {
+  handleContentMessage,
+  handleInternalMessage,
+  setConnectionMode,
+} from "../shared/wallet.js";
+import { connect } from "../shared/socket.js";
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action) {
@@ -12,8 +16,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-chrome.storage.local.get(['isLinked', 'connectionMode']).then(res => {
-  if (res.isLinked && res.connectionMode === 'desktop') {
+chrome.storage.local.get(["isLinked", "connectionMode"]).then((res) => {
+  setConnectionMode(res.connectionMode || "desktop");
+  if (res.isLinked && res.connectionMode === "desktop") {
     connect();
   }
 });

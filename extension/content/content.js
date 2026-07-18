@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const PAGE_MESSAGE_SOURCE = 'cointmu-page';
-const INJECTED_MESSAGE_SOURCE = 'cointmu-injected';
+const PAGE_MESSAGE_SOURCE = "cointmu-page";
+const INJECTED_MESSAGE_SOURCE = "cointmu-injected";
 
 /**
  * Injects the injected.js provider script into the page's MAIN world by
@@ -12,11 +12,11 @@ const INJECTED_MESSAGE_SOURCE = 'cointmu-injected';
  * @returns {void}
  */
 function injectProvider() {
-  const script = document.createElement('script');
-  script.src = chrome.runtime.getURL('content/injected.js');
-  script.type = 'text/javascript';
+  const script = document.createElement("script");
+  script.src = chrome.runtime.getURL("content/injected.js");
+  script.type = "text/javascript";
 
-  script.addEventListener('load', function () {
+  script.addEventListener("load", function () {
     script.remove();
   });
 
@@ -46,9 +46,12 @@ function handlePageMessage(event) {
             {
               source: INJECTED_MESSAGE_SOURCE,
               id,
-              error: { message: chrome.runtime.lastError.message || 'Extension relay error' }
+              error: {
+                message:
+                  chrome.runtime.lastError.message || "Extension relay error",
+              },
             },
-            '*'
+            "*",
           );
           return;
         }
@@ -58,30 +61,32 @@ function handlePageMessage(event) {
             source: INJECTED_MESSAGE_SOURCE,
             id,
             result: response.result,
-            error: response.error || null
+            error: response.error || null,
           },
-          '*'
+          "*",
         );
-      }
+      },
     );
   } catch (err) {
-    if (err.message && err.message.includes('Extension context invalidated')) {
+    if (err.message && err.message.includes("Extension context invalidated")) {
       window.postMessage(
         {
           source: INJECTED_MESSAGE_SOURCE,
           id,
-          error: { message: 'Extension context invalidated. Please refresh the page.' }
+          error: {
+            message: "Extension context invalidated. Please refresh the page.",
+          },
         },
-        '*'
+        "*",
       );
     } else {
       window.postMessage(
         {
           source: INJECTED_MESSAGE_SOURCE,
           id,
-          error: { message: err.message || 'Unknown extension error' }
+          error: { message: err.message || "Unknown extension error" },
         },
-        '*'
+        "*",
       );
     }
   }
@@ -89,12 +94,22 @@ function handlePageMessage(event) {
 
 injectProvider();
 
-window.addEventListener('message', handlePageMessage);
+window.addEventListener("message", handlePageMessage);
 
 chrome.runtime.onMessage.addListener((message) => {
-  if (message && message.type === 'REVOKE_SITE') {
-    window.postMessage({ type: 'COINTMU_REVOKE_SITE', source: INJECTED_MESSAGE_SOURCE }, '*');
-  } else if (message && message.type === 'ACCOUNTS_CHANGED') {
-    window.postMessage({ type: 'COINTMU_ACCOUNTS_CHANGED', accounts: message.accounts, source: INJECTED_MESSAGE_SOURCE }, '*');
+  if (message && message.type === "REVOKE_SITE") {
+    window.postMessage(
+      { type: "COINTMU_REVOKE_SITE", source: INJECTED_MESSAGE_SOURCE },
+      "*",
+    );
+  } else if (message && message.type === "ACCOUNTS_CHANGED") {
+    window.postMessage(
+      {
+        type: "COINTMU_ACCOUNTS_CHANGED",
+        accounts: message.accounts,
+        source: INJECTED_MESSAGE_SOURCE,
+      },
+      "*",
+    );
   }
 });

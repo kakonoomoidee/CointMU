@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * Flattens a nested object into a single level object with dot-notation keys.
@@ -6,10 +6,14 @@
  * @param {string} [prefix=''] - The prefix for the current level.
  * @returns {Object} The flattened object.
  */
-export function flattenObject(obj, prefix = '') {
+export function flattenObject(obj, prefix = "") {
   return Object.keys(obj).reduce((acc, k) => {
-    const pre = prefix.length ? prefix + '.' : '';
-    if (typeof obj[k] === 'object' && obj[k] !== null && !Array.isArray(obj[k])) {
+    const pre = prefix.length ? prefix + "." : "";
+    if (
+      typeof obj[k] === "object" &&
+      obj[k] !== null &&
+      !Array.isArray(obj[k])
+    ) {
       Object.assign(acc, flattenObject(obj[k], pre + k));
     } else {
       acc[pre + k] = obj[k];
@@ -25,14 +29,14 @@ export function flattenObject(obj, prefix = '') {
  */
 export async function loadTranslations() {
   try {
-    const response = await fetch('./locales/en.json');
-    if (!response.ok) throw new Error('Failed to load translations');
+    const response = await fetch("../locales/en.json");
+    if (!response.ok) throw new Error("Failed to load translations");
     const json = await response.json();
     const translations = flattenObject(json);
 
-    document.querySelectorAll('[id]').forEach((el) => {
+    document.querySelectorAll("[id]").forEach((el) => {
       if (translations[el.id]) {
-        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
           el.placeholder = translations[el.id];
         } else {
           el.textContent = translations[el.id];
@@ -41,7 +45,7 @@ export async function loadTranslations() {
     });
     return translations;
   } catch (err) {
-    console.error('Error loading translations:', err);
+    console.error("Error loading translations:", err);
     return {};
   }
 }

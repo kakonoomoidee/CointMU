@@ -1,115 +1,136 @@
-'use strict';
+"use strict";
 
-import { loadTranslations } from './locale.js';
+import { loadTranslations } from "./locale.js";
 
 export async function initPopup() {
   const translations = await loadTranslations();
 
-  const loginView = document.getElementById('login-view');
-  const selectionView = document.getElementById('selection-view');
-  const defaultView = document.getElementById('default-view');
-  const approvalView = document.getElementById('approval-view');
-  const addNetworkView = document.getElementById('add-network-view');
+  const loginView = document.getElementById("login-view");
+  const selectionView = document.getElementById("selection-view");
+  const defaultView = document.getElementById("default-view");
+  const approvalView = document.getElementById("approval-view");
+  const addNetworkView = document.getElementById("add-network-view");
 
-  const privKeyInput = document.getElementById('priv-key-input');
-  const importBtn = document.getElementById('import-btn');
-  const cancelImportBtn = document.getElementById('cancel-import-btn');
-  const selectImportBtn = document.getElementById('select-import-btn');
-  const selectLinkBtn = document.getElementById('select-link-btn');
-  const cancelSelectionBtn = document.getElementById('cancel-selection-btn');
+  const privKeyInput = document.getElementById("priv-key-input");
+  const importBtn = document.getElementById("import-btn");
+  const cancelImportBtn = document.getElementById("cancel-import-btn");
+  const selectImportBtn = document.getElementById("select-import-btn");
+  const selectLinkBtn = document.getElementById("select-link-btn");
+  const cancelSelectionBtn = document.getElementById("cancel-selection-btn");
 
-  const balanceValue = document.getElementById('balance-value');
-  const fiatValue = document.getElementById('fiat-value');
-  const assetsList = document.getElementById('assets-list');
-  const assetsCount = document.getElementById('assets-count');
-  const connectedStatus = document.getElementById('connected-status');
-  const statusText = document.getElementById('status-text');
+  const balanceValue = document.getElementById("balance-value");
+  const fiatValue = document.getElementById("fiat-value");
+  const assetsList = document.getElementById("assets-list");
+  const assetsCount = document.getElementById("assets-count");
+  const connectedStatus = document.getElementById("connected-status");
+  const statusText = document.getElementById("status-text");
 
-  const accountDropdown = document.getElementById('account-dropdown');
-  const accountSelectedText = document.getElementById('account-selected-text');
-  const accountOptions = document.getElementById('account-options');
-  
-  const networkDropdown = document.getElementById('network-dropdown');
-  const networkSelectedText = document.getElementById('network-selected-text');
-  const networkOptions = document.getElementById('network-options');
+  const accountDropdown = document.getElementById("account-dropdown");
+  const accountSelectedText = document.getElementById("account-selected-text");
+  const accountOptions = document.getElementById("account-options");
 
-  const addNetworkBtn = document.getElementById('add-network-btn');
-  const saveNetworkBtn = document.getElementById('save-network-btn');
-  const cancelNetworkBtn = document.getElementById('cancel-network-btn');
+  const networkDropdown = document.getElementById("network-dropdown");
+  const networkSelectedText = document.getElementById("network-selected-text");
+  const networkOptions = document.getElementById("network-options");
 
-  const sendView = document.getElementById('send-view');
-  const actionSendBtn = document.getElementById('action-send');
-  const sendConfirmBtn = document.getElementById('send-confirm-btn');
-  const sendCancelBtn = document.getElementById('send-cancel-btn');
-  const sendToInput = document.getElementById('send-to-input');
-  const sendAmountInput = document.getElementById('send-amount-input');
+  const addNetworkBtn = document.getElementById("add-network-btn");
+  const saveNetworkBtn = document.getElementById("save-network-btn");
+  const cancelNetworkBtn = document.getElementById("cancel-network-btn");
 
-  const btnApproveConfirm = document.getElementById('btn-approve-confirm');
-  const rejectTxBtn = document.getElementById('extension.wallet.rejectTx');
+  const sendView = document.getElementById("send-view");
+  const actionSendBtn = document.getElementById("action-send");
+  const sendConfirmBtn = document.getElementById("send-confirm-btn");
+  const sendCancelBtn = document.getElementById("send-cancel-btn");
+  const sendToInput = document.getElementById("send-to-input");
+  const sendAmountInput = document.getElementById("send-amount-input");
+
+  const btnApproveConfirm = document.getElementById("btn-approve-confirm");
+  const rejectTxBtn = document.getElementById("extension.wallet.rejectTx");
 
   const urlParams = new URLSearchParams(window.location.search);
-  const mode = urlParams.get('mode');
-  const reqIdParam = urlParams.get('reqId');
+  const mode = urlParams.get("mode");
+  const reqIdParam = urlParams.get("reqId");
   const reqId = reqIdParam ? parseInt(reqIdParam, 10) : null;
 
   // Dropdown state
-  let currentNetworkId = 'desktop_connection';
-  let currentAccountAddress = '';
-  let currentAccountMode = 'desktop';
+  let currentNetworkId = "desktop_connection";
+  let currentAccountAddress = "";
+  let currentAccountMode = "desktop";
 
   // Toggle Dropdowns
-  document.addEventListener('click', (e) => {
+  document.addEventListener("click", (e) => {
     if (networkDropdown && networkDropdown.contains(e.target)) {
-      networkOptions.classList.toggle('hidden');
-      if (accountOptions) accountOptions.classList.add('hidden');
+      networkOptions.classList.toggle("hidden");
+      if (accountOptions) accountOptions.classList.add("hidden");
     } else if (accountDropdown && accountDropdown.contains(e.target)) {
-      accountOptions.classList.toggle('hidden');
-      if (networkOptions) networkOptions.classList.add('hidden');
+      accountOptions.classList.toggle("hidden");
+      if (networkOptions) networkOptions.classList.add("hidden");
     } else {
-      if (networkOptions) networkOptions.classList.add('hidden');
-      if (accountOptions) accountOptions.classList.add('hidden');
+      if (networkOptions) networkOptions.classList.add("hidden");
+      if (accountOptions) accountOptions.classList.add("hidden");
     }
   });
 
-  if (mode === 'approve' && reqId) {
-    loginView.classList.add('hidden');
-    defaultView.classList.add('hidden');
-    approvalView.classList.remove('hidden');
+  if (mode === "approve" && reqId) {
+    loginView.classList.add("hidden");
+    defaultView.classList.add("hidden");
+    approvalView.classList.remove("hidden");
 
-    chrome.runtime.sendMessage({ action: 'GET_PENDING_REQ', reqId }, (response) => {
-      if (response && response.success && response.data) {
-        const { method, params, origin } = response.data;
-        document.getElementById('tx-to').textContent = origin || 'Unknown Origin';
-        document.getElementById('tx-value').textContent = method === 'eth_requestAccounts' ? 'Connection Request' : (params[0]?.value || '0x0');
-        document.getElementById('tx-data').textContent = method === 'eth_requestAccounts' ? 'Allow access to your wallet address' : (params[0]?.data || '0x');
-      }
+    chrome.runtime.sendMessage(
+      { action: "GET_PENDING_REQ", reqId },
+      (response) => {
+        if (response && response.success && response.data) {
+          const { method, params, origin } = response.data;
+          document.getElementById("tx-to").textContent =
+            origin || "Unknown Origin";
+          document.getElementById("tx-value").textContent =
+            method === "eth_requestAccounts"
+              ? "Connection Request"
+              : params[0]?.value || "0x0";
+          document.getElementById("tx-data").textContent =
+            method === "eth_requestAccounts"
+              ? "Allow access to your wallet address"
+              : params[0]?.data || "0x";
+        }
+      },
+    );
+
+    btnApproveConfirm.addEventListener("click", () => {
+      chrome.runtime.sendMessage(
+        { action: "RESOLVE_REQ", reqId, approved: true },
+        () => window.close(),
+      );
     });
 
-    btnApproveConfirm.addEventListener('click', () => {
-      chrome.runtime.sendMessage({ action: 'RESOLVE_REQ', reqId, approved: true }, () => window.close());
-    });
-
-    rejectTxBtn.addEventListener('click', () => {
-      chrome.runtime.sendMessage({ action: 'RESOLVE_REQ', reqId, approved: false }, () => window.close());
+    rejectTxBtn.addEventListener("click", () => {
+      chrome.runtime.sendMessage(
+        { action: "RESOLVE_REQ", reqId, approved: false },
+        () => window.close(),
+      );
     });
     return;
   }
 
-  const renderAssets = (balanceStr, symbol = 'CMU') => {
-    assetsList.innerHTML = '';
-    
+  const renderAssets = (balanceStr, symbol = "CMU") => {
+    assetsList.innerHTML = "";
+
     balanceValue.textContent = `${balanceStr} ${symbol}`;
     fiatValue.textContent = `≈ $--`;
 
     const realAssets = [
-      { symbol: symbol.charAt(0), name: symbol === 'CMU' ? 'CointMU' : symbol, bal: `${balanceStr || '0.00'} ${symbol}`, fiat: `--` }
+      {
+        symbol: symbol.charAt(0),
+        name: symbol === "CMU" ? "CointMU" : symbol,
+        bal: `${balanceStr || "0.00"} ${symbol}`,
+        fiat: `--`,
+      },
     ];
 
     assetsCount.textContent = realAssets.length;
 
-    realAssets.forEach(asset => {
-      const item = document.createElement('div');
-      item.className = 'asset-item';
+    realAssets.forEach((asset) => {
+      const item = document.createElement("div");
+      item.className = "asset-item";
       item.innerHTML = `
         <div class="asset-icon">${asset.symbol}</div>
         <div class="asset-info">
@@ -122,29 +143,67 @@ export async function initPopup() {
     });
   };
 
-  const formatAddress = (addr) => addr ? addr.substring(0, 6) + '...' + addr.substring(addr.length - 4) : '';
+  const formatAddress = (addr) =>
+    addr ? addr.substring(0, 6) + "..." + addr.substring(addr.length - 4) : "";
+
+  // Confirm Modal
+  const confirmModal = document.getElementById("confirm-modal");
+  const confirmModalTitle = document.getElementById("confirm-modal-title");
+  const confirmModalMessage = document.getElementById("confirm-modal-message");
+  const confirmModalCancelBtn = document.getElementById("confirm-modal-cancel");
+  const confirmModalConfirmBtn = document.getElementById(
+    "confirm-modal-confirm",
+  );
+
+  const showConfirmModal = (message, title) => {
+    return new Promise((resolve) => {
+      confirmModalTitle.textContent = title || "Are you sure?";
+      confirmModalMessage.textContent = message;
+      confirmModal.classList.remove("hidden");
+
+      const cleanup = (result) => {
+        confirmModal.classList.add("hidden");
+        confirmModalConfirmBtn.removeEventListener("click", onConfirm);
+        confirmModalCancelBtn.removeEventListener("click", onCancel);
+        resolve(result);
+      };
+      const onConfirm = () => cleanup(true);
+      const onCancel = () => cleanup(false);
+
+      confirmModalConfirmBtn.addEventListener("click", onConfirm);
+      confirmModalCancelBtn.addEventListener("click", onCancel);
+    });
+  };
 
   const updateUI = async (res) => {
-    currentNetworkId = res.activeNetworkId || 'desktop_connection';
+    currentNetworkId = res.activeNetworkId || "desktop_connection";
 
     // Populate Custom Networks
     const baseNetworks = [
-      { id: 'desktop_connection', name: translations['extension.wallet.desktopConnection'] || 'Desktop Connection' }
+      {
+        id: "desktop_connection",
+        name:
+          translations["extension.wallet.desktopConnection"] ||
+          "Desktop Connection",
+      },
     ];
-    networkOptions.innerHTML = '';
-    
-    let activeNetName = 'Unknown Network';
-    [...baseNetworks, ...(res.customNetworks || [])].forEach(net => {
-      const li = document.createElement('li');
+    networkOptions.innerHTML = "";
+
+    let activeNetName = "Unknown Network";
+    [...baseNetworks, ...(res.customNetworks || [])].forEach((net) => {
+      const li = document.createElement("li");
       li.dataset.value = net.id;
       li.textContent = net.name;
       if (res.activeNetworkId === net.id) {
         activeNetName = net.name;
       }
-      li.addEventListener('click', () => {
+      li.addEventListener("click", () => {
         networkSelectedText.textContent = net.name;
         currentNetworkId = net.id;
-        chrome.runtime.sendMessage({ action: 'SWITCH_NETWORK', networkId: net.id });
+        chrome.runtime.sendMessage({
+          action: "SWITCH_NETWORK",
+          networkId: net.id,
+        });
       });
       networkOptions.appendChild(li);
     });
@@ -152,9 +211,10 @@ export async function initPopup() {
 
     // Handle View Mode & Account Populate
     let currentAddress = null;
-    accountOptions.innerHTML = '';
+    accountOptions.innerHTML = "";
 
-    const placeholderText = translations['extension.wallet.selectAccount'] || 'Select Account';
+    const placeholderText =
+      translations["extension.wallet.selectAccount"] || "Select Account";
     let activeAccName = placeholderText;
 
     let isStandaloneSelected = false;
@@ -162,294 +222,382 @@ export async function initPopup() {
     const trackingSet = new Set();
 
     // Local standalone wallets
-    (res.wallets || []).forEach(w => {
+    (res.wallets || []).forEach((w) => {
       if (w.address) trackingSet.add(w.address.toLowerCase());
-      const li = document.createElement('li');
-      li.dataset.mode = 'standalone';
+      const li = document.createElement("li");
+      li.dataset.mode = "standalone";
       li.dataset.value = w.address;
-      const text = `${formatAddress(w.address)} (${translations['extension.wallet.imported'] || 'Imported'})`;
+      const text = `${formatAddress(w.address)} (${translations["extension.wallet.imported"] || "Imported"})`;
       li.textContent = text;
-      
-      if (res.connectionMode === 'standalone' && w.address === res.activeStandaloneAddress) {
+
+      if (
+        res.connectionMode === "standalone" &&
+        w.address === res.activeStandaloneAddress
+      ) {
         activeAccName = text;
         currentAddress = w.address;
-        currentAccountMode = 'standalone';
+        currentAccountMode = "standalone";
         isStandaloneSelected = true;
       }
-      
-      li.addEventListener('click', () => {
-        chrome.runtime.sendMessage({ action: 'SWITCH_ACCOUNT', address: w.address, mode: 'standalone' });
+
+      li.addEventListener("click", () => {
+        chrome.runtime.sendMessage({
+          action: "SWITCH_ACCOUNT",
+          address: w.address,
+          mode: "standalone",
+        });
       });
       accountOptions.appendChild(li);
     });
 
     // Desktop wallets
-    if (res.isLinked && res.walletState && Array.isArray(res.walletState.accounts) && res.walletState.accounts.length > 0) {
-      res.walletState.accounts.forEach(acc => {
+    if (
+      res.isLinked &&
+      res.walletState &&
+      Array.isArray(res.walletState.accounts) &&
+      res.walletState.accounts.length > 0
+    ) {
+      res.walletState.accounts.forEach((acc) => {
         if (acc && trackingSet.has(acc.toLowerCase())) return;
         if (acc) trackingSet.add(acc.toLowerCase());
-        const li = document.createElement('li');
-        li.dataset.mode = 'desktop';
+        const li = document.createElement("li");
+        li.dataset.mode = "desktop";
         li.dataset.value = acc;
-        const text = `${formatAddress(acc)} (${translations['extension.wallet.desktop'] || 'Desktop'})`;
+        const text = `${formatAddress(acc)} (${translations["extension.wallet.desktop"] || "Desktop"})`;
         li.textContent = text;
-        
-        if (res.connectionMode === 'desktop' && res.walletState.address === acc) {
+
+        if (
+          res.connectionMode === "desktop" &&
+          res.walletState.address === acc
+        ) {
           activeAccName = text;
           currentAddress = acc;
-          currentAccountMode = 'desktop';
+          currentAccountMode = "desktop";
           isDesktopSelected = true;
         }
-        
-        li.addEventListener('click', () => {
-          chrome.runtime.sendMessage({ action: 'SWITCH_ACCOUNT', address: acc, mode: 'desktop' });
+
+        li.addEventListener("click", () => {
+          chrome.runtime.sendMessage({
+            action: "SWITCH_ACCOUNT",
+            address: acc,
+            mode: "desktop",
+          });
         });
         accountOptions.appendChild(li);
       });
     }
 
     // Add Wallet Option
-    const addLi = document.createElement('li');
-    addLi.dataset.value = 'add_wallet';
-    addLi.textContent = `+ ${translations['extension.wallet.addWallet'] || 'Add Wallet'}`;
-    addLi.addEventListener('click', () => {
-      defaultView.classList.add('hidden');
-      selectionView.classList.remove('hidden');
+    const addLi = document.createElement("li");
+    addLi.dataset.value = "add_wallet";
+    addLi.textContent = `+ ${translations["extension.wallet.addWallet"] || "Add Wallet"}`;
+    addLi.addEventListener("click", () => {
+      defaultView.classList.add("hidden");
+      selectionView.classList.remove("hidden");
     });
     accountOptions.appendChild(addLi);
 
     accountSelectedText.textContent = activeAccName;
-    currentAccountAddress = currentAddress || '';
+    currentAccountAddress = currentAddress || "";
 
-    const deleteBtn = document.getElementById('delete-wallet-btn');
-    if (res.connectionMode === 'standalone' && currentAddress && (res.wallets || []).some(w => w.address === currentAddress)) {
-      deleteBtn.classList.remove('hidden');
+    const deleteBtn = document.getElementById("delete-wallet-btn");
+    if (
+      res.connectionMode === "standalone" &&
+      currentAddress &&
+      (res.wallets || []).some((w) => w.address === currentAddress)
+    ) {
+      deleteBtn.classList.remove("hidden");
     } else {
-      deleteBtn.classList.add('hidden');
+      deleteBtn.classList.add("hidden");
     }
 
     // Adjust view layout and balances based on connection mode
-    if (res.connectionMode === 'standalone') {
-      loginView.classList.add('hidden');
-      selectionView.classList.add('hidden');
-      defaultView.classList.remove('hidden');
-      addNetworkView.classList.add('hidden');
-      
-      connectedStatus.style.borderColor = 'var(--border-color)';
-      statusText.textContent = translations['extension.wallet.standaloneMode'] || 'Standalone Mode';
+    if (res.connectionMode === "standalone") {
+      loginView.classList.add("hidden");
+      selectionView.classList.add("hidden");
+      defaultView.classList.remove("hidden");
+      addNetworkView.classList.add("hidden");
+
+      connectedStatus.style.borderColor = "var(--border-color)";
+      statusText.textContent =
+        translations["extension.wallet.standaloneMode"] || "Standalone Mode";
     } else {
       if (res.isLinked) {
-        loginView.classList.add('hidden');
-        selectionView.classList.add('hidden');
-        defaultView.classList.remove('hidden');
-        addNetworkView.classList.add('hidden');
-        
+        loginView.classList.add("hidden");
+        selectionView.classList.add("hidden");
+        defaultView.classList.remove("hidden");
+        addNetworkView.classList.add("hidden");
+
         if (res.isReconnecting) {
-          connectedStatus.style.borderColor = 'var(--warning-color, orange)';
-          statusText.textContent = translations['extension.wallet.reconnecting'] || 'Reconnecting...';
+          connectedStatus.style.borderColor = "var(--warning-color, orange)";
+          statusText.textContent =
+            translations["extension.wallet.reconnecting"] || "Reconnecting...";
         } else {
-          connectedStatus.style.borderColor = 'var(--border-color)';
-          statusText.textContent = translations['extension.wallet.desktopMode'] || 'Connected to CointMU App';
+          connectedStatus.style.borderColor = "var(--border-color)";
+          statusText.textContent =
+            translations["extension.wallet.desktopMode"] ||
+            "Connected to CointMU App";
         }
       } else {
-        loginView.classList.add('hidden');
-        selectionView.classList.remove('hidden');
-        defaultView.classList.add('hidden');
-        addNetworkView.classList.add('hidden');
+        loginView.classList.add("hidden");
+        selectionView.classList.remove("hidden");
+        defaultView.classList.add("hidden");
+        addNetworkView.classList.add("hidden");
       }
     }
 
     // Adaptive Asset Fetching
-    const customNet = (res.customNetworks || []).find(n => n.id === res.activeNetworkId);
-    
-    const deleteNetBtn = document.getElementById('delete-network-btn');
+    const customNet = (res.customNetworks || []).find(
+      (n) => n.id === res.activeNetworkId,
+    );
+
+    const deleteNetBtn = document.getElementById("delete-network-btn");
     if (deleteNetBtn) {
       if (customNet) {
-        deleteNetBtn.classList.remove('hidden');
+        deleteNetBtn.classList.remove("hidden");
       } else {
-        deleteNetBtn.classList.add('hidden');
+        deleteNetBtn.classList.add("hidden");
       }
     }
 
     if (customNet && currentAddress) {
-      renderAssets('--', 'ETH');
+      renderAssets("--", "ETH");
       let rpcUrl = customNet.rpcUrl;
-      if (!rpcUrl.startsWith('http')) {
-        rpcUrl = 'http://' + rpcUrl;
+      if (!rpcUrl.startsWith("http")) {
+        rpcUrl = "http://" + rpcUrl;
       }
       try {
-        const provider = new globalThis.ethers.JsonRpcProvider(rpcUrl, parseInt(customNet.chainId, 10), { staticNetwork: true });
-        provider.getBalance(currentAddress).then(bal => {
-          if (currentAccountAddress === currentAddress) {
-            renderAssets(globalThis.ethers.formatEther(bal), 'ETH');
-          }
-        }).catch(err => {
-          console.error('Failed to fetch from custom RPC', err);
-          if (currentAccountAddress === currentAddress) {
-            renderAssets('0.00', 'ERR');
-          }
-        });
+        const provider = new globalThis.ethers.JsonRpcProvider(
+          rpcUrl,
+          parseInt(customNet.chainId, 10),
+          { staticNetwork: true },
+        );
+        provider
+          .getBalance(currentAddress)
+          .then((bal) => {
+            if (currentAccountAddress === currentAddress) {
+              renderAssets(globalThis.ethers.formatEther(bal), "ETH");
+            }
+          })
+          .catch((err) => {
+            console.error("Failed to fetch from custom RPC", err);
+            if (currentAccountAddress === currentAddress) {
+              renderAssets("0.00", "ERR");
+            }
+          });
       } catch (err) {
-        console.error('Failed to initialize provider', err);
-        renderAssets('0.00', 'ERR');
+        console.error("Failed to initialize provider", err);
+        renderAssets("0.00", "ERR");
       }
-    } else if (res.activeNetworkId === 'desktop_connection' && res.connectionMode === 'desktop' && res.walletState) {
-      renderAssets(res.walletState.balance, 'CMU');
+    } else if (
+      res.activeNetworkId === "desktop_connection" &&
+      res.connectionMode === "desktop" &&
+      res.walletState
+    ) {
+      renderAssets(res.walletState.balance, "CMU");
     } else {
-      renderAssets('0.00', 'CMU');
+      renderAssets("0.00", "CMU");
     }
   };
 
-  chrome.runtime.sendMessage({ action: 'GET_CURRENT_STATE' }, (res) => {
+  chrome.runtime.sendMessage({ action: "GET_CURRENT_STATE" }, (res) => {
     if (res) {
       updateUI(res);
-      if (res.isLinked && res.connectionMode === 'desktop') {
-        chrome.runtime.sendMessage({ action: 'AUTO_RECONNECT' });
+      if (res.isLinked && res.connectionMode === "desktop") {
+        chrome.runtime.sendMessage({ action: "AUTO_RECONNECT" });
       }
     }
   });
 
   chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (namespace === 'local') {
-      chrome.runtime.sendMessage({ action: 'GET_CURRENT_STATE' }, (res) => {
+    if (namespace === "local") {
+      chrome.runtime.sendMessage({ action: "GET_CURRENT_STATE" }, (res) => {
         if (res) updateUI(res);
       });
     }
   });
 
-  importBtn.addEventListener('click', (e) => {
+  importBtn.addEventListener("click", (e) => {
     e.preventDefault();
     const pk = privKeyInput.value.trim();
     if (!pk) return;
-    chrome.runtime.sendMessage({ action: 'IMPORT_PRIVATE_KEY', privateKey: pk }, (res) => {
-      if (res && res.success) {
-        privKeyInput.value = '';
-        loginView.classList.add('hidden');
-        defaultView.classList.remove('hidden');
-        
-        chrome.runtime.sendMessage({ action: 'GET_CURRENT_STATE' }, (newState) => {
-          if (newState) updateUI(newState);
-        });
-      } else {
-        alert(translations['extension.wallet.importFailed'] || 'Failed to import key');
+    chrome.runtime.sendMessage(
+      { action: "IMPORT_PRIVATE_KEY", privateKey: pk },
+      (res) => {
+        if (res && res.success) {
+          privKeyInput.value = "";
+          loginView.classList.add("hidden");
+          defaultView.classList.remove("hidden");
+
+          chrome.runtime.sendMessage(
+            { action: "GET_CURRENT_STATE" },
+            (newState) => {
+              if (newState) updateUI(newState);
+            },
+          );
+        } else {
+          alert(
+            translations["extension.wallet.importFailed"] ||
+              "Failed to import key",
+          );
+        }
+      },
+    );
+  });
+
+  cancelImportBtn.addEventListener("click", () => {
+    loginView.classList.add("hidden");
+    defaultView.classList.remove("hidden");
+  });
+
+  selectImportBtn.addEventListener("click", () => {
+    selectionView.classList.add("hidden");
+    loginView.classList.remove("hidden");
+  });
+
+  selectLinkBtn.addEventListener("click", () => {
+    selectLinkBtn.disabled = true;
+    selectLinkBtn.querySelector("span").textContent =
+      translations["extension.wallet.waitingApproval"] ||
+      "Waiting for approval...";
+
+    chrome.runtime.sendMessage({ action: "REQUEST_LINK" }, (res) => {
+      selectLinkBtn.disabled = false;
+      if (!res || !res.success) {
+        selectLinkBtn.querySelector("span").textContent =
+          translations["extension.wallet.selectLinkBtn"] ||
+          "Link to Desktop App";
+        alert(
+          (res && res.error) ||
+            "Could not reach CointMU Desktop App. Make sure it's running and try again.",
+        );
       }
     });
   });
 
-  cancelImportBtn.addEventListener('click', () => {
-    loginView.classList.add('hidden');
-    defaultView.classList.remove('hidden');
+  cancelSelectionBtn.addEventListener("click", () => {
+    selectionView.classList.add("hidden");
+    defaultView.classList.remove("hidden");
   });
 
-  selectImportBtn.addEventListener('click', () => {
-    selectionView.classList.add('hidden');
-    loginView.classList.remove('hidden');
+  addNetworkBtn.addEventListener("click", () => {
+    defaultView.classList.add("hidden");
+    addNetworkView.classList.remove("hidden");
   });
 
-  selectLinkBtn.addEventListener('click', () => {
-    chrome.runtime.sendMessage({ action: 'REQUEST_LINK' });
-    selectLinkBtn.querySelector('span').textContent = translations['extension.wallet.waitingApproval'] || 'Waiting for approval...';
-  });
-
-  cancelSelectionBtn.addEventListener('click', () => {
-    selectionView.classList.add('hidden');
-    defaultView.classList.remove('hidden');
-  });
-
-  addNetworkBtn.addEventListener('click', () => {
-    defaultView.classList.add('hidden');
-    addNetworkView.classList.remove('hidden');
-  });
-
-  const deleteBtn = document.getElementById('delete-wallet-btn');
+  const deleteBtn = document.getElementById("delete-wallet-btn");
   if (deleteBtn) {
-    deleteBtn.addEventListener('click', () => {
-      if (confirm(translations['extension.wallet.deleteWalletConfirm'] || 'Are you sure you want to remove this wallet?')) {
-        if (currentAccountAddress) {
-          chrome.runtime.sendMessage({ action: 'DELETE_WALLET', address: currentAccountAddress });
-        }
+    deleteBtn.addEventListener("click", async () => {
+      const confirmed = await showConfirmModal(
+        translations["extension.wallet.deleteWalletConfirm"] ||
+          "Are you sure you want to remove this wallet?",
+      );
+      if (confirmed && currentAccountAddress) {
+        chrome.runtime.sendMessage({
+          action: "DELETE_WALLET",
+          address: currentAccountAddress,
+        });
       }
     });
   }
 
-  cancelNetworkBtn.addEventListener('click', () => {
-    addNetworkView.classList.add('hidden');
-    defaultView.classList.remove('hidden');
+  cancelNetworkBtn.addEventListener("click", () => {
+    addNetworkView.classList.add("hidden");
+    defaultView.classList.remove("hidden");
   });
 
-  saveNetworkBtn.addEventListener('click', () => {
-    const name = document.getElementById('network-name-input').value.trim();
-    const rpcUrl = document.getElementById('rpc-url-input').value.trim();
-    const chainId = document.getElementById('chain-id-input').value.trim();
+  saveNetworkBtn.addEventListener("click", () => {
+    const name = document.getElementById("network-name-input").value.trim();
+    const rpcUrl = document.getElementById("rpc-url-input").value.trim();
+    const chainId = document.getElementById("chain-id-input").value.trim();
     if (!name || !rpcUrl) {
-      alert('Name and RPC URL are required');
+      alert("Name and RPC URL are required");
       return;
     }
-    chrome.runtime.sendMessage({ action: 'ADD_CUSTOM_NETWORK', name, rpcUrl, chainId }, (res) => {
-      if (res && res.success) {
-        document.getElementById('network-name-input').value = '';
-        document.getElementById('rpc-url-input').value = '';
-        document.getElementById('chain-id-input').value = '';
-        addNetworkView.classList.add('hidden');
-        defaultView.classList.remove('hidden');
-      }
-    });
+    chrome.runtime.sendMessage(
+      { action: "ADD_CUSTOM_NETWORK", name, rpcUrl, chainId },
+      (res) => {
+        if (res && res.success) {
+          document.getElementById("network-name-input").value = "";
+          document.getElementById("rpc-url-input").value = "";
+          document.getElementById("chain-id-input").value = "";
+          addNetworkView.classList.add("hidden");
+          defaultView.classList.remove("hidden");
+        }
+      },
+    );
   });
 
-  const deleteNetBtn = document.getElementById('delete-network-btn');
+  const deleteNetBtn = document.getElementById("delete-network-btn");
   if (deleteNetBtn) {
-    deleteNetBtn.addEventListener('click', () => {
-      if (currentNetworkId !== 'desktop_connection') {
-        chrome.runtime.sendMessage({ action: 'DELETE_NETWORK', networkId: currentNetworkId });
+    deleteNetBtn.addEventListener("click", () => {
+      if (currentNetworkId !== "desktop_connection") {
+        chrome.runtime.sendMessage({
+          action: "DELETE_NETWORK",
+          networkId: currentNetworkId,
+        });
       }
     });
   }
 
   if (actionSendBtn) {
-    actionSendBtn.addEventListener('click', () => {
-      defaultView.classList.add('hidden');
-      sendView.classList.remove('hidden');
+    actionSendBtn.addEventListener("click", () => {
+      defaultView.classList.add("hidden");
+      sendView.classList.remove("hidden");
     });
   }
 
   if (sendCancelBtn) {
-    sendCancelBtn.addEventListener('click', () => {
-      sendToInput.value = '';
-      sendAmountInput.value = '';
-      sendView.classList.add('hidden');
-      defaultView.classList.remove('hidden');
+    sendCancelBtn.addEventListener("click", () => {
+      sendToInput.value = "";
+      sendAmountInput.value = "";
+      sendView.classList.add("hidden");
+      defaultView.classList.remove("hidden");
     });
   }
 
   if (sendConfirmBtn) {
-    sendConfirmBtn.addEventListener('click', () => {
+    sendConfirmBtn.addEventListener("click", () => {
       const to = sendToInput.value.trim();
       const amount = sendAmountInput.value.trim();
       if (!to || !amount || isNaN(amount)) {
-        alert('Valid recipient and amount are required');
+        alert("Valid recipient and amount are required");
         return;
       }
-      
-      sendConfirmBtn.querySelector('span').textContent = translations['extension.wallet.sendInProgress'] || 'Sending...';
+
+      sendConfirmBtn.querySelector("span").textContent =
+        translations["extension.wallet.sendInProgress"] || "Sending...";
       sendConfirmBtn.disabled = true;
 
-      chrome.runtime.sendMessage({
-        action: 'EXECUTE_SEND',
-        to,
-        amount,
-        mode: currentAccountMode,
-        networkId: currentNetworkId,
-        from: currentAccountAddress
-      }, (res) => {
-        sendConfirmBtn.disabled = false;
-        sendConfirmBtn.querySelector('span').textContent = translations['extension.wallet.sendConfirmBtn'] || 'Confirm';
-        if (res && res.success) {
-          alert((translations['extension.wallet.sendSuccess'] || 'Transaction Sent!') + (res.hash ? ' Hash: ' + res.hash : ''));
-          sendCancelBtn.click();
-        } else {
-          alert((translations['extension.wallet.sendFailed'] || 'Transaction Failed') + ': ' + (res?.error || 'Unknown error'));
-        }
-      });
+      chrome.runtime.sendMessage(
+        {
+          action: "EXECUTE_SEND",
+          to,
+          amount,
+          mode: currentAccountMode,
+          networkId: currentNetworkId,
+          from: currentAccountAddress,
+        },
+        (res) => {
+          sendConfirmBtn.disabled = false;
+          sendConfirmBtn.querySelector("span").textContent =
+            translations["extension.wallet.sendConfirmBtn"] || "Confirm";
+          if (res && res.success) {
+            alert(
+              (translations["extension.wallet.sendSuccess"] ||
+                "Transaction Sent!") + (res.hash ? " Hash: " + res.hash : ""),
+            );
+            sendCancelBtn.click();
+          } else {
+            alert(
+              (translations["extension.wallet.sendFailed"] ||
+                "Transaction Failed") +
+                ": " +
+                (res?.error || "Unknown error"),
+            );
+          }
+        },
+      );
     });
   }
 }

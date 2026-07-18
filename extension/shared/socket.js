@@ -1,8 +1,13 @@
-'use strict';
+"use strict";
 
-import { handleSocketMessage, setConnectionMode, connectionMode } from './wallet.js';
+import {
+  handleSocketMessage,
+  setConnectionMode,
+  connectionMode,
+  pendingCallbacks
+} from './wallet.js';
 
-export const WS_URL = 'ws://127.0.0.1:8765';
+export const WS_URL = "ws://127.0.0.1:8765";
 export const RECONNECT_DELAY_MS = 3000;
 
 /** @type {WebSocket | null} */
@@ -25,9 +30,9 @@ export function startHeartbeat() {
   clearHeartbeat();
   pingInterval = setInterval(() => {
     if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({ type: 'ping' }));
+      socket.send(JSON.stringify({ type: "ping" }));
       pongTimeout = setTimeout(() => {
-        console.warn('[CointMU-bg] Heartbeat timeout, closing socket...');
+        console.warn("[CointMU-bg] Heartbeat timeout, closing socket...");
         chrome.storage.local.set({ isLinked: false });
         if (socket) socket.close();
       }, 5000);
@@ -42,43 +47,47 @@ export function startHeartbeat() {
  * @returns {void}
  */
 export function connect() {
-  if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) {
+  if (
+    socket &&
+    (socket.readyState === WebSocket.OPEN ||
+      socket.readyState === WebSocket.CONNECTING)
+  ) {
     return;
   }
 
   intentionalClose = false;
   socket = new WebSocket(WS_URL);
 
-  socket.addEventListener('open', function () {
-    console.log('[CointMU-bg] WebSocket connected to Electron.');
+  socket.addEventListener("open", function () {
+    console.log("[CointMU-bg] WebSocket connected to Electron.");
     chrome.storage.local.set({ isReconnecting: false });
-    if (connectionMode === 'desktop') {
+    if (connectionMode === "desktop") {
       startHeartbeat();
     }
   });
 
-  socket.addEventListener('message', handleSocketMessage);
+  socket.addEventListener("message", handleSocketMessage);
 
-  socket.addEventListener('close', function () {
+  socket.addEventListener("close", function () {
     clearHeartbeat();
     chrome.storage.local.set({ isReconnecting: true });
     socket = null;
-    
-    // dynamically import pendingCallbacks to clear them out on close
-    import('./wallet.js').then(module => {
-      module.pendingCallbacks.forEach(function (callback) {
-        callback({ result: null, error: { message: 'CointMU desktop wallet disconnected.' } });
+
+    pendingCallbacks.forEach(function (callback) {
+      callback({
+        result: null,
+        error: { message: 'CointMU desktop wallet disconnected.' },
       });
-      module.pendingCallbacks.clear();
     });
+    pendingCallbacks.clear();
 
     if (!intentionalClose) {
       setTimeout(connect, RECONNECT_DELAY_MS);
     }
   });
 
-  socket.addEventListener('error', function (err) {
-    console.error('[CointMU-bg] WebSocket error:', err);
+  socket.addEventListener("error", function (err) {
+    console.error("[CointMU-bg] WebSocket error:", err);
   });
 }
 

@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
 (function () {
-  const PROVIDER_MESSAGE_SOURCE = 'cointmu-injected';
-  const PAGE_MESSAGE_SOURCE = 'cointmu-page';
+  const PROVIDER_MESSAGE_SOURCE = "cointmu-injected";
+  const PAGE_MESSAGE_SOURCE = "cointmu-page";
 
   let nextRequestId = 1;
 
@@ -27,29 +27,37 @@
   function handleResponse(event) {
     if (!event.data) return;
 
-    if (event.data.source === PROVIDER_MESSAGE_SOURCE && event.data.type === 'COINTMU_REVOKE_SITE') {
+    if (
+      event.data.source === PROVIDER_MESSAGE_SOURCE &&
+      event.data.type === "COINTMU_REVOKE_SITE"
+    ) {
       provider.selectedAddress = null;
-      if (provider._listeners && provider._listeners['accountsChanged']) {
-        provider._listeners['accountsChanged'].forEach(function (listener) {
+      if (provider._listeners && provider._listeners["accountsChanged"]) {
+        provider._listeners["accountsChanged"].forEach(function (listener) {
           try {
             listener([]);
           } catch (e) {
-            console.error('Error executing accountsChanged listener', e);
+            console.error("Error executing accountsChanged listener", e);
           }
         });
       }
       return;
     }
 
-    if (event.data.source === PROVIDER_MESSAGE_SOURCE && event.data.type === 'COINTMU_ACCOUNTS_CHANGED') {
-      const accounts = Array.isArray(event.data.accounts) ? event.data.accounts : [];
+    if (
+      event.data.source === PROVIDER_MESSAGE_SOURCE &&
+      event.data.type === "COINTMU_ACCOUNTS_CHANGED"
+    ) {
+      const accounts = Array.isArray(event.data.accounts)
+        ? event.data.accounts
+        : [];
       provider.selectedAddress = accounts[0] || null;
-      if (provider._listeners && provider._listeners['accountsChanged']) {
-        provider._listeners['accountsChanged'].forEach(function (listener) {
+      if (provider._listeners && provider._listeners["accountsChanged"]) {
+        provider._listeners["accountsChanged"].forEach(function (listener) {
           try {
             listener(accounts);
           } catch (e) {
-            console.error('Error executing accountsChanged listener', e);
+            console.error("Error executing accountsChanged listener", e);
           }
         });
       }
@@ -62,13 +70,13 @@
     if (!entry) return;
     pending.delete(id);
     if (error) {
-      entry.reject(new Error(error.message || 'RPC error'));
+      entry.reject(new Error(error.message || "RPC error"));
     } else {
       entry.resolve(result);
     }
   }
 
-  window.addEventListener('message', handleResponse);
+  window.addEventListener("message", handleResponse);
 
   /**
    * The EIP-1193 compliant provider object injected into window.ethereum.
@@ -97,9 +105,9 @@
             source: PAGE_MESSAGE_SOURCE,
             id,
             method: args.method,
-            params: args.params || []
+            params: args.params || [],
           },
-          '*'
+          "*",
         );
       });
     },
@@ -125,7 +133,7 @@
     sendAsync(payload, callback) {
       this.request({ method: payload.method, params: payload.params })
         .then(function (result) {
-          callback(null, { id: payload.id, jsonrpc: '2.0', result });
+          callback(null, { id: payload.id, jsonrpc: "2.0", result });
         })
         .catch(function (err) {
           callback(err, null);
@@ -155,9 +163,11 @@
      */
     removeListener(eventName, listener) {
       if (this._listeners[eventName]) {
-        this._listeners[eventName] = this._listeners[eventName].filter(function (l) {
-          return l !== listener;
-        });
+        this._listeners[eventName] = this._listeners[eventName].filter(
+          function (l) {
+            return l !== listener;
+          },
+        );
       }
       return this;
     },
@@ -173,18 +183,18 @@
           try {
             listener(payload);
           } catch (e) {
-            console.error('Error in event listener', e);
+            console.error("Error in event listener", e);
           }
         });
       }
-    }
+    },
   };
 
-  Object.defineProperty(window, 'ethereum', {
+  Object.defineProperty(window, "ethereum", {
     value: provider,
     writable: false,
-    configurable: false
+    configurable: false,
   });
 
-  window.dispatchEvent(new Event('ethereum#initialized'));
+  window.dispatchEvent(new Event("ethereum#initialized"));
 })();

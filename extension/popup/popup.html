@@ -14,21 +14,26 @@
     <div id="login-view" class="view hidden">
       <div class="header">
         <div class="brand">
-          <div class="logo-mark"><span>C</span></div>
+          <div class="logo-mark">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+          </div>
           <span class="brand-name">CointMU</span>
         </div>
       </div>
       <div class="login-content">
-        <h2 id="extension.wallet.importPrivKey" class="login-title">Import Private Key</h2>
-        <div class="input-group">
-          <input type="password" id="priv-key-input" class="priv-key-input" placeholder="0x..." />
+        <div class="form-card">
+          <h2 id="extension.wallet.importPrivKey" class="login-title">Import Private Key</h2>
+          <div class="input-group">
+            <label class="input-label">Private Key</label>
+            <input type="password" id="priv-key-input" class="text-input mono-input" placeholder="0x..." />
+          </div>
+          <button id="import-btn" class="btn primary-btn mt-4">
+            <span id="extension.wallet.importBtn">Login</span>
+          </button>
+          <button id="cancel-import-btn" class="btn secondary-btn mt-2">
+            <span id="extension.wallet.cancel">Cancel</span>
+          </button>
         </div>
-        <button id="import-btn" class="btn primary-btn mt-4">
-          <span id="extension.wallet.importBtn">Login</span>
-        </button>
-        <button id="cancel-import-btn" class="btn secondary-btn mt-2">
-          <span id="extension.wallet.cancel">Cancel</span>
-        </button>
       </div>
     </div>
 
@@ -36,21 +41,27 @@
     <div id="selection-view" class="view hidden">
       <div class="header">
         <div class="brand">
-          <div class="logo-mark"><span>C</span></div>
+          <div class="logo-mark">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+          </div>
           <span class="brand-name">CointMU</span>
         </div>
       </div>
-      <div class="login-content" style="display: flex; flex-direction: column; gap: 12px; margin-top: 40px;">
-        <h2 id="extension.wallet.addWalletSelectionTitle" class="login-title" style="margin-bottom: 24px;">Choose Wallet Type</h2>
-        <button id="select-import-btn" class="btn primary-btn">
-          <span id="extension.wallet.selectImportBtn">Import Private Key</span>
-        </button>
-        <button id="select-link-btn" class="btn secondary-btn">
-          <span id="extension.wallet.selectLinkBtn">Link to Desktop App</span>
-        </button>
-        <button id="cancel-selection-btn" class="btn secondary-btn" style="background: transparent; border: none; box-shadow: none;">
-          <span id="extension.wallet.cancelSelectionBtn">Cancel</span>
-        </button>
+      <div class="login-content">
+        <div class="form-card">
+          <h2 id="extension.wallet.addWalletSelectionTitle" class="login-title">Choose Wallet Type</h2>
+          <div class="choice-list">
+            <button id="select-import-btn" class="btn primary-btn">
+              <span id="extension.wallet.selectImportBtn">Import Private Key</span>
+            </button>
+            <button id="select-link-btn" class="btn secondary-btn">
+              <span id="extension.wallet.selectLinkBtn">Link to Desktop App</span>
+            </button>
+          </div>
+          <button id="cancel-selection-btn" class="btn text-btn">
+            <span id="extension.wallet.cancelSelectionBtn">Cancel</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -60,12 +71,14 @@
       <!-- Header: brand + network switcher -->
       <div class="header">
         <div class="brand">
-          <div class="logo-mark"><span>C</span></div>
+          <div class="logo-mark">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+          </div>
           <span class="brand-name">CointMU</span>
         </div>
 
-        <div style="display: flex; gap: 8px; align-items: center;">
-          <div class="select-wrap outline-wrap custom-dropdown" id="network-dropdown">
+        <div class="header-actions">
+          <div class="select-wrap pill-dropdown custom-dropdown" id="network-dropdown">
             <span class="network-dot"></span>
             <div class="dropdown-selected">
               <span id="network-selected-text">CointMU Mainnet</span>
@@ -76,13 +89,13 @@
             <ul class="dropdown-options hidden" id="network-options">
             </ul>
           </div>
-          <button id="add-network-btn" class="outline-wrap" style="background: transparent; cursor: pointer; padding: 4px 8px;" title="Add Network">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <button id="add-network-btn" class="icon-btn" title="Add Network">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
             </svg>
           </button>
-          <button id="delete-network-btn" class="outline-wrap hidden" style="background: transparent; cursor: pointer; padding: 4px 8px; border: 1px solid var(--danger-color, #ff4d4f); color: var(--danger-color, #ff4d4f);" title="Delete Network">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <button id="delete-network-btn" class="icon-btn icon-btn--danger hidden" title="Delete Network">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
             </svg>
           </button>
@@ -90,9 +103,9 @@
       </div>
 
       <!-- Account Switcher -->
-      <div class="account-section" style="padding: 0 20px; display: flex; gap: 8px; align-items: center;">
-        <div class="select-wrap outline-wrap custom-dropdown" style="width: 100%;" id="account-dropdown">
-          <div class="dropdown-selected" style="width: 100%; justify-content: center;">
+      <div class="account-row">
+        <div class="select-wrap card-dropdown custom-dropdown account-select" id="account-dropdown">
+          <div class="dropdown-selected dropdown-selected--center">
             <span id="account-selected-text">Select Account</span>
             <svg class="select-chevron select-chevron--account" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
@@ -101,34 +114,34 @@
           <ul class="dropdown-options hidden" id="account-options">
           </ul>
         </div>
-        <button id="delete-wallet-btn" class="outline-wrap hidden" style="background: transparent; cursor: pointer; padding: 4px 8px; border: 1px solid var(--danger-color, #ff4d4f); color: var(--danger-color, #ff4d4f);" title="Delete Wallet">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <button id="delete-wallet-btn" class="icon-btn icon-btn--danger hidden" title="Delete Wallet">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
           </svg>
         </button>
       </div>
 
       <!-- Balance -->
-      <div class="content balance-content">
+      <div class="hero-card">
         <p class="balance-label" id="extension.wallet.totalBalance">Total balance</p>
         <div id="balance-value" class="balance-display">0.00 CMU</div>
         <p id="fiat-value" class="fiat-display">≈ $0.00</p>
-      </div>
 
-      <!-- Actions -->
-      <div class="actions-row">
-        <button class="action-btn active" id="action-send">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
-          <span id="extension.wallet.send">Send</span>
-        </button>
-        <button class="action-btn" id="action-receive">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
-          <span id="extension.wallet.receive">Receive</span>
-        </button>
-        <button class="action-btn" id="action-swap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
-          <span id="extension.wallet.swap">Swap</span>
-        </button>
+        <!-- Actions -->
+        <div class="actions-row">
+          <button class="action-btn active" id="action-send">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
+            <span id="extension.wallet.send">Send</span>
+          </button>
+          <button class="action-btn" id="action-receive">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+            <span id="extension.wallet.receive">Receive</span>
+          </button>
+          <button class="action-btn" id="action-swap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+            <span id="extension.wallet.swap">Swap</span>
+          </button>
+        </div>
       </div>
 
       <!-- Assets -->
@@ -154,6 +167,9 @@
     <!-- Transaction Approval View -->
     <div id="approval-view" class="view hidden">
       <div class="approval-header">
+        <div class="approval-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
         <h2 id="extension.wallet.approveTx">Approve Transaction</h2>
       </div>
 
@@ -184,51 +200,82 @@
     <div id="add-network-view" class="view hidden">
       <div class="header">
         <div class="brand">
-          <div class="logo-mark"><span>C</span></div>
+          <div class="logo-mark">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+          </div>
           <span class="brand-name">CointMU</span>
         </div>
       </div>
       <div class="login-content">
-        <h2 id="extension.wallet.addNetwork" class="login-title">Add Network</h2>
-        <div class="input-group" style="margin-bottom: 12px;">
-          <input type="text" id="network-name-input" class="priv-key-input" placeholder="Network Name" />
+        <div class="form-card">
+          <h2 id="extension.wallet.addNetwork" class="login-title">Add Network</h2>
+          <div class="input-group">
+            <label class="input-label">Network Name</label>
+            <input type="text" id="network-name-input" class="text-input" placeholder="e.g. My Testnet" />
+          </div>
+          <div class="input-group">
+            <label class="input-label">RPC URL</label>
+            <input type="text" id="rpc-url-input" class="text-input mono-input" placeholder="http://127.0.0.1:8545" />
+          </div>
+          <div class="input-group">
+            <label class="input-label">Chain ID</label>
+            <input type="text" id="chain-id-input" class="text-input" placeholder="1912" />
+          </div>
+          <button id="save-network-btn" class="btn primary-btn mt-4">
+            <span id="extension.wallet.saveNetwork">Save Network</span>
+          </button>
+          <button id="cancel-network-btn" class="btn secondary-btn mt-2">
+            <span id="extension.wallet.cancel">Cancel</span>
+          </button>
         </div>
-        <div class="input-group" style="margin-bottom: 12px;">
-          <input type="text" id="rpc-url-input" class="priv-key-input" placeholder="RPC URL" />
-        </div>
-        <div class="input-group">
-          <input type="text" id="chain-id-input" class="priv-key-input" placeholder="Chain ID" />
-        </div>
-        <button id="save-network-btn" class="btn primary-btn mt-4">
-          <span id="extension.wallet.saveNetwork">Save Network</span>
-        </button>
-        <button id="cancel-network-btn" class="btn secondary-btn mt-2">
-          <span id="extension.wallet.cancel">Cancel</span>
-        </button>
       </div>
     </div>
+
     <!-- Send View -->
     <div id="send-view" class="view hidden">
       <div class="header">
         <div class="brand">
-          <div class="logo-mark"><span>C</span></div>
+          <div class="logo-mark">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+          </div>
           <span class="brand-name">CointMU</span>
         </div>
       </div>
       <div class="login-content">
-        <h2 id="extension.wallet.sendTitle" class="login-title">Send Asset</h2>
-        <div class="input-group" style="margin-bottom: 12px;">
-          <input type="text" id="send-to-input" class="priv-key-input" placeholder="Recipient Address" />
+        <div class="form-card">
+          <h2 id="extension.wallet.sendTitle" class="login-title">Send Asset</h2>
+          <div class="input-group">
+            <label class="input-label">Recipient Address</label>
+            <input type="text" id="send-to-input" class="text-input mono-input" placeholder="0x..." />
+          </div>
+          <div class="input-group">
+            <label class="input-label">Amount</label>
+            <input type="number" id="send-amount-input" class="text-input" placeholder="0.00" step="any" />
+          </div>
+          <button id="send-confirm-btn" class="btn primary-btn mt-4">
+            <span id="extension.wallet.sendConfirmBtn">Confirm</span>
+          </button>
+          <button id="send-cancel-btn" class="btn secondary-btn mt-2">
+            <span id="extension.wallet.sendCancelBtn">Cancel</span>
+          </button>
         </div>
-        <div class="input-group">
-          <input type="number" id="send-amount-input" class="priv-key-input" placeholder="Amount" step="any" />
+      </div>
+    </div>
+
+    <!-- Confirm Modal (replaces native window.confirm) -->
+    <div id="confirm-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          </svg>
         </div>
-        <button id="send-confirm-btn" class="btn primary-btn mt-4">
-          <span id="extension.wallet.sendConfirmBtn">Confirm</span>
-        </button>
-        <button id="send-cancel-btn" class="btn secondary-btn mt-2">
-          <span id="extension.wallet.sendCancelBtn">Cancel</span>
-        </button>
+        <h3 id="confirm-modal-title" class="modal-title">Are you sure?</h3>
+        <p id="confirm-modal-message" class="modal-message"></p>
+        <div class="modal-actions">
+          <button id="confirm-modal-cancel" class="btn secondary-btn">Cancel</button>
+          <button id="confirm-modal-confirm" class="btn danger-btn">Confirm</button>
+        </div>
       </div>
     </div>
 

@@ -1,5 +1,5 @@
-'use strict';
+"use strict";
 
-import { initPopup } from '../shared/ui.js';
+import { initPopup } from "../shared/ui.js";
 
-document.addEventListener('DOMContentLoaded', initPopup);
+document.addEventListener("DOMContentLoaded", initPopup);
