@@ -1,11 +1,8 @@
 import { FOUND_BLOCKS_PAGE_SIZE } from "@/features/mining";
 import { useState, useMemo, type JSX } from "react";
 import { useTimer, usePagination, useRecentBlocks } from "@/shared/lib";
-import {
-  useMiningStats,
-  useMiningControls,
-  useMiningActivity,
-} from "@/features/mining";
+import { useMiningStats } from "@/features/mining/lib/mining-stats.hook";
+import { useMiningControls, useMiningActivity } from "@/features/mining";
 import { useAppStore } from "@/shared/model";
 import { useMiningStore, type FoundBlock } from "@/features/mining";
 import { type DerivedAccount } from "@/features/wallet";

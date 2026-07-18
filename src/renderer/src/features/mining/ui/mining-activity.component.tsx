@@ -12,7 +12,7 @@ import { useMemo, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { subDays, format, differenceInMinutes } from "date-fns";
 import { Card, Pagination } from "@/shared/ui";
-import { WalletHistoryFilter } from "@/features/wallet";
+import { WalletHistoryFilter } from '../../wallet/ui/wallet-history-filter.component';
 import { Check, Box } from "lucide-react";
 import { formatAge } from "@/shared/lib";
 import { type FoundBlock } from "../model/mining.store";
