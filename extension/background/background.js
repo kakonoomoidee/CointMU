@@ -1,8 +1,8 @@
 'use strict';
 
-import './ethers.umd.min.js';
-import { handleContentMessage, handleInternalMessage, connectionMode } from './wallet.js';
-import { connect } from './socket.js';
+import '../lib/ethers.umd.min.js';
+import { handleContentMessage, handleInternalMessage, connectionMode } from '../shared/wallet.js';
+import { connect } from '../shared/socket.js';
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action) {

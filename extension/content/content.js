@@ -13,7 +13,7 @@ const INJECTED_MESSAGE_SOURCE = 'cointmu-injected';
  */
 function injectProvider() {
   const script = document.createElement('script');
-  script.src = chrome.runtime.getURL('injected.js');
+  script.src = chrome.runtime.getURL('content/injected.js');
   script.type = 'text/javascript';
 
   script.addEventListener('load', function () {
