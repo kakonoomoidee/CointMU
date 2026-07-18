@@ -25,31 +25,31 @@ function ReceiveModal({
 
   return (
     <div className="p-8 text-center">
-      <h3 className="text-xl font-bold text-slate-800 mb-2">
+      <h3 className="text-xl font-bold text-slate-800 dark:text-gray-100 mb-2">
         {t("wallet.modals.receive.title")}
       </h3>
-      <p className="text-sm text-slate-500 mb-8">
+      <p className="text-sm text-slate-500 dark:text-gray-400 mb-8">
         {t("wallet.modals.receive.subtitle")}
       </p>
 
-      <div className="mx-auto w-56 h-56 bg-white border-2 border-slate-100 rounded-2xl p-4 shadow-sm mb-8 flex items-center justify-center">
+      <div className="mx-auto w-56 h-56 bg-white p-2 rounded-lg border-2 border-slate-100 dark:border-transparent shadow-sm mb-8 flex items-center justify-center">
         {activeAccount?.address && (
           <QRCodeSVG value={activeAccount.address} className="w-full h-full" />
         )}
       </div>
 
-      <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 mb-6">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-1">
+      <div className="bg-slate-50 dark:bg-gray-800 border border-slate-100 dark:border-gray-700 rounded-xl p-4 mb-6">
+        <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-gray-400 mb-1">
           {t("wallet.modals.receive.yourAddress")}
         </p>
-        <p className="text-sm font-mono text-slate-800 break-all">
+        <p className="text-sm font-mono text-slate-800 dark:text-gray-100 break-all">
           {activeAccount?.address}
         </p>
       </div>
 
       <button
         onClick={onCopy}
-        className="w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl shadow-sm shadow-blue-200 hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+        className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-sm shadow-accent/20 hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
       >
         {copied ? (
           <Check width={16} height={16} strokeWidth={2.5} />

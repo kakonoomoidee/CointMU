@@ -1,6 +1,7 @@
 export * from "./model/advanced.store";
 export * from "./model/security.store";
 export * from "./model/connected-sites.store";
+export * from "./model/appearance.store";
 
 export { useBiometrics } from "./lib/biometrics.hook";
 export { useHardwareDetection } from "./lib/hardware-detection.hook";

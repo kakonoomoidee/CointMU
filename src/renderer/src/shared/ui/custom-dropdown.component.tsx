@@ -93,7 +93,7 @@ export function CustomDropdown<T>({
         type="button"
         onClick={() => setIsOpen((v) => !v)}
         disabled={disabled}
-        className={`w-full flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 hover:bg-white hover:border-slate-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+        className={`w-full flex items-center justify-between bg-slate-50 dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-xl font-semibold text-slate-800 dark:text-gray-100 hover:bg-white dark:hover:bg-gray-800 hover:border-slate-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
           compact ? "px-3 py-1.5 text-xs" : "px-4 py-3 text-sm"
         }`}
       >
@@ -108,16 +108,16 @@ export function CustomDropdown<T>({
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden flex flex-col">
+        <div className="absolute z-10 top-full left-0 right-0 mt-1 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden flex flex-col">
           {showSearch && (
-            <div className="px-3 pt-2 pb-1.5 border-b border-slate-100 flex-shrink-0">
+            <div className="px-3 pt-2 pb-1.5 border-b border-slate-100 dark:border-gray-800 flex-shrink-0">
               <input
                 ref={searchRef}
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search..."
-                className="w-full px-3 py-1.5 text-xs rounded-lg bg-slate-50 border border-slate-200 text-slate-700 placeholder-slate-400 outline-none focus:ring-1 focus:ring-slate-300"
+                className="w-full px-3 py-1.5 text-xs rounded-lg bg-slate-50 dark:bg-gray-950 border border-slate-200 dark:border-gray-800 text-slate-700 dark:text-gray-100 placeholder-slate-400 dark:placeholder-gray-500 outline-none focus:ring-1 focus:ring-slate-300"
               />
             </div>
           )}
@@ -138,7 +138,7 @@ export function CustomDropdown<T>({
                     onSelect(option);
                     setIsOpen(false);
                   }}
-                  className="w-full flex items-center gap-2 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="w-full flex items-center gap-2 px-4 py-3 text-sm font-semibold text-slate-700 dark:text-gray-100 hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors"
                 >
                   {renderOption(option)}
                 </button>

@@ -108,14 +108,14 @@ function MiningPage({ accounts, onNavigate }: MinerProps): JSX.Element {
 
   if (loading) {
     return (
-      <div className="flex flex-col h-full bg-slate-50/80">
+      <div className="flex flex-col h-full bg-slate-50/80 dark:bg-gray-950 dark:text-white">
         <MiningHeader
           isMining={false}
           powerStatus="offline"
           onNavigate={onNavigate}
         />
         <main className="flex-1 overflow-y-auto px-8 pb-8 space-y-5">
-          <Skeleton className="rounded-3xl bg-white border border-slate-200 h-64 w-full" />
+          <Skeleton className="rounded-3xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 h-64 w-full" />
           <div className="grid grid-cols-4 gap-5">
             <SkeletonCard />
             <SkeletonCard />
@@ -123,14 +123,14 @@ function MiningPage({ accounts, onNavigate }: MinerProps): JSX.Element {
             <SkeletonCard />
           </div>
           <div className="grid grid-cols-[1fr_1.2fr] gap-5">
-            <div className="rounded-2xl bg-white border border-slate-200 p-5">
+            <div className="rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 p-5">
               <Skeleton className="w-48 h-6 mb-6" />
               <Skeleton className="w-full h-12 mb-4" />
               <Skeleton className="w-full h-12 mb-4" />
               <Skeleton className="w-full h-12" />
             </div>
-            <div className="rounded-2xl bg-white border border-slate-200 overflow-hidden">
-              <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-4">
+            <div className="rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 overflow-hidden">
+              <div className="px-5 py-4 border-b border-slate-100 dark:border-gray-800 flex items-center gap-4">
                 <Skeleton className="w-24 h-8 rounded-lg" />
                 <Skeleton className="w-24 h-8 rounded-lg" />
               </div>
@@ -143,7 +143,7 @@ function MiningPage({ accounts, onNavigate }: MinerProps): JSX.Element {
   }
 
   return (
-    <div className="flex flex-col h-full bg-slate-50/80">
+    <div className="flex flex-col h-full bg-slate-50/80 dark:bg-gray-950 dark:text-white">
       <MiningHeader
         isMining={isMining}
         powerStatus={telemetry.powerStatus}
@@ -166,7 +166,7 @@ function MiningPage({ accounts, onNavigate }: MinerProps): JSX.Element {
         />
 
         {error && (
-          <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 flex items-center gap-3">
+          <div className="px-4 py-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 flex items-center gap-3">
             <AlertCircle
               className="text-red-500 flex-shrink-0"
               width={16}

@@ -42,33 +42,33 @@ function ActivityItem({ activity }: ActivityItemProps): JSX.Element {
 
   switch (activity.type) {
     case "mining":
-      bgClass = "bg-emerald-100 text-emerald-600";
+      bgClass = "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-500";
       amountClass = "text-emerald-500";
       displayAmount = `+${activity.amount}`;
       Icon = <MiningIcon />;
       break;
     case "send":
-      bgClass = "bg-orange-100 text-orange-500";
-      amountClass = "text-slate-800";
+      bgClass = "bg-orange-100 dark:bg-orange-900/30 text-orange-500";
+      amountClass = "text-slate-800 dark:text-gray-100";
       displayAmount = `-${activity.amount}`;
       Icon = <SendIcon />;
       break;
     case "receive":
-      bgClass = "bg-blue-100 text-blue-500";
+      bgClass = "bg-blue-100 dark:bg-blue-900/30 text-blue-500";
       amountClass = "text-emerald-500";
       displayAmount = `+${activity.amount}`;
       Icon = <ReceiveIcon />;
       break;
     case "contract":
-      bgClass = "bg-purple-100 text-purple-500";
-      amountClass = "text-slate-800";
+      bgClass = "bg-purple-100 dark:bg-purple-900/30 text-purple-500";
+      amountClass = "text-slate-800 dark:text-gray-100";
       displayAmount = `-${activity.amount}`;
       Icon = <ContractIcon />;
       break;
   }
 
   return (
-    <div className="flex items-center justify-between p-4 bg-white">
+    <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-900">
       <div className="flex items-center gap-4">
         <div
           className={`w-10 h-10 rounded-full flex items-center justify-center ${bgClass}`}
@@ -77,7 +77,7 @@ function ActivityItem({ activity }: ActivityItemProps): JSX.Element {
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-bold text-slate-800">
+            <h4 className="text-sm font-bold text-slate-800 dark:text-gray-100">
               {activity.title}
             </h4>
             {activity.pending && (

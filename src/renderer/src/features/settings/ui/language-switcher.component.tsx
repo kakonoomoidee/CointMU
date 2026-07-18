@@ -25,8 +25,8 @@ function LanguageSwitcher(): JSX.Element {
   return (
     <div className="flex items-center justify-between p-4">
       <div>
-        <p className="text-sm font-bold text-slate-800">{t("languageLabel")}</p>
-        <p className="text-xs text-slate-500 mt-0.5">
+        <p className="text-sm font-bold text-slate-800 dark:text-gray-100">{t("languageLabel")}</p>
+        <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
           {t("languageDescription")}
         </p>
       </div>

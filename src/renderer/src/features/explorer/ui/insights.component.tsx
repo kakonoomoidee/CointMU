@@ -44,9 +44,9 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
 
   return (
     <div className="grid grid-cols-5 gap-4">
-      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-slate-200 dark:border-gray-800 p-4 shadow-sm">
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-5 h-5 rounded bg-blue-50 flex items-center justify-center">
+          <div className="w-5 h-5 rounded bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
             <Box
               className="text-blue-500"
               width={12}
@@ -54,19 +54,19 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
               strokeWidth={2.5}
             />
           </div>
-          <span className="text-xs font-semibold text-slate-600">
+          <span className="text-xs font-semibold text-slate-600 dark:text-gray-300">
             {t("explorer.insights.chainHeight")}
           </span>
         </div>
-        <p className="text-xl font-bold text-slate-800">{height}</p>
-        <p className="text-[10px] text-slate-400 mt-0.5">
+        <p className="text-xl font-bold text-slate-800 dark:text-gray-100">{height}</p>
+        <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
           {t("explorer.insights.latest")}
         </p>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-slate-200 dark:border-gray-800 p-4 shadow-sm">
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-5 h-5 rounded bg-indigo-50 flex items-center justify-center">
+          <div className="w-5 h-5 rounded bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center">
             <Clock
               className="text-indigo-500"
               width={12}
@@ -74,19 +74,19 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
               strokeWidth={2.5}
             />
           </div>
-          <span className="text-xs font-semibold text-slate-600">
+          <span className="text-xs font-semibold text-slate-600 dark:text-gray-300">
             {t("explorer.insights.blockTime")}
           </span>
         </div>
-        <p className="text-xl font-bold text-slate-800">{blockTime}</p>
-        <p className="text-[10px] text-slate-400 mt-0.5">
+        <p className="text-xl font-bold text-slate-800 dark:text-gray-100">{blockTime}</p>
+        <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
           {t("explorer.insights.past100")}
         </p>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-slate-200 dark:border-gray-800 p-4 shadow-sm">
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-5 h-5 rounded bg-emerald-50 flex items-center justify-center">
+          <div className="w-5 h-5 rounded bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center">
             <ArrowUp
               className="text-emerald-500"
               width={12}
@@ -94,19 +94,19 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
               strokeWidth={2.5}
             />
           </div>
-          <span className="text-xs font-semibold text-slate-600">
+          <span className="text-xs font-semibold text-slate-600 dark:text-gray-300">
             {t("explorer.insights.transactions")}
           </span>
         </div>
-        <p className="text-xl font-bold text-slate-800">{txs}</p>
-        <p className="text-[10px] text-slate-400 mt-0.5">
+        <p className="text-xl font-bold text-slate-800 dark:text-gray-100">{txs}</p>
+        <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
           {t("explorer.insights.estPast12")}
         </p>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-slate-200 dark:border-gray-800 p-4 shadow-sm">
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-5 h-5 rounded bg-amber-50 flex items-center justify-center">
+          <div className="w-5 h-5 rounded bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center">
             <Users
               className="text-amber-500"
               width={12}
@@ -114,19 +114,19 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
               strokeWidth={2.5}
             />
           </div>
-          <span className="text-xs font-semibold text-slate-600">
+          <span className="text-xs font-semibold text-slate-600 dark:text-gray-300">
             {t("explorer.insights.activeAddrs")}
           </span>
         </div>
-        <p className="text-xl font-bold text-slate-800">{addrs}</p>
-        <p className="text-[10px] text-slate-400 mt-0.5">
+        <p className="text-xl font-bold text-slate-800 dark:text-gray-100">{addrs}</p>
+        <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
           {t("explorer.insights.estPast12")}
         </p>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-slate-200 dark:border-gray-800 p-4 shadow-sm">
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-5 h-5 rounded bg-fuchsia-50 flex items-center justify-center">
+          <div className="w-5 h-5 rounded bg-fuchsia-50 dark:bg-fuchsia-900/30 flex items-center justify-center">
             <Zap
               className="text-fuchsia-500"
               width={12}
@@ -134,12 +134,12 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
               strokeWidth={2.5}
             />
           </div>
-          <span className="text-xs font-semibold text-slate-600">
+          <span className="text-xs font-semibold text-slate-600 dark:text-gray-300">
             {t("explorer.insights.difficulty")}
           </span>
         </div>
-        <p className="text-xl font-bold text-slate-800">{diff}</p>
-        <p className="text-[10px] text-slate-400 mt-0.5">
+        <p className="text-xl font-bold text-slate-800 dark:text-gray-100">{diff}</p>
+        <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
           {t("explorer.insights.current")}
         </p>
       </div>

@@ -64,8 +64,8 @@ function AccountSidebar({
                   onClick={() => onAccountSwitch(acc.address)}
                   className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150 relative ${
                     isSelected
-                      ? "bg-white border border-slate-200 shadow-sm"
-                      : "hover:bg-white/60 border border-transparent"
+                      ? "bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 shadow-sm"
+                      : "hover:bg-white/60 dark:hover:bg-gray-900/50 border border-transparent"
                   }`}
                 >
                   <div className="flex-shrink-0 rounded-full overflow-hidden w-8 h-8">
@@ -73,10 +73,10 @@ function AccountSidebar({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <p className="text-xs font-semibold text-slate-700 truncate">
+                      <p className="text-xs font-semibold text-slate-700 dark:text-gray-200 truncate">
                         {acc.label}
                       </p>
-                      <p className="text-xs font-bold text-slate-800 ml-2 group-hover:opacity-0 transition-opacity">
+                      <p className="text-xs font-bold text-slate-800 dark:text-gray-100 ml-2 group-hover:opacity-0 transition-opacity">
                         {balances[acc.address] || "0.00"}
                       </p>
                     </div>

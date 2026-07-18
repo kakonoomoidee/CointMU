@@ -80,40 +80,40 @@ function ExplorerDataTabs({
 
   return (
     <div className="flex gap-6">
-      <div className="flex-[2] min-w-0 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-        <div className="flex items-center justify-between p-4 border-b border-slate-100">
+      <div className="flex-[2] min-w-0 bg-white dark:bg-gray-900 rounded-2xl border border-slate-200 dark:border-gray-800 shadow-sm overflow-hidden flex flex-col">
+        <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-gray-800">
           <div className="flex items-center gap-2">
             <button
               onClick={() => onTabChange("blocks")}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === "blocks" ? "bg-slate-100 text-slate-800" : "text-slate-500 hover:bg-slate-50"}`}
+              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === "blocks" ? "bg-slate-100 dark:bg-gray-800 text-slate-800 dark:text-gray-100" : "text-slate-500 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800"}`}
             >
               {t("explorer.dataTabs.latestBlocks")}
             </button>
             <button
               onClick={() => onTabChange("transactions")}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === "transactions" ? "bg-slate-100 text-slate-800" : "text-slate-500 hover:bg-slate-50"}`}
+              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === "transactions" ? "bg-slate-100 dark:bg-gray-800 text-slate-800 dark:text-gray-100" : "text-slate-500 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800"}`}
             >
               {t("explorer.dataTabs.transactions")}
             </button>
             <button
               onClick={() => onTabChange("accounts")}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === "accounts" ? "bg-slate-100 text-slate-800" : "text-slate-500 hover:bg-slate-50"}`}
+              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === "accounts" ? "bg-slate-100 dark:bg-gray-800 text-slate-800 dark:text-gray-100" : "text-slate-500 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800"}`}
             >
               {t("explorer.dataTabs.topAccounts")}
             </button>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-semibold text-slate-400">
+            <span className="text-[10px] font-semibold text-slate-400 dark:text-gray-400">
               {t("explorer.dataTabs.autoRefresh")}
             </span>
             <div
-              className={`flex items-center gap-1.5 px-2 py-1 rounded ${isConnected ? "bg-emerald-50" : "bg-slate-100"}`}
+              className={`flex items-center gap-1.5 px-2 py-1 rounded ${isConnected ? "bg-emerald-50 dark:bg-emerald-900/20" : "bg-slate-100 dark:bg-gray-800"}`}
             >
               {isConnected && (
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               )}
               <span
-                className={`text-[9px] font-bold uppercase ${isConnected ? "text-emerald-600" : "text-slate-500"}`}
+                className={`text-[9px] font-bold uppercase ${isConnected ? "text-emerald-600 dark:text-emerald-500" : "text-slate-500 dark:text-gray-400"}`}
               >
                 {isConnected
                   ? t("explorer.dataTabs.live")
@@ -127,34 +127,34 @@ function ExplorerDataTabs({
           {activeTab === "blocks" && (
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-slate-100">
-                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
+                <tr className="border-b border-slate-100 dark:border-gray-800">
+                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
                     {t("explorer.dataTabs.tableBlock")}
                   </th>
-                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
+                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
                     {t("explorer.dataTabs.tableMinerHash")}
                   </th>
-                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
+                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
                     {t("explorer.dataTabs.tableTxs")}
                   </th>
-                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
+                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
                     {t("explorer.dataTabs.tableReward")}
                   </th>
-                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
+                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400 text-right">
                     {t("explorer.dataTabs.tableAge")}
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-gray-800">
                 {recentBlocks.length > 0 ? (
                   recentBlocks.map((block) => (
                     <tr
                       key={block.hash}
-                      className="hover:bg-slate-50/50 transition-colors"
+                      className="hover:bg-slate-50/50 dark:hover:bg-gray-800/50 transition-colors"
                     >
                       <td className="px-5 py-3.5">
                         <p
-                          className="text-sm font-semibold text-blue-600 cursor-pointer hover:underline"
+                          className="text-sm font-semibold text-blue-600 dark:text-accent cursor-pointer hover:underline"
                           onClick={() => onBlockSelect(block.number)}
                         >
                           #{block.number}
@@ -167,40 +167,40 @@ function ExplorerDataTabs({
                           </div>
                           <div>
                             <p
-                              className="text-xs font-mono text-slate-800 cursor-pointer hover:text-blue-600 hover:underline"
+                              className="text-xs font-mono text-slate-800 dark:text-gray-100 cursor-pointer hover:text-blue-600 dark:hover:text-accent hover:underline"
                               onClick={() => onAddressSelect(block.miner)}
                             >
                               {block.miner.substring(0, 10)}...
                               {block.miner.substring(block.miner.length - 8)}
                             </p>
-                            <p className="text-[10px] text-slate-400 mt-0.5">
+                            <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
                               Hash: {block.hash.substring(0, 14)}...
                             </p>
                           </div>
                           {checkIfMinedByMe(block.miner, balances) && (
-                            <span className="px-1.5 py-0.5 rounded bg-blue-50 text-[9px] font-bold text-blue-600 uppercase tracking-wider">
+                            <span className="px-1.5 py-0.5 rounded bg-blue-50 dark:bg-accent/20 text-[9px] font-bold text-blue-600 dark:text-accent uppercase tracking-wider">
                               {t("explorer.dataTabs.you")}
                             </span>
                           )}
                         </div>
                       </td>
                       <td className="px-5 py-3.5">
-                        <p className="text-xs font-semibold text-slate-700">
+                        <p className="text-xs font-semibold text-slate-700 dark:text-gray-300">
                           {block.txCount}
                         </p>
                       </td>
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-1">
-                          <p className="text-xs font-bold text-slate-800">
+                          <p className="text-xs font-bold text-slate-800 dark:text-gray-100">
                             2.00
                           </p>
-                          <span className="text-[9px] font-semibold text-slate-400">
+                          <span className="text-[9px] font-semibold text-slate-400 dark:text-gray-400">
                             CMU
                           </span>
                         </div>
                       </td>
                       <td className="px-5 py-3.5 text-right">
-                        <p className="text-[10px] text-slate-500">
+                        <p className="text-[10px] text-slate-500 dark:text-gray-400">
                           {formatTxAge(block.timestamp)}
                         </p>
                       </td>
@@ -215,10 +215,10 @@ function ExplorerDataTabs({
                 ) : (
                   <tr>
                     <td colSpan={5} className="px-5 py-12 text-center">
-                      <p className="text-sm font-medium text-slate-400">
+                      <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
                         {t("explorer.dataTabs.awaitingActivity")}
                       </p>
-                      <p className="text-xs text-slate-400 mt-1">
+                      <p className="text-xs text-slate-400 dark:text-gray-500 mt-1">
                         {t("explorer.dataTabs.blockDataRequires")}
                       </p>
                     </td>
@@ -231,34 +231,34 @@ function ExplorerDataTabs({
           {activeTab === "transactions" && (
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-slate-100">
-                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
+                <tr className="border-b border-slate-100 dark:border-gray-800">
+                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
                     {t("explorer.dataTabs.tableHash")}
                   </th>
-                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
+                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
                     {t("explorer.dataTabs.tableFrom")}
                   </th>
-                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
+                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
                     {t("explorer.dataTabs.tableTo")}
                   </th>
-                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
+                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400 text-right">
                     {t("explorer.dataTabs.tableAmount")}
                   </th>
-                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
+                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400 text-right">
                     {t("explorer.dataTabs.tableAge")}
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-gray-800">
                 {transactions.length > 0 ? (
                   transactions.map((tx) => (
                     <tr
                       key={tx.id}
-                      className="hover:bg-slate-50/50 transition-colors"
+                      className="hover:bg-slate-50/50 dark:hover:bg-gray-800/50 transition-colors"
                     >
                       <td className="px-5 py-2.5">
                         <p
-                          className="text-xs font-mono text-blue-600 cursor-pointer hover:underline"
+                          className="text-xs font-mono text-blue-600 dark:text-accent cursor-pointer hover:underline"
                           onClick={() =>
                             tx.hash && onTxHashSelect(tx.hash as string)
                           }
@@ -272,7 +272,7 @@ function ExplorerDataTabs({
                             <AccountIcon address={tx.from || ""} size={20} />
                           </div>
                           <p
-                            className="text-xs font-mono text-slate-700 cursor-pointer hover:text-blue-600 hover:underline"
+                            className="text-xs font-mono text-slate-700 dark:text-gray-200 cursor-pointer hover:text-blue-600 dark:hover:text-accent hover:underline"
                             onClick={() => tx.from && onAddressSelect(tx.from)}
                           >
                             {shortHex(tx.from)}
@@ -285,7 +285,7 @@ function ExplorerDataTabs({
                             <AccountIcon address={tx.to || ""} size={20} />
                           </div>
                           <p
-                            className="text-xs font-mono text-slate-700 cursor-pointer hover:text-blue-600 hover:underline"
+                            className="text-xs font-mono text-slate-700 dark:text-gray-200 cursor-pointer hover:text-blue-600 dark:hover:text-accent hover:underline"
                             onClick={() => tx.to && onAddressSelect(tx.to)}
                           >
                             {shortHex(tx.to)}
@@ -294,20 +294,20 @@ function ExplorerDataTabs({
                       </td>
                       <td className="px-5 py-2.5 text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <p className="text-xs font-bold text-slate-800">
+                          <p className="text-xs font-bold text-slate-800 dark:text-gray-100">
                             {tx.amount}
                           </p>
-                          <span className="text-[9px] font-semibold text-slate-400">
+                          <span className="text-[9px] font-semibold text-slate-400 dark:text-gray-400">
                             CMU
                           </span>
                         </div>
                       </td>
                       <td className="px-5 py-2.5 text-right">
                         <div className="flex flex-col items-end whitespace-nowrap">
-                          <p className="text-[10px] text-slate-700 font-medium">
+                          <p className="text-[10px] text-slate-700 dark:text-gray-300 font-medium">
                             {formatTxAge(tx.timestamp)}
                           </p>
-                          <p className="text-[9px] text-slate-500 mt-0.5">
+                          <p className="text-[9px] text-slate-500 dark:text-gray-500 mt-0.5">
                             {tx.timestampStr}
                           </p>
                         </div>
@@ -323,10 +323,10 @@ function ExplorerDataTabs({
                 ) : (
                   <tr>
                     <td colSpan={5} className="px-5 py-12 text-center">
-                      <p className="text-sm font-medium text-slate-400">
+                      <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
                         {t("explorer.dataTabs.noTxsFound")}
                       </p>
-                      <p className="text-xs text-slate-400 mt-1">
+                      <p className="text-xs text-slate-400 dark:text-gray-500 mt-1">
                         {t("explorer.dataTabs.noTxsOccurred")}
                       </p>
                     </td>
@@ -349,25 +349,25 @@ function ExplorerDataTabs({
           {activeTab === "accounts" && (
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-slate-100">
-                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
+                <tr className="border-b border-slate-100 dark:border-gray-800">
+                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
                     {t("explorer.dataTabs.tableNumber")}
                   </th>
-                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
+                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
                     {t("explorer.dataTabs.tableAddress")}
                   </th>
-                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400">
+                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
                     {t("explorer.dataTabs.tableTag")}
                   </th>
-                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
+                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400 text-right">
                     {t("explorer.dataTabs.tableBalance")}
                   </th>
-                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 text-right">
+                  <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400 text-right">
                     {t("explorer.dataTabs.tableSupply")}
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-gray-800">
                 {isLoadingAccounts ? (
                   <tr>
                     <td colSpan={5} className="p-0">
@@ -378,10 +378,10 @@ function ExplorerDataTabs({
                   topAccounts.map((acc, i) => (
                     <tr
                       key={acc.address}
-                      className="hover:bg-slate-50/50 transition-colors"
+                      className="hover:bg-slate-50/50 dark:hover:bg-gray-800/50 transition-colors"
                     >
                       <td className="px-5 py-3.5">
-                        <p className="text-xs font-bold text-slate-500">
+                        <p className="text-xs font-bold text-slate-500 dark:text-gray-400">
                           {i + 1}
                         </p>
                       </td>
@@ -391,40 +391,40 @@ function ExplorerDataTabs({
                             <AccountIcon address={acc.address} size={24} />
                           </div>
                           <p
-                            className="text-xs font-mono text-blue-600 cursor-pointer hover:underline"
+                            className="text-xs font-mono text-blue-600 dark:text-accent cursor-pointer hover:underline"
                             onClick={() => onAddressSelect(acc.address)}
                           >
                             {acc.address.substring(0, 10)}...
                             {acc.address.substring(acc.address.length - 8)}
                           </p>
                           {checkIfMinedByMe(acc.address, balances) && (
-                            <span className="px-1.5 py-0.5 rounded bg-blue-50 text-[9px] font-bold text-blue-600 uppercase tracking-wider">
+                            <span className="px-1.5 py-0.5 rounded bg-blue-50 dark:bg-accent/20 text-[9px] font-bold text-blue-600 dark:text-accent uppercase tracking-wider">
                               {t("explorer.dataTabs.you")}
                             </span>
                           )}
                         </div>
                       </td>
                       <td className="px-5 py-3.5">
-                        <span className="px-2 py-1 rounded bg-slate-100 text-[10px] font-medium text-slate-500">
+                        <span className="px-2 py-1 rounded bg-slate-100 dark:bg-gray-800 text-[10px] font-medium text-slate-500 dark:text-gray-400">
                           {t("explorer.dataTabs.miner")}
                         </span>
                       </td>
                       <td className="px-5 py-3.5 text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <p className="text-xs font-bold text-slate-800">
+                          <p className="text-xs font-bold text-slate-800 dark:text-gray-100">
                             {acc.balance.toLocaleString(undefined, {
                               minimumFractionDigits:
                                 acc.balance % 1 === 0 ? 1 : 2,
                               maximumFractionDigits: 2,
                             })}
                           </p>
-                          <span className="text-[9px] font-semibold text-slate-400">
+                          <span className="text-[9px] font-semibold text-slate-400 dark:text-gray-400">
                             CMU
                           </span>
                         </div>
                       </td>
                       <td className="px-5 py-3.5 text-right">
-                        <p className="text-[10px] text-slate-500">
+                        <p className="text-[10px] text-slate-500 dark:text-gray-400">
                           {acc.percentage.toFixed(2)} %
                         </p>
                       </td>
@@ -433,10 +433,10 @@ function ExplorerDataTabs({
                 ) : (
                   <tr>
                     <td colSpan={5} className="px-5 py-12 text-center">
-                      <p className="text-sm font-medium text-slate-400">
+                      <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
                         {t("explorer.dataTabs.awaitingActivity")}
                       </p>
-                      <p className="text-xs text-slate-400 mt-1">
+                      <p className="text-xs text-slate-400 dark:text-gray-500 mt-1">
                         {t("explorer.dataTabs.accountDataRequires")}
                       </p>
                     </td>

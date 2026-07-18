@@ -29,23 +29,23 @@ function ExternalSourceSettings(): JSX.Element {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
       <div>
-        <h2 className="text-xl font-bold text-slate-800">
+        <h2 className="text-xl font-bold text-slate-800 dark:text-gray-100">
           {t("settings.externalSources.title")}
         </h2>
-        <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+        <p className="text-sm text-slate-500 dark:text-gray-400 mt-1 leading-relaxed">
           {t("settings.externalSources.description")}
         </p>
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm p-6 flex items-start gap-4">
-        <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0 border border-blue-100">
-          <Box width={24} height={24} className="text-blue-500" />
+      <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm p-6 flex items-start gap-4">
+        <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0 border border-blue-100 dark:border-blue-800">
+          <Box width={24} height={24} className="text-blue-500 dark:text-blue-400" />
         </div>
         <div className="flex-1">
-          <h3 className="text-sm font-bold text-slate-800">
+          <h3 className="text-sm font-bold text-slate-800 dark:text-gray-100">
             {t("settings.externalSources.extensionTitle")}
           </h3>
-          <p className="text-xs text-slate-500 mt-1 leading-relaxed max-w-lg">
+          <p className="text-xs text-slate-500 dark:text-gray-400 mt-1 leading-relaxed max-w-lg">
             {t("settings.externalSources.extensionDesc")}
           </p>
         </div>

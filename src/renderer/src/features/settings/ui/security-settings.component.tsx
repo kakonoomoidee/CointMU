@@ -25,7 +25,7 @@ function Toggle({ value, onChange }: ToggleProps): JSX.Element {
   return (
     <button
       onClick={onChange}
-      className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${value ? "bg-emerald-500" : "bg-slate-200"}`}
+      className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${value ? "bg-emerald-500" : "bg-slate-200 dark:bg-gray-700"}`}
     >
       <div
         className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${value ? "translate-x-5" : "translate-x-0"}`}
@@ -74,22 +74,22 @@ export function SecuritySettings(): JSX.Element {
 
   return (
     <div>
-      <h2 className="text-sm font-semibold text-slate-700 mb-6">
+      <h2 className="text-sm font-semibold text-slate-700 dark:text-gray-100 mb-6">
         {t("settings.securitySettings.subtitle")}
       </h2>
 
       <div className="space-y-8">
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
             {t("settings.securitySettings.access")}
           </h3>
-          <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
+          <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">
+                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                   {t("settings.securitySettings.autoLockTitle")}
                 </p>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
                   {t("settings.securitySettings.autoLockDesc")}
                 </p>
               </div>
@@ -99,10 +99,10 @@ export function SecuritySettings(): JSX.Element {
             {biometricsSupported && (
               <div className="flex items-center justify-between p-4">
                 <div>
-                  <p className="text-sm font-bold text-slate-800">
+                  <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                     {t("settings.securitySettings.biometricsTitle")}
                   </p>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
                     {t("settings.securitySettings.biometricsDesc")}
                   </p>
                 </div>
@@ -116,14 +116,14 @@ export function SecuritySettings(): JSX.Element {
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
             {t("settings.securitySettings.backup")}
           </h3>
-          <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
+          <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="p-4">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <p className="text-sm font-bold text-slate-800 dark:text-gray-100 flex items-center gap-2">
                     <ShieldCheck
                       className="text-emerald-500"
                       width={16}
@@ -131,13 +131,13 @@ export function SecuritySettings(): JSX.Element {
                     />
                     {t("settings.securitySettings.seedPhraseTitle")}
                   </p>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-slate-500 dark:text-gray-400 mt-1">
                     {t("settings.securitySettings.seedPhraseDesc")}
                   </p>
                 </div>
                 <button
                   onClick={() => setShowRecovery(true)}
-                  className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-colors"
+                  className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 shadow-sm transition-colors"
                 >
                   {t("settings.securitySettings.reveal")}
                 </button>
@@ -146,16 +146,16 @@ export function SecuritySettings(): JSX.Element {
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">
+                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                   {t("settings.securitySettings.exportTitle")}
                 </p>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
                   {t("settings.securitySettings.exportDesc")}
                 </p>
               </div>
               <button
                 onClick={() => setShowExport(true)}
-                className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-colors"
+                className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 shadow-sm transition-colors"
               >
                 {t("settings.securitySettings.export")}
               </button>
@@ -163,16 +163,16 @@ export function SecuritySettings(): JSX.Element {
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">
+                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                   {t("settings.securitySettings.privateKeyTitle")}
                 </p>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
                   {t("settings.securitySettings.privateKeyDesc")}
                 </p>
               </div>
               <button
                 onClick={() => setShowReveal(true)}
-                className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-colors"
+                className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 shadow-sm transition-colors"
               >
                 {t("settings.securitySettings.reveal")}
               </button>
@@ -181,14 +181,14 @@ export function SecuritySettings(): JSX.Element {
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
             {t("settings.securitySettings.hardware")}
           </h3>
-          <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
+          <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Ledger</p>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">Ledger</p>
+                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
                   {t("settings.securitySettings.hardwareDesc", {
                     device: "Ledger",
                   })}
@@ -197,7 +197,7 @@ export function SecuritySettings(): JSX.Element {
               <button
                 onClick={() => handleConnect("ledger")}
                 disabled={!hasDevice || connecting !== null}
-                className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {!hasDevice
                   ? t("settings.securitySettings.noUsb")
@@ -209,8 +209,8 @@ export function SecuritySettings(): JSX.Element {
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">Trezor</p>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">Trezor</p>
+                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
                   {t("settings.securitySettings.hardwareDesc", {
                     device: "Trezor",
                   })}
@@ -219,7 +219,7 @@ export function SecuritySettings(): JSX.Element {
               <button
                 onClick={() => handleConnect("trezor")}
                 disabled={!hasDevice || connecting !== null}
-                className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {!hasDevice
                   ? t("settings.securitySettings.noUsb")
@@ -229,12 +229,12 @@ export function SecuritySettings(): JSX.Element {
               </button>
             </div>
 
-            <div className="flex items-center justify-between p-4 mt-6 border-t border-slate-200">
+            <div className="flex items-center justify-between p-4 mt-6 border-t border-slate-200 dark:border-gray-800">
               <div>
-                <p className="text-sm font-bold text-slate-800">
+                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                   {t("settings.securitySettings.resetWalletTitle")}
                 </p>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
                   {t("settings.securitySettings.resetWalletDesc")}
                 </p>
               </div>

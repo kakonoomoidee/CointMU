@@ -177,28 +177,28 @@ export function MiningSettings({
 
   return (
     <div>
-      <h2 className="text-sm font-semibold text-slate-700 mb-6">
+      <h2 className="text-sm font-semibold text-slate-700 dark:text-gray-100 mb-6">
         {t("settings.miningSettings.subtitle")}
       </h2>
 
       <div className="space-y-8">
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
             {t("settings.miningSettings.mining")}
           </h3>
-          <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
+          <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">
+                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                   {t("settings.miningSettings.enableTitle")}
                 </p>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
                   {t("settings.miningSettings.enableDesc")}
                 </p>
               </div>
               <button
                 onClick={() => handleToggleMining(!config.isMiningEnabled)}
-                className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${config.isMiningEnabled ? "bg-emerald-500" : "bg-slate-200"}`}
+                className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${config.isMiningEnabled ? "bg-emerald-500" : "bg-slate-200 dark:bg-gray-700"}`}
               >
                 <div
                   className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${config.isMiningEnabled ? "translate-x-5" : "translate-x-0"}`}
@@ -208,16 +208,16 @@ export function MiningSettings({
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">
+                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                   {t("settings.miningSettings.startLaunchTitle")}
                 </p>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
                   {t("settings.miningSettings.startLaunchDesc")}
                 </p>
               </div>
               <button
                 onClick={() => onUpdate("startAtLaunch", !config.startAtLaunch)}
-                className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${config.startAtLaunch ? "bg-emerald-500" : "bg-slate-200"}`}
+                className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${config.startAtLaunch ? "bg-emerald-500" : "bg-slate-200 dark:bg-gray-700"}`}
               >
                 <div
                   className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${config.startAtLaunch ? "translate-x-5" : "translate-x-0"}`}
@@ -228,24 +228,24 @@ export function MiningSettings({
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
             {t("settings.miningSettings.worker")}
           </h3>
-          <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
+          <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="p-4">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="text-sm font-bold text-slate-800">
+                  <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                     {t("settings.miningSettings.cpuThreadsTitle")}
                   </p>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
                     {t("settings.miningSettings.cpuThreadsDesc", {
                       count: config.cpuThreads,
                       max: MAX_CORES,
                     })}
                   </p>
                 </div>
-                <span className="text-sm font-bold font-mono text-slate-800 bg-slate-100 px-2 py-1 rounded">
+                <span className="text-sm font-bold font-mono text-slate-800 dark:text-gray-100 bg-slate-100 dark:bg-gray-800 px-2 py-1 rounded">
                   {config.cpuThreads} {t("settings.miningSettings.coresSuffix")}
                 </span>
               </div>
@@ -259,14 +259,14 @@ export function MiningSettings({
                       className={`flex-1 rounded-sm transition-colors ${
                         core <= config.cpuThreads
                           ? "bg-emerald-500 hover:bg-emerald-600"
-                          : "bg-slate-100 hover:bg-slate-200"
+                          : "bg-slate-100 dark:bg-gray-800 hover:bg-slate-200 dark:hover:bg-gray-700"
                       }`}
                       title={`${core} cores`}
                     />
                   ),
                 )}
               </div>
-              <div className="flex justify-between text-[10px] font-medium text-slate-400">
+              <div className="flex justify-between text-[10px] font-medium text-slate-400 dark:text-gray-500">
                 <span>1</span>
                 <span>{Math.ceil(MAX_CORES / 2)}</span>
                 <span>{MAX_CORES}</span>
@@ -275,22 +275,22 @@ export function MiningSettings({
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">
+                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                   {t("settings.miningSettings.intensityTitle")}
                 </p>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
                   {t("settings.miningSettings.intensityDesc")}
                 </p>
               </div>
-              <div className="flex items-center bg-slate-100 rounded-lg p-1">
+              <div className="flex items-center bg-slate-100 dark:bg-gray-800 rounded-lg p-1">
                 {["Eco", "Balanced", "Turbo"].map((opt) => (
                   <button
                     key={opt}
                     onClick={() => onUpdate("intensity", opt)}
                     className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
                       config.intensity === opt
-                        ? "bg-white text-slate-800 shadow-sm"
-                        : "text-slate-500 hover:text-slate-700"
+                        ? "bg-white dark:bg-gray-700 text-slate-800 dark:text-gray-100 shadow-sm"
+                        : "text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-200"
                     }`}
                   >
                     {opt}
@@ -301,10 +301,10 @@ export function MiningSettings({
 
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">
+                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                   {t("settings.miningSettings.pauseTitle")}
                 </p>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
                   {t("settings.miningSettings.pauseDesc")}
                 </p>
               </div>
@@ -312,7 +312,7 @@ export function MiningSettings({
                 onClick={() =>
                   onUpdate("pauseOnBattery", !config.pauseOnBattery)
                 }
-                className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${config.pauseOnBattery ? "bg-emerald-500" : "bg-slate-200"}`}
+                className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${config.pauseOnBattery ? "bg-emerald-500" : "bg-slate-200 dark:bg-gray-700"}`}
               >
                 <div
                   className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${config.pauseOnBattery ? "translate-x-5" : "translate-x-0"}`}
@@ -323,16 +323,16 @@ export function MiningSettings({
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
             {t("settings.miningSettings.rewards")}
           </h3>
-          <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
+          <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
-                <p className="text-sm font-bold text-slate-800">
+                <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                   {t("settings.miningSettings.modeTitle")}
                 </p>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
                   {t("settings.miningSettings.modeDesc")}
                 </p>
               </div>
@@ -352,10 +352,10 @@ export function MiningSettings({
 
             <div className="p-4 flex flex-col gap-3">
               <div>
-                <p className="text-sm font-bold text-slate-800 mb-0.5">
+                <p className="text-sm font-bold text-slate-800 dark:text-gray-100 mb-0.5">
                   {t("settings.miningSettings.rewardAddressTitle")}
                 </p>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-500 dark:text-gray-400">
                   {t("settings.miningSettings.rewardAddressDesc")}
                 </p>
               </div>
@@ -384,7 +384,7 @@ export function MiningSettings({
                     placeholder={t(
                       "settings.miningSettings.customAddressPlaceholder",
                     )}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-sm font-medium text-slate-800 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+                    className="w-full bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg pl-9 pr-3 py-2 text-sm font-medium text-slate-800 dark:text-gray-200 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
                   />
                 </div>
               )}

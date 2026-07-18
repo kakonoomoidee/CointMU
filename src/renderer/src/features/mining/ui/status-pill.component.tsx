@@ -15,17 +15,17 @@ const BASE_CLASSES =
   "inline-flex items-center gap-2 px-4 py-2 rounded-full border";
 
 const CONTAINER_TONE: Record<StatusTone, string> = {
-  success: "border-emerald-200 bg-emerald-50",
-  warning: "border-amber-200 bg-amber-50",
-  danger: "border-red-200 bg-red-50",
-  neutral: "border-slate-200 bg-slate-50",
+  success: "border-emerald-200 bg-emerald-50 dark:border-emerald-900/50 dark:bg-emerald-900/20",
+  warning: "border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-900/20",
+  danger: "border-red-200 bg-red-50 dark:border-red-900/50 dark:bg-red-900/20",
+  neutral: "border-slate-200 bg-slate-50 dark:border-gray-700 dark:bg-gray-800",
 };
 
 const TEXT_TONE: Record<StatusTone, string> = {
-  success: "text-emerald-600",
-  warning: "text-amber-700",
-  danger: "text-red-600",
-  neutral: "text-slate-500",
+  success: "text-emerald-600 dark:text-emerald-500",
+  warning: "text-amber-700 dark:text-amber-500",
+  danger: "text-red-600 dark:text-red-500",
+  neutral: "text-slate-500 dark:text-gray-300",
 };
 
 const DOT_TONE: Record<StatusTone, string> = {

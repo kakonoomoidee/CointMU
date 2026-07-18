@@ -152,44 +152,44 @@ function SettingsPage({
   if (!settings) {
     return (
       <div className="flex items-center justify-center h-full bg-slate-50">
-        <div className="w-6 h-6 rounded-full border-2 border-slate-300 border-t-blue-500 animate-spin" />
+        <div className="w-6 h-6 rounded-full border-2 border-slate-300 border-t-accent animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-full bg-white">
-      <header className="flex items-center justify-between px-8 py-4 border-b border-slate-200">
+    <div className="flex flex-col h-full bg-white dark:bg-gray-950">
+      <header className="flex items-center justify-between px-8 py-4 border-b border-slate-200 dark:border-gray-800">
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold tracking-widest uppercase text-slate-400">
             {t("settings.system")}
           </span>
           <span className="text-slate-300">/</span>
-          <span className="text-sm font-semibold text-slate-800">
+          <span className="text-sm font-semibold text-slate-800 dark:text-gray-100">
             {t("sidebar.settings")}
           </span>
         </div>
 
-        <button className="text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors">
+        <button className="text-xs font-semibold text-slate-700 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-100 transition-colors">
           {t("settings.resetToDefaults")}
         </button>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar Navigation */}
-        <div className="w-56 flex-shrink-0 border-r border-slate-200 bg-slate-50/50 p-4 space-y-1">
+        <div className="w-56 flex-shrink-0 border-r border-slate-200 dark:border-gray-800 bg-slate-50/50 dark:bg-gray-950 p-4 space-y-1">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
               className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150 ${
                 activeCategory === cat.id
-                  ? "bg-white text-blue-600 shadow-sm border border-slate-200/60"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-800 border border-transparent"
+                  ? "bg-white dark:bg-gray-800 text-accent shadow-sm border border-slate-200/60 dark:border-gray-700"
+                  : "text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-gray-800 hover:text-slate-800 dark:hover:text-gray-100 border border-transparent"
               }`}
             >
               <div
-                className={`${activeCategory === cat.id ? "text-blue-500" : "text-slate-400"}`}
+                className={`${activeCategory === cat.id ? "text-accent" : "text-slate-400"}`}
               >
                 {cat.icon}
               </div>
@@ -199,7 +199,7 @@ function SettingsPage({
         </div>
 
         {/* Right Content Area */}
-        <div className="flex-1 overflow-y-auto bg-white p-8">
+        <div className="flex-1 overflow-y-auto bg-white dark:bg-gray-950 p-8">
           <div className="max-w-3xl">
             {activeCategory === "general" && (
               <GeneralSettings
@@ -207,12 +207,7 @@ function SettingsPage({
                 onUpdate={(k, v) => updateSetting("general", k, v)}
               />
             )}
-            {activeCategory === "appearance" && (
-              <AppearanceSettings
-                config={settings.appearance}
-                onUpdate={(k, v) => updateSetting("appearance", k, v)}
-              />
-            )}
+            {activeCategory === "appearance" && <AppearanceSettings />}
             {activeCategory === "notifications" && <NotificationSettings />}
             {activeCategory === "network" && (
               <NetworkSettings

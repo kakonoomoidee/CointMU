@@ -79,30 +79,30 @@ function AddTokenModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 dark:bg-gray-950/60 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white rounded-3xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden relative">
+      <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-slate-200 dark:border-gray-800 w-full max-w-md overflow-hidden relative">
         <button
           type="button"
           onClick={onClose}
           disabled={isLoading}
-          className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="absolute top-5 right-5 text-slate-400 dark:text-gray-500 hover:text-slate-600 dark:hover:text-gray-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <X width={20} height={20} strokeWidth={2.5} />
         </button>
 
         <div className="p-8">
-          <h3 className="text-xl font-bold text-slate-800 mb-1">
+          <h3 className="text-xl font-bold text-slate-800 dark:text-gray-100 mb-1">
             Add Custom Token
           </h3>
-          <p className="text-sm text-slate-500 mb-6">
+          <p className="text-sm text-slate-500 dark:text-gray-400 mb-6">
             Enter the contract address of the ERC-20 token you want to track.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-600 dark:text-gray-300 mb-1.5">
                 Token Contract Address
               </label>
               <input
@@ -111,13 +111,13 @@ function AddTokenModal({
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="0x..."
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-mono disabled:opacity-50"
+                className="w-full px-4 py-3 bg-slate-50 dark:bg-gray-800/50 border border-slate-200 dark:border-gray-700 rounded-xl text-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-accent/20 focus:border-blue-500 dark:focus:border-accent transition-all font-mono disabled:opacity-50"
                 disabled={isLoading}
               />
             </div>
 
             {error && (
-              <div className="flex items-start gap-2 text-red-600 bg-red-50 px-3 py-2.5 rounded-xl border border-red-100">
+              <div className="flex items-start gap-2 text-red-600 dark:text-red-500 bg-red-50 dark:bg-red-900/20 px-3 py-2.5 rounded-xl border border-red-100 dark:border-red-900/50">
                 <AlertCircle
                   width={14}
                   height={14}
@@ -130,7 +130,7 @@ function AddTokenModal({
             <button
               type="submit"
               disabled={isLoading || !address}
-              className="w-full py-3.5 bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3.5 bg-accent hover:opacity-90 text-white border-transparent text-sm font-bold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? "Verifying..." : "Add Token"}
             </button>

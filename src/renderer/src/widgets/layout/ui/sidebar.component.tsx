@@ -65,14 +65,14 @@ export function Sidebar({
   }, []);
 
   return (
-    <aside className="w-56 flex flex-col border-r border-slate-200 bg-white">
+    <aside className="w-56 flex flex-col border-r border-slate-200 dark:border-gray-800 bg-white dark:bg-gray-950">
       <div className="flex items-center justify-between px-5 py-5">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-sm shadow-blue-200">
+          <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center shadow-sm shadow-accent/20">
             <Zap color="white" width={16} height={16} strokeWidth={2.5} />
           </div>
           <div>
-            <p className="text-sm font-bold text-slate-800">CointMU</p>
+            <p className="text-sm font-bold text-slate-800 dark:text-gray-100">CointMU</p>
             <p className="text-[10px] text-slate-400 tracking-wide">
               v{window.systemInfo?.version || "0.0.1"} - {APP_NETWORK}
             </p>
@@ -82,11 +82,11 @@ export function Sidebar({
       </div>
 
       <div className="px-4 py-2">
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-50 border border-slate-100">
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-50 dark:bg-gray-900 border border-slate-100 dark:border-gray-800">
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="text-[11px] font-medium text-slate-600">
             {t("sidebar.connectedTo")}
-            <span className="font-semibold text-blue-600 ml-1">
+            <span className="font-semibold text-accent ml-1">
               CointMU Mainnet
             </span>
           </span>
@@ -109,8 +109,8 @@ export function Sidebar({
           onClick={() => setActiveView("dashboard")}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 text-left ${
             activeView === "dashboard"
-              ? "bg-blue-600 text-white shadow-sm shadow-blue-200"
-              : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+              ? "bg-accent text-white shadow-sm shadow-accent/20"
+              : "text-slate-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800 hover:text-slate-800 dark:hover:text-gray-100"
           }`}
         >
           <Grid width={18} height={18} />
@@ -121,8 +121,8 @@ export function Sidebar({
           onClick={() => setActiveView("miner")}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 text-left ${
             activeView === "miner"
-              ? "bg-blue-600 text-white shadow-sm shadow-blue-200"
-              : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+              ? "bg-accent text-white shadow-sm shadow-accent/20"
+              : "text-slate-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800 hover:text-slate-800 dark:hover:text-gray-100"
           }`}
         >
           <Cpu width={18} height={18} />
@@ -134,8 +134,8 @@ export function Sidebar({
           onClick={() => setActiveView("wallet")}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 text-left ${
             activeView === "wallet"
-              ? "bg-blue-600 text-white shadow-sm shadow-blue-200"
-              : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+              ? "bg-accent text-white shadow-sm shadow-accent/20"
+              : "text-slate-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800 hover:text-slate-800 dark:hover:text-gray-100"
           }`}
         >
           <Wallet width={18} height={18} />
@@ -146,8 +146,8 @@ export function Sidebar({
           onClick={() => setActiveView("explorer")}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 text-left ${
             activeView === "explorer"
-              ? "bg-blue-600 text-white shadow-sm shadow-blue-200"
-              : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+              ? "bg-accent text-white shadow-sm shadow-accent/20"
+              : "text-slate-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800 hover:text-slate-800 dark:hover:text-gray-100"
           }`}
         >
           <Search width={18} height={18} />
@@ -164,8 +164,8 @@ export function Sidebar({
           onClick={() => setActiveView("settings")}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 text-left ${
             activeView === "settings"
-              ? "bg-blue-600 text-white shadow-sm shadow-blue-200"
-              : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+              ? "bg-accent text-white shadow-sm shadow-accent/20"
+              : "text-slate-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800 hover:text-slate-800 dark:hover:text-gray-100"
           }`}
         >
           <Settings width={18} height={18} />
@@ -173,23 +173,23 @@ export function Sidebar({
           {(updateStatus === "available" ||
             updateStatus === "downloading" ||
             updateStatus === "downloaded") && (
-            <span className="ml-auto w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+            <span className="ml-auto w-2 h-2 rounded-full bg-accent animate-pulse" />
           )}
         </button>
       </nav>
 
       <div
-        className="relative px-4 py-3 border-t border-slate-100"
+        className="relative px-4 py-3 border-t border-slate-100 dark:border-gray-800"
         ref={popoverRef}
       >
         {isPopoverOpen && (
-          <div className="absolute bottom-full mb-2 left-4 right-4 bg-white border border-slate-200 rounded-xl shadow-lg p-1.5 z-50 animate-in fade-in zoom-in-95 duration-100 origin-bottom">
+          <div className="absolute bottom-full mb-2 left-4 right-4 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl shadow-lg p-1.5 z-50 animate-in fade-in zoom-in-95 duration-100 origin-bottom">
             <button
               onClick={() => {
                 setIsPopoverOpen(false);
                 setActiveView("settings");
               }}
-              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors text-left"
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors text-left"
             >
               <Settings
                 className="text-slate-400"
@@ -197,17 +197,17 @@ export function Sidebar({
                 height={14}
                 strokeWidth={2.5}
               />
-              <span className="text-xs font-semibold text-slate-700">
+              <span className="text-xs font-semibold text-slate-700 dark:text-gray-300">
                 {t("sidebar.settings")}
               </span>
             </button>
-            <div className="h-px bg-slate-100 my-1 mx-2" />
+            <div className="h-px bg-slate-100 dark:bg-gray-800 my-1 mx-2" />
             <button
               onClick={() => {
                 setIsPopoverOpen(false);
                 onLogout();
               }}
-              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-red-50 transition-colors text-left group"
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950 transition-colors text-left group"
             >
               <LockOpen
                 className="text-red-400 group-hover:text-red-500 transition-colors"
@@ -224,17 +224,17 @@ export function Sidebar({
 
         <button
           onClick={() => setIsPopoverOpen(!isPopoverOpen)}
-          className="w-full flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-50 transition-colors focus:outline-none"
+          className="w-full flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors focus:outline-none"
         >
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
-            <Wallet className="text-slate-500" width={16} height={16} />
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-gray-800 dark:to-gray-800 dark:border dark:border-gray-700 flex items-center justify-center">
+            <Wallet className="text-slate-500 dark:text-gray-300" width={16} height={16} />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
-              <p className="text-xs font-semibold text-slate-700 truncate">
+              <p className="text-xs font-semibold text-slate-700 dark:text-gray-100 truncate">
                 {activeAccount?.label || "Wallet"}
               </p>
-              <p className="text-xs font-bold text-slate-800 ml-2">{balance}</p>
+              <p className="text-xs font-bold text-slate-800 dark:text-gray-100 ml-2">{balance}</p>
             </div>
             <div className="flex items-center justify-between mt-0.5">
               <p

@@ -32,7 +32,7 @@ function StatCard({
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           {icon}
-          <span className="text-[10px] font-semibold tracking-wider uppercase text-slate-400">
+          <span className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
             {label}
           </span>
         </div>
@@ -40,14 +40,14 @@ function StatCard({
       </div>
       <p
         className={cn(
-          "text-2xl font-bold text-slate-800 tracking-tight",
+          "text-2xl font-bold text-slate-800 dark:text-gray-100 tracking-tight",
           valueClassName,
         )}
       >
         {value}
       </p>
       {hint !== undefined && (
-        <p className="text-xs text-slate-400 mt-1">{hint}</p>
+        <p className="text-xs text-slate-400 dark:text-gray-400 mt-1">{hint}</p>
       )}
     </Card>
   );

@@ -237,7 +237,7 @@ function WalletPage({
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-50/80 relative">
+    <div className="flex flex-col h-full bg-slate-50/80 dark:bg-gray-950 dark:text-white relative">
       <WalletHeader onAddAccount={() => setModalState("ADD_ACCOUNT")} />
 
       <main className="flex-1 overflow-y-auto px-8 pb-8">

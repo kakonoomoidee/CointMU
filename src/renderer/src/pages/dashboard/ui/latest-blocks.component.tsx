@@ -39,9 +39,9 @@ function LatestBlocks({
   };
 
   return (
-    <div className="rounded-2xl bg-white border border-slate-200 p-6">
+    <div className="rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 p-6">
       <div className="flex items-center justify-between mb-1">
-        <h3 className="text-sm font-bold text-slate-800">
+        <h3 className="text-sm font-bold text-slate-800 dark:text-gray-100">
           {t("dashboard.latestBlocks.title")}
         </h3>
         <button
@@ -60,19 +60,19 @@ function LatestBlocks({
         {(isConnected ? recentBlocks : []).slice(0, 10).map((block) => (
           <div
             key={block.hash}
-            className="flex items-center justify-between py-3.5 border-t border-slate-100 first:border-t-0 hover:bg-slate-50/50 transition-colors px-2 rounded-lg"
+            className="flex items-center justify-between py-3.5 border-t border-slate-100 dark:border-gray-800 first:border-t-0 hover:bg-slate-50/50 dark:hover:bg-gray-800 transition-colors px-2 rounded-lg"
           >
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-                <Square className="text-blue-500" width={14} height={14} />
+              <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
+                <Square className="text-accent" width={14} height={14} />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold text-slate-800 font-mono">
+                  <span className="text-sm font-bold text-slate-800 dark:text-gray-100 font-mono">
                     #{block.number}
                   </span>
                   {checkIfMinedByMe(block.miner, balances) && (
-                    <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+                    <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950 px-1.5 py-0.5 rounded">
                       +2 CMU {t("dashboard.latestBlocks.mined")}
                     </span>
                   )}

@@ -392,18 +392,18 @@ function SendModal({
           <div className="w-16 h-16 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
             <Check width={32} height={32} strokeWidth={3} />
           </div>
-          <p className="text-lg font-bold text-slate-800 mb-2">
+          <p className="text-lg font-bold text-slate-800 dark:text-gray-100 mb-2">
             {t("wallet.modals.send.successTitle")}
           </p>
-          <p className="text-xs text-slate-500 mb-1">
+          <p className="text-xs text-slate-500 dark:text-gray-400 mb-1">
             {t("wallet.modals.send.txHash")}
           </p>
-          <p className="text-xs font-mono text-slate-700 break-all bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 mb-6">
+          <p className="text-xs font-mono text-slate-700 dark:text-gray-200 break-all bg-slate-50 dark:bg-gray-950 border border-slate-200 dark:border-gray-700 rounded-xl px-3 py-2 mb-6">
             {sendSuccess}
           </p>
           <button
             onClick={handleDone}
-            className="w-full py-3.5 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors"
+            className="w-full py-3.5 bg-slate-100 dark:bg-gray-800 text-slate-700 dark:text-gray-200 font-bold rounded-xl hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors"
           >
             {t("wallet.modals.send.doneBtn")}
           </button>
@@ -414,16 +414,16 @@ function SendModal({
 
   return (
     <div className="p-8">
-      <h3 className="text-xl font-bold text-slate-800 mb-1">
+      <h3 className="text-xl font-bold text-slate-800 dark:text-gray-100 mb-1">
         {t("wallet.modals.send.title")}
       </h3>
-      <p className="text-sm text-slate-500 mb-6">
+      <p className="text-sm text-slate-500 dark:text-gray-400 mb-6">
         {t("wallet.modals.send.subtitle")}
       </p>
 
       <div className="space-y-5">
         <div>
-          <label className="block text-xs font-bold text-slate-700 mb-2">
+          <label className="block text-xs font-bold text-slate-700 dark:text-gray-200 mb-2">
             {t("wallet.modals.send.assetLabel")}
           </label>
           <div className="relative">
@@ -442,7 +442,7 @@ function SendModal({
                   <span>
                     {selected?.name ?? t("wallet.modals.send.selectToken")}
                   </span>
-                  <span className="text-slate-400 font-normal">
+                  <span className="text-slate-400 dark:text-gray-400 font-normal">
                     ({selected?.symbol})
                   </span>
                 </>
@@ -455,7 +455,7 @@ function SendModal({
                     size="sm"
                   />
                   <span>{option.name}</span>
-                  <span className="text-slate-400 font-normal ml-1">
+                  <span className="text-slate-400 dark:text-gray-400 font-normal ml-1">
                     ({option.symbol})
                   </span>
                 </>
@@ -464,17 +464,17 @@ function SendModal({
           </div>
 
           <div className="flex items-center justify-between mt-1.5 px-1">
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-400 dark:text-gray-400">
               {t("wallet.modals.send.availableBalance")}
             </span>
-            <span className="text-xs font-mono font-semibold text-slate-600">
+            <span className="text-xs font-mono font-semibold text-slate-600 dark:text-gray-300">
               {tokenBalance} {selectedToken?.symbol}
             </span>
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-slate-700 mb-2">
+          <label className="block text-xs font-bold text-slate-700 dark:text-gray-200 mb-2">
             {t("wallet.modals.send.recipientLabel")}
           </label>
           <input
@@ -483,20 +483,20 @@ function SendModal({
             onChange={(e) => setSendTo(e.target.value)}
             disabled={sendLoading}
             placeholder="0x..."
-            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-mono text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-4 py-3 bg-slate-50 dark:bg-gray-950 border border-slate-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white dark:focus:bg-gray-900 dark:text-white transition-all font-mono text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           />
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="text-xs font-bold text-slate-700">
+            <label className="text-xs font-bold text-slate-700 dark:text-gray-200">
               {t("wallet.modals.send.amountLabel")}
             </label>
             <button
               type="button"
               onClick={handleMaxAmount}
               disabled={sendLoading || tokenBalance === "..."}
-              className="text-xs font-bold text-blue-500 hover:text-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="text-xs font-bold text-accent hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               {t("wallet.modals.send.maxBtn")}
             </button>
@@ -509,7 +509,7 @@ function SendModal({
               onChange={(e) => handleAmountChange(e.target.value)}
               disabled={sendLoading}
               placeholder="0.00"
-              className="w-full pl-4 pr-20 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-mono text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full pl-4 pr-20 py-3 bg-slate-50 dark:bg-gray-950 border border-slate-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white dark:focus:bg-gray-900 dark:text-white transition-all font-mono text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <span className="absolute right-4 top-3.5 text-sm font-bold text-slate-400">
               {selectedToken?.symbol ?? "CMU"}
@@ -517,12 +517,12 @@ function SendModal({
           </div>
         </div>
 
-        <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-3">
+        <div className="bg-slate-50 dark:bg-gray-950 border border-slate-100 dark:border-gray-800 rounded-xl p-4 space-y-3">
           <div className="flex justify-between items-center">
-            <span className="text-xs font-semibold text-slate-500">
+            <span className="text-xs font-semibold text-slate-500 dark:text-gray-400">
               {t("wallet.modals.send.networkFee")}
             </span>
-            <span className="text-xs font-mono font-bold text-slate-700">
+            <span className="text-xs font-mono font-bold text-slate-700 dark:text-gray-200">
               {estimationStatus === "estimating" && (
                 <span className="text-slate-400 animate-pulse">
                   {t("wallet.modals.send.estimating")}
@@ -544,12 +544,12 @@ function SendModal({
 
           {!isNative && (
             <>
-              <div className="h-px bg-slate-200" />
+              <div className="h-px bg-slate-200 dark:bg-gray-800" />
               <div className="flex justify-between items-center">
-                <span className="text-xs font-semibold text-slate-500">
+                <span className="text-xs font-semibold text-slate-500 dark:text-gray-400">
                   {t("wallet.modals.send.cmuGasBalance")}
                 </span>
-                <span className="text-xs font-mono font-bold text-slate-700">
+                <span className="text-xs font-mono font-bold text-slate-700 dark:text-gray-200">
                   {nativeBalance} CMU
                 </span>
               </div>
@@ -561,12 +561,12 @@ function SendModal({
             gasFeeFormatted &&
             estimationStatus === "ready" && (
               <>
-                <div className="h-px bg-slate-200" />
+                <div className="h-px bg-slate-200 dark:bg-gray-800" />
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-bold text-slate-800">
+                  <span className="text-sm font-bold text-slate-800 dark:text-gray-100">
                     {t("wallet.modals.send.totalDeducted")}
                   </span>
-                  <span className="text-sm font-mono font-bold text-slate-800">
+                  <span className="text-sm font-mono font-bold text-slate-800 dark:text-gray-100">
                     {(
                       parseFloat(sendAmount) + parseFloat(gasFeeFormatted)
                     ).toFixed(6)}{" "}
@@ -578,7 +578,7 @@ function SendModal({
         </div>
 
         {sendError && (
-          <div className="flex items-start gap-2 text-red-600 bg-red-50 px-3 py-2.5 rounded-xl border border-red-100">
+          <div className="flex items-start gap-2 text-red-600 dark:text-red-500 bg-red-50 dark:bg-red-900/20 px-3 py-2.5 rounded-xl border border-red-100 dark:border-red-900/50">
             <AlertCircle
               width={14}
               height={14}
@@ -591,7 +591,7 @@ function SendModal({
         <button
           onClick={handleSend}
           disabled={sendLoading || estimationStatus === "estimating"}
-          className="w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl shadow-sm shadow-blue-200 hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
+          className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-sm shadow-accent/20 hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
         >
           {sendLoading
             ? t("wallet.modals.send.pendingConf")

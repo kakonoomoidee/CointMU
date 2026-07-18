@@ -51,9 +51,9 @@ function ActivityFeed({
     downloadActivityCsv(activity, ACTIVITY_CSV_FILENAME);
 
   return (
-    <div className="rounded-2xl bg-white border border-slate-200 p-6">
+    <div className="rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 p-6">
       <div className="flex items-center justify-between mb-1">
-        <h3 className="text-sm font-bold text-slate-800">
+        <h3 className="text-sm font-bold text-slate-800 dark:text-gray-100">
           {t("dashboard.activityFeed.yourActivity")}
         </h3>
         <button
@@ -82,7 +82,7 @@ function ActivityFeed({
       <div className="space-y-0">
         {hasActivity ? (
           <>
-            <div className="divide-y divide-slate-100 -mx-2">
+            <div className="divide-y divide-slate-100 dark:divide-gray-800 -mx-2">
               {pageItems.map((item) => (
                 <ActivityItem key={item.id} activity={item} />
               ))}

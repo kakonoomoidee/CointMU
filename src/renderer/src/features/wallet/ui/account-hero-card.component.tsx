@@ -83,25 +83,25 @@ function AccountHeroCard({
         <div className="flex items-center gap-2.5">
           <button
             onClick={onSend}
-            className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors"
+            className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-accent/20 backdrop-blur-sm text-xs font-semibold text-accent hover:bg-accent hover:text-white transition-colors"
           >
             <ArrowUp width={12} height={12} strokeWidth={2.5} />
             {t("wallet.send")}
           </button>
           <button
             onClick={onReceive}
-            className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors"
+            className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-accent/20 backdrop-blur-sm text-xs font-semibold text-accent hover:bg-accent hover:text-white transition-colors"
           >
             <ArrowDown width={12} height={12} strokeWidth={2.5} />
             {t("wallet.receive")}
           </button>
-          <button className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors">
+          <button className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-accent/20 backdrop-blur-sm text-xs font-semibold text-accent hover:bg-accent hover:text-white transition-colors">
             <RefreshCw width={12} height={12} />
             {t("wallet.swap")}
           </button>
           <button
             onClick={onCopy}
-            className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-xs font-semibold text-white hover:bg-white/20 transition-colors"
+            className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-accent/20 backdrop-blur-sm text-xs font-semibold text-accent hover:bg-accent hover:text-white transition-colors"
           >
             {copied ? (
               <Check width={12} height={12} />

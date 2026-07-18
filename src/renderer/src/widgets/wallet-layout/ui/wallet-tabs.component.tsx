@@ -183,15 +183,15 @@ function WalletTabs({
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center rounded-lg border border-slate-200 overflow-hidden bg-slate-100/50">
+        <div className="flex items-center rounded-lg border border-slate-200 dark:border-gray-800 overflow-hidden bg-slate-100/50 dark:bg-gray-950">
           {WALLET_TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
               className={`px-4 py-2 text-xs font-semibold transition-all duration-150 ${
                 activeTab === tab.id
-                  ? "bg-white text-slate-800 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700"
+                  ? "bg-white dark:bg-gray-800 text-slate-800 dark:text-white shadow-sm"
+                  : "text-slate-500 hover:text-slate-700 dark:hover:text-gray-300"
               }`}
             >
               {t(`walletTabs.${tab.id}`)}
@@ -203,7 +203,7 @@ function WalletTabs({
           <button
             type="button"
             onClick={() => setIsAddTokenModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all duration-150 shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-gray-200 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-700 hover:border-slate-300 dark:hover:border-gray-600 transition-all duration-150 shadow-sm"
           >
             <Plus width={12} height={12} strokeWidth={2.5} />
             Add Token
@@ -213,7 +213,7 @@ function WalletTabs({
           <button
             type="button"
             onClick={nftFetcher.refresh}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all duration-150 shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-gray-200 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-700 hover:border-slate-300 dark:hover:border-gray-600 transition-all duration-150 shadow-sm"
           >
             Refresh
           </button>
@@ -222,7 +222,7 @@ function WalletTabs({
 
       {activeTab === "activity" && (
         <div className="flex flex-col gap-4">
-          <div className="rounded-2xl bg-white border border-slate-200 divide-y divide-slate-100 overflow-hidden">
+          <div className="rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 divide-y divide-slate-100 dark:divide-gray-800 overflow-hidden text-slate-800 dark:text-gray-100">
             {isFetchingActivity ? (
               <SkeletonList itemCount={5} />
             ) : paginatedActivities.length > 0 ? (
@@ -232,15 +232,15 @@ function WalletTabs({
             ) : (
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <Zap
-                  className="text-slate-300 mb-3"
+                  className="text-slate-300 dark:text-gray-600 mb-3"
                   width={32}
                   height={32}
                   strokeWidth={1.5}
                 />
-                <p className="text-sm font-medium text-slate-400">
+                <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
                   No activity yet
                 </p>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-slate-400 dark:text-gray-400 mt-1">
                   Transactions will appear here once you send or receive CMU
                 </p>
               </div>
@@ -259,25 +259,25 @@ function WalletTabs({
       )}
 
       {activeTab === "tokens" && (
-        <div className="rounded-2xl bg-white border border-slate-200 overflow-hidden">
+        <div className="rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 overflow-hidden">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-100">
-                <th className="text-left px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400">
+              <tr className="border-b border-slate-100 dark:border-gray-800">
+                <th className="text-left px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
                   Token
                 </th>
-                <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400">
+                <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
                   Price
                 </th>
-                <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400">
+                <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
                   Balance
                 </th>
-                <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400">
+                <th className="text-right px-5 py-3 text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
                   Value
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-gray-800">
               {isFetchingTokens ? (
                 <tr>
                   <td colSpan={4} className="p-0">
@@ -288,7 +288,7 @@ function WalletTabs({
                 knownTokens.map((token) => (
                   <tr
                     key={token.symbol}
-                    className="hover:bg-slate-50/50 transition-colors"
+                    className="hover:bg-slate-50/50 dark:hover:bg-gray-800/50 transition-colors"
                   >
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
@@ -297,27 +297,27 @@ function WalletTabs({
                           symbol={token.symbol}
                         />
                         <div>
-                          <p className="text-sm font-bold text-slate-800">
+                          <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
                             {token.name}
                           </p>
-                          <p className="text-xs font-semibold text-slate-400">
+                          <p className="text-xs font-semibold text-slate-400 dark:text-gray-400">
                             {token.symbol}
                           </p>
                         </div>
                       </div>
                     </td>
                     <td className="px-5 py-4 text-right">
-                      <p className="text-sm font-semibold text-slate-700 font-mono">
+                      <p className="text-sm font-semibold text-slate-700 dark:text-gray-200 font-mono">
                         N/A
                       </p>
                     </td>
                     <td className="px-5 py-4 text-right">
-                      <p className="text-sm font-semibold text-slate-700 font-mono">
+                      <p className="text-sm font-semibold text-slate-700 dark:text-gray-200 font-mono">
                         {tokenBalances[token.symbol] ?? "..."}
                       </p>
                     </td>
                     <td className="px-5 py-4 text-right">
-                      <p className="text-sm font-bold text-slate-800 font-mono">
+                      <p className="text-sm font-bold text-slate-800 dark:text-gray-100 font-mono">
                         N/A
                       </p>
                     </td>
@@ -332,9 +332,9 @@ function WalletTabs({
       {activeTab === "nfts" && (
         <div>
           {nftFetcher.isFetching ? (
-            <div className="rounded-2xl bg-white border border-slate-200">
+            <div className="rounded-2xl bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700">
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <p className="text-sm font-medium text-slate-400">
+                <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
                   {t("walletTabs.scanningNfts")}
                 </p>
               </div>
@@ -342,9 +342,9 @@ function WalletTabs({
           ) : nftFetcher.nfts.length > 0 ? (
             <NFTGrid nfts={nftFetcher.nfts} />
           ) : (
-            <div className="rounded-2xl bg-white border border-slate-200">
+            <div className="rounded-2xl bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700">
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <p className="text-sm font-medium text-slate-400">
+                <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
                   {t("walletTabs.noNftsFound")}
                 </p>
                 {nftFetcher.error && (

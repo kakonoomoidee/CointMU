@@ -28,21 +28,21 @@ function WorkerConfiguration({
   return (
     <Card>
       <div className="mb-1">
-        <h3 className="text-sm font-bold text-slate-800">
+        <h3 className="text-sm font-bold text-slate-800 dark:text-gray-100">
           {t("mining.worker.title")}
         </h3>
-        <p className="text-[10px] text-slate-400 mt-0.5">
+        <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
           {t("mining.worker.subtitle")}
         </p>
       </div>
 
-      <div className="divide-y divide-slate-100 mt-4 opacity-80 pointer-events-none">
+      <div className="divide-y divide-slate-100 dark:divide-gray-800 mt-4 opacity-80 pointer-events-none">
         <div className="flex items-center justify-between py-4">
           <div>
-            <p className="text-sm font-semibold text-slate-700">
+            <p className="text-sm font-semibold text-slate-700 dark:text-gray-200">
               {t("mining.worker.workerThreads")}
             </p>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-400 dark:text-gray-400 mt-0.5">
               {cpuThreads} {t("mining.worker.ofCores", { count: maxCores })}
             </p>
           </div>
@@ -50,7 +50,7 @@ function WorkerConfiguration({
             {Array.from({ length: maxCores }).map((_, i) => (
               <div
                 key={i}
-                className={`w-4 h-6 rounded-sm cursor-default ${i < cpuThreads ? "bg-emerald-400" : "bg-slate-200"}`}
+                className={`w-4 h-6 rounded-sm cursor-default ${i < cpuThreads ? "bg-emerald-400" : "bg-slate-200 dark:bg-gray-800"}`}
                 title={`${i + 1} Thread${i === 0 ? "" : "s"}`}
               />
             ))}
@@ -59,21 +59,21 @@ function WorkerConfiguration({
 
         <div className="flex items-center justify-between py-4">
           <div>
-            <p className="text-sm font-semibold text-slate-700">
+            <p className="text-sm font-semibold text-slate-700 dark:text-gray-200">
               {t("mining.worker.intensityTitle")}
             </p>
-            <p className="text-xs text-slate-400 mt-0.5 max-w-[140px]">
+            <p className="text-xs text-slate-400 dark:text-gray-400 mt-0.5 max-w-[140px]">
               {t("mining.worker.higherMoreHeat")}
             </p>
           </div>
-          <div className="flex items-center rounded-lg border border-slate-200 overflow-hidden">
+          <div className="flex items-center rounded-lg border border-slate-200 dark:border-gray-700 overflow-hidden">
             {INTENSITY_OPTIONS.map((option) => (
               <div
                 key={option}
                 className={`px-3.5 py-1.5 text-xs font-semibold cursor-default transition-colors ${
                   intensity === option
-                    ? "bg-slate-300 text-slate-700"
-                    : "bg-white text-slate-400"
+                    ? "bg-slate-300 dark:bg-gray-700 text-slate-700 dark:text-gray-100"
+                    : "bg-white dark:bg-gray-800 text-slate-400 dark:text-gray-400"
                 }`}
               >
                 {option}
@@ -84,10 +84,10 @@ function WorkerConfiguration({
 
         <div className="flex items-center justify-between py-4">
           <div>
-            <p className="text-sm font-semibold text-slate-700">
+            <p className="text-sm font-semibold text-slate-700 dark:text-gray-200">
               {t("mining.worker.rewardAddressTitle")}
             </p>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-400 dark:text-gray-400 mt-0.5">
               {t("mining.worker.blockRewardsCreditedHere")}
             </p>
           </div>
@@ -96,7 +96,7 @@ function WorkerConfiguration({
               <div
                 className={`w-5 h-5 rounded-full bg-gradient-to-br ${generateIdenticonGradient(rewardAddress)} flex-shrink-0`}
               />
-              <span className="text-xs font-mono text-slate-500 font-medium tracking-tight">
+              <span className="text-xs font-mono text-slate-500 dark:text-gray-400 font-medium tracking-tight">
                 {rewardAddress.substring(0, 10)}...
                 {rewardAddress.substring(rewardAddress.length - 8)}
               </span>

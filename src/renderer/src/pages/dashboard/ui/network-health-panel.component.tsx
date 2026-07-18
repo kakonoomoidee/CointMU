@@ -31,19 +31,19 @@ function NetworkHealthPanel({
   const { t } = useTranslation();
 
   return (
-    <div className="rounded-2xl bg-white border border-slate-200 p-6">
+    <div className="rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 p-6 flex flex-col h-full">
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
           <span
             className={`w-2 h-2 rounded-full ${isConnected ? "bg-emerald-500" : "bg-red-400"}`}
           />
-          <span className="text-sm font-semibold text-slate-800">
+          <p className="text-sm font-medium text-slate-700 dark:text-gray-100">
             {isConnected
               ? t("dashboard.networkHealth.healthy")
               : t("dashboard.networkHealth.disconnected")}
-          </span>
+          </p>
         </div>
-        <span className="text-[10px] font-semibold tracking-wide text-slate-500 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200">
+        <span className="text-[10px] font-semibold tracking-wide text-slate-500 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-gray-800 border border-slate-200 dark:border-gray-700">
           {CONSENSUS_LABEL}
         </span>
       </div>
@@ -53,7 +53,7 @@ function NetworkHealthPanel({
           <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">
             {t("dashboard.networkHealth.chainHeight")}
           </p>
-          <p className="text-xl font-bold text-slate-800 font-mono">
+          <p className="text-xl font-bold text-slate-800 dark:text-gray-100 font-mono">
             {blockDisplay}
           </p>
           <p className="text-[10px] text-slate-400">
@@ -64,7 +64,7 @@ function NetworkHealthPanel({
           <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">
             {t("dashboard.networkHealth.peers")}
           </p>
-          <p className="text-xl font-bold text-slate-800 font-mono">
+          <p className="text-xl font-bold text-slate-800 dark:text-gray-100 font-mono">
             {peerDisplay}
           </p>
           <p className="text-[10px] text-slate-400">
@@ -75,7 +75,7 @@ function NetworkHealthPanel({
           <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">
             {t("dashboard.networkHealth.difficulty")}
           </p>
-          <p className="text-xl font-bold text-slate-800 font-mono">
+          <p className="text-xl font-bold text-slate-800 dark:text-gray-100 font-mono">
             {difficultyDisplay}
           </p>
           <p className="text-[10px] text-slate-400">
@@ -86,7 +86,7 @@ function NetworkHealthPanel({
           <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">
             {t("dashboard.networkHealth.gasAvg")}
           </p>
-          <p className="text-xl font-bold text-slate-800 font-mono">
+          <p className="text-xl font-bold text-slate-800 dark:text-gray-100 font-mono">
             {gasDisplay}{" "}
             <span className="text-sm font-medium text-slate-400">gwei</span>
           </p>
@@ -96,12 +96,12 @@ function NetworkHealthPanel({
         </div>
       </div>
 
-      <div className="rounded-xl bg-slate-50 border border-slate-100 p-3.5 flex items-center justify-between">
+      <div className="mt-6 rounded-xl bg-slate-50 dark:bg-gray-800 border border-slate-100 dark:border-gray-700 p-4 flex items-center justify-between">
         <div>
           <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-0.5">
             {t("dashboard.networkHealth.blocksPastHour")}
           </p>
-          <p className="text-2xl font-bold text-slate-800 font-mono">
+          <p className="text-2xl font-bold text-slate-800 dark:text-gray-100 font-mono">
             {isConnected ? blocksPastHour.toString() : "--"}
           </p>
         </div>

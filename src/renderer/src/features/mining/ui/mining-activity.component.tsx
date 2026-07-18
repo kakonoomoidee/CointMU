@@ -121,36 +121,36 @@ function FoundBlocksPanel({
       <div className="relative z-0 h-[280px] overflow-y-auto pr-1">
         {minedBlocks.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Box className="text-slate-300 mb-3" width={32} height={32} />
-            <p className="text-sm font-medium text-slate-400">
+            <Box className="text-slate-300 dark:text-gray-600 mb-3" width={32} height={32} />
+            <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
               {t("mining.activity.noBlocks")}
             </p>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-400 dark:text-gray-400 mt-1">
               {t("mining.activity.startMining")}
             </p>
           </div>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-slate-100 dark:divide-gray-800">
             {minedBlocks.map((block) => (
               <div
                 key={block.hash}
-                className="flex items-center justify-between py-4 px-2 hover:bg-slate-50/50 rounded-lg transition-colors"
+                className="flex items-center justify-between py-4 px-2 hover:bg-slate-50/50 dark:hover:bg-gray-800/50 rounded-lg transition-colors"
               >
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-500">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-emerald-50 dark:bg-gray-800 border border-emerald-100 dark:border-gray-800 flex items-center justify-center text-emerald-500">
                     <Check width={16} height={16} />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-slate-800">
+                      <span className="font-semibold text-slate-800 dark:text-gray-100">
                         #{block.number.toLocaleString()}
                       </span>
-                      <span className="text-xs font-mono text-slate-400">
+                      <span className="text-xs font-mono text-slate-400 dark:text-gray-400">
                         {block.hash.substring(0, 6)}...
                         {block.hash.substring(block.hash.length - 4)}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
                       {formatAge(block.timestamp)}
                     </p>
                   </div>
@@ -193,7 +193,7 @@ function ActivityGraphPanel({
 
   return (
     <div className="py-2">
-      <p className="text-[11px] font-semibold text-slate-500 mb-3">
+      <p className="text-[11px] font-semibold text-slate-500 dark:text-gray-400 mb-3">
         {minutesSinceLast !== null
           ? minutesSinceLast === 1
             ? t("mining.activity.acceptedSharesLastMin", {
@@ -215,22 +215,22 @@ function ActivityGraphPanel({
         ))}
       </div>
 
-      <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
-        <p className="text-[11px] font-medium text-slate-500">
+      <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100 dark:border-gray-800">
+        <p className="text-[11px] font-medium text-slate-500 dark:text-gray-400">
           <span className="font-bold text-emerald-600">{acceptedDays}</span>
           {t("mining.activity.sharesAccepted")}
           <span className="font-bold text-red-500">{rejectedDays}</span>
           {t("mining.activity.rejected")}
         </p>
         <div className="flex items-center gap-1.5">
-          <span className="text-[10px] text-slate-400 mr-1">
+          <span className="text-[10px] text-slate-400 dark:text-gray-400 mr-1">
             {t("mining.activity.less")}
           </span>
-          <div className="w-3 h-3 rounded-sm bg-slate-100" />
+          <div className="w-3 h-3 rounded-sm bg-slate-100 dark:bg-gray-800" />
           <div className="w-3 h-3 rounded-sm bg-green-200" />
           <div className="w-3 h-3 rounded-sm bg-green-400" />
           <div className="w-3 h-3 rounded-sm bg-green-600" />
-          <span className="text-[10px] text-slate-400 ml-1">
+          <span className="text-[10px] text-slate-400 dark:text-gray-400 ml-1">
             {t("mining.activity.more")}
           </span>
         </div>
@@ -296,22 +296,22 @@ function MiningActivity({
     <Card>
       <div className="flex items-center justify-between mb-1">
         <div>
-          <h3 className="text-sm font-bold text-slate-800">
+          <h3 className="text-sm font-bold text-slate-800 dark:text-gray-100">
             {t("mining.activity.title")}
           </h3>
-          <p className="text-[10px] text-slate-400 mt-0.5">
+          <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
             {t("mining.activity.subtitle")}
           </p>
         </div>
-        <div className="relative z-10 flex items-center rounded-lg border border-slate-200 overflow-hidden">
+        <div className="relative z-10 flex items-center rounded-lg border border-slate-200 dark:border-gray-700 overflow-hidden">
           {ACTIVITY_TABS.map((tab) => (
             <button
               key={tab}
               onClick={() => onTabChange(tab)}
               className={`px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                 activeTab === tab
-                  ? "bg-slate-800 text-white"
-                  : "bg-white text-slate-500 hover:bg-slate-50"
+                  ? "bg-slate-800 dark:bg-gray-700 text-white dark:text-gray-100"
+                  : "bg-white dark:bg-gray-800 text-slate-500 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-700"
               }`}
             >
               {tab === ACTIVITY_TAB_FOUND && t("mining.activity.tabFound")}

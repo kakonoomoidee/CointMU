@@ -60,16 +60,16 @@ export function ChainTimeline({
   }, []);
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-slate-200 dark:border-gray-800 p-6 shadow-sm">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h3 className="text-base font-bold text-slate-800">Chain timeline</h3>
-          <p className="text-[10px] text-slate-400 mt-0.5">
+          <h3 className="text-base font-bold text-slate-800 dark:text-gray-100">Chain timeline</h3>
+          <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
             Latest 12 blocks — newest on the right
           </p>
         </div>
         <div
-          className={`flex items-center gap-1.5 px-3 py-1 rounded ${isOnline ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"}`}
+          className={`flex items-center gap-1.5 px-3 py-1 rounded ${isOnline ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-500" : "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-500"}`}
         >
           {isOnline ? (
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -91,10 +91,10 @@ export function ChainTimeline({
               height={28}
               strokeWidth={1.5}
             />
-            <p className="text-sm font-medium text-slate-500">
+            <p className="text-sm font-medium text-slate-500 dark:text-gray-400">
               Node is offline
             </p>
-            <p className="text-xs text-slate-400 mt-1 max-w-xs">
+            <p className="text-xs text-slate-400 dark:text-gray-500 mt-1 max-w-xs">
               Please start the node or enable RPC in Settings to view network
               activity.
             </p>
@@ -106,21 +106,21 @@ export function ChainTimeline({
             const isMinedByMe = checkIfMinedByMe(block.miner, balances);
 
             const cardStyle = isLatest
-              ? "bg-blue-500 border-blue-600 text-white shadow-blue-500/20"
+              ? "bg-accent border-accent/80 text-white shadow-accent/20"
               : isMinedByMe
                 ? "bg-emerald-500 border-emerald-600 text-white shadow-emerald-500/20"
-                : "bg-white border-slate-200 text-slate-800 hover:border-slate-300";
+                : "bg-white dark:bg-gray-800 border-slate-200 dark:border-gray-700 text-slate-800 dark:text-gray-200 hover:border-slate-300 dark:hover:border-gray-600";
 
             const labelStyle = isLatest
-              ? "text-blue-100"
+              ? "text-blue-100 dark:text-white"
               : isMinedByMe
                 ? "text-emerald-100"
-                : "text-slate-400";
+                : "text-slate-400 dark:text-gray-400";
             const subLabelStyle = isLatest
-              ? "text-blue-100"
+              ? "text-blue-100 dark:text-white"
               : isMinedByMe
                 ? "text-emerald-100"
-                : "text-slate-500";
+                : "text-slate-500 dark:text-gray-400";
 
             return (
               <div
@@ -132,7 +132,7 @@ export function ChainTimeline({
                   onClick={() => onBlockClick?.(block.number)}
                 >
                   {isMinedByMe && (
-                    <div className="absolute -top-2 -right-2 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-sm border border-emerald-100">
+                    <div className="absolute -top-2 -right-2 w-5 h-5 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm border border-emerald-100 dark:border-emerald-900">
                       <Check
                         className="text-emerald-500"
                         width={12}
@@ -153,7 +153,7 @@ export function ChainTimeline({
                     {block.txCount} tx
                   </span>
                 </div>
-                <span className="text-[10px] font-semibold text-slate-400 whitespace-nowrap">
+                <span className="text-[10px] font-semibold text-slate-400 dark:text-gray-400 whitespace-nowrap">
                   {formatAge(block.timestamp, now)}
                 </span>
               </div>
@@ -167,7 +167,7 @@ export function ChainTimeline({
               height={28}
               strokeWidth={1.5}
             />
-            <p className="text-sm font-medium text-slate-400">
+            <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
               Awaiting network activity
             </p>
           </div>

@@ -321,7 +321,7 @@ function ExplorerPage({
     : EMPTY_STAT_LABEL;
 
   return (
-    <div className="flex flex-col h-full bg-slate-50/80">
+    <div className="flex flex-col h-full bg-slate-50/80 dark:bg-gray-950 dark:text-white">
       <ExplorerHeader isConnected={isConnected} networkHeight={networkHeight} />
 
       <main className="flex-1 overflow-y-auto px-8 py-6">
@@ -343,7 +343,7 @@ function ExplorerPage({
                   <SkeletonCard />
                   <SkeletonCard />
                 </div>
-                <Skeleton className="w-full h-32 rounded-2xl bg-white border border-slate-200" />
+                <Skeleton className="w-full h-32 rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800" />
               </>
             ) : (
               <>

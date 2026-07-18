@@ -213,7 +213,7 @@ function DashboardPage({
 
   if (loading) {
     return (
-      <div className="flex flex-col h-full bg-slate-50/80">
+      <div className="flex flex-col h-full bg-slate-50/80 dark:bg-gray-950">
         <DashboardHeader
           isConnected={false}
           onReceive={handleReceive}
@@ -221,8 +221,8 @@ function DashboardPage({
         />
         <main className="flex-1 overflow-y-auto px-8 pb-8 space-y-5">
           <div className="grid grid-cols-[1.35fr_1fr] gap-5">
-            <Skeleton className="rounded-2xl bg-white border border-slate-200 h-48" />
-            <Skeleton className="rounded-2xl bg-white border border-slate-200 h-48" />
+            <Skeleton className="rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 h-48" />
+            <Skeleton className="rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 h-48" />
           </div>
           <div className="grid grid-cols-4 gap-5">
             <SkeletonCard />
@@ -231,15 +231,15 @@ function DashboardPage({
             <SkeletonCard />
           </div>
           <div className="grid grid-cols-2 gap-5 min-h-0">
-            <div className="rounded-2xl bg-white border border-slate-200 overflow-hidden">
-              <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 overflow-hidden">
+              <div className="px-5 py-4 border-b border-slate-100 dark:border-gray-800 flex items-center justify-between">
                 <Skeleton className="w-24 h-5" />
                 <Skeleton className="w-16 h-4" />
               </div>
               <SkeletonList itemCount={4} />
             </div>
-            <div className="rounded-2xl bg-white border border-slate-200 overflow-hidden">
-              <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 overflow-hidden">
+              <div className="px-5 py-4 border-b border-slate-100 dark:border-gray-800 flex items-center justify-between">
                 <Skeleton className="w-32 h-5" />
                 <Skeleton className="w-16 h-4" />
               </div>
@@ -252,7 +252,7 @@ function DashboardPage({
   }
 
   return (
-    <div className="flex flex-col h-full bg-slate-50/80">
+    <div className="flex flex-col h-full bg-slate-50/80 dark:bg-gray-950">
       <DashboardHeader
         isConnected={isConnected}
         onReceive={handleReceive}

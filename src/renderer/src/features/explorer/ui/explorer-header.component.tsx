@@ -19,20 +19,20 @@ function ExplorerHeader({
   const { t } = useTranslation();
 
   return (
-    <header className="flex items-center justify-between px-8 py-4 bg-white/50 border-b border-slate-100">
+    <header className="flex items-center justify-between px-8 py-4 bg-white/50 dark:bg-gray-950 border-b border-slate-100 dark:border-gray-800">
       <div className="flex items-center gap-2">
-        <span className="text-xs font-semibold tracking-widest uppercase text-slate-400">
+        <span className="text-xs font-semibold tracking-widest uppercase text-slate-400 dark:text-gray-400">
           {t("explorer.header.network")}
         </span>
-        <span className="text-slate-300">/</span>
-        <span className="text-sm font-semibold text-slate-800">
+        <span className="text-slate-300 dark:text-gray-500">/</span>
+        <span className="text-sm font-semibold text-slate-800 dark:text-gray-100">
           {t("explorer.header.explorer")}
         </span>
       </div>
 
       <div className="flex items-center gap-3">
         <div
-          className={`flex items-center gap-2 px-3 py-1.5 rounded ${isConnected ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-500"}`}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded ${isConnected ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-500" : "bg-slate-100 dark:bg-gray-800 text-slate-500 dark:text-gray-400"}`}
         >
           {isConnected && (
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -44,7 +44,7 @@ function ExplorerHeader({
           </span>
         </div>
 
-        <button className="px-4 py-1.5 rounded border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
+        <button className="px-4 py-1.5 rounded border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs font-semibold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 transition-colors shadow-sm">
           {t("explorer.header.savedSearches")}
         </button>
       </div>

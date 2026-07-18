@@ -146,8 +146,8 @@ function App(): JSX.Element {
 
   if (isLoadingWallet) {
     return (
-      <div className="flex items-center justify-center h-screen bg-slate-50">
-        <div className="w-8 h-8 rounded-full border-2 border-slate-200 border-t-blue-500 animate-spin" />
+      <div className="flex items-center justify-center h-screen bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+        <div className="w-8 h-8 rounded-full border-2 border-slate-200 border-t-accent animate-spin" />
       </div>
     );
   }
@@ -166,7 +166,7 @@ function App(): JSX.Element {
   }
 
   return (
-    <div className="flex flex-col h-full bg-slate-50 overflow-hidden">
+    <div className="flex flex-col h-full bg-slate-50 text-slate-900 dark:bg-gray-950 dark:text-gray-100 overflow-hidden">
       <CustomTitleBar />
       <div className="flex flex-1 overflow-hidden">
         <PairingApprovalModal />
@@ -184,7 +184,7 @@ function App(): JSX.Element {
           <Suspense
             fallback={
               <div className="flex items-center justify-center h-full w-full">
-                <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin" />
               </div>
             }
           >

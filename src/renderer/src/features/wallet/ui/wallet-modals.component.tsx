@@ -46,11 +46,11 @@ function WalletModals({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden relative">
+      <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-slate-200 dark:border-gray-800 w-full max-w-md overflow-hidden relative">
         <button
           onClick={onClose}
           disabled={sendLoading}
-          className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="absolute top-5 right-5 text-slate-400 dark:text-gray-400 hover:text-slate-600 dark:hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <X width={20} height={20} strokeWidth={2.5} />
         </button>

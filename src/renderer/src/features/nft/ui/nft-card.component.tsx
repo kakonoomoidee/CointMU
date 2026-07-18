@@ -27,7 +27,7 @@ function NFTCard({
   tokenHash,
 }: NFTCardProps): JSX.Element {
   return (
-    <div className="flex flex-col rounded-xl overflow-hidden bg-white shadow-sm border border-gray-100">
+    <div className="flex flex-col rounded-xl overflow-hidden bg-white dark:bg-gray-900 shadow-sm border border-gray-100 dark:border-gray-800">
       <div className="relative w-full h-48 overflow-hidden">
         {imageUrl ? (
           <img
@@ -44,9 +44,9 @@ function NFTCard({
           {standard}
         </div>
       </div>
-      <div className="px-4 pt-2 pb-2 bg-white flex flex-col">
-        <span className="text-black font-bold text-base truncate">{name}</span>
-        <span className="text-gray-500 text-sm font-medium truncate">
+      <div className="px-4 pt-2 pb-2 bg-white dark:bg-transparent flex flex-col">
+        <span className="text-black dark:text-gray-100 font-bold text-base truncate">{name}</span>
+        <span className="text-gray-500 dark:text-gray-400 text-sm font-medium truncate">
           {subtitle}
         </span>
       </div>

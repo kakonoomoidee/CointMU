@@ -23,12 +23,12 @@ function ToggleRow({
   return (
     <div className="flex items-center justify-between p-4">
       <div>
-        <p className="text-sm font-bold text-slate-800">{title}</p>
-        <p className="text-xs text-slate-500 mt-0.5">{description}</p>
+        <p className="text-sm font-bold text-slate-800 dark:text-gray-100">{title}</p>
+        <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">{description}</p>
       </div>
       <button
         onClick={onChange}
-        className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${value ? "bg-emerald-500" : "bg-slate-200"}`}
+        className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${value ? "bg-emerald-500" : "bg-slate-200 dark:bg-gray-700"}`}
       >
         <div
           className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform ${value ? "translate-x-5" : "translate-x-0"}`}
@@ -50,16 +50,16 @@ export function NotificationSettings(): JSX.Element {
 
   return (
     <div>
-      <h2 className="text-sm font-semibold text-slate-700 mb-6">
+      <h2 className="text-sm font-semibold text-slate-700 dark:text-gray-100 mb-6">
         {t("settings.notifications.subtitle")}
       </h2>
 
       <div className="space-y-8">
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
             {t("settings.notifications.delivery")}
           </h3>
-          <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
+          <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <ToggleRow
               title={t("settings.notifications.globalTitle")}
               description={t("settings.notifications.globalDesc")}
@@ -84,10 +84,10 @@ export function NotificationSettings(): JSX.Element {
         </section>
 
         <section>
-          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-3">
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
             {t("settings.notifications.eventCategories")}
           </h3>
-          <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 shadow-sm">
+          <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <ToggleRow
               title={t("settings.notifications.txTitle")}
               description={t("settings.notifications.txDesc")}

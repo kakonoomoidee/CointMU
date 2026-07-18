@@ -61,14 +61,14 @@ function MinerRow({
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-xs font-semibold text-slate-700 truncate">
+          <span className="text-xs font-semibold text-slate-700 dark:text-gray-300 truncate">
             {label}
           </span>
-          <span className="text-xs font-bold text-slate-800 ml-2 flex-shrink-0">
+          <span className="text-xs font-bold text-slate-800 dark:text-gray-100 ml-2 flex-shrink-0">
             {entry.percentage.toFixed(1)}%
           </span>
         </div>
-        <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+        <div className="h-1.5 w-full bg-slate-100 dark:bg-gray-800 rounded-full overflow-hidden">
           <div
             className={`h-full ${colorClass} rounded-full transition-all duration-500`}
             style={{ width: `${entry.percentage}%` }}
@@ -121,9 +121,9 @@ export function MinerDistribution({
   const isEmpty = !isLoading && entries.length === 0;
 
   return (
-    <div className="flex-1 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col">
-      <h3 className="text-sm font-bold text-slate-800">Miner distribution</h3>
-      <p className="text-[10px] text-slate-400 mt-0.5 mb-5">
+    <div className="flex-1 bg-white dark:bg-gray-900 rounded-2xl border border-slate-200 dark:border-gray-800 p-6 shadow-sm flex flex-col">
+      <h3 className="text-sm font-bold text-slate-800 dark:text-gray-100">Miner distribution</h3>
+      <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5 mb-5">
         Share of blocks mined · past 24 hours
       </p>
 
@@ -131,10 +131,10 @@ export function MinerDistribution({
         <div className="space-y-4 flex-1">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="flex items-center gap-3 animate-pulse">
-              <div className="w-7 h-7 rounded-full bg-slate-200 flex-shrink-0" />
+              <div className="w-7 h-7 rounded-full bg-slate-200 dark:bg-gray-800 flex-shrink-0" />
               <div className="flex-1 space-y-1.5">
-                <div className="h-2 bg-slate-200 rounded w-3/4" />
-                <div className="h-1.5 bg-slate-100 rounded-full w-full" />
+                <div className="h-2 bg-slate-200 dark:bg-gray-700 rounded w-3/4" />
+                <div className="h-1.5 bg-slate-100 dark:bg-gray-800 rounded-full w-full" />
               </div>
             </div>
           ))}
@@ -142,15 +142,15 @@ export function MinerDistribution({
       ) : isEmpty ? (
         <div className="flex-1 flex flex-col items-center justify-center py-8 text-center">
           <Activity
-            className="text-slate-300 mb-2"
+            className="text-slate-300 dark:text-gray-600 mb-2"
             width={28}
             height={28}
             strokeWidth={1.5}
           />
-          <p className="text-sm font-medium text-slate-400">
+          <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
             Awaiting network activity
           </p>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-400 dark:text-gray-500 mt-0.5">
             No blocks mined in the past 24 hours
           </p>
         </div>
@@ -169,7 +169,7 @@ export function MinerDistribution({
 
       <div className="mt-5 h-2 flex rounded-full overflow-hidden gap-0.5">
         {isEmpty || isLoading ? (
-          <div className="h-full w-full bg-slate-100 rounded-full" />
+          <div className="h-full w-full bg-slate-100 dark:bg-gray-800 rounded-full" />
         ) : (
           entries.map((entry, i) => (
             <div

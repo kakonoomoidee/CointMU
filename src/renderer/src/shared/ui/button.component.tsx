@@ -14,12 +14,12 @@ const BASE_CLASSES =
   "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: "bg-blue-600 text-white hover:bg-blue-700 shadow-sm shadow-blue-200",
+  primary: "bg-accent text-white hover:brightness-110 shadow-sm shadow-accent/20",
   danger: "bg-red-500 text-white hover:bg-red-600 shadow-lg shadow-red-500/30",
   success:
     "bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg shadow-emerald-500/30",
   secondary:
-    "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50",
+    "border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-slate-700 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-gray-700",
   ghost: "bg-white/15 backdrop-blur-sm text-white hover:bg-white/25",
 };
 
