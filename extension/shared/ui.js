@@ -36,6 +36,14 @@ export async function initPopup() {
   const addNetworkBtn = document.getElementById("add-network-btn");
   const saveNetworkBtn = document.getElementById("save-network-btn");
   const cancelNetworkBtn = document.getElementById("cancel-network-btn");
+  const chainIdInput = document.getElementById("chain-id-input");
+  const networkErrorMsg = document.getElementById("network-error-msg");
+
+  if (chainIdInput) {
+    chainIdInput.addEventListener("input", (e) => {
+      e.target.value = e.target.value.replace(/[^0-9]/g, "");
+    });
+  }
 
   const sendView = document.getElementById("send-view");
   const actionSendBtn = document.getElementById("action-send");
@@ -59,6 +67,11 @@ export async function initPopup() {
 
   // Toggle Dropdowns
   document.addEventListener("click", (e) => {
+    if (!e.target.closest('.kebab-trigger') && !e.target.closest('.kebab-actions')) {
+      document.querySelectorAll('.kebab-actions').forEach((el) => {
+        el.classList.add('hidden');
+      });
+    }
     if (networkDropdown && networkDropdown.contains(e.target)) {
       networkOptions.classList.toggle("hidden");
       if (accountOptions) accountOptions.classList.add("hidden");
@@ -193,18 +206,95 @@ export async function initPopup() {
     [...baseNetworks, ...(res.customNetworks || [])].forEach((net) => {
       const li = document.createElement("li");
       li.dataset.value = net.id;
-      li.textContent = net.name;
       if (res.activeNetworkId === net.id) {
         activeNetName = net.name;
       }
-      li.addEventListener("click", () => {
-        networkSelectedText.textContent = net.name;
-        currentNetworkId = net.id;
-        chrome.runtime.sendMessage({
-          action: "SWITCH_NETWORK",
-          networkId: net.id,
+
+      if (net.id === 'desktop_connection') {
+        li.textContent = net.name;
+        li.addEventListener('click', () => {
+          networkSelectedText.textContent = net.name;
+          currentNetworkId = net.id;
+          chrome.runtime.sendMessage({
+            action: 'SWITCH_NETWORK',
+            networkId: net.id,
+          });
         });
-      });
+      } else {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'net-item';
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'net-item-name';
+        nameSpan.textContent = net.name;
+
+        const kebabBtn = document.createElement('button');
+        kebabBtn.className = 'kebab-trigger';
+        kebabBtn.innerHTML = '&#8942;';
+        kebabBtn.title = 'Options';
+
+        wrapper.appendChild(nameSpan);
+        wrapper.appendChild(kebabBtn);
+        li.appendChild(wrapper);
+
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'kebab-actions hidden';
+
+        const editBtn = document.createElement('button');
+        editBtn.textContent = 'Edit';
+        editBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          actionsDiv.classList.add('hidden');
+          const nameInput = document.getElementById('network-name-input');
+          const rpcInput = document.getElementById('rpc-url-input');
+          const chainInput = document.getElementById('chain-id-input');
+          if (nameInput) nameInput.value = net.name || '';
+          if (rpcInput) rpcInput.value = net.rpcUrl || '';
+          if (chainInput) chainInput.value = net.chainId || '';
+          defaultView.classList.add('hidden');
+          addNetworkView.classList.remove('hidden');
+        });
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'kebab-delete';
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          actionsDiv.classList.add('hidden');
+          const confirmed = await showConfirmModal(
+            'Are you sure you want to delete this network?',
+            'Delete Network',
+          );
+          if (confirmed) {
+            chrome.runtime.sendMessage({
+              action: 'DELETE_NETWORK',
+              networkId: net.id,
+            });
+          }
+        });
+
+        actionsDiv.appendChild(editBtn);
+        actionsDiv.appendChild(deleteBtn);
+        li.appendChild(actionsDiv);
+
+        kebabBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          document.querySelectorAll('.kebab-actions').forEach((el) => {
+            if (el !== actionsDiv) el.classList.add('hidden');
+          });
+          actionsDiv.classList.toggle('hidden');
+        });
+
+        nameSpan.addEventListener('click', () => {
+          networkSelectedText.textContent = net.name;
+          currentNetworkId = net.id;
+          chrome.runtime.sendMessage({
+            action: 'SWITCH_NETWORK',
+            networkId: net.id,
+          });
+        });
+      }
+
       networkOptions.appendChild(li);
     });
     networkSelectedText.textContent = activeNetName;
@@ -351,14 +441,7 @@ export async function initPopup() {
       (n) => n.id === res.activeNetworkId,
     );
 
-    const deleteNetBtn = document.getElementById("delete-network-btn");
-    if (deleteNetBtn) {
-      if (customNet) {
-        deleteNetBtn.classList.remove("hidden");
-      } else {
-        deleteNetBtn.classList.add("hidden");
-      }
-    }
+
 
     if (customNet && currentAddress) {
       renderAssets("--", "ETH");
@@ -366,10 +449,16 @@ export async function initPopup() {
       if (!rpcUrl.startsWith("http")) {
         rpcUrl = "http://" + rpcUrl;
       }
+      if (rpcUrl === 'http://localhost') { rpcUrl = 'http://127.0.0.1:8545'; }
       try {
+        const parsedChainId = Number(customNet.chainId);
+        const validChainId =
+          !isNaN(parsedChainId) && parsedChainId > 0
+            ? parsedChainId
+            : undefined;
         const provider = new globalThis.ethers.JsonRpcProvider(
           rpcUrl,
-          parseInt(customNet.chainId, 10),
+          validChainId,
           { staticNetwork: true },
         );
         provider
@@ -382,12 +471,12 @@ export async function initPopup() {
           .catch((err) => {
             console.error("Failed to fetch from custom RPC", err);
             if (currentAccountAddress === currentAddress) {
-              renderAssets("0.00", "ERR");
+              renderAssets("--", "Offline");
             }
           });
       } catch (err) {
         console.error("Failed to initialize provider", err);
-        renderAssets("0.00", "ERR");
+        renderAssets("--", "Offline");
       }
     } else if (
       res.activeNetworkId === "desktop_connection" &&
@@ -511,9 +600,26 @@ export async function initPopup() {
     const rpcUrl = document.getElementById("rpc-url-input").value.trim();
     const chainId = document.getElementById("chain-id-input").value.trim();
     if (!name || !rpcUrl) {
-      alert("Name and RPC URL are required");
+      if (networkErrorMsg) {
+        networkErrorMsg.textContent = "Name and RPC URL are required.";
+        networkErrorMsg.classList.remove("hidden");
+      }
       return;
     }
+
+    const parsedChainId = Number(chainId);
+    if (!chainId || isNaN(parsedChainId) || parsedChainId <= 0) {
+      if (networkErrorMsg) {
+        networkErrorMsg.textContent = 'Chain ID must be a valid positive number.';
+        networkErrorMsg.classList.remove("hidden");
+      }
+      return;
+    }
+
+    if (networkErrorMsg) {
+      networkErrorMsg.classList.add("hidden");
+    }
+
     chrome.runtime.sendMessage(
       { action: "ADD_CUSTOM_NETWORK", name, rpcUrl, chainId },
       (res) => {
@@ -528,17 +634,7 @@ export async function initPopup() {
     );
   });
 
-  const deleteNetBtn = document.getElementById("delete-network-btn");
-  if (deleteNetBtn) {
-    deleteNetBtn.addEventListener("click", () => {
-      if (currentNetworkId !== "desktop_connection") {
-        chrome.runtime.sendMessage({
-          action: "DELETE_NETWORK",
-          networkId: currentNetworkId,
-        });
-      }
-    });
-  }
+
 
   if (actionSendBtn) {
     actionSendBtn.addEventListener("click", () => {

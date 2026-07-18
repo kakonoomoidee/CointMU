@@ -94,11 +94,6 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
             </svg>
           </button>
-          <button id="delete-network-btn" class="icon-btn icon-btn--danger hidden" title="Delete Network">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
-            </svg>
-          </button>
         </div>
       </div>
 
@@ -221,6 +216,7 @@
             <label class="input-label">Chain ID</label>
             <input type="text" id="chain-id-input" class="text-input" placeholder="1912" />
           </div>
+          <div id="network-error-msg" class="hidden"></div>
           <button id="save-network-btn" class="btn primary-btn mt-4">
             <span id="extension.wallet.saveNetwork">Save Network</span>
           </button>

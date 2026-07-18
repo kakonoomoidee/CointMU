@@ -139,6 +139,19 @@ body {
   border-color: var(--primary-color);
 }
 
+#network-dropdown {
+  width: 140px;
+  box-sizing: border-box;
+}
+
+#network-selected-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 90px;
+}
+
 .card-dropdown {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -188,8 +201,10 @@ body {
 .dropdown-options {
   position: absolute;
   top: calc(100% + 6px);
-  left: 0;
-  width: 100%;
+  right: 0;
+  left: auto;
+  width: 220px;
+  box-sizing: border-box;
   background: var(--surface);
   border: 1px solid var(--border-color);
   border-radius: 12px;
@@ -207,11 +222,93 @@ body {
   color: var(--text-primary);
   cursor: pointer;
   border-radius: 8px;
+  box-sizing: border-box;
 }
 
 .dropdown-options li:hover {
   background-color: var(--primary-bg);
   color: var(--primary-color);
+}
+
+.net-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.net-item-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kebab-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.kebab-trigger:hover {
+  background: var(--border-color);
+  color: var(--text-primary);
+}
+
+.kebab-actions {
+  display: flex;
+  gap: 4px;
+  padding-top: 6px;
+  margin-top: 4px;
+  border-top: 1px solid var(--border-color);
+}
+
+.kebab-actions button {
+  flex: 1;
+  padding: 5px 8px;
+  border: 1px solid var(--border-color);
+  background: var(--panel-bg);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+  white-space: nowrap;
+  font-family: inherit;
+  border-radius: 6px;
+  transition: background-color 0.12s, border-color 0.12s;
+}
+
+.kebab-actions button:hover {
+  background-color: var(--btn-hover);
+  border-color: var(--primary-color);
+}
+
+.kebab-actions button.kebab-delete {
+  color: var(--danger-color);
+  border-color: rgba(240, 68, 56, 0.25);
+  background: var(--danger-bg);
+}
+
+.kebab-actions button.kebab-delete:hover {
+  background-color: var(--danger-color);
+  color: #ffffff;
+  border-color: var(--danger-color);
 }
 
 .select-chevron {
@@ -530,6 +627,15 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+#network-error-msg {
+  color: var(--danger-color);
+  font-size: 11.5px;
+  font-weight: 600;
+  margin-top: -6px;
+  margin-bottom: 8px;
+  text-align: center;
 }
 
 .input-label {

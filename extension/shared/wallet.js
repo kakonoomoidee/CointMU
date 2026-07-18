@@ -1,6 +1,12 @@
 "use strict";
 
-import { socket, connect, disconnect } from "./socket.js";
+import {
+  socket,
+  connect,
+  disconnect,
+  clearHeartbeat,
+  startHeartbeat,
+} from "./socket.js";
 
 export const JSON_RPC_VERSION = "2.0";
 
@@ -55,15 +61,8 @@ export function handleSocketMessage(event) {
   }
 
   if (payload.type === "pong") {
-    // handled by socket.js if we wanted, but we can just import the clear here if needed.
-    // simpler to let the timeout clear it if it fails. The actual timeout clearance
-    // is in socket.js. We can emit an event or just do it.
-    // For now we will just use a global function or skip.
-    // Wait, let's import the timer handles from socket.js
-    import("./socket.js").then((module) => {
-      module.clearHeartbeat();
-      if (connectionMode === "desktop") module.startHeartbeat();
-    });
+    clearHeartbeat();
+    if (connectionMode === "desktop") startHeartbeat();
     return;
   } else if (payload.type === "LINK_APPROVED") {
     connectionMode = "desktop";
@@ -236,7 +235,9 @@ export function handleContentMessage(message, sender, sendResponse) {
             sendResponse,
           });
           chrome.windows.create({
-            url: `popup/popup.html?mode=approve&reqId=${id}`,
+            url: chrome.runtime.getURL(
+              `popup/popup.html?mode=approve&reqId=${id}`,
+            ),
             type: "popup",
             width: 360,
             height: 700,
@@ -316,7 +317,9 @@ export function handleContentMessage(message, sender, sendResponse) {
             sendResponse,
           });
           chrome.windows.create({
-            url: `popup.html?mode=approve&reqId=${id}`,
+            url: chrome.runtime.getURL(
+              `popup/popup.html?mode=approve&reqId=${id}`,
+            ),
             type: "popup",
             width: 360,
             height: 700,
