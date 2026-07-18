@@ -1,8 +1,8 @@
 {
   "name": "cointmu-desktop",
   "productName": "CointMU",
-  "version": "1.6.11",
-  "codename": "Nike",
+  "version": "1.6.12",
+  "codename": "Mnemosyne",
   "description": "CointMU Desktop Client - Proof of Work Blockchain Node Manager",
   "main": "./out/main/index.js",
   "author": "CointMU",

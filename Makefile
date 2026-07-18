@@ -4,8 +4,8 @@
 
 VERSION = 1
 PATCHLEVEL = 6
-SUBLEVEL = 11
-EXTRAVERSION = Nike
+SUBLEVEL = 12
+EXTRAVERSION = Mnemosyne
 
 help:
 	@echo "============================================="
