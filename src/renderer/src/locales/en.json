@@ -502,7 +502,8 @@
       "waitingForNodeTooltip": "Waiting for node connection",
       "nodeSyncingTooltip": "Node is syncing blocks",
       "starting": "Starting...",
-      "startMiningBtn": "Start mining"
+      "startMiningBtn": "Start mining",
+      "stopMiningbtn": "Stop mining"
     },
     "stats": {
       "sessionTime": "Session Time",
@@ -756,4 +757,3 @@
     }
   }
 }
-

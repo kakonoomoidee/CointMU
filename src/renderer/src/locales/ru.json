@@ -277,7 +277,7 @@
       "softwareUpdateTitle": "Обновления ПО",
       "updateError": "Не удалось проверить обновления.",
       "updateLatest": "У вас последняя версия.",
-      "updateCheckDesc": "Проверить наличие новой версии.",
+      "checkUpdatesDesc": "Проверить наличие новой версии.",
       "checkUpdateBtn": "Проверить",
       "system": "Система",
       "nodeVersionTitle": "Версия узла",
@@ -290,7 +290,7 @@
       "githubTitle": "GitHub",
       "githubDesc": "github.com/kakonoomoidee/CointMU",
       "reportTitle": "Сообщить о проблеме",
-      "reportDesc": "Отправить баг-репорт",
+      "reportIssueDesc": "Отправить баг-репорт или запрос функции",
       "openBtn": "Открыть ›",
       "saveBtn": "Сохранить",
       "savingBtn": "Сохранение...",
@@ -379,6 +379,7 @@
       "customAddressPlaceholder": "0x..."
     },
     "securitySettings": {
+      "subtitle": "Управление настройками безопасности вашего кошелька",
       "autoLockTitle": "Автоблокировка кошелька",
       "autoLockDesc": "Блокировать ключи после 5 минут бездействия",
       "seedPhraseTitle": "Фраза восстановления",
@@ -502,7 +503,8 @@
       "waitingForNodeTooltip": "Ожидание подключения узла",
       "nodeSyncingTooltip": "Узел синхронизирует блоки",
       "starting": "Запуск...",
-      "startMiningBtn": "Начать майнинг"
+      "startMiningBtn": "Начать майнинг",
+      "stopMiningbtn": "Остановить майнинг"
     },
     "stats": {
       "sessionTime": "Время сессии",

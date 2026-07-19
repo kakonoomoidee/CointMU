@@ -277,7 +277,7 @@
       "softwareUpdateTitle": "Software-Updates",
       "updateError": "Fehler bei der Suche nach Updates.",
       "updateLatest": "Sie verwenden die neueste Version.",
-      "updateCheckDesc": "Prüfen Sie, ob eine neuere Version verfügbar ist.",
+      "checkUpdatesDesc": "Prüfen Sie, ob eine neuere Version verfügbar ist.",
       "checkUpdateBtn": "Nach Updates suchen",
       "system": "System",
       "nodeVersionTitle": "Knoten-Version",
@@ -290,7 +290,7 @@
       "githubTitle": "GitHub",
       "githubDesc": "github.com/kakonoomoidee/CointMU",
       "reportTitle": "Ein Problem melden",
-      "reportDesc": "Senden Sie einen Fehlerbericht oder eine Funktionsanfrage",
+      "reportIssueDesc": "Senden Sie einen Fehlerbericht oder eine Funktionsanfrage",
       "openBtn": "Öffnen ›",
       "saveBtn": "Speichern",
       "savingBtn": "Speichern...",
@@ -379,6 +379,7 @@
       "customAddressPlaceholder": "0x..."
     },
     "securitySettings": {
+      "subtitle": "Verwalten Sie die Sicherheitseinstellungen für Ihr Wallet",
       "autoLockTitle": "Wallet automatisch sperren",
       "autoLockDesc": "Schlüssel nach 5 Minuten Inaktivität sperren",
       "seedPhraseTitle": "Wiederherstellungsphrase",
@@ -502,7 +503,8 @@
       "waitingForNodeTooltip": "Warte auf Node-Verbindung",
       "nodeSyncingTooltip": "Node synchronisiert Blöcke",
       "starting": "Wird gestartet...",
-      "startMiningBtn": "Mining starten"
+      "startMiningBtn": "Mining starten",
+      "stopMiningbtn": "Mining stoppen"
     },
     "stats": {
       "sessionTime": "Sitzungszeit",

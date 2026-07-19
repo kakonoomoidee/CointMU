@@ -277,7 +277,7 @@
       "softwareUpdateTitle": "Actualizaciones de software",
       "updateError": "Error al buscar actualizaciones.",
       "updateLatest": "Estás en la última versión.",
-      "updateCheckDesc": "Comprueba si hay una versión más nueva disponible.",
+      "checkUpdatesDesc": "Comprueba si hay una versión más nueva disponible.",
       "checkUpdateBtn": "Buscar Actualizaciones",
       "system": "Sistema",
       "nodeVersionTitle": "Versión de nodo",
@@ -290,7 +290,7 @@
       "githubTitle": "GitHub",
       "githubDesc": "github.com/kakonoomoidee/CointMU",
       "reportTitle": "Reportar un problema",
-      "reportDesc": "Enviar reporte de bug o solicitud de función",
+      "reportIssueDesc": "Enviar reporte de bug o solicitud de función",
       "openBtn": "Abrir ›",
       "saveBtn": "Guardar",
       "savingBtn": "Guardando...",
@@ -379,6 +379,7 @@
       "customAddressPlaceholder": "0x..."
     },
     "securitySettings": {
+      "subtitle": "Gestionar los ajustes de seguridad de tu billetera",
       "autoLockTitle": "Bloquear billetera automáticamente",
       "autoLockDesc": "Bloquear claves después de 5 minutos de inactividad",
       "seedPhraseTitle": "Frase de recuperación",
@@ -502,7 +503,8 @@
       "waitingForNodeTooltip": "Esperando conexión del nodo",
       "nodeSyncingTooltip": "El nodo está sincronizando bloques",
       "starting": "Iniciando...",
-      "startMiningBtn": "Iniciar minería"
+      "startMiningBtn": "Iniciar minería",
+      "stopMiningbtn": "Detener la minería"
     },
     "stats": {
       "sessionTime": "Tiempo de Sesión",

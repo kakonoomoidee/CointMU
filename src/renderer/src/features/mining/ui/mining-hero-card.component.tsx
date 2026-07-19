@@ -142,7 +142,7 @@ function MiningHeroCard({
             >
               {toggling
                 ? t("mining.hero.Squareping")
-                : t("mining.hero.SquareMining")}
+                : t("mining.hero.stopMiningbtn")}
             </Button>
           </div>
         </div>

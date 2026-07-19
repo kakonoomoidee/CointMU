@@ -27,8 +27,8 @@ function NotificationRow({
       onClick={() => onSelect(notification.id)}
       className={`w-full flex items-start gap-3 p-3 text-left transition-colors ${
         notification.isRead
-          ? "bg-white hover:bg-slate-50"
-          : "bg-blue-50/60 hover:bg-blue-50"
+          ? "bg-white dark:bg-gray-900 hover:bg-slate-50 dark:hover:bg-gray-800"
+          : "bg-blue-50/60 dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700"
       }`}
     >
       <span
@@ -36,17 +36,17 @@ function NotificationRow({
       />
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
-          <p className="text-sm font-bold text-slate-800 truncate">
+          <p className="text-sm font-bold text-slate-800 dark:text-white truncate">
             {notification.title}
           </p>
           {!notification.isRead && (
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
           )}
         </div>
-        <p className="text-xs text-slate-500 mt-0.5 break-words">
+        <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5 break-words">
           {notification.message}
         </p>
-        <p className="text-[10px] text-slate-400 mt-1">
+        <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-1">
           {formatDistanceToNow(notification.timestamp, { addSuffix: true })}
         </p>
       </div>
@@ -89,7 +89,7 @@ export function NotificationCenter(): JSX.Element {
     <div className="relative" ref={containerRef}>
       <button
         onClick={() => setIsOpen((v) => !v)}
-        className="relative w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors focus:outline-none"
+        className="relative w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-300 transition-colors focus:outline-none"
         aria-label="Notifications"
       >
         <Bell width={18} height={18} />
@@ -101,28 +101,30 @@ export function NotificationCenter(): JSX.Element {
       </button>
 
       {isOpen && (
-        <div className="absolute left-full top-0 ml-4 w-80 bg-white border border-slate-200 rounded-xl shadow-lg z-50 animate-in fade-in zoom-in-95 duration-100 origin-top-left overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
-            <p className="text-sm font-bold text-slate-800">Notifications</p>
+        <div className="absolute left-full top-0 ml-4 w-80 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl shadow-lg z-50 animate-in fade-in zoom-in-95 duration-100 origin-top-left overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-gray-800">
+            <p className="text-sm font-bold text-slate-800 dark:text-white">
+              Notifications
+            </p>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => markAllAsRead()}
                 disabled={unreadCount === 0}
-                className="text-[11px] font-semibold text-blue-600 hover:text-blue-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="text-[11px] font-semibold text-accent hover:opacity-80 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Mark all read
               </button>
               <button
                 onClick={() => clearAll()}
                 disabled={notifications.length === 0}
-                className="text-[11px] font-semibold text-slate-500 hover:text-red-500 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="text-[11px] font-semibold text-accent hover:opacity-80 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Clear All
               </button>
             </div>
           </div>
 
-          <div className="max-h-96 overflow-y-auto divide-y divide-slate-100">
+          <div className="max-h-96 overflow-y-auto divide-y divide-slate-100 dark:divide-gray-800">
             {notifications.length > 0 ? (
               notifications.map((notification) => (
                 <NotificationRow
@@ -134,15 +136,15 @@ export function NotificationCenter(): JSX.Element {
             ) : (
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <Bell
-                  className="text-slate-300 mb-2"
+                  className="text-slate-300 dark:text-gray-600 mb-2"
                   width={28}
                   height={28}
                   strokeWidth={1.5}
                 />
-                <p className="text-sm font-medium text-slate-400">
+                <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
                   No notifications
                 </p>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-slate-400 dark:text-gray-500 mt-1">
                   Events will appear here as they happen
                 </p>
               </div>

@@ -277,7 +277,7 @@
       "softwareUpdateTitle": "Pembaruan perangkat lunak",
       "updateError": "Gagal memeriksa pembaruan.",
       "updateLatest": "Anda menggunakan versi terbaru.",
-      "updateCheckDesc": "Periksa apakah ada versi yang lebih baru.",
+      "checkUpdatesDesc": "Periksa apakah ada versi yang lebih baru.",
       "checkUpdateBtn": "Periksa Pembaruan",
       "system": "Sistem",
       "nodeVersionTitle": "Versi node",
@@ -290,7 +290,7 @@
       "githubTitle": "GitHub",
       "githubDesc": "github.com/kakonoomoidee/CointMU",
       "reportTitle": "Laporkan masalah",
-      "reportDesc": "Kirim laporan bug atau permintaan fitur",
+      "reportIssueDesc": "Kirim laporan bug atau permintaan fitur",
       "openBtn": "Buka ›",
       "saveBtn": "Simpan",
       "savingBtn": "Menyimpan...",
@@ -379,6 +379,7 @@
       "customAddressPlaceholder": "0x..."
     },
     "securitySettings": {
+      "subtitle": "Kelola pengaturan keamanan dompet Anda",
       "autoLockTitle": "Kunci otomatis dompet",
       "autoLockDesc": "Kunci kunci setelah 5 menit tidak aktif",
       "seedPhraseTitle": "Frasa pemulihan",
@@ -502,7 +503,8 @@
       "waitingForNodeTooltip": "Menunggu koneksi node",
       "nodeSyncingTooltip": "Node sedang menyinkronkan blok",
       "starting": "Memulai...",
-      "startMiningBtn": "Mulai menambang"
+      "startMiningBtn": "Mulai menambang",
+      "stopMiningbtn": "Berhenti menambang"
     },
     "stats": {
       "sessionTime": "Waktu Sesi",
