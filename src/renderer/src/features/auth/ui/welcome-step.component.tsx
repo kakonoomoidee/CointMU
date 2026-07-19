@@ -22,26 +22,26 @@ function WelcomeStep({
 }: WelcomeStepProps): JSX.Element {
   const { t } = useTranslation();
   return (
-    <div className="w-full flex flex-col gap-4">
+    <div className='w-full flex flex-col gap-4'>
       {hasExistingWallet && (
         <button
           onClick={onLogin}
-          className="w-full py-3.5 bg-slate-800 text-white rounded-xl text-sm font-bold hover:bg-slate-900 transition-colors shadow-sm"
+          className='w-full py-3.5 bg-gray-800 dark:bg-gray-700 text-white rounded-xl text-sm font-bold hover:bg-gray-900 dark:hover:bg-gray-600 transition-colors shadow-sm'
         >
-          {t("auth.welcome.login")}
+          {t('auth.welcome.login')}
         </button>
       )}
       <button
         onClick={onCreate}
-        className="w-full py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm"
+        className='w-full py-3.5 bg-accent text-white rounded-xl text-sm font-bold hover:opacity-80 transition-colors shadow-sm'
       >
-        {t("auth.welcome.createNewWallet")}
+        {t('auth.welcome.createNewWallet')}
       </button>
       <button
         onClick={onImport}
-        className="w-full py-3.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors shadow-sm"
+        className='w-full py-3.5 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-300 border border-gray-200 dark:border-gray-800 rounded-xl text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors shadow-sm'
       >
-        {t("auth.welcome.importWallet")}
+        {t('auth.welcome.importWallet')}
       </button>
     </div>
   );

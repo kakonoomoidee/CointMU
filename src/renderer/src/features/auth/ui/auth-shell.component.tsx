@@ -85,16 +85,16 @@ function AuthShell({
   const { title, subtitle } = getStepCopy(t, step, importMethod);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 text-slate-800">
-      <div className="w-full max-w-md p-10 bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col items-center">
-        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-md mb-8">
-          <Zap color="white" width={40} height={40} />
+    <div className='flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white'>
+      <div className='w-full max-w-md p-10 bg-white dark:bg-gray-900 rounded-3xl border border-slate-200 dark:border-gray-800 shadow-sm flex flex-col items-center'>
+        <div className='w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-md mb-8'>
+          <Zap color='white' width={40} height={40} />
         </div>
 
-        <h1 className="text-2xl font-bold tracking-tight mb-2 text-center">
+        <h1 className='text-2xl font-bold tracking-tight mb-2 text-center text-gray-900 dark:text-white'>
           {title}
         </h1>
-        <p className="text-center text-sm font-medium text-slate-500 mb-8 leading-relaxed">
+        <p className='text-center text-sm font-medium text-gray-500 dark:text-gray-400 mb-8 leading-relaxed'>
           {subtitle}
         </p>
 

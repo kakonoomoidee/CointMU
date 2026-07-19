@@ -25,11 +25,11 @@ function LoginStep({ onUnlock, onBack }: LoginStepProps): JSX.Element {
   const setError = useAuthStore((s) => s.setError);
 
   return (
-    <div className="w-full flex flex-col gap-5">
+    <div className='w-full flex flex-col gap-5'>
       <PasswordField
-        label={t("auth.login.enterPassword")}
+        label={t('auth.login.enterPassword')}
         value={password}
-        placeholder={t("auth.login.passwordPlaceholder")}
+        placeholder={t('auth.login.passwordPlaceholder')}
         show={showPassword}
         onChange={(value) => {
           setPassword(value);
@@ -37,19 +37,19 @@ function LoginStep({ onUnlock, onBack }: LoginStepProps): JSX.Element {
         }}
         onToggleShow={() => setShowPassword(!showPassword)}
       />
-      {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
-      <div className="flex gap-3">
+      {error && <p className='text-xs text-red-500 font-medium'>{error}</p>}
+      <div className='flex gap-3'>
         <button
           onClick={onBack}
-          className="flex-1 py-3.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors"
+          className='flex-1 py-3.5 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-300 border border-gray-200 dark:border-gray-800 rounded-xl text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
         >
-          {t("auth.login.back")}
+          {t('auth.login.back')}
         </button>
         <button
           onClick={onUnlock}
-          className="flex-1 py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm"
+          className='flex-1 py-3.5 bg-accent text-white rounded-xl text-sm font-bold hover:opacity-80 transition-colors shadow-sm'
         >
-          {t("auth.login.unlock")}
+          {t('auth.login.unlock')}
         </button>
       </div>
     </div>

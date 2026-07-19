@@ -38,11 +38,11 @@ function SecureWalletStep({
     password.length >= MIN_PASSWORD_LENGTH && password === confirmPassword;
 
   return (
-    <div className="w-full flex flex-col gap-4">
+    <div className='w-full flex flex-col gap-4'>
       <PasswordField
-        label={t("auth.secureWallet.newPassword")}
+        label={t('auth.secureWallet.newPassword')}
         value={password}
-        placeholder={t("auth.secureWallet.newPasswordPlaceholder")}
+        placeholder={t('auth.secureWallet.newPasswordPlaceholder')}
         show={showPassword}
         onChange={(value) => {
           setPassword(value);
@@ -51,9 +51,9 @@ function SecureWalletStep({
         onToggleShow={() => setShowPassword(!showPassword)}
       />
       <PasswordField
-        label={t("auth.secureWallet.confirmPassword")}
+        label={t('auth.secureWallet.confirmPassword')}
         value={confirmPassword}
-        placeholder={t("auth.secureWallet.confirmPasswordPlaceholder")}
+        placeholder={t('auth.secureWallet.confirmPasswordPlaceholder')}
         show={showConfirmPassword}
         onChange={(value) => {
           setConfirmPassword(value);
@@ -62,22 +62,22 @@ function SecureWalletStep({
         onToggleShow={() => setShowConfirmPassword(!showConfirmPassword)}
       />
 
-      {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
+      {error && <p className='text-xs text-red-500 font-medium'>{error}</p>}
 
-      <div className="flex gap-3 mt-2">
+      <div className='flex gap-3 mt-2'>
         <button
           onClick={onBack}
-          className="flex-1 py-3.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors"
+          className='flex-1 py-3.5 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-800 rounded-xl text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
         >
-          {t("auth.secureWallet.back")}
+          {t('auth.secureWallet.back')}
         </button>
         <button
           onClick={onSave}
           disabled={!isValid}
-          className="flex-[2] py-3.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className='flex-[2] py-3.5 bg-accent text-white rounded-xl text-sm font-bold hover:opacity-80 transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
         >
           <Lock width={16} height={16} strokeWidth={2.5} />
-          {t("auth.secureWallet.encryptAndSave")}
+          {t('auth.secureWallet.encryptAndSave')}
         </button>
       </div>
     </div>
