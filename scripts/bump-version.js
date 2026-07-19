@@ -152,6 +152,14 @@ function main() {
     process.exit(EXIT_CODE_ERROR);
   }
 
+  try {
+    console.log("Running build process to verify before version bump...");
+    execSync("npm run build", { stdio: "inherit" });
+  } catch (error) {
+    console.error("Version update aborted: Build process failed with errors.");
+    process.exit(EXIT_CODE_ERROR);
+  }
+
   const pkg = readPackageJson();
   const currentVersion = pkg.version;
   const newVersion = calculateNewVersion(

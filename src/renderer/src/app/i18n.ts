@@ -1,24 +1,28 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
 
 const namespaces = [
-  'common',
-  'wallet',
-  'walletTabs',
-  'settings',
-  'dashboard',
-  'mining',
-  'explorer',
-  'auth',
-  'ui',
-  'extension'
+  "common",
+  "wallet",
+  "walletTabs",
+  "settings",
+  "dashboard",
+  "mining",
+  "explorer",
+  "auth",
+  "ui",
+  "extension",
 ];
 
-const savedLanguage = localStorage.getItem('appLanguage') || 'en';
+const savedLanguage = localStorage.getItem("appLanguage") || "en";
 
 const customBackend = {
-  type: 'backend' as const,
-  read: (language: string, namespace: string, callback: (errorValue: unknown, translations: unknown) => void) => {
+  type: "backend" as const,
+  read: (
+    language: string,
+    namespace: string,
+    callback: (errorValue: unknown, translations: unknown) => void,
+  ) => {
     import(`../locales/${language}/${namespace}.json`)
       .then((resources) => {
         callback(null, resources.default || resources);
@@ -26,7 +30,7 @@ const customBackend = {
       .catch((error) => {
         callback(error, null);
       });
-  }
+  },
 };
 
 void i18n
@@ -34,20 +38,20 @@ void i18n
   .use(initReactI18next)
   .init({
     lng: savedLanguage,
-    fallbackLng: 'en',
+    fallbackLng: "en",
     ns: namespaces,
-    defaultNS: 'common',
-    fallbackNS: 'common',
+    defaultNS: "common",
+    fallbackNS: "common",
     interpolation: {
       escapeValue: false,
     },
     react: {
-      useSuspense: true
-    }
+      useSuspense: true,
+    },
   });
 
-i18n.on('languageChanged', (lng) => {
-  localStorage.setItem('appLanguage', lng);
+i18n.on("languageChanged", (lng) => {
+  localStorage.setItem("appLanguage", lng);
 });
 
 export default i18n;
