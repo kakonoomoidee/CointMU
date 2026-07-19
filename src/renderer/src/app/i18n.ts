@@ -19,9 +19,9 @@ const savedLanguage = localStorage.getItem('appLanguage') || 'en';
 const customBackend = {
   type: 'backend' as const,
   read: (language: string, namespace: string, callback: (errorValue: unknown, translations: unknown) => void) => {
-    import(`../../locales/${language}/${namespace}.json`)
+    import(`../locales/${language}/${namespace}.json`)
       .then((resources) => {
-        callback(null, resources.default);
+        callback(null, resources.default || resources);
       })
       .catch((error) => {
         callback(error, null);

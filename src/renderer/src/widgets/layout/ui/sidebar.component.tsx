@@ -43,7 +43,7 @@ export function Sidebar({
   const peerCount = useAppStore((s) => s.peerCount);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common']);
 
   const activeAccount =
     accounts.find((a) => a.address === activeWalletAddress) || accounts[0];
