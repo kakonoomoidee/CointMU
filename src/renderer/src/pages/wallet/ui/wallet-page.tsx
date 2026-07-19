@@ -107,13 +107,13 @@ function WalletPage({
     const updatedAccounts = accounts.map((acc) =>
       acc.address === address ? { ...acc, isHidden: false } : acc,
     );
-    await setSetting('accounts', updatedAccounts);
+    await setSetting("accounts", updatedAccounts);
     setAccounts(updatedAccounts);
   };
 
   const handleDeleteAccount = async (address: string): Promise<void> => {
     const updatedAccounts = accounts.filter((acc) => acc.address !== address);
-    await setSetting('accounts', updatedAccounts);
+    await setSetting("accounts", updatedAccounts);
     setAccounts(updatedAccounts);
   };
 
@@ -130,10 +130,10 @@ function WalletPage({
       const encryptedPayload = await getSetting<string | null>(
         "encryptedPayload",
       );
-      if (!encryptedPayload) throw new Error(t("wallet.index.notUnlocked"));
+      if (!encryptedPayload) throw new Error(t("wallet:index.notUnlocked"));
 
       const password = getSessionPassword();
-      if (!password) throw new Error(t("wallet.index.walletLocked"));
+      if (!password) throw new Error(t("wallet:index.walletLocked"));
 
       const secretKey = await decryptSecret(encryptedPayload, password);
       const newIndex = accounts.length;
@@ -143,13 +143,13 @@ function WalletPage({
         newAccount = deriveAccount(
           secretKey,
           newIndex,
-          t("wallet.index.accountLabel", { index: newIndex + 1 }),
+          t("wallet:index.accountLabel", { index: newIndex + 1 }),
         );
       } else {
         const randomWallet = ethers.Wallet.createRandom();
         newAccount = deriveAccountFromPrivateKey(
           randomWallet.privateKey,
-          t("wallet.index.accountLabel", { index: newIndex + 1 }),
+          t("wallet:index.accountLabel", { index: newIndex + 1 }),
         );
         newAccount.encryptedKey = await encryptSecret(
           randomWallet.privateKey,
@@ -171,7 +171,7 @@ function WalletPage({
       setAddAccountError("");
       let newAccount: DerivedAccount;
       const password = getSessionPassword();
-      if (!password) throw new Error(t("wallet.index.walletLocked"));
+      if (!password) throw new Error(t("wallet:index.walletLocked"));
 
       if (addAccountType === "IMPORT_PK") {
         const pk =
@@ -180,14 +180,14 @@ function WalletPage({
             : importInput;
         newAccount = deriveAccountFromPrivateKey(
           pk,
-          t("wallet.index.importedAccount"),
+          t("wallet:index.importedAccount"),
         );
         newAccount.encryptedKey = await encryptSecret(pk, password);
       } else if (addAccountType === "IMPORT_SEED") {
         newAccount = deriveAccount(
           importInput,
           0,
-          t("wallet.index.importedSeedAccount"),
+          t("wallet:index.importedSeedAccount"),
         );
         newAccount.encryptedKey = await encryptSecret(importInput, password);
       } else {
@@ -202,7 +202,7 @@ function WalletPage({
       setModalState("NONE");
     } catch (e) {
       setAddAccountError(
-        e instanceof Error ? e.message : t("wallet.index.failedToAdd"),
+        e instanceof Error ? e.message : t("wallet:index.failedToAdd"),
       );
     }
   };
@@ -232,7 +232,7 @@ function WalletPage({
 
     const newAccount = deriveAccountFromPrivateKey(
       privateKey,
-      t("wallet.index.importedAccount"),
+      t("wallet:index.importedAccount"),
     );
     newAccount.encryptedKey = await encryptSecret(privateKey, password);
 
@@ -287,7 +287,7 @@ function WalletPage({
         activeWalletAddress={activeWalletAddress}
         balances={balances}
         copied={copied}
-        onClose={() => setModalState('NONE')}
+        onClose={() => setModalState("NONE")}
         onCopy={handleCopy}
         onImportAccount={handleCreateOrImportAccount}
         onImportKeystore={handleImportKeystoreFile}

@@ -108,7 +108,7 @@ export function AuthFlow({ onComplete }: AuthFlowProps): JSX.Element {
 
   const handleLogin = async (): Promise<void> => {
     if (!password) {
-      setError(t("auth.errors.enterPassword"));
+      setError(t("auth:errors.enterPassword"));
       return;
     }
 
@@ -117,13 +117,13 @@ export function AuthFlow({ onComplete }: AuthFlowProps): JSX.Element {
         "encryptedPayload",
       );
       if (!encryptedPayload) {
-        setError(t("auth.errors.corruptedData"));
+        setError(t("auth:errors.corruptedData"));
         return;
       }
 
       const valid = await verifyPassword(encryptedPayload, password);
       if (!valid) {
-        setError(t("auth.errors.invalidPassword"));
+        setError(t("auth:errors.invalidPassword"));
         return;
       }
 
@@ -134,10 +134,10 @@ export function AuthFlow({ onComplete }: AuthFlowProps): JSX.Element {
         unlockSession(password);
         onComplete(activeAddress);
       } else {
-        setError(t("auth.errors.corruptedData"));
+        setError(t("auth:errors.corruptedData"));
       }
     } catch {
-      setError(t("auth.errors.failedDecrypt"));
+      setError(t("auth:errors.failedDecrypt"));
     }
   };
 
@@ -146,11 +146,11 @@ export function AuthFlow({ onComplete }: AuthFlowProps): JSX.Element {
     isPrivateKey: boolean,
   ): Promise<void> => {
     if (password.length < MIN_PASSWORD_LENGTH) {
-      setError(t("auth.errors.passwordLength"));
+      setError(t("auth:errors.passwordLength"));
       return;
     }
     if (password !== confirmPassword) {
-      setError(t("auth.errors.passwordsMismatch"));
+      setError(t("auth:errors.passwordsMismatch"));
       return;
     }
 
@@ -169,7 +169,7 @@ export function AuthFlow({ onComplete }: AuthFlowProps): JSX.Element {
       unlockSession(password);
       onComplete(firstAccount.address);
     } catch {
-      setError(t("auth.errors.failedGenerate"));
+      setError(t("auth:errors.failedGenerate"));
     }
   };
 

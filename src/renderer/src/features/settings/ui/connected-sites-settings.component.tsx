@@ -27,10 +27,10 @@ function ConnectedSitesSettings(): JSX.Element {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
       <div>
         <h2 className="text-xl font-bold text-slate-800 dark:text-gray-100">
-          {t("settings.connectedSites.title")}
+          {t("settings:connectedSites.title")}
         </h2>
         <p className="text-sm text-slate-500 dark:text-gray-400 mt-1 leading-relaxed">
-          {t("settings.connectedSites.description")}
+          {t("settings:connectedSites.description")}
         </p>
       </div>
 
@@ -46,14 +46,16 @@ function ConnectedSitesSettings(): JSX.Element {
               width={20}
               height={20}
               className={
-                isExtensionLinked ? "text-green-600 dark:text-green-400" : "text-slate-500 dark:text-gray-400"
+                isExtensionLinked
+                  ? "text-green-600 dark:text-green-400"
+                  : "text-slate-500 dark:text-gray-400"
               }
             />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-sm font-semibold text-slate-800 dark:text-gray-100">
-                {t("settings.connectedSites.extensionStatusTitle")}
+                {t("settings:connectedSites.extensionStatusTitle")}
               </h3>
               <div
                 className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md flex items-center gap-1.5 ${isExtensionLinked ? "bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700" : "bg-slate-200 dark:bg-gray-700 text-slate-600 dark:text-gray-300 border border-slate-300 dark:border-gray-600"}`}
@@ -64,14 +66,14 @@ function ConnectedSitesSettings(): JSX.Element {
                   <span className="w-1.5 h-1.5 bg-slate-400 rounded-full" />
                 )}
                 {isExtensionLinked
-                  ? t("settings.connectedSites.statusConnected")
-                  : t("settings.connectedSites.statusDisconnected")}
+                  ? t("settings:connectedSites.statusConnected")
+                  : t("settings:connectedSites.statusDisconnected")}
               </div>
             </div>
             <p className="text-xs text-slate-500 dark:text-gray-400 mt-1">
               {isExtensionLinked
-                ? t("settings.connectedSites.statusConnectedDesc")
-                : t("settings.connectedSites.statusDisconnectedDesc")}
+                ? t("settings:connectedSites.statusConnectedDesc")
+                : t("settings:connectedSites.statusDisconnectedDesc")}
             </p>
           </div>
         </div>
@@ -81,13 +83,17 @@ function ConnectedSitesSettings(): JSX.Element {
         {connectedSites.length === 0 && !isExtensionLinked ? (
           <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
             <div className="w-12 h-12 bg-slate-50 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 border border-slate-100 dark:border-gray-700">
-              <Link width={24} height={24} className="text-slate-300 dark:text-gray-600" />
+              <Link
+                width={24}
+                height={24}
+                className="text-slate-300 dark:text-gray-600"
+              />
             </div>
             <h3 className="text-sm font-semibold text-slate-700 dark:text-gray-100">
-              {t("settings.connectedSites.emptyTitle")}
+              {t("settings:connectedSites.emptyTitle")}
             </h3>
             <p className="text-xs text-slate-500 dark:text-gray-400 mt-1 max-w-[250px]">
-              {t("settings.connectedSites.emptyDesc")}
+              {t("settings:connectedSites.emptyDesc")}
             </p>
           </div>
         ) : (
@@ -96,17 +102,21 @@ function ConnectedSitesSettings(): JSX.Element {
               <li className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-900/50 border border-indigo-100 dark:border-indigo-800 flex items-center justify-center flex-shrink-0">
-                    <Box width={20} height={20} className="text-indigo-500 dark:text-indigo-400" />
+                    <Box
+                      width={20}
+                      height={20}
+                      className="text-indigo-500 dark:text-indigo-400"
+                    />
                   </div>
                   <div className="overflow-hidden">
                     <p
                       className="text-sm font-semibold text-slate-800 dark:text-gray-100 truncate"
                       title="CointMU Extension"
                     >
-                      {t("settings.connectedSites.extensionName")}
+                      {t("settings:connectedSites.extensionName")}
                     </p>
                     <p className="text-xs text-slate-400 dark:text-gray-400 mt-0.5">
-                      {t("settings.connectedSites.extensionDesc")}
+                      {t("settings:connectedSites.extensionDesc")}
                     </p>
                   </div>
                 </div>
@@ -123,7 +133,7 @@ function ConnectedSitesSettings(): JSX.Element {
                     }}
                     className="px-3 py-1.5 text-xs font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 border border-red-100 dark:border-red-800 hover:border-red-200 dark:hover:border-red-700 rounded-lg transition-colors flex-shrink-0"
                   >
-                    {t("settings.connectedSites.revoke")}
+                    {t("settings:connectedSites.revoke")}
                   </button>
                 </div>
               </li>
@@ -136,7 +146,11 @@ function ConnectedSitesSettings(): JSX.Element {
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 flex items-center justify-center flex-shrink-0">
-                    <Globe width={20} height={20} className="text-blue-500 dark:text-blue-400" />
+                    <Globe
+                      width={20}
+                      height={20}
+                      className="text-blue-500 dark:text-blue-400"
+                    />
                   </div>
                   <div className="overflow-hidden">
                     <p
@@ -147,12 +161,12 @@ function ConnectedSitesSettings(): JSX.Element {
                     </p>
                     <p className="text-xs text-slate-400 dark:text-gray-400 mt-0.5">
                       {site.connectedAt
-                        ? t("settings.connectedSites.connectedOn", {
+                        ? t("settings:connectedSites.connectedOn", {
                             date: new Intl.DateTimeFormat("en-US", {
                               dateStyle: "medium",
                             }).format(new Date(site.connectedAt)),
                           })
-                        : t("settings.connectedSites.accessGranted")}
+                        : t("settings:connectedSites.accessGranted")}
                     </p>
                   </div>
                 </div>
@@ -164,7 +178,7 @@ function ConnectedSitesSettings(): JSX.Element {
                   }}
                   className="px-3 py-1.5 text-xs font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 border border-red-100 dark:border-red-800 hover:border-red-200 dark:hover:border-red-700 rounded-lg transition-colors ml-4 flex-shrink-0"
                 >
-                  {t("settings.connectedSites.revoke")}
+                  {t("settings:connectedSites.revoke")}
                 </button>
               </li>
             ))}

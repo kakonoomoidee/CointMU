@@ -76,7 +76,7 @@ function AccountHeroCard({
             <span className="text-lg font-semibold text-white/60">CMU</span>
           </div>
           <p className="text-sm text-white/40 mt-1">
-            {t("wallet.balanceFromNode")}
+            {t("wallet:balanceFromNode")}
           </p>
         </div>
 
@@ -86,18 +86,18 @@ function AccountHeroCard({
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-accent/20 backdrop-blur-sm text-xs font-semibold text-accent hover:bg-accent hover:text-white transition-colors"
           >
             <ArrowUp width={12} height={12} strokeWidth={2.5} />
-            {t("wallet.send")}
+            {t("wallet:send")}
           </button>
           <button
             onClick={onReceive}
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-accent/20 backdrop-blur-sm text-xs font-semibold text-accent hover:bg-accent hover:text-white transition-colors"
           >
             <ArrowDown width={12} height={12} strokeWidth={2.5} />
-            {t("wallet.receive")}
+            {t("wallet:receive")}
           </button>
           <button className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-accent/20 backdrop-blur-sm text-xs font-semibold text-accent hover:bg-accent hover:text-white transition-colors">
             <RefreshCw width={12} height={12} />
-            {t("wallet.swap")}
+            {t("wallet:swap")}
           </button>
           <button
             onClick={onCopy}
@@ -108,7 +108,7 @@ function AccountHeroCard({
             ) : (
               <Copy width={12} height={12} />
             )}
-            {copied ? t("wallet.copied") : t("wallet.copyAddress")}
+            {copied ? t("wallet:copied") : t("wallet:copyAddress")}
           </button>
         </div>
       </div>

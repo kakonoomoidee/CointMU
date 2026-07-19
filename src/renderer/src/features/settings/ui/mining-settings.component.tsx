@@ -166,7 +166,7 @@ export function MiningSettings({
       label: `${acc.label} (${acc.address.substring(0, 6)}...${acc.address.substring(acc.address.length - 4)})`,
       value: acc.address,
     })),
-    { label: t("settings.miningSettings.customAddress"), value: "custom" },
+    { label: t("settings:miningSettings.customAddress"), value: "custom" },
   ];
 
   const selectedRewardOption =
@@ -178,22 +178,22 @@ export function MiningSettings({
   return (
     <div>
       <h2 className="text-sm font-semibold text-slate-700 dark:text-gray-100 mb-6">
-        {t("settings.miningSettings.subtitle")}
+        {t("settings:miningSettings.subtitle")}
       </h2>
 
       <div className="space-y-8">
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.miningSettings.mining")}
+            {t("settings:miningSettings.mining")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.miningSettings.enableTitle")}
+                  {t("settings:miningSettings.enableTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.miningSettings.enableDesc")}
+                  {t("settings:miningSettings.enableDesc")}
                 </p>
               </div>
               <button
@@ -209,10 +209,10 @@ export function MiningSettings({
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.miningSettings.startLaunchTitle")}
+                  {t("settings:miningSettings.startLaunchTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.miningSettings.startLaunchDesc")}
+                  {t("settings:miningSettings.startLaunchDesc")}
                 </p>
               </div>
               <button
@@ -229,24 +229,24 @@ export function MiningSettings({
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.miningSettings.worker")}
+            {t("settings:miningSettings.worker")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="p-4">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                    {t("settings.miningSettings.cpuThreadsTitle")}
+                    {t("settings:miningSettings.cpuThreadsTitle")}
                   </p>
                   <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                    {t("settings.miningSettings.cpuThreadsDesc", {
+                    {t("settings:miningSettings.cpuThreadsDesc", {
                       count: config.cpuThreads,
                       max: MAX_CORES,
                     })}
                   </p>
                 </div>
                 <span className="text-sm font-bold font-mono text-slate-800 dark:text-gray-100 bg-slate-100 dark:bg-gray-800 px-2 py-1 rounded">
-                  {config.cpuThreads} {t("settings.miningSettings.coresSuffix")}
+                  {config.cpuThreads} {t("settings:miningSettings.coresSuffix")}
                 </span>
               </div>
 
@@ -276,10 +276,10 @@ export function MiningSettings({
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.miningSettings.intensityTitle")}
+                  {t("settings:miningSettings.intensityTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.miningSettings.intensityDesc")}
+                  {t("settings:miningSettings.intensityDesc")}
                 </p>
               </div>
               <div className="flex items-center bg-slate-100 dark:bg-gray-800 rounded-lg p-1">
@@ -302,10 +302,10 @@ export function MiningSettings({
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.miningSettings.pauseTitle")}
+                  {t("settings:miningSettings.pauseTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.miningSettings.pauseDesc")}
+                  {t("settings:miningSettings.pauseDesc")}
                 </p>
               </div>
               <button
@@ -324,16 +324,16 @@ export function MiningSettings({
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.miningSettings.rewards")}
+            {t("settings:miningSettings.rewards")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.miningSettings.modeTitle")}
+                  {t("settings:miningSettings.modeTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.miningSettings.modeDesc")}
+                  {t("settings:miningSettings.modeDesc")}
                 </p>
               </div>
               <div className="w-56 flex-shrink-0">
@@ -353,10 +353,10 @@ export function MiningSettings({
             <div className="p-4 flex flex-col gap-3">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100 mb-0.5">
-                  {t("settings.miningSettings.rewardAddressTitle")}
+                  {t("settings:miningSettings.rewardAddressTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400">
-                  {t("settings.miningSettings.rewardAddressDesc")}
+                  {t("settings:miningSettings.rewardAddressDesc")}
                 </p>
               </div>
 
@@ -366,7 +366,7 @@ export function MiningSettings({
                   selected={selectedRewardOption}
                   onSelect={(opt) => handleDropdownSelection(opt.value)}
                   renderSelected={(selected) =>
-                    selected?.label || t("settings.miningSettings.selectWallet")
+                    selected?.label || t("settings:miningSettings.selectWallet")
                   }
                   renderOption={(option) => option.label}
                 />
@@ -382,7 +382,7 @@ export function MiningSettings({
                     value={rewardInput}
                     onChange={(e) => handlePoolAddressChange(e.target.value)}
                     placeholder={t(
-                      "settings.miningSettings.customAddressPlaceholder",
+                      "settings:miningSettings.customAddressPlaceholder",
                     )}
                     className="w-full bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg pl-9 pr-3 py-2 text-sm font-medium text-slate-800 dark:text-gray-200 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
                   />

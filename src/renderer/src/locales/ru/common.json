@@ -1,0 +1,17 @@
+{
+  "languageSettings": "Языковые настройки",
+  "languageLabel": "Язык",
+  "languageDescription": "Язык приложения",
+  "sidebar": {
+    "connectedTo": "Подключено к",
+    "peers": "узлов",
+    "workspace": "Рабочая область",
+    "dashboard": "Панель управления",
+    "mining": "Майнинг",
+    "wallet": "Кошелёк",
+    "explorer": "Обозреватель",
+    "system": "Система",
+    "settings": "Настройки",
+    "lockWallet": "Заблокировать кошелёк"
+  }
+}

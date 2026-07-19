@@ -1,0 +1,98 @@
+{
+  "balanceFromNode": "Баланс с узла",
+  "send": "Отправить",
+  "receive": "Получить",
+  "swap": "Обмен",
+  "copyAddress": "Копировать адрес",
+  "copied": "Скопировано!",
+  "sidebar": {
+    "accounts": "Аккаунты",
+    "watchList": "Список отслеживания",
+    "noWatched": "Нет отслеживаемых адресов",
+    "importWallet": "+ Импортировать кошелёк",
+    "manageHidden": "Управление скрытыми аккаунтами",
+    "hideAccount": "Скрыть аккаунт"
+  },
+  "activity": {
+    "pending": "В обработке"
+  },
+  "header": {
+    "workspace": "Рабочая область",
+    "title": "Кошелёк",
+    "synced": "Синхронизировано",
+    "backup": "Резервная копия",
+    "newAccount": "Новый аккаунт"
+  },
+  "index": {
+    "accountLabel": "Аккаунт {{index}}",
+    "notUnlocked": "Не разблокирован",
+    "walletLocked": "Кошелёк заблокирован. Пожалуйста, войдите снова.",
+    "importedAccount": "Импортированный аккаунт",
+    "importedSeedAccount": "Импортированный аккаунт из Seed-фразы",
+    "failedToAdd": "Не удалось добавить аккаунт"
+  },
+  "modals": {
+    "addAccount": {
+      "title": "Добавить аккаунт",
+      "subtitle": "Импортируйте существующую Seed-фразу или приватный ключ.",
+      "importSeedTitle": "Импорт Seed-фразы",
+      "importSeedSubtitle": "Восстановите аккаунт из 12-словной Seed-фразы.",
+      "importPkTitle": "Импорт приватного ключа",
+      "importPkSubtitle": "Импортируйте отдельный hex-приватный ключ.",
+      "importJsonTitle": "Импорт аккаунта (JSON)",
+      "importJsonSubtitle": "Импортируйте зашифрованный файл Web3 keystore.",
+      "seedLabel": "Seed-фраза из 12 слов",
+      "pkLabel": "Приватный ключ (Hex)",
+      "seedPlaceholder": "слово1 слово2...",
+      "pkPlaceholder": "0x...",
+      "back": "Назад",
+      "importBtn": "Импортировать"
+    },
+    "manageHidden": {
+      "title": "Скрытые аккаунты",
+      "subtitle": "Восстановите аккаунты в активной боковой панели.",
+      "noHidden": "Нет скрытых аккаунтов.",
+      "unhideTooltip": "Показать аккаунт",
+      "confirmDeleteZero": "Вы уверены, что хотите навсегда удалить этот пустой аккаунт?",
+      "confirmDeleteDust": "На этом аккаунте есть небольшой баланс. Вы уверены, что хотите навсегда удалить его и потерять средства?"
+    },
+    "receive": {
+      "title": "Получить CMU",
+      "subtitle": "Отсканируйте QR-код или скопируйте адрес ниже для получения средств.",
+      "yourAddress": "Ваш адрес",
+      "copiedBtn": "Адрес скопирован!",
+      "copyBtn": "Копировать адрес"
+    },
+    "send": {
+      "title": "Отправить",
+      "subtitle": "Перевести активы на другой адрес.",
+      "assetLabel": "Актив",
+      "selectToken": "Выберите токен",
+      "availableBalance": "Доступный баланс",
+      "recipientLabel": "Адрес получателя",
+      "amountLabel": "Сумма",
+      "maxBtn": "Макс",
+      "networkFee": "Комиссия сети (приблиз.)",
+      "estimating": "Оценка...",
+      "couldNotEstimate": "Не удалось оценить",
+      "cmuGasBalance": "Баланс Gas CMU",
+      "totalDeducted": "Итого списано",
+      "reviewSign": "Проверить и подписать",
+      "pendingConf": "Ожидание подтверждения...",
+      "errorRecipientReq": "Адрес получателя обязателен.",
+      "errorInvalidAddress": "Неверный формат адреса получателя.",
+      "errorValidAmount": "Введите корректную сумму больше нуля.",
+      "errorGasPending": "Оценка Gas ещё выполняется. Пожалуйста, подождите.",
+      "errorInsufficientToken": "Недостаточный баланс {{symbol}}.",
+      "errorInsufficientTotal": "Недостаточно средств для покрытия суммы ({{amount}}) и комиссии сети ({{fee}} CMU).",
+      "errorInsufficientGas": "Недостаточно CMU для оплаты комиссии сети ({{fee}} CMU). Пополните баланс CMU.",
+      "successTitle": "Транзакция отправлена",
+      "txHash": "Хеш транзакции",
+      "doneBtn": "Готово",
+      "notifConfirmedTitle": "Транзакция подтверждена",
+      "notifConfirmedDesc": "Отправлено {{asset}} на {{to}}",
+      "notifFailedTitle": "Транзакция не удалась",
+      "notifFailedDesc": "Перевод {{asset}} на {{to}} не удалось подтвердить"
+    }
+  }
+}

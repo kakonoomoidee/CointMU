@@ -38,14 +38,14 @@ function DashboardStatsGrid({
               <Activity className="text-accent w-3.5 h-3.5" />
             </div>
             <span className="text-xs font-medium text-slate-500">
-              {t("dashboard.statsGrid.yourMining")}
+              {t("dashboard:statsGrid.yourMining")}
             </span>
           </div>
           <button
             onClick={() => onNavigate("miner")}
             className="text-[11px] font-semibold text-accent hover:opacity-80 transition-opacity flex items-center gap-0.5"
           >
-            {t("dashboard.statsGrid.open")}
+            {t("dashboard:statsGrid.open")}
             <ChevronRight className="w-2.5 h-2.5" strokeWidth={3} />
           </button>
         </div>
@@ -61,7 +61,7 @@ function DashboardStatsGrid({
             <Grid className="text-emerald-500 w-3.5 h-3.5" />
           </div>
           <span className="text-xs font-medium text-slate-500">
-            {t("dashboard.statsGrid.minedBlocks")}
+            {t("dashboard:statsGrid.minedBlocks")}
           </span>
         </div>
         <p className="text-2xl font-bold text-slate-800 dark:text-gray-100 tracking-tight">
@@ -69,7 +69,7 @@ function DashboardStatsGrid({
         </p>
         <p className="text-xs text-slate-400 mt-1">
           {isConnected
-            ? `+${minedBlocksCount * 2} CMU ${t("dashboard.statsGrid.rewards")}`
+            ? `+${minedBlocksCount * 2} CMU ${t("dashboard:statsGrid.rewards")}`
             : "--"}
         </p>
       </div>
@@ -80,14 +80,14 @@ function DashboardStatsGrid({
             <Globe className="text-violet-500 w-3.5 h-3.5" />
           </div>
           <span className="text-xs font-medium text-slate-500">
-            {t("dashboard.statsGrid.networkHashrate")}
+            {t("dashboard:statsGrid.networkHashrate")}
           </span>
         </div>
         <p className="text-2xl font-bold text-slate-800 dark:text-gray-100 tracking-tight">
           {hashrateDisplay}
         </p>
         <p className="text-xs text-slate-400 mt-1">
-          {isConnected ? t("dashboard.statsGrid.realTimeRpc") : "--"}
+          {isConnected ? t("dashboard:statsGrid.realTimeRpc") : "--"}
         </p>
       </div>
 
@@ -97,7 +97,7 @@ function DashboardStatsGrid({
             <Link className="text-amber-500 w-3.5 h-3.5" />
           </div>
           <span className="text-xs font-medium text-slate-500">
-            {t("dashboard.statsGrid.smartContracts")}
+            {t("dashboard:statsGrid.smartContracts")}
           </span>
         </div>
         <p className="text-2xl font-bold text-slate-800 dark:text-gray-100 tracking-tight">
@@ -105,7 +105,7 @@ function DashboardStatsGrid({
         </p>
         <p className="text-xs text-slate-400 mt-1">
           {isConnected
-            ? `${smartContractsCount} ${t("dashboard.statsGrid.deployedByYou")}`
+            ? `${smartContractsCount} ${t("dashboard:statsGrid.deployedByYou")}`
             : "--"}
         </p>
       </div>

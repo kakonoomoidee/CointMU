@@ -1,46 +1,53 @@
-import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
-import enTranslations from "@/locales/en.json";
-import idTranslations from "@/locales/id.json";
-import esTranslations from "@/locales/es.json";
-import zhTranslations from "@/locales/zh.json";
-import ruTranslations from "@/locales/ru.json";
-import deTranslations from "@/locales/de.json";
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
 
-const resources = {
-  en: {
-    translation: enTranslations,
-  },
-  id: {
-    translation: idTranslations,
-  },
-  es: {
-    translation: esTranslations,
-  },
-  zh: {
-    translation: zhTranslations,
-  },
-  ru: {
-    translation: ruTranslations,
-  },
-  de: {
-    translation: deTranslations,
-  },
+const namespaces = [
+  'common',
+  'wallet',
+  'walletTabs',
+  'settings',
+  'dashboard',
+  'mining',
+  'explorer',
+  'auth',
+  'ui',
+  'extension'
+];
+
+const savedLanguage = localStorage.getItem('appLanguage') || 'en';
+
+const customBackend = {
+  type: 'backend' as const,
+  read: (language: string, namespace: string, callback: (errorValue: unknown, translations: unknown) => void) => {
+    import(`../../locales/${language}/${namespace}.json`)
+      .then((resources) => {
+        callback(null, resources.default);
+      })
+      .catch((error) => {
+        callback(error, null);
+      });
+  }
 };
 
-const savedLanguage = localStorage.getItem("appLanguage") || "en";
+void i18n
+  .use(customBackend)
+  .use(initReactI18next)
+  .init({
+    lng: savedLanguage,
+    fallbackLng: 'en',
+    ns: namespaces,
+    defaultNS: 'common',
+    fallbackNS: 'common',
+    interpolation: {
+      escapeValue: false,
+    },
+    react: {
+      useSuspense: true
+    }
+  });
 
-void i18n.use(initReactI18next).init({
-  resources,
-  lng: savedLanguage,
-  fallbackLng: "en",
-  interpolation: {
-    escapeValue: false,
-  },
-});
-
-i18n.on("languageChanged", (lng) => {
-  localStorage.setItem("appLanguage", lng);
+i18n.on('languageChanged', (lng) => {
+  localStorage.setItem('appLanguage', lng);
 });
 
 export default i18n;

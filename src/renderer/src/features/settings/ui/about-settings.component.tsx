@@ -48,7 +48,7 @@ const formatBytes = (bytes: number): string => {
 export function AboutSettings(): JSX.Element {
   const { t } = useTranslation();
   const [uptimeStr, setUptimeStr] = useState<string>(
-    t("settings.about.loadingUptime"),
+    t("settings:about.loadingUptime"),
   );
   const [chainId, setChainId] = useState<number | null>(null);
   const [isEditingChain, setIsEditingChain] = useState<boolean>(false);
@@ -94,7 +94,7 @@ export function AboutSettings(): JSX.Element {
     const parsedId = parseInt(newChainIdInput, 10);
     if (isNaN(parsedId) || parsedId <= 0) return;
 
-    const confirmed = window.confirm(t("settings.about.warningChainId"));
+    const confirmed = window.confirm(t("settings:about.warningChainId"));
 
     if (!confirmed) return;
 
@@ -104,13 +104,13 @@ export function AboutSettings(): JSX.Element {
       if (success) {
         setChainId(parsedId);
         setIsEditingChain(false);
-        alert(t("settings.about.successChainId"));
+        alert(t("settings:about.successChainId"));
       } else {
-        alert(t("settings.about.failChainId"));
+        alert(t("settings:about.failChainId"));
       }
     } catch (err) {
       console.error(err);
-      alert(t("settings.about.errorChainId"));
+      alert(t("settings:about.errorChainId"));
     } finally {
       setIsSavingChain(false);
     }
@@ -142,7 +142,7 @@ export function AboutSettings(): JSX.Element {
               }
               className="px-4 py-1.5 bg-slate-100 dark:bg-gray-800 text-slate-800 dark:text-white rounded-lg text-sm font-bold border border-slate-200 dark:border-gray-700 hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors"
             >
-              {t("settings.about.releaseNotes")}
+              {t("settings:about.releaseNotes")}
             </button>
           </div>
         </div>
@@ -151,24 +151,24 @@ export function AboutSettings(): JSX.Element {
       <div className="space-y-8">
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.about.update")}
+            {t("settings:about.update")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl shadow-sm p-4">
             {updater.status === "checking" && (
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                    {t("settings.about.checkingUpdateTitle")}
+                    {t("settings:about.checkingUpdateTitle")}
                   </p>
                   <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                    {t("settings.about.checkingUpdateDesc")}
+                    {t("settings:about.checkingUpdateDesc")}
                   </p>
                 </div>
                 <button
                   disabled
                   className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-slate-300 text-slate-500 dark:text-gray-400 cursor-not-allowed"
                 >
-                  {t("settings.about.checkingUpdateBtn")}
+                  {t("settings:about.checkingUpdateBtn")}
                 </button>
               </div>
             )}
@@ -177,10 +177,10 @@ export function AboutSettings(): JSX.Element {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                    {t("settings.about.updateAvailableTitle")}
+                    {t("settings:about.updateAvailableTitle")}
                   </p>
                   <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                    {t("settings.about.updateAvailableDesc", {
+                    {t("settings:about.updateAvailableDesc", {
                       version: updater.info?.version ?? "unknown",
                     })}
                   </p>
@@ -189,7 +189,7 @@ export function AboutSettings(): JSX.Element {
                   onClick={() => updater.download()}
                   className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-blue-500 text-white hover:bg-blue-600 transition-colors"
                 >
-                  {t("settings.about.downloadUpdateBtn")}
+                  {t("settings:about.downloadUpdateBtn")}
                 </button>
               </div>
             )}
@@ -198,7 +198,7 @@ export function AboutSettings(): JSX.Element {
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                    {t("settings.about.downloadingUpdateTitle")}
+                    {t("settings:about.downloadingUpdateTitle")}
                   </p>
                   <span className="text-sm font-medium font-mono text-slate-600">
                     {Math.round(updater.progress?.percent ?? 0)}%
@@ -221,10 +221,10 @@ export function AboutSettings(): JSX.Element {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                    {t("settings.about.updateReadyTitle")}
+                    {t("settings:about.updateReadyTitle")}
                   </p>
                   <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                    {t("settings.about.updateReadyDesc", {
+                    {t("settings:about.updateReadyDesc", {
                       version: updater.info?.version ?? "unknown",
                     })}
                   </p>
@@ -233,7 +233,7 @@ export function AboutSettings(): JSX.Element {
                   onClick={() => updater.install()}
                   className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-emerald-500 text-white hover:bg-emerald-600 transition-colors"
                 >
-                  {t("settings.about.restartInstallBtn")}
+                  {t("settings:about.restartInstallBtn")}
                 </button>
               </div>
             )}
@@ -244,19 +244,19 @@ export function AboutSettings(): JSX.Element {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                    {t("settings.about.softwareUpdateTitle")}
+                    {t("settings:about.softwareUpdateTitle")}
                   </p>
                   {updater.status === "error" ? (
                     <p className="text-xs text-red-500 mt-0.5">
-                      {updater.error ?? t("settings.about.failedCheck")}
+                      {updater.error ?? t("settings:about.failedCheck")}
                     </p>
                   ) : updater.status === "not-available" ? (
                     <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                      {t("settings.about.latestVersion")}
+                      {t("settings:about.latestVersion")}
                     </p>
                   ) : (
                     <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                      {t("settings.about.checkUpdateDesc")}
+                      {t("settings:about.checkUpdateDesc")}
                     </p>
                   )}
                 </div>
@@ -264,7 +264,7 @@ export function AboutSettings(): JSX.Element {
                   onClick={() => updater.check()}
                   className="px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm bg-blue-500 text-white hover:bg-blue-600 transition-colors"
                 >
-                  {t("settings.about.checkUpdateBtn")}
+                  {t("settings:about.checkUpdateBtn")}
                 </button>
               </div>
             )}
@@ -273,12 +273,12 @@ export function AboutSettings(): JSX.Element {
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.about.system")}
+            {t("settings:about.system")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                {t("settings.about.nodeVersion")}
+                {t("settings:about.nodeVersion")}
               </p>
               <span className="text-sm font-medium font-mono text-slate-600">
                 cointmu/v{sysInfo.version}-{sysInfo.codename || "stable"} (Node
@@ -288,7 +288,7 @@ export function AboutSettings(): JSX.Element {
 
             <div className="flex items-center justify-between p-4">
               <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                {t("settings.about.chainId")}
+                {t("settings:about.chainId")}
               </p>
               <div className="flex items-center gap-3">
                 {isEditingChain ? (
@@ -306,8 +306,8 @@ export function AboutSettings(): JSX.Element {
                       className="text-xs font-bold text-white bg-blue-500 hover:bg-blue-600 rounded px-2.5 py-1 transition-colors"
                     >
                       {isSavingChain
-                        ? t("settings.about.saving")
-                        : t("settings.about.save")}
+                        ? t("settings:about.saving")
+                        : t("settings:about.save")}
                     </button>
                     <button
                       onClick={() => {
@@ -317,7 +317,7 @@ export function AboutSettings(): JSX.Element {
                       disabled={isSavingChain}
                       className="text-xs font-bold text-slate-500 dark:text-gray-400 hover:text-slate-700 transition-colors"
                     >
-                      {t("settings.about.cancel")}
+                      {t("settings:about.cancel")}
                     </button>
                   </>
                 ) : (
@@ -329,7 +329,7 @@ export function AboutSettings(): JSX.Element {
                       onClick={() => setIsEditingChain(true)}
                       className="text-xs font-bold text-blue-500 hover:text-blue-600 transition-colors"
                     >
-                      {t("settings.about.edit")}
+                      {t("settings:about.edit")}
                     </button>
                   </>
                 )}
@@ -338,7 +338,7 @@ export function AboutSettings(): JSX.Element {
 
             <div className="flex items-center justify-between p-4">
               <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                {t("settings.about.connectedPeers")}
+                {t("settings:about.connectedPeers")}
               </p>
               <span className="text-sm font-medium font-mono text-slate-600">
                 {peerCount !== null ? peerCount : "--"}
@@ -347,7 +347,7 @@ export function AboutSettings(): JSX.Element {
 
             <div className="flex items-center justify-between p-4">
               <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                {t("settings.about.uptime")}
+                {t("settings:about.uptime")}
               </p>
               <span className="text-sm font-bold text-slate-800 dark:text-gray-100">
                 {uptimeStr}
@@ -358,7 +358,7 @@ export function AboutSettings(): JSX.Element {
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.about.links")}
+            {t("settings:about.links")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <button
@@ -369,14 +369,14 @@ export function AboutSettings(): JSX.Element {
             >
               <div className="text-left">
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.about.documentationTitle")}
+                  {t("settings:about.documentationTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.about.documentationDesc")}
+                  {t("settings:about.documentationDesc")}
                 </p>
               </div>
               <span className="text-sm font-bold text-slate-800 dark:text-gray-100 group-hover:text-blue-500 transition-colors">
-                {t("settings.about.openLink")}
+                {t("settings:about.openLink")}
               </span>
             </button>
 
@@ -386,14 +386,14 @@ export function AboutSettings(): JSX.Element {
             >
               <div className="text-left">
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.about.githubTitle")}
+                  {t("settings:about.githubTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
                   github.com/kakonoomoidee/CointMU
                 </p>
               </div>
               <span className="text-sm font-bold text-slate-800 dark:text-gray-100 group-hover:text-blue-500 transition-colors">
-                {t("settings.about.openLink")}
+                {t("settings:about.openLink")}
               </span>
             </button>
 
@@ -403,14 +403,14 @@ export function AboutSettings(): JSX.Element {
             >
               <div className="text-left">
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.about.reportIssueTitle")}
+                  {t("settings:about.reportIssueTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.about.reportIssueDesc")}
+                  {t("settings:about.reportIssueDesc")}
                 </p>
               </div>
               <span className="text-sm font-bold text-slate-800 dark:text-gray-100 group-hover:text-blue-500 transition-colors">
-                {t("settings.about.openLink")}
+                {t("settings:about.openLink")}
               </span>
             </button>
           </div>

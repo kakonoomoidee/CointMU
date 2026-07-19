@@ -87,24 +87,24 @@ function ExplorerDataTabs({
               onClick={() => onTabChange("blocks")}
               className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === "blocks" ? "bg-slate-100 dark:bg-gray-800 text-slate-800 dark:text-gray-100" : "text-slate-500 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800"}`}
             >
-              {t("explorer.dataTabs.latestBlocks")}
+              {t("explorer:dataTabs.latestBlocks")}
             </button>
             <button
               onClick={() => onTabChange("transactions")}
               className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === "transactions" ? "bg-slate-100 dark:bg-gray-800 text-slate-800 dark:text-gray-100" : "text-slate-500 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800"}`}
             >
-              {t("explorer.dataTabs.transactions")}
+              {t("explorer:dataTabs.transactions")}
             </button>
             <button
               onClick={() => onTabChange("accounts")}
               className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === "accounts" ? "bg-slate-100 dark:bg-gray-800 text-slate-800 dark:text-gray-100" : "text-slate-500 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800"}`}
             >
-              {t("explorer.dataTabs.topAccounts")}
+              {t("explorer:dataTabs.topAccounts")}
             </button>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-semibold text-slate-400 dark:text-gray-400">
-              {t("explorer.dataTabs.autoRefresh")}
+              {t("explorer:dataTabs.autoRefresh")}
             </span>
             <div
               className={`flex items-center gap-1.5 px-2 py-1 rounded ${isConnected ? "bg-emerald-50 dark:bg-emerald-900/20" : "bg-slate-100 dark:bg-gray-800"}`}
@@ -116,8 +116,8 @@ function ExplorerDataTabs({
                 className={`text-[9px] font-bold uppercase ${isConnected ? "text-emerald-600 dark:text-emerald-500" : "text-slate-500 dark:text-gray-400"}`}
               >
                 {isConnected
-                  ? t("explorer.dataTabs.live")
-                  : t("explorer.dataTabs.off")}
+                  ? t("explorer:dataTabs.live")
+                  : t("explorer:dataTabs.off")}
               </span>
             </div>
           </div>
@@ -129,19 +129,19 @@ function ExplorerDataTabs({
               <thead>
                 <tr className="border-b border-slate-100 dark:border-gray-800">
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                    {t("explorer.dataTabs.tableBlock")}
+                    {t("explorer:dataTabs.tableBlock")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                    {t("explorer.dataTabs.tableMinerHash")}
+                    {t("explorer:dataTabs.tableMinerHash")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                    {t("explorer.dataTabs.tableTxs")}
+                    {t("explorer:dataTabs.tableTxs")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                    {t("explorer.dataTabs.tableReward")}
+                    {t("explorer:dataTabs.tableReward")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400 text-right">
-                    {t("explorer.dataTabs.tableAge")}
+                    {t("explorer:dataTabs.tableAge")}
                   </th>
                 </tr>
               </thead>
@@ -179,7 +179,7 @@ function ExplorerDataTabs({
                           </div>
                           {checkIfMinedByMe(block.miner, balances) && (
                             <span className="px-1.5 py-0.5 rounded bg-blue-50 dark:bg-accent/20 text-[9px] font-bold text-blue-600 dark:text-accent uppercase tracking-wider">
-                              {t("explorer.dataTabs.you")}
+                              {t("explorer:dataTabs.you")}
                             </span>
                           )}
                         </div>
@@ -216,10 +216,10 @@ function ExplorerDataTabs({
                   <tr>
                     <td colSpan={5} className="px-5 py-12 text-center">
                       <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
-                        {t("explorer.dataTabs.awaitingActivity")}
+                        {t("explorer:dataTabs.awaitingActivity")}
                       </p>
                       <p className="text-xs text-slate-400 dark:text-gray-500 mt-1">
-                        {t("explorer.dataTabs.blockDataRequires")}
+                        {t("explorer:dataTabs.blockDataRequires")}
                       </p>
                     </td>
                   </tr>
@@ -233,19 +233,19 @@ function ExplorerDataTabs({
               <thead>
                 <tr className="border-b border-slate-100 dark:border-gray-800">
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                    {t("explorer.dataTabs.tableHash")}
+                    {t("explorer:dataTabs.tableHash")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                    {t("explorer.dataTabs.tableFrom")}
+                    {t("explorer:dataTabs.tableFrom")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                    {t("explorer.dataTabs.tableTo")}
+                    {t("explorer:dataTabs.tableTo")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400 text-right">
-                    {t("explorer.dataTabs.tableAmount")}
+                    {t("explorer:dataTabs.tableAmount")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400 text-right">
-                    {t("explorer.dataTabs.tableAge")}
+                    {t("explorer:dataTabs.tableAge")}
                   </th>
                 </tr>
               </thead>
@@ -324,10 +324,10 @@ function ExplorerDataTabs({
                   <tr>
                     <td colSpan={5} className="px-5 py-12 text-center">
                       <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
-                        {t("explorer.dataTabs.noTxsFound")}
+                        {t("explorer:dataTabs.noTxsFound")}
                       </p>
                       <p className="text-xs text-slate-400 dark:text-gray-500 mt-1">
-                        {t("explorer.dataTabs.noTxsOccurred")}
+                        {t("explorer:dataTabs.noTxsOccurred")}
                       </p>
                     </td>
                   </tr>
@@ -351,19 +351,19 @@ function ExplorerDataTabs({
               <thead>
                 <tr className="border-b border-slate-100 dark:border-gray-800">
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                    {t("explorer.dataTabs.tableNumber")}
+                    {t("explorer:dataTabs.tableNumber")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                    {t("explorer.dataTabs.tableAddress")}
+                    {t("explorer:dataTabs.tableAddress")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                    {t("explorer.dataTabs.tableTag")}
+                    {t("explorer:dataTabs.tableTag")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400 text-right">
-                    {t("explorer.dataTabs.tableBalance")}
+                    {t("explorer:dataTabs.tableBalance")}
                   </th>
                   <th className="px-5 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400 text-right">
-                    {t("explorer.dataTabs.tableSupply")}
+                    {t("explorer:dataTabs.tableSupply")}
                   </th>
                 </tr>
               </thead>
@@ -399,14 +399,14 @@ function ExplorerDataTabs({
                           </p>
                           {checkIfMinedByMe(acc.address, balances) && (
                             <span className="px-1.5 py-0.5 rounded bg-blue-50 dark:bg-accent/20 text-[9px] font-bold text-blue-600 dark:text-accent uppercase tracking-wider">
-                              {t("explorer.dataTabs.you")}
+                              {t("explorer:dataTabs.you")}
                             </span>
                           )}
                         </div>
                       </td>
                       <td className="px-5 py-3.5">
                         <span className="px-2 py-1 rounded bg-slate-100 dark:bg-gray-800 text-[10px] font-medium text-slate-500 dark:text-gray-400">
-                          {t("explorer.dataTabs.miner")}
+                          {t("explorer:dataTabs.miner")}
                         </span>
                       </td>
                       <td className="px-5 py-3.5 text-right">
@@ -434,10 +434,10 @@ function ExplorerDataTabs({
                   <tr>
                     <td colSpan={5} className="px-5 py-12 text-center">
                       <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
-                        {t("explorer.dataTabs.awaitingActivity")}
+                        {t("explorer:dataTabs.awaitingActivity")}
                       </p>
                       <p className="text-xs text-slate-400 dark:text-gray-500 mt-1">
-                        {t("explorer.dataTabs.accountDataRequires")}
+                        {t("explorer:dataTabs.accountDataRequires")}
                       </p>
                     </td>
                   </tr>

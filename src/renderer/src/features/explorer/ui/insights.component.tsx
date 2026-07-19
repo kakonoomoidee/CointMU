@@ -32,7 +32,7 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
   const height =
     isOnline && insights
       ? insights.height.toLocaleString()
-      : t("explorer.insights.offline");
+      : t("explorer:insights.offline");
   const blockTime =
     isOnline && insights ? `${insights.blockTime.toFixed(1)}s` : "--";
   const txs =
@@ -55,12 +55,14 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
             />
           </div>
           <span className="text-xs font-semibold text-slate-600 dark:text-gray-300">
-            {t("explorer.insights.chainHeight")}
+            {t("explorer:insights.chainHeight")}
           </span>
         </div>
-        <p className="text-xl font-bold text-slate-800 dark:text-gray-100">{height}</p>
+        <p className="text-xl font-bold text-slate-800 dark:text-gray-100">
+          {height}
+        </p>
         <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
-          {t("explorer.insights.latest")}
+          {t("explorer:insights.latest")}
         </p>
       </div>
 
@@ -75,12 +77,14 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
             />
           </div>
           <span className="text-xs font-semibold text-slate-600 dark:text-gray-300">
-            {t("explorer.insights.blockTime")}
+            {t("explorer:insights.blockTime")}
           </span>
         </div>
-        <p className="text-xl font-bold text-slate-800 dark:text-gray-100">{blockTime}</p>
+        <p className="text-xl font-bold text-slate-800 dark:text-gray-100">
+          {blockTime}
+        </p>
         <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
-          {t("explorer.insights.past100")}
+          {t("explorer:insights.past100")}
         </p>
       </div>
 
@@ -95,12 +99,14 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
             />
           </div>
           <span className="text-xs font-semibold text-slate-600 dark:text-gray-300">
-            {t("explorer.insights.transactions")}
+            {t("explorer:insights.transactions")}
           </span>
         </div>
-        <p className="text-xl font-bold text-slate-800 dark:text-gray-100">{txs}</p>
+        <p className="text-xl font-bold text-slate-800 dark:text-gray-100">
+          {txs}
+        </p>
         <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
-          {t("explorer.insights.estPast12")}
+          {t("explorer:insights.estPast12")}
         </p>
       </div>
 
@@ -115,12 +121,14 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
             />
           </div>
           <span className="text-xs font-semibold text-slate-600 dark:text-gray-300">
-            {t("explorer.insights.activeAddrs")}
+            {t("explorer:insights.activeAddrs")}
           </span>
         </div>
-        <p className="text-xl font-bold text-slate-800 dark:text-gray-100">{addrs}</p>
+        <p className="text-xl font-bold text-slate-800 dark:text-gray-100">
+          {addrs}
+        </p>
         <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
-          {t("explorer.insights.estPast12")}
+          {t("explorer:insights.estPast12")}
         </p>
       </div>
 
@@ -135,12 +143,14 @@ export function Insights({ insights }: InsightsProps): JSX.Element {
             />
           </div>
           <span className="text-xs font-semibold text-slate-600 dark:text-gray-300">
-            {t("explorer.insights.difficulty")}
+            {t("explorer:insights.difficulty")}
           </span>
         </div>
-        <p className="text-xl font-bold text-slate-800 dark:text-gray-100">{diff}</p>
+        <p className="text-xl font-bold text-slate-800 dark:text-gray-100">
+          {diff}
+        </p>
         <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
-          {t("explorer.insights.current")}
+          {t("explorer:insights.current")}
         </p>
       </div>
     </div>

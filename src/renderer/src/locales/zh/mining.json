@@ -1,0 +1,72 @@
+{
+  "activity": {
+    "noBlocks": "尚未找到区块",
+    "startMining": "开始挖矿以寻找区块",
+    "acceptedSharesLastMin": "已接受的 Share · 最近 {{count}} 分钟",
+    "acceptedSharesLastMins": "已接受的 Share · 最近 {{count}} 分钟",
+    "acceptedSharesNoActivity": "已接受的 Share · 过去30天内无活动",
+    "sharesAccepted": " 个 Share 已接受 · ",
+    "rejected": " 被拒绝",
+    "less": "较少",
+    "more": "较多",
+    "title": "挖矿活动",
+    "subtitle": "你找到的区块及网络支付的奖励",
+    "logAwaiting": "等待节点活动...",
+    "tabFound": "已找到",
+    "tabLog": "日志",
+    "tabActivity": "活动"
+  },
+  "header": {
+    "workspace": "工作区",
+    "title": "挖矿",
+    "statusMining": "挖矿中",
+    "statusStopped": "已停止",
+    "preferences": "偏好设置"
+  },
+  "hero": {
+    "rewardsToday": "今日奖励",
+    "miningWithThreads": "正在使用 {{count}} 个线程挖矿",
+    "stopping": "正在停止...",
+    "stopMining": "停止挖矿",
+    "targetDifficulty": "目标难度",
+    "blockReward": "区块奖励",
+    "initializing": "正在初始化",
+    "generatingDag": "正在生成有向无环图（DAG）用于验证...",
+    "generatingDagBtn": "正在生成 DAG...",
+    "idle": "空闲",
+    "syncingNetwork": "正在从网络同步...",
+    "pressStart": "按下开始加入共识。获得",
+    "perBlock": "每个找到的区块。",
+    "waitingForNode": "等待节点连接...",
+    "waitingForNodeTooltip": "等待节点连接",
+    "nodeSyncingTooltip": "节点正在同步区块",
+    "starting": "正在启动...",
+    "startMiningBtn": "开始挖矿",
+    "stopMiningbtn": "停止挖矿"
+  },
+  "stats": {
+    "sessionTime": "会话时间",
+    "active": "活跃",
+    "idle": "空闲",
+    "blocksFound": "找到的区块",
+    "past24Hours": "过去24小时",
+    "totalEarned": "总收益",
+    "acrossThisWallet": "此钱包累计",
+    "hashrate5Min": "算力 - 5分钟",
+    "stable": "稳定"
+  },
+  "nonce": {
+    "solvingCandidate": "正在求解候选 #{{candidate}} - 已尝试 {{nonces}} 个 Nonce"
+  },
+  "worker": {
+    "title": "矿工配置",
+    "subtitle": "当前内部节点配置",
+    "workerThreads": "工作线程",
+    "ofCores": "共 {{count}} 个核心",
+    "intensityTitle": "强度",
+    "higherMoreHeat": "越高 = 越热，求解更快",
+    "rewardAddressTitle": "奖励地址",
+    "blockRewardsCreditedHere": "区块奖励将发送到此地址",
+    "setInMiningSettings": "在挖矿设置中配置"
+  }
+}

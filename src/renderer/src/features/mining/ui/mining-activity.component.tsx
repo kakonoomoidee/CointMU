@@ -12,7 +12,7 @@ import { useMemo, type JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { subDays, format, differenceInMinutes } from "date-fns";
 import { Card, Pagination } from "@/shared/ui";
-import { WalletHistoryFilter } from '../../wallet/ui/wallet-history-filter.component';
+import { WalletHistoryFilter } from "../../wallet/ui/wallet-history-filter.component";
 import { Check, Box } from "lucide-react";
 import { formatAge } from "@/shared/lib";
 import { type FoundBlock } from "../model/mining.store";
@@ -121,12 +121,16 @@ function FoundBlocksPanel({
       <div className="relative z-0 h-[280px] overflow-y-auto pr-1">
         {minedBlocks.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Box className="text-slate-300 dark:text-gray-600 mb-3" width={32} height={32} />
+            <Box
+              className="text-slate-300 dark:text-gray-600 mb-3"
+              width={32}
+              height={32}
+            />
             <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
-              {t("mining.activity.noBlocks")}
+              {t("mining:activity.noBlocks")}
             </p>
             <p className="text-xs text-slate-400 dark:text-gray-400 mt-1">
-              {t("mining.activity.startMining")}
+              {t("mining:activity.startMining")}
             </p>
           </div>
         ) : (
@@ -196,13 +200,13 @@ function ActivityGraphPanel({
       <p className="text-[11px] font-semibold text-slate-500 dark:text-gray-400 mb-3">
         {minutesSinceLast !== null
           ? minutesSinceLast === 1
-            ? t("mining.activity.acceptedSharesLastMin", {
+            ? t("mining:activity.acceptedSharesLastMin", {
                 count: minutesSinceLast,
               })
-            : t("mining.activity.acceptedSharesLastMins", {
+            : t("mining:activity.acceptedSharesLastMins", {
                 count: minutesSinceLast,
               })
-          : t("mining.activity.acceptedSharesNoActivity")}
+          : t("mining:activity.acceptedSharesNoActivity")}
       </p>
 
       <div className="flex flex-wrap gap-1.5">
@@ -218,20 +222,20 @@ function ActivityGraphPanel({
       <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100 dark:border-gray-800">
         <p className="text-[11px] font-medium text-slate-500 dark:text-gray-400">
           <span className="font-bold text-emerald-600">{acceptedDays}</span>
-          {t("mining.activity.sharesAccepted")}
+          {t("mining:activity.sharesAccepted")}
           <span className="font-bold text-red-500">{rejectedDays}</span>
-          {t("mining.activity.rejected")}
+          {t("mining:activity.rejected")}
         </p>
         <div className="flex items-center gap-1.5">
           <span className="text-[10px] text-slate-400 dark:text-gray-400 mr-1">
-            {t("mining.activity.less")}
+            {t("mining:activity.less")}
           </span>
           <div className="w-3 h-3 rounded-sm bg-slate-100 dark:bg-gray-800" />
           <div className="w-3 h-3 rounded-sm bg-green-200" />
           <div className="w-3 h-3 rounded-sm bg-green-400" />
           <div className="w-3 h-3 rounded-sm bg-green-600" />
           <span className="text-[10px] text-slate-400 dark:text-gray-400 ml-1">
-            {t("mining.activity.more")}
+            {t("mining:activity.more")}
           </span>
         </div>
       </div>
@@ -297,10 +301,10 @@ function MiningActivity({
       <div className="flex items-center justify-between mb-1">
         <div>
           <h3 className="text-sm font-bold text-slate-800 dark:text-gray-100">
-            {t("mining.activity.title")}
+            {t("mining:activity.title")}
           </h3>
           <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
-            {t("mining.activity.subtitle")}
+            {t("mining:activity.subtitle")}
           </p>
         </div>
         <div className="relative z-10 flex items-center rounded-lg border border-slate-200 dark:border-gray-700 overflow-hidden">
@@ -314,10 +318,10 @@ function MiningActivity({
                   : "bg-white dark:bg-gray-800 text-slate-500 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-700"
               }`}
             >
-              {tab === ACTIVITY_TAB_FOUND && t("mining.activity.tabFound")}
-              {tab === ACTIVITY_TAB_LOG && t("mining.activity.tabLog")}
+              {tab === ACTIVITY_TAB_FOUND && t("mining:activity.tabFound")}
+              {tab === ACTIVITY_TAB_LOG && t("mining:activity.tabLog")}
               {tab === ACTIVITY_TAB_ACTIVITY &&
-                t("mining.activity.tabActivity")}
+                t("mining:activity.tabActivity")}
             </button>
           ))}
         </div>

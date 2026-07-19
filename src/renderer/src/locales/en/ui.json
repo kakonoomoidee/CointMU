@@ -1,0 +1,12 @@
+{
+  "window": {
+    "minimize": "Minimize",
+    "close": "Close"
+  },
+  "pairing": {
+    "pairingRequest": "Extension Link Request",
+    "pairingDesc": "Do you want to allow the CointMU Browser Extension to connect to your wallet?",
+    "approve": "Approve",
+    "reject": "Reject"
+  }
+}

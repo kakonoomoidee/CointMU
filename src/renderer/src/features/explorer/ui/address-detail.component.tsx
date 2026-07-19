@@ -126,11 +126,11 @@ function AddressDetail({
             className="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-semibold text-slate-600 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 transition-colors shadow-sm"
           >
             <ChevronLeft width={12} height={12} strokeWidth={2.5} />
-            {t("explorer.addressDetail.back")}
+            {t("explorer:addressDetail.back")}
           </button>
           <div>
             <p className="text-[10px] font-semibold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-0.5">
-              {t("explorer.addressDetail.address")}
+              {t("explorer:addressDetail.address")}
             </p>
             <h2 className="text-xl font-bold text-slate-800 dark:text-gray-100 tracking-tight font-mono">
               {abbrAddress}
@@ -140,13 +140,13 @@ function AddressDetail({
         <div className="flex items-center gap-2">
           {isOwned && (
             <span className="text-xs font-semibold text-blue-600 dark:text-accent bg-blue-50 dark:bg-accent/20 px-3 py-1.5 rounded-lg border border-blue-100 dark:border-accent/50">
-              {t("explorer.addressDetail.yourWallet")}
+              {t("explorer:addressDetail.yourWallet")}
             </span>
           )}
           <span className="text-xs font-semibold text-slate-600 dark:text-gray-300 bg-slate-100 dark:bg-gray-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-gray-700">
             {isContract
-              ? t("explorer.addressDetail.contract")
-              : t("explorer.addressDetail.eoa")}
+              ? t("explorer:addressDetail.contract")
+              : t("explorer:addressDetail.eoa")}
           </span>
         </div>
       </div>
@@ -170,11 +170,13 @@ function AddressDetail({
           <div className="space-y-4">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-gray-800">
               <span className="text-sm font-medium text-slate-500 dark:text-gray-400">
-                {t("explorer.addressDetail.balance")}
+                {t("explorer:addressDetail.balance")}
               </span>
               <span className="text-lg font-bold text-slate-800 dark:text-gray-100">
                 {balance}{" "}
-                <span className="text-sm font-medium text-slate-400 dark:text-gray-400">CMU</span>
+                <span className="text-sm font-medium text-slate-400 dark:text-gray-400">
+                  CMU
+                </span>
                 <span className="text-xs font-medium text-slate-400 dark:text-gray-400 ml-2">
                   {"≈"} ${approxUsd}
                 </span>
@@ -182,10 +184,10 @@ function AddressDetail({
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-gray-800">
               <span className="text-sm font-medium text-slate-500 dark:text-gray-400">
-                {t("explorer.addressDetail.transactions")}
+                {t("explorer:addressDetail.transactions")}
               </span>
               <span className="text-sm font-semibold text-slate-800 dark:text-gray-100">
-                {t("explorer.addressDetail.recentTxsCount", {
+                {t("explorer:addressDetail.recentTxsCount", {
                   recent: transactions.length,
                   pastWeek: pastWeekCount,
                 })}
@@ -193,37 +195,37 @@ function AddressDetail({
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-gray-800">
               <span className="text-sm font-medium text-slate-500 dark:text-gray-400">
-                {t("explorer.addressDetail.firstSeen")}
+                {t("explorer:addressDetail.firstSeen")}
               </span>
               <span className="text-sm font-semibold text-slate-800 dark:text-gray-100">
                 {firstSeen !== null
-                  ? t("explorer.addressDetail.blockNumber", {
+                  ? t("explorer:addressDetail.blockNumber", {
                       number: firstSeen,
                     })
-                  : t("explorer.addressDetail.none")}
+                  : t("explorer:addressDetail.none")}
               </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-slate-500 dark:text-gray-400">
-                {t("explorer.addressDetail.lastSeen")}
+                {t("explorer:addressDetail.lastSeen")}
               </span>
               <span className="text-sm font-semibold text-slate-800 dark:text-gray-100">
                 {lastSeen !== null
-                  ? t("explorer.addressDetail.blockNumber", {
+                  ? t("explorer:addressDetail.blockNumber", {
                       number: lastSeen,
                     })
-                  : t("explorer.addressDetail.none")}
+                  : t("explorer:addressDetail.none")}
               </span>
             </div>
           </div>
           <p className="text-[10px] text-slate-400 dark:text-gray-500 mt-4">
-            {t("explorer.addressDetail.derivedNotice")}
+            {t("explorer:addressDetail.derivedNotice")}
           </p>
         </div>
 
         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-slate-200 dark:border-gray-800 p-6 shadow-sm flex flex-col">
           <p className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-4">
-            {t("explorer.addressDetail.balanceTrend")}
+            {t("explorer:addressDetail.balanceTrend")}
           </p>
           <div className="flex-1 min-h-[120px]">
             <Sparkline
@@ -234,10 +236,10 @@ function AddressDetail({
           </div>
           <div className="flex items-center justify-between mt-3">
             <span className="text-[10px] text-slate-400 dark:text-gray-500">
-              {t("explorer.addressDetail.daysAgo30")}
+              {t("explorer:addressDetail.daysAgo30")}
             </span>
             <span className="text-[10px] text-slate-400 dark:text-gray-500">
-              {t("explorer.addressDetail.today")}
+              {t("explorer:addressDetail.today")}
             </span>
           </div>
         </div>
@@ -245,10 +247,10 @@ function AddressDetail({
 
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-slate-200 dark:border-gray-800 p-6 shadow-sm">
         <h3 className="text-sm font-bold text-slate-800 dark:text-gray-100 mb-1">
-          {t("explorer.addressDetail.recentTransactions")}
+          {t("explorer:addressDetail.recentTransactions")}
         </h3>
         <p className="text-[10px] text-slate-400 dark:text-gray-400 mb-5">
-          {t("explorer.addressDetail.showingTxs", {
+          {t("explorer:addressDetail.showingTxs", {
             visible: pagination.pageItems.length,
             total: transactions.length,
           })}
@@ -258,13 +260,13 @@ function AddressDetail({
           <div className="py-12 text-center">
             <div className="w-6 h-6 rounded-full border-2 border-slate-200 dark:border-gray-700 border-t-blue-500 dark:border-t-accent animate-spin mx-auto mb-3" />
             <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
-              {t("explorer.addressDetail.loadingTxs")}
+              {t("explorer:addressDetail.loadingTxs")}
             </p>
           </div>
         ) : transactions.length === 0 ? (
           <div className="py-12 text-center">
             <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
-              {t("explorer.addressDetail.noRecentTxs")}
+              {t("explorer:addressDetail.noRecentTxs")}
             </p>
           </div>
         ) : (
@@ -273,19 +275,19 @@ function AddressDetail({
               <thead>
                 <tr className="border-b border-slate-100 dark:border-gray-800">
                   <th className="px-2 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                    {t("explorer.addressDetail.hash")}
+                    {t("explorer:addressDetail.hash")}
                   </th>
                   <th className="px-2 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                    {t("explorer.addressDetail.from")}
+                    {t("explorer:addressDetail.from")}
                   </th>
                   <th className="px-2 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400">
-                    {t("explorer.addressDetail.to")}
+                    {t("explorer:addressDetail.to")}
                   </th>
                   <th className="px-2 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400 text-right">
-                    {t("explorer.addressDetail.amount")}
+                    {t("explorer:addressDetail.amount")}
                   </th>
                   <th className="px-2 py-3 text-[9px] font-semibold tracking-wider uppercase text-slate-400 dark:text-gray-400 text-right">
-                    {t("explorer.addressDetail.age")}
+                    {t("explorer:addressDetail.age")}
                   </th>
                 </tr>
               </thead>

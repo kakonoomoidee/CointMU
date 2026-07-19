@@ -1,0 +1,72 @@
+{
+  "activity": {
+    "noBlocks": "Aún no se han encontrado bloques",
+    "startMining": "Empieza a minar para encontrar bloques",
+    "acceptedSharesLastMin": "Shares aceptados · último {{count}} minuto",
+    "acceptedSharesLastMins": "Shares aceptados · últimos {{count}} minutos",
+    "acceptedSharesNoActivity": "Shares aceptados · sin actividad en los últimos 30 días",
+    "sharesAccepted": " shares aceptados · ",
+    "rejected": " rechazados",
+    "less": "Menos",
+    "more": "Más",
+    "title": "Actividad de minería",
+    "subtitle": "Bloques que encontraste y lo que la red pagó",
+    "logAwaiting": "Esperando actividad del nodo...",
+    "tabFound": "Encontrado",
+    "tabLog": "Registro",
+    "tabActivity": "Actividad"
+  },
+  "header": {
+    "workspace": "Espacio de Trabajo",
+    "title": "Minería",
+    "statusMining": "Minando",
+    "statusStopped": "Detenido",
+    "preferences": "Preferencias"
+  },
+  "hero": {
+    "rewardsToday": "Recompensas de hoy",
+    "miningWithThreads": "Minando con {{count}} hilos",
+    "stopping": "Deteniendo...",
+    "stopMining": "Detener minería",
+    "targetDifficulty": "Dificultad objetivo",
+    "blockReward": "Recompensa de bloque",
+    "initializing": "Inicializando",
+    "generatingDag": "Generando el Gráfico Acíclico Dirigido (DAG) para verificación...",
+    "generatingDagBtn": "Generando DAG...",
+    "idle": "Inactivo",
+    "syncingNetwork": "Sincronizando de la red...",
+    "pressStart": "Presiona Iniciar para unirte al consenso. Gana",
+    "perBlock": "por bloque encontrado.",
+    "waitingForNode": "Esperando conexión del nodo...",
+    "waitingForNodeTooltip": "Esperando conexión del nodo",
+    "nodeSyncingTooltip": "El nodo está sincronizando bloques",
+    "starting": "Iniciando...",
+    "startMiningBtn": "Iniciar minería",
+    "stopMiningbtn": "Detener la minería"
+  },
+  "stats": {
+    "sessionTime": "Tiempo de Sesión",
+    "active": "Activo",
+    "idle": "Inactivo",
+    "blocksFound": "Bloques Encontrados",
+    "past24Hours": "últimas 24 horas",
+    "totalEarned": "Total Ganado",
+    "acrossThisWallet": "en toda esta billetera",
+    "hashrate5Min": "Hashrate - 5 min",
+    "stable": "Estable"
+  },
+  "nonce": {
+    "solvingCandidate": "Resolviendo candidato #{{candidate}} - {{nonces}} nonces probados"
+  },
+  "worker": {
+    "title": "Configuración del trabajador",
+    "subtitle": "Configuración actual del nodo interno",
+    "workerThreads": "Hilos de trabajo",
+    "ofCores": "de {{count}} núcleos",
+    "intensityTitle": "Intensidad",
+    "higherMoreHeat": "Mayor = más calor, resolución más rápida",
+    "rewardAddressTitle": "Dirección de recompensa",
+    "blockRewardsCreditedHere": "Las recompensas de bloque se acreditan aquí",
+    "setInMiningSettings": "Establecido en Ajustes de Minería"
+  }
+}

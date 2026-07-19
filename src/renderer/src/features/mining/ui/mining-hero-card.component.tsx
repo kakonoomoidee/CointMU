@@ -71,7 +71,7 @@ function RewardsBadge({
       <p
         className={`text-[10px] font-semibold tracking-wider uppercase ${muted ? "text-white/40" : "text-white/50"}`}
       >
-        {t("mining.hero.rewardsToday")}
+        {t("mining:hero.rewardsToday")}
       </p>
       <p
         className={`text-xl font-bold mt-0.5 ${muted ? "text-white/70" : "text-white"}`}
@@ -126,7 +126,7 @@ function MiningHeroCard({
               <span className="text-xl font-semibold text-white/70">MH/s</span>
             </div>
             <p className="text-sm text-white/60 mt-2">
-              {t("mining.hero.miningWithThreads", { count: cpuThreads })}
+              {t("mining:hero.miningWithThreads", { count: cpuThreads })}
             </p>
           </div>
 
@@ -141,8 +141,8 @@ function MiningHeroCard({
               leftIcon={<Square width={14} height={14} />}
             >
               {toggling
-                ? t("mining.hero.Squareping")
-                : t("mining.hero.stopMiningbtn")}
+                ? t("mining:hero.Squareping")
+                : t("mining:hero.stopMiningbtn")}
             </Button>
           </div>
         </div>
@@ -151,10 +151,10 @@ function MiningHeroCard({
 
         <div className="flex items-center justify-between text-xs text-white/40 font-mono">
           <span>
-            {t("mining.hero.targetDifficulty")} {difficultyLabel}
+            {t("mining:hero.targetDifficulty")} {difficultyLabel}
           </span>
           <span>
-            {t("mining.hero.blockReward")} {BLOCK_REWARD_CMU} CMU
+            {t("mining:hero.blockReward")} {BLOCK_REWARD_CMU} CMU
           </span>
         </div>
       </HeroCardShell>
@@ -170,7 +170,7 @@ function MiningHeroCard({
         <div className="flex items-center gap-2 mb-3">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           <span className="text-xs font-semibold tracking-wider uppercase text-emerald-400">
-            {t("mining.hero.initializing")}
+            {t("mining:hero.initializing")}
           </span>
         </div>
 
@@ -183,14 +183,14 @@ function MiningHeroCard({
               <span className="text-xl font-semibold text-white/50">%</span>
             </div>
             <p className="text-sm text-white/50 mt-2">
-              {t("mining.hero.generatingDag")}
+              {t("mining:hero.generatingDag")}
             </p>
           </div>
 
           <div className="flex items-center gap-4">
             <RewardsBadge value="0.00" muted />
             <Button variant="success" size="lg" disabled>
-              {t("mining.hero.generatingDagBtn")}
+              {t("mining:hero.generatingDagBtn")}
             </Button>
           </div>
         </div>
@@ -215,7 +215,7 @@ function MiningHeroCard({
       <div className="flex items-center gap-2 mb-3">
         <span className="w-2 h-2 rounded-full bg-slate-500" />
         <span className="text-xs font-semibold tracking-wider uppercase text-slate-400">
-          {t("mining.hero.idle")}
+          {t("mining:hero.idle")}
         </span>
       </div>
 
@@ -231,17 +231,17 @@ function MiningHeroCard({
             {isConnected ? (
               isSyncing ? (
                 <span className="text-yellow-400">
-                  {t("mining.hero.syncingNetwork")}
+                  {t("mining:hero.syncingNetwork")}
                 </span>
               ) : (
                 <>
-                  {t("mining.hero.pressStart")}{" "}
+                  {t("mining:hero.pressStart")}{" "}
                   <span className="font-semibold text-white/70">2 CMU</span>{" "}
-                  {t("mining.hero.perBlock")}
+                  {t("mining:hero.perBlock")}
                 </>
               )
             ) : (
-              <>{t("mining.hero.waitingForNode")}</>
+              <>{t("mining:hero.waitingForNode")}</>
             )}
           </p>
         </div>
@@ -256,26 +256,26 @@ function MiningHeroCard({
             disabled={toggling || !isConnected || isSyncing}
             title={
               !isConnected
-                ? t("mining.hero.waitingForNodeTooltip")
+                ? t("mining:hero.waitingForNodeTooltip")
                 : isSyncing
-                  ? t("mining.hero.nodeSyncingTooltip")
+                  ? t("mining:hero.nodeSyncingTooltip")
                   : ""
             }
             leftIcon={<Play width={14} height={14} />}
           >
             {toggling
-              ? t("mining.hero.starting")
-              : t("mining.hero.startMiningBtn")}
+              ? t("mining:hero.starting")
+              : t("mining:hero.startMiningBtn")}
           </Button>
         </div>
       </div>
 
       <div className="flex items-center justify-between text-xs text-white/30 font-mono mt-4">
         <span>
-          {t("mining.hero.targetDifficulty")} {difficultyLabel}
+          {t("mining:hero.targetDifficulty")} {difficultyLabel}
         </span>
         <span>
-          {t("mining.hero.blockReward")} {BLOCK_REWARD_CMU} CMU
+          {t("mining:hero.blockReward")} {BLOCK_REWARD_CMU} CMU
         </span>
       </div>
     </HeroCardShell>

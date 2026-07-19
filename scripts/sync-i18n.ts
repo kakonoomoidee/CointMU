@@ -1,9 +1,8 @@
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 
-const LOCALES_DIR = path.join(__dirname, "../src/renderer/src/locales");
-const SOURCE_FILE = "en.json";
-const TARGET_FILES = ["id.json", "es.json", "zh.json", "ru.json", "de.json"];
+const LOCALES_DIR = path.join(__dirname, '../src/renderer/src/locales');
+const SOURCE_LANG = 'en';
 
 /**
  * Recursively diffs an object against a source object to find missing keys.
@@ -12,7 +11,7 @@ const TARGET_FILES = ["id.json", "es.json", "zh.json", "ru.json", "de.json"];
  * @param prefix - The current object path prefix.
  * @returns An array of missing key paths.
  */
-function findMissingKeys(source: any, target: any, prefix = ""): string[] {
+function findMissingKeys(source: any, target: any, prefix = ''): string[] {
   let missing: string[] = [];
 
   for (const key in source) {
@@ -21,10 +20,10 @@ function findMissingKeys(source: any, target: any, prefix = ""): string[] {
 
       if (target[key] === undefined) {
         missing.push(currentPath);
-      } else if (typeof source[key] === "object" && source[key] !== null) {
-        if (typeof target[key] === "object" && target[key] !== null) {
+      } else if (typeof source[key] === 'object' && source[key] !== null) {
+        if (typeof target[key] === 'object' && target[key] !== null) {
           missing = missing.concat(
-            findMissingKeys(source[key], target[key], currentPath),
+            findMissingKeys(source[key], target[key], currentPath)
           );
         } else {
           missing.push(currentPath);
@@ -37,49 +36,62 @@ function findMissingKeys(source: any, target: any, prefix = ""): string[] {
 }
 
 /**
- * Audits all target locale files against the primary english locale.
+ * Audits all target locale namespaces against the primary english locale namespaces.
  * @returns Void.
  */
 function auditLocales(): void {
-  const sourcePath = path.join(LOCALES_DIR, SOURCE_FILE);
+  const sourceDir = path.join(LOCALES_DIR, SOURCE_LANG);
 
-  if (!fs.existsSync(sourcePath)) {
-    console.error(`Source file not found: ${sourcePath}`);
+  if (!fs.existsSync(sourceDir)) {
+    console.error(`Source directory not found: ${sourceDir}`);
     process.exit(1);
   }
 
-  const sourceData = JSON.parse(fs.readFileSync(sourcePath, "utf8"));
-  console.log(`Starting i18n audit against ${SOURCE_FILE}...`);
+  const namespaces = fs
+    .readdirSync(sourceDir)
+    .filter((file) => file.endsWith('.json'));
+
+  const allLangs = fs
+    .readdirSync(LOCALES_DIR)
+    .filter((dir) => fs.statSync(path.join(LOCALES_DIR, dir)).isDirectory());
+
+  const targetLangs = allLangs.filter((lang) => lang !== SOURCE_LANG);
+
+  console.log(`Starting i18n audit against ${SOURCE_LANG} namespaces...`);
 
   let totalMissing = 0;
 
-  TARGET_FILES.forEach((targetFile) => {
-    const targetPath = path.join(LOCALES_DIR, targetFile);
+  targetLangs.forEach((targetLang) => {
+    const targetDir = path.join(LOCALES_DIR, targetLang);
 
-    if (!fs.existsSync(targetPath)) {
-      console.warn(`Target file not found: ${targetFile}`);
-      return;
-    }
+    namespaces.forEach((namespaceFile) => {
+      const sourcePath = path.join(sourceDir, namespaceFile);
+      const targetPath = path.join(targetDir, namespaceFile);
 
-    const targetData = JSON.parse(fs.readFileSync(targetPath, "utf8"));
-    const missingKeys = findMissingKeys(sourceData, targetData);
+      const sourceData = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
+      
+      let targetData = {};
+      if (fs.existsSync(targetPath)) {
+        targetData = JSON.parse(fs.readFileSync(targetPath, 'utf8'));
+      } else {
+        console.warn(`\n[${targetLang}/${namespaceFile}] File is completely missing.`);
+      }
 
-    if (missingKeys.length > 0) {
-      console.log(`\n[${targetFile}] Missing ${missingKeys.length} keys:`);
-      missingKeys.forEach((key) => console.log(`  - ${key}`));
-      totalMissing += missingKeys.length;
-    } else {
-      console.log(`\n[${targetFile}] All keys are synced!`);
-    }
+      const missingKeys = findMissingKeys(sourceData, targetData);
+
+      if (missingKeys.length > 0) {
+        console.log(`\n[${targetLang}/${namespaceFile}] Missing ${missingKeys.length} keys:`);
+        missingKeys.forEach((key) => console.log(`  - ${key}`));
+        totalMissing += missingKeys.length;
+      }
+    });
   });
 
   if (totalMissing > 0) {
-    console.log(
-      `\nAudit complete. Found ${totalMissing} missing translations total.`,
-    );
+    console.log(`\nAudit complete. Found ${totalMissing} missing translations total.`);
     process.exit(1);
   } else {
-    console.log("\nAudit complete. 100% translation coverage!");
+    console.log('\nAudit complete. 100% translation coverage!');
     process.exit(0);
   }
 }

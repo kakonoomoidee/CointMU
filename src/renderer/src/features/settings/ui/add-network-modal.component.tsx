@@ -32,7 +32,7 @@ export function AddNetworkModal({
 
     if (!name.trim()) {
       setError(
-        t("settings.network.addNetwork.networkNameLabel") + " is required",
+        t("settings:network.addNetwork.networkNameLabel") + " is required",
       );
       return;
     }
@@ -45,7 +45,7 @@ export function AddNetworkModal({
       }
     } catch {
       setError(
-        t("settings.network.addNetwork.rpcUrlLabel") +
+        t("settings:network.addNetwork.rpcUrlLabel") +
           " must be a valid HTTP/HTTPS URL",
       );
       return;
@@ -54,7 +54,7 @@ export function AddNetworkModal({
     const parsedChainId = parseInt(chainId, 10);
     if (isNaN(parsedChainId) || parsedChainId <= 0) {
       setError(
-        t("settings.network.addNetwork.chainIdLabel") +
+        t("settings:network.addNetwork.chainIdLabel") +
           " must be a positive number",
       );
       return;
@@ -62,7 +62,7 @@ export function AddNetworkModal({
 
     if (!symbol.trim()) {
       setError(
-        t("settings.network.addNetwork.currencySymbolLabel") + " is required",
+        t("settings:network.addNetwork.currencySymbolLabel") + " is required",
       );
       return;
     }
@@ -85,7 +85,7 @@ export function AddNetworkModal({
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <h3 className="text-lg font-bold text-slate-800">
-            {t("settings.network.addNetwork.modalTitle")}
+            {t("settings:network.addNetwork.modalTitle")}
           </h3>
           <button
             onClick={onClose}
@@ -104,7 +104,7 @@ export function AddNetworkModal({
 
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1.5">
-              {t("settings.network.addNetwork.networkNameLabel")}
+              {t("settings:network.addNetwork.networkNameLabel")}
             </label>
             <input
               type="text"
@@ -117,7 +117,7 @@ export function AddNetworkModal({
 
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1.5">
-              {t("settings.network.addNetwork.rpcUrlLabel")}
+              {t("settings:network.addNetwork.rpcUrlLabel")}
             </label>
             <input
               type="text"
@@ -130,7 +130,7 @@ export function AddNetworkModal({
 
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1.5">
-              {t("settings.network.addNetwork.chainIdLabel")}
+              {t("settings:network.addNetwork.chainIdLabel")}
             </label>
             <input
               type="number"
@@ -143,7 +143,7 @@ export function AddNetworkModal({
 
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1.5">
-              {t("settings.network.addNetwork.currencySymbolLabel")}
+              {t("settings:network.addNetwork.currencySymbolLabel")}
             </label>
             <input
               type="text"
@@ -160,13 +160,13 @@ export function AddNetworkModal({
             onClick={onClose}
             className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors"
           >
-            {t("settings.network.addNetwork.cancelBtn")}
+            {t("settings:network.addNetwork.cancelBtn")}
           </button>
           <button
             onClick={handleSave}
             className="px-4 py-2 text-sm font-semibold text-white bg-blue-500 hover:bg-blue-600 rounded-xl transition-colors shadow-sm"
           >
-            {t("settings.network.addNetwork.saveBtn")}
+            {t("settings:network.addNetwork.saveBtn")}
           </button>
         </div>
       </div>

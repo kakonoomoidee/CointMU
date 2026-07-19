@@ -1,0 +1,17 @@
+{
+  "languageSettings": "Language Settings",
+  "languageLabel": "Language",
+  "languageDescription": "Application language",
+  "sidebar": {
+    "connectedTo": "Connected to",
+    "peers": "peers",
+    "workspace": "Workspace",
+    "dashboard": "Dashboard",
+    "mining": "Mining",
+    "wallet": "Wallet",
+    "explorer": "Explorer",
+    "system": "System",
+    "settings": "Settings",
+    "lockWallet": "Lock Wallet"
+  }
+}

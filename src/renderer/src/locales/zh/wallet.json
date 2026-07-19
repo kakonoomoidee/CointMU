@@ -1,0 +1,98 @@
+{
+  "balanceFromNode": "节点余额",
+  "send": "发送",
+  "receive": "接收",
+  "swap": "兑换",
+  "copyAddress": "复制地址",
+  "copied": "已复制！",
+  "sidebar": {
+    "accounts": "账户",
+    "watchList": "监控列表",
+    "noWatched": "没有监控地址",
+    "importWallet": "+ 导入钱包",
+    "manageHidden": "管理隐藏账户",
+    "hideAccount": "隐藏账户"
+  },
+  "activity": {
+    "pending": "待处理"
+  },
+  "header": {
+    "workspace": "工作区",
+    "title": "钱包",
+    "synced": "已同步",
+    "backup": "备份",
+    "newAccount": "新建账户"
+  },
+  "index": {
+    "accountLabel": "账户 {{index}}",
+    "notUnlocked": "未解锁",
+    "walletLocked": "钱包已锁定，请重新登录。",
+    "importedAccount": "导入的账户",
+    "importedSeedAccount": "导入的助记词账户",
+    "failedToAdd": "添加账户失败"
+  },
+  "modals": {
+    "addAccount": {
+      "title": "添加账户",
+      "subtitle": "导入已有的助记词或私钥。",
+      "importSeedTitle": "导入助记词",
+      "importSeedSubtitle": "通过12个单词的助记词恢复账户。",
+      "importPkTitle": "导入私钥",
+      "importPkSubtitle": "导入独立的十六进制私钥。",
+      "importJsonTitle": "导入账户 (JSON)",
+      "importJsonSubtitle": "导入加密的 Web3 密钥库文件。",
+      "seedLabel": "12个单词的助记词",
+      "pkLabel": "私钥 (Hex)",
+      "seedPlaceholder": "单词1 单词2...",
+      "pkPlaceholder": "0x...",
+      "back": "返回",
+      "importBtn": "导入"
+    },
+    "manageHidden": {
+      "title": "隐藏的账户",
+      "subtitle": "将账户恢复到活动侧边栏。",
+      "noHidden": "没有隐藏的账户。",
+      "unhideTooltip": "取消隐藏账户",
+      "confirmDeleteZero": "您确定要永久删除这个空帐户吗？",
+      "confirmDeleteDust": "此帐户中有少量余额。您确定要永久删除它并失去这些资金吗？"
+    },
+    "receive": {
+      "title": "接收 CMU",
+      "subtitle": "扫描此二维码或复制以下地址以接收资金。",
+      "yourAddress": "你的地址",
+      "copiedBtn": "地址已复制！",
+      "copyBtn": "复制地址"
+    },
+    "send": {
+      "title": "发送",
+      "subtitle": "将资产转账到其他地址。",
+      "assetLabel": "资产",
+      "selectToken": "选择代币",
+      "availableBalance": "可用余额",
+      "recipientLabel": "收款地址",
+      "amountLabel": "金额",
+      "maxBtn": "最大",
+      "networkFee": "网络手续费（预估）",
+      "estimating": "估算中...",
+      "couldNotEstimate": "无法估算",
+      "cmuGasBalance": "CMU Gas 余额",
+      "totalDeducted": "总扣除额",
+      "reviewSign": "审核并签名",
+      "pendingConf": "等待确认中...",
+      "errorRecipientReq": "收款地址为必填项。",
+      "errorInvalidAddress": "收款地址格式无效。",
+      "errorValidAmount": "请输入大于零的有效金额。",
+      "errorGasPending": "Gas 估算仍在进行中，请稍候。",
+      "errorInsufficientToken": "{{symbol}} 余额不足。",
+      "errorInsufficientTotal": "余额不足以支付金额（{{amount}}）和网络手续费（{{fee}} CMU）。",
+      "errorInsufficientGas": "CMU 不足以支付网络手续费（{{fee}} CMU）。请充值你的 CMU 余额。",
+      "successTitle": "交易已发送",
+      "txHash": "交易哈希",
+      "doneBtn": "完成",
+      "notifConfirmedTitle": "交易已确认",
+      "notifConfirmedDesc": "已发送 {{asset}} 到 {{to}}",
+      "notifFailedTitle": "交易失败",
+      "notifFailedDesc": "向 {{to}} 转账 {{asset}} 无法确认"
+    }
+  }
+}

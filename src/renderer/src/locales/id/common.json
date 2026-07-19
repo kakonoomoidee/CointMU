@@ -1,0 +1,17 @@
+{
+  "languageSettings": "Pengaturan Bahasa",
+  "languageLabel": "Bahasa",
+  "languageDescription": "Bahasa aplikasi",
+  "sidebar": {
+    "connectedTo": "Terhubung ke",
+    "peers": "rekanan",
+    "workspace": "Ruang Kerja",
+    "dashboard": "Dasbor",
+    "mining": "Penambangan",
+    "wallet": "Dompet",
+    "explorer": "Penjelajah",
+    "system": "Sistem",
+    "settings": "Pengaturan",
+    "lockWallet": "Kunci Dompet"
+  }
+}

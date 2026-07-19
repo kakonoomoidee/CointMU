@@ -194,7 +194,7 @@ function WalletTabs({
                   : "text-slate-500 hover:text-slate-700 dark:hover:text-gray-300"
               }`}
             >
-              {t(`walletTabs.${tab.id}`)}
+              {t(`walletTabs:${tab.id}`)}
             </button>
           ))}
         </div>
@@ -335,7 +335,7 @@ function WalletTabs({
             <div className="rounded-2xl bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700">
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
-                  {t("walletTabs.scanningNfts")}
+                  {t("walletTabs:scanningNfts")}
                 </p>
               </div>
             </div>
@@ -345,7 +345,7 @@ function WalletTabs({
             <div className="rounded-2xl bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700">
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
-                  {t("walletTabs.noNftsFound")}
+                  {t("walletTabs:noNftsFound")}
                 </p>
                 {nftFetcher.error && (
                   <p className="text-xs text-red-400 mt-1">

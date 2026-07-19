@@ -1,0 +1,72 @@
+{
+  "activity": {
+    "noBlocks": "Блоки ещё не найдены",
+    "startMining": "Начните майнить, чтобы найти блоки",
+    "acceptedSharesLastMin": "Принятые шары · за последнюю {{count}} минуту",
+    "acceptedSharesLastMins": "Принятые шары · за последние {{count}} минут",
+    "acceptedSharesNoActivity": "Принятые шары · нет активности за последние 30 дней",
+    "sharesAccepted": " шар принято · ",
+    "rejected": " отклонено",
+    "less": "Меньше",
+    "more": "Больше",
+    "title": "Активность майнинга",
+    "subtitle": "Блоки, которые вы нашли, и вознаграждение сети",
+    "logAwaiting": "Ожидание активности узла...",
+    "tabFound": "Найдено",
+    "tabLog": "Журнал",
+    "tabActivity": "Активность"
+  },
+  "header": {
+    "workspace": "Рабочая область",
+    "title": "Майнинг",
+    "statusMining": "Майнинг",
+    "statusStopped": "Остановлен",
+    "preferences": "Предпочтения"
+  },
+  "hero": {
+    "rewardsToday": "Награды за сегодня",
+    "miningWithThreads": "Майнинг с {{count}} потоками",
+    "stopping": "Остановка...",
+    "stopMining": "Остановить майнинг",
+    "targetDifficulty": "Целевая сложность",
+    "blockReward": "Награда за блок",
+    "initializing": "Инициализация",
+    "generatingDag": "Генерация направленного ациклического графа (DAG) для верификации...",
+    "generatingDagBtn": "Генерация DAG...",
+    "idle": "Простой",
+    "syncingNetwork": "Синхронизация из сети...",
+    "pressStart": "Нажмите Старт, чтобы присоединиться к консенсусу. Заработайте",
+    "perBlock": "за найденный блок.",
+    "waitingForNode": "Ожидание подключения узла...",
+    "waitingForNodeTooltip": "Ожидание подключения узла",
+    "nodeSyncingTooltip": "Узел синхронизирует блоки",
+    "starting": "Запуск...",
+    "startMiningBtn": "Начать майнинг",
+    "stopMiningbtn": "Остановить майнинг"
+  },
+  "stats": {
+    "sessionTime": "Время сессии",
+    "active": "Активен",
+    "idle": "Простой",
+    "blocksFound": "Найдено блоков",
+    "past24Hours": "за последние 24 часа",
+    "totalEarned": "Всего заработано",
+    "acrossThisWallet": "по этому кошельку",
+    "hashrate5Min": "Хешрейт - 5 мин",
+    "stable": "Стабильно"
+  },
+  "nonce": {
+    "solvingCandidate": "Решение кандидата #{{candidate}} - {{nonces}} nonce проверено"
+  },
+  "worker": {
+    "title": "Конфигурация воркера",
+    "subtitle": "Текущая внутренняя конфигурация узла",
+    "workerThreads": "Рабочие потоки",
+    "ofCores": "из {{count}} ядер",
+    "intensityTitle": "Интенсивность",
+    "higherMoreHeat": "Выше = больше нагрев, быстрее решение",
+    "rewardAddressTitle": "Адрес вознаграждения",
+    "blockRewardsCreditedHere": "Награды за блоки зачисляются сюда",
+    "setInMiningSettings": "Установлено в настройках майнинга"
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "balanceFromNode": "Guthaben vom Node",
+  "send": "Senden",
+  "receive": "Empfangen",
+  "swap": "Tauschen",
+  "copyAddress": "Adresse kopieren",
+  "copied": "Kopiert!",
+  "sidebar": {
+    "accounts": "Konten",
+    "watchList": "Beobachtungsliste",
+    "noWatched": "Keine beobachteten Adressen",
+    "importWallet": "+ Wallet importieren",
+    "manageHidden": "Versteckte Konten verwalten",
+    "hideAccount": "Konto ausblenden"
+  },
+  "activity": {
+    "pending": "Ausstehend"
+  },
+  "header": {
+    "workspace": "Arbeitsbereich",
+    "title": "Wallet",
+    "synced": "Synchronisiert",
+    "backup": "Sicherung",
+    "newAccount": "Neues Konto"
+  },
+  "index": {
+    "accountLabel": "Konto {{index}}",
+    "notUnlocked": "Nicht entsperrt",
+    "walletLocked": "Wallet ist gesperrt. Bitte melden Sie sich erneut an.",
+    "importedAccount": "Importiertes Konto",
+    "importedSeedAccount": "Importiertes Seed-Konto",
+    "failedToAdd": "Konto konnte nicht hinzugefügt werden"
+  },
+  "modals": {
+    "addAccount": {
+      "title": "Konto hinzufügen",
+      "subtitle": "Importieren Sie eine vorhandene Seed-Phrase oder einen privaten Schlüssel.",
+      "importSeedTitle": "Seed-Phrase importieren",
+      "importSeedSubtitle": "Stellen Sie ein Konto aus einer 12-Wörter-Seed-Phrase wieder her.",
+      "importPkTitle": "Privaten Schlüssel importieren",
+      "importPkSubtitle": "Importieren Sie einen eigenständigen Hex-Privatschlüssel.",
+      "importJsonTitle": "Konto importieren (JSON)",
+      "importJsonSubtitle": "Importieren Sie eine verschlüsselte Web3-Keystore-Datei.",
+      "seedLabel": "12-Wörter-Seed-Phrase",
+      "pkLabel": "Privater Schlüssel (Hex)",
+      "seedPlaceholder": "Wort1 Wort2...",
+      "pkPlaceholder": "0x...",
+      "back": "Zurück",
+      "importBtn": "Importieren"
+    },
+    "manageHidden": {
+      "title": "Versteckte Konten",
+      "subtitle": "Stellen Sie Konten in Ihrer aktiven Seitenleiste wieder her.",
+      "noHidden": "Keine versteckten Konten.",
+      "unhideTooltip": "Konto einblenden",
+      "confirmDeleteZero": "Sind Sie sicher, dass Sie dieses leere Konto dauerhaft löschen möchten?",
+      "confirmDeleteDust": "Dieses Konto weist ein geringes Guthaben auf. Sind Sie sicher, dass Sie es dauerhaft löschen und das Guthaben verlieren möchten?"
+    },
+    "receive": {
+      "title": "CMU empfangen",
+      "subtitle": "Scannen Sie diesen QR-Code oder kopieren Sie die Adresse unten, um Guthaben zu empfangen.",
+      "yourAddress": "Ihre Adresse",
+      "copiedBtn": "Adresse kopiert!",
+      "copyBtn": "Adresse kopieren"
+    },
+    "send": {
+      "title": "Senden",
+      "subtitle": "Übertragen Sie Vermögenswerte an eine andere Adresse.",
+      "assetLabel": "Vermögenswert",
+      "selectToken": "Token auswählen",
+      "availableBalance": "Verfügbares Guthaben",
+      "recipientLabel": "Empfängeradresse",
+      "amountLabel": "Betrag",
+      "maxBtn": "Max",
+      "networkFee": "Netzwerkgebühr (geschätzt)",
+      "estimating": "Wird geschätzt...",
+      "couldNotEstimate": "Schätzung nicht möglich",
+      "cmuGasBalance": "CMU-Gas-Guthaben",
+      "totalDeducted": "Gesamt abgezogen",
+      "reviewSign": "Prüfen und signieren",
+      "pendingConf": "Warte auf Bestätigung...",
+      "errorRecipientReq": "Empfängeradresse ist erforderlich.",
+      "errorInvalidAddress": "Ungültiges Format der Empfängeradresse.",
+      "errorValidAmount": "Geben Sie einen gültigen Betrag größer als Null ein.",
+      "errorGasPending": "Gas-Schätzung wird noch durchgeführt. Bitte warten.",
+      "errorInsufficientToken": "Unzureichendes {{symbol}}-Guthaben.",
+      "errorInsufficientTotal": "Unzureichendes Guthaben für Betrag ({{amount}}) und Netzwerkgebühr ({{fee}} CMU).",
+      "errorInsufficientGas": "Nicht genügend CMU für die Netzwerkgebühr ({{fee}} CMU). Laden Sie Ihr CMU-Guthaben auf.",
+      "successTitle": "Transaktion gesendet",
+      "txHash": "Transaktions-Hash",
+      "doneBtn": "Fertig",
+      "notifConfirmedTitle": "Transaktion bestätigt",
+      "notifConfirmedDesc": "{{asset}} an {{to}} gesendet",
+      "notifFailedTitle": "Transaktion fehlgeschlagen",
+      "notifFailedDesc": "Übertragung von {{asset}} an {{to}} konnte nicht bestätigt werden"
+    }
+  }
+}

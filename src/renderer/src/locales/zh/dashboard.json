@@ -1,0 +1,60 @@
+{
+  "header": {
+    "synced": "已同步",
+    "offline": "离线",
+    "workspace": "工作区",
+    "title": "仪表盘",
+    "receive": "接收",
+    "send": "发送"
+  },
+  "statsGrid": {
+    "yourMining": "你的挖矿",
+    "open": "打开",
+    "minedBlocks": "已挖区块（24小时）",
+    "rewards": "奖励",
+    "networkHashrate": "全网算力",
+    "realTimeRpc": "通过 RPC 实时获取",
+    "smartContracts": "智能合约",
+    "deployedByYou": "由你部署"
+  },
+  "networkHealth": {
+    "healthy": "网络运行正常",
+    "disconnected": "网络已断开",
+    "chainHeight": "链高度",
+    "latestBlock": "最新区块",
+    "peers": "节点",
+    "gossipConnected": "Gossip 已连接",
+    "difficulty": "难度",
+    "currentNetwork": "当前网络",
+    "gasAvg": "Gas（平均）",
+    "suggestedPrice": "建议价格",
+    "blocksPastHour": "过去一小时的区块"
+  },
+  "walletOverview": {
+    "copy": "复制",
+    "balanceFromNode": "节点余额",
+    "send": "发送",
+    "receive": "接收",
+    "stake": "质押",
+    "miningLive": "挖矿进行中"
+  },
+  "activityFeed": {
+    "yourActivity": "你的活动",
+    "export": "导出",
+    "aggregatedHistory": "汇总交易历史",
+    "noActivity": "暂无活动",
+    "startMining": "开始挖矿以查看奖励"
+  },
+  "latestBlocks": {
+    "title": "最新区块",
+    "viewAll": "查看全部",
+    "minedAcrossNetwork": "全网挖出的区块",
+    "mined": "已挖出",
+    "txs": "笔交易",
+    "awaitingBlocks": "等待网络区块"
+  },
+  "index": {
+    "activelyMining": "正在挖矿",
+    "minerIdle": "矿工空闲"
+  }
+}

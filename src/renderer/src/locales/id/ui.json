@@ -1,0 +1,12 @@
+{
+  "window": {
+    "minimize": "Minimalkan",
+    "close": "Tutup"
+  },
+  "pairing": {
+    "pairingRequest": "Permintaan Tautan Ekstensi",
+    "pairingDesc": "Izinkan CointMU Browser Extension terhubung ke dompet Anda?",
+    "approve": "Setujui",
+    "reject": "Tolak"
+  }
+}

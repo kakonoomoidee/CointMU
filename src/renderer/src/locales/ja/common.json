@@ -1,0 +1,17 @@
+{
+  "languageSettings": "言語設定",
+  "languageLabel": "言語",
+  "languageDescription": "アプリケーションの言語",
+  "sidebar": {
+    "connectedTo": "接続先",
+    "peers": "ピア",
+    "workspace": "ワークスペース",
+    "dashboard": "ダッシュボード",
+    "mining": "マイニング",
+    "wallet": "ウォレット",
+    "explorer": "エクスプローラー",
+    "system": "システム",
+    "settings": "設定",
+    "lockWallet": "ウォレットをロック"
+  }
+}

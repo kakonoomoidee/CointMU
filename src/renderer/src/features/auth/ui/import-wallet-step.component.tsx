@@ -46,10 +46,10 @@ function ImportWalletStep({
             </div>
             <div className='text-left'>
               <p className='text-sm font-bold text-gray-800 dark:text-white'>
-                {t('auth.importWallet.seedPhraseTitle')}
+                {t('auth:importWallet.seedPhraseTitle')}
               </p>
               <p className='text-[10px] text-gray-500 dark:text-gray-400'>
-                {t('auth.importWallet.seedPhraseDesc')}
+                {t('auth:importWallet.seedPhraseDesc')}
               </p>
             </div>
           </div>
@@ -71,10 +71,10 @@ function ImportWalletStep({
             </div>
             <div className='text-left'>
               <p className='text-sm font-bold text-gray-800 dark:text-white'>
-                {t('auth.importWallet.privateKeyTitle')}
+                {t('auth:importWallet.privateKeyTitle')}
               </p>
               <p className='text-[10px] text-gray-500 dark:text-gray-400'>
-                {t('auth.importWallet.privateKeyDesc')}
+                {t('auth:importWallet.privateKeyDesc')}
               </p>
             </div>
           </div>
@@ -97,10 +97,10 @@ function ImportWalletStep({
               </div>
               <div className='text-left'>
                 <p className='text-sm font-bold text-gray-800 dark:text-white'>
-                  {t('auth.importWallet.keystoreTitle')}
+                  {t('auth:importWallet.keystoreTitle')}
                 </p>
                 <p className='text-[10px] text-gray-500 dark:text-gray-400'>
-                  {t('auth.importWallet.keystoreDesc')}
+                  {t('auth:importWallet.keystoreDesc')}
                 </p>
               </div>
             </div>
@@ -117,7 +117,7 @@ function ImportWalletStep({
           onClick={onBackToInitial}
           className='w-full mt-2 py-3.5 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-800 rounded-xl text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
         >
-          {t('auth.importWallet.back')}
+          {t('auth:importWallet.back')}
         </button>
       </div>
     );
@@ -128,27 +128,27 @@ function ImportWalletStep({
       {importMethod === 'seed' ? (
         <div>
           <label className='block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5'>
-            {t('auth.importWallet.seedPhraseLabel')}
+            {t('auth:importWallet.seedPhraseLabel')}
           </label>
           <textarea
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             className='w-full px-4 py-3 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-accent transition-all resize-none'
             rows={4}
-            placeholder={t('auth.importWallet.seedPhrasePlaceholder')}
+            placeholder={t('auth:importWallet.seedPhrasePlaceholder')}
           />
         </div>
       ) : (
         <div>
           <label className='block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5'>
-            {t('auth.importWallet.privateKeyLabel')}
+            {t('auth:importWallet.privateKeyLabel')}
           </label>
           <input
             type='password'
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             className='w-full px-4 py-3 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-accent transition-all'
-            placeholder={t('auth.importWallet.privateKeyPlaceholder')}
+            placeholder={t('auth:importWallet.privateKeyPlaceholder')}
           />
         </div>
       )}
@@ -158,14 +158,14 @@ function ImportWalletStep({
           onClick={onBackToMethod}
           className='flex-1 py-3.5 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-800 rounded-xl text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
         >
-          {t('auth.importWallet.back')}
+          {t('auth:importWallet.back')}
         </button>
         <button
           onClick={onContinue}
           disabled={!inputValue.trim()}
           className='flex-1 py-3.5 bg-accent text-white rounded-xl text-sm font-bold hover:opacity-80 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed'
         >
-          {t('auth.importWallet.next')}
+          {t('auth:importWallet.next')}
         </button>
       </div>
     </div>

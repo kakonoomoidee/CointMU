@@ -15,13 +15,13 @@ export function AppearanceSettings(): JSX.Element {
   return (
     <div>
       <h2 className="text-sm font-semibold text-slate-700 dark:text-gray-100 mb-6">
-        {t("settings.appearance.subtitle")}
+        {t("settings:appearance.subtitle")}
       </h2>
 
       <div className="space-y-8">
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.appearance.theme")}
+            {t("settings:appearance.theme")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl p-4 shadow-sm flex gap-4">
             <button
@@ -44,7 +44,7 @@ export function AppearanceSettings(): JSX.Element {
                 </div>
               </div>
               <span className="text-sm font-bold text-slate-800 dark:text-gray-100 px-2">
-                {t("settings.appearance.themeLight")}
+                {t("settings:appearance.themeLight")}
               </span>
             </button>
 
@@ -68,7 +68,7 @@ export function AppearanceSettings(): JSX.Element {
                 </div>
               </div>
               <span className="text-sm font-bold text-slate-800 dark:text-gray-100 px-2">
-                {t("settings.appearance.themeDark")}
+                {t("settings:appearance.themeDark")}
               </span>
             </button>
 
@@ -96,7 +96,7 @@ export function AppearanceSettings(): JSX.Element {
                 </div>
               </div>
               <span className="text-sm font-bold text-slate-800 dark:text-gray-100 px-2">
-                {t("settings.appearance.themeAuto")}
+                {t("settings:appearance.themeAuto")}
               </span>
             </button>
           </div>
@@ -104,7 +104,7 @@ export function AppearanceSettings(): JSX.Element {
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.appearance.accentColor")}
+            {t("settings:appearance.accentColor")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl p-4 shadow-sm flex items-center gap-3">
             {COLORS.map((c) => (
@@ -117,7 +117,10 @@ export function AppearanceSettings(): JSX.Element {
                     : "hover:scale-110"
                 }`}
               >
-                <div className="w-full h-full rounded-full" style={{ backgroundColor: c.id }} />
+                <div
+                  className="w-full h-full rounded-full"
+                  style={{ backgroundColor: c.id }}
+                />
               </button>
             ))}
           </div>
@@ -125,16 +128,16 @@ export function AppearanceSettings(): JSX.Element {
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.appearance.layout")}
+            {t("settings:appearance.layout")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.appearance.densityTitle")}
+                  {t("settings:appearance.densityTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.appearance.densityDesc")}
+                  {t("settings:appearance.densityDesc")}
                 </p>
               </div>
               <div className="flex items-center bg-slate-100 dark:bg-black/20 rounded-lg p-1">
@@ -157,15 +160,17 @@ export function AppearanceSettings(): JSX.Element {
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.appearance.showSidebarColorsTitle")}
+                  {t("settings:appearance.showSidebarColorsTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.appearance.showSidebarColorsDesc")}
+                  {t("settings:appearance.showSidebarColorsDesc")}
                 </p>
               </div>
               <button
                 onClick={() =>
-                  appearanceStore.setShowSidebarColors(!appearanceStore.showSidebarColors)
+                  appearanceStore.setShowSidebarColors(
+                    !appearanceStore.showSidebarColors,
+                  )
                 }
                 className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${appearanceStore.showSidebarColors ? "bg-emerald-500" : "bg-slate-200 dark:bg-slate-700"}`}
               >
@@ -178,15 +183,17 @@ export function AppearanceSettings(): JSX.Element {
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.appearance.animatedTransitionsTitle")}
+                  {t("settings:appearance.animatedTransitionsTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.appearance.animatedTransitionsDesc")}
+                  {t("settings:appearance.animatedTransitionsDesc")}
                 </p>
               </div>
               <button
                 onClick={() =>
-                  appearanceStore.setAnimatedTransitions(!appearanceStore.animatedTransitions)
+                  appearanceStore.setAnimatedTransitions(
+                    !appearanceStore.animatedTransitions,
+                  )
                 }
                 className={`w-11 h-6 rounded-full flex items-center transition-colors px-0.5 ${appearanceStore.animatedTransitions ? "bg-emerald-500" : "bg-slate-200 dark:bg-slate-700"}`}
               >

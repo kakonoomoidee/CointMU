@@ -26,10 +26,10 @@ function ReceiveModal({
   return (
     <div className="p-8 text-center">
       <h3 className="text-xl font-bold text-slate-800 dark:text-gray-100 mb-2">
-        {t("wallet.modals.receive.title")}
+        {t("wallet:modals.receive.title")}
       </h3>
       <p className="text-sm text-slate-500 dark:text-gray-400 mb-8">
-        {t("wallet.modals.receive.subtitle")}
+        {t("wallet:modals.receive.subtitle")}
       </p>
 
       <div className="mx-auto w-56 h-56 bg-white p-2 rounded-lg border-2 border-slate-100 dark:border-transparent shadow-sm mb-8 flex items-center justify-center">
@@ -40,7 +40,7 @@ function ReceiveModal({
 
       <div className="bg-slate-50 dark:bg-gray-800 border border-slate-100 dark:border-gray-700 rounded-xl p-4 mb-6">
         <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-gray-400 mb-1">
-          {t("wallet.modals.receive.yourAddress")}
+          {t("wallet:modals.receive.yourAddress")}
         </p>
         <p className="text-sm font-mono text-slate-800 dark:text-gray-100 break-all">
           {activeAccount?.address}
@@ -57,8 +57,8 @@ function ReceiveModal({
           <Copy width={16} height={16} strokeWidth={2.5} />
         )}
         {copied
-          ? t("wallet.modals.receive.copiedBtn")
-          : t("wallet.modals.receive.copyBtn")}
+          ? t("wallet:modals.receive.copiedBtn")
+          : t("wallet:modals.receive.copyBtn")}
       </button>
     </div>
   );

@@ -43,7 +43,7 @@ function NonceCounter(): JSX.Element {
   return (
     <div className="mt-4 mb-3">
       <p className="text-[11px] text-emerald-100/80 font-mono mb-2 tracking-wide font-medium">
-        {t("mining.nonce.solvingCandidate", {
+        {t("mining:nonce.solvingCandidate", {
           candidate: displayCandidate.toLocaleString(),
           nonces: displayNonces,
         })}

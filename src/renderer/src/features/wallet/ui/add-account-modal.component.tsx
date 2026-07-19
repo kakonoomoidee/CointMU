@@ -29,10 +29,10 @@ function AddAccountModal({
   return (
     <div className="p-8">
       <h3 className="text-xl font-bold text-slate-800 dark:text-gray-100 mb-2">
-        {t("wallet.modals.addAccount.title")}
+        {t("wallet:modals.addAccount.title")}
       </h3>
       <p className="text-sm text-slate-500 dark:text-gray-400 mb-8">
-        {t("wallet.modals.addAccount.subtitle")}
+        {t("wallet:modals.addAccount.subtitle")}
       </p>
 
       {addAccountType === "SELECT" && (
@@ -46,10 +46,10 @@ function AddAccountModal({
             </div>
             <div>
               <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                {t("wallet.modals.addAccount.importSeedTitle")}
+                {t("wallet:modals.addAccount.importSeedTitle")}
               </p>
               <p className="text-xs text-slate-500 dark:text-gray-400">
-                {t("wallet.modals.addAccount.importSeedSubtitle")}
+                {t("wallet:modals.addAccount.importSeedSubtitle")}
               </p>
             </div>
           </button>
@@ -62,10 +62,10 @@ function AddAccountModal({
             </div>
             <div>
               <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                {t("wallet.modals.addAccount.importPkTitle")}
+                {t("wallet:modals.addAccount.importPkTitle")}
               </p>
               <p className="text-xs text-slate-500 dark:text-gray-400">
-                {t("wallet.modals.addAccount.importPkSubtitle")}
+                {t("wallet:modals.addAccount.importPkSubtitle")}
               </p>
             </div>
           </button>
@@ -78,10 +78,10 @@ function AddAccountModal({
             </div>
             <div>
               <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                {t("wallet.modals.addAccount.importJsonTitle")}
+                {t("wallet:modals.addAccount.importJsonTitle")}
               </p>
               <p className="text-xs text-slate-500 dark:text-gray-400">
-                {t("wallet.modals.addAccount.importJsonSubtitle")}
+                {t("wallet:modals.addAccount.importJsonSubtitle")}
               </p>
             </div>
           </button>
@@ -93,16 +93,16 @@ function AddAccountModal({
           <div>
             <label className="block text-xs font-bold text-slate-700 dark:text-gray-200 mb-2">
               {addAccountType === "IMPORT_SEED"
-                ? t("wallet.modals.addAccount.seedLabel")
-                : t("wallet.modals.addAccount.pkLabel")}
+                ? t("wallet:modals.addAccount.seedLabel")
+                : t("wallet:modals.addAccount.pkLabel")}
             </label>
             <textarea
               value={importInput}
               onChange={(e) => setImportInput(e.target.value)}
               placeholder={
                 addAccountType === "IMPORT_SEED"
-                  ? t("wallet.modals.addAccount.seedPlaceholder")
-                  : t("wallet.modals.addAccount.pkPlaceholder")
+                  ? t("wallet:modals.addAccount.seedPlaceholder")
+                  : t("wallet:modals.addAccount.pkPlaceholder")
               }
               rows={3}
               className="w-full p-4 bg-slate-50 dark:bg-gray-950 border border-slate-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white dark:focus:bg-gray-900 dark:text-gray-100 transition-all font-mono text-sm resize-none"
@@ -120,13 +120,13 @@ function AddAccountModal({
               onClick={() => setAddAccountType("SELECT")}
               className="flex-1 py-3.5 bg-slate-100 dark:bg-gray-800 text-slate-700 dark:text-gray-200 font-bold rounded-xl hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors"
             >
-              {t("wallet.modals.addAccount.back")}
+              {t("wallet:modals.addAccount.back")}
             </button>
             <button
               onClick={onImport}
               className="flex-1 py-3.5 bg-accent text-white font-bold rounded-xl shadow-sm shadow-accent/20 hover:opacity-90 transition-opacity"
             >
-              {t("wallet.modals.addAccount.importBtn")}
+              {t("wallet:modals.addAccount.importBtn")}
             </button>
           </div>
         </div>

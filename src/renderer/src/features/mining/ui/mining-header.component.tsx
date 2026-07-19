@@ -27,11 +27,11 @@ function MiningHeader({
     <header className="flex items-center justify-between px-8 py-4">
       <div className="flex items-center gap-2">
         <span className="text-xs font-semibold tracking-widest uppercase text-slate-400">
-          {t("mining.header.workspace")}
+          {t("mining:header.workspace")}
         </span>
         <span className="text-slate-300">/</span>
         <span className="text-sm font-semibold text-slate-800">
-          {t("mining.header.title")}
+          {t("mining:header.title")}
         </span>
       </div>
 
@@ -39,7 +39,7 @@ function MiningHeader({
         {isMining ? (
           <StatusPill
             tone="success"
-            label={t("mining.header.statusMining")}
+            label={t("mining:header.statusMining")}
             pulse
           />
         ) : powerStatus === "Paused (Battery)" ? (
@@ -47,7 +47,7 @@ function MiningHeader({
         ) : (
           <StatusPill
             tone="neutral"
-            label={t("mining.header.statusStopped")}
+            label={t("mining:header.statusStopped")}
             showDot={false}
           />
         )}
@@ -57,7 +57,7 @@ function MiningHeader({
           leftIcon={<Settings width={14} height={14} />}
           onClick={() => onNavigate("settings", "mining")}
         >
-          {t("mining.header.preferences")}
+          {t("mining:header.preferences")}
         </Button>
       </div>
     </header>

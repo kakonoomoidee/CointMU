@@ -43,7 +43,7 @@ function MiningActivityLogs(): JSX.Element {
           ))
         ) : (
           <div className="text-slate-500 text-center py-8">
-            {t("mining.activity.logAwaiting")}
+            {t("mining:activity.logAwaiting")}
           </div>
         )}
       </div>

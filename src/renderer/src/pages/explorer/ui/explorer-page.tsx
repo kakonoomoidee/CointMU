@@ -94,8 +94,8 @@ function ExplorerPage({
             id: tx.hash,
             type: tx.to ? "send" : "contract",
             title: tx.to
-              ? t("explorer.index.transaction")
-              : t("explorer.index.contractCreation"),
+              ? t("explorer:index.transaction")
+              : t("explorer:index.contractCreation"),
             subtitle: "",
             amount: amountCmu,
             timestamp: block.timestamp,

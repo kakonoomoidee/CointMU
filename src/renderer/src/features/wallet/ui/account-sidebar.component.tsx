@@ -41,7 +41,7 @@ function AccountSidebar({
       <div>
         <div className="flex items-center justify-between mb-3">
           <h3 className='text-[10px] font-semibold tracking-[0.15em] uppercase text-gray-400'>
-            {t('wallet.sidebar.accounts')}
+            {t('wallet:sidebar.accounts')}
           </h3>
           <button
             onClick={onDeriveAccount}
@@ -97,7 +97,7 @@ function AccountSidebar({
                     <div
                       onClick={(e) => onHideAccount(e, acc.address)}
                       className='absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-slate-600 dark:text-gray-300 dark:hover:text-white bg-white/80 dark:bg-gray-800/50 dark:hover:bg-gray-700/80 backdrop-blur-sm rounded-full p-1.5 shadow-sm'
-                      title={t('wallet.sidebar.hideAccount')}
+                      title={t('wallet:sidebar.hideAccount')}
                     >
                       <EyeOff width={14} height={14} strokeWidth={2.5} />
                     </div>
@@ -110,14 +110,14 @@ function AccountSidebar({
 
       <div>
         <h3 className="text-[10px] font-semibold tracking-[0.15em] uppercase text-slate-400 mb-3">
-          {t("wallet.sidebar.watchList")}
+          {t("wallet:sidebar.watchList")}
         </h3>
         <div className="space-y-2">
           {WATCH_LIST.length > 0 ? (
             WATCH_LIST.map((_, i) => <div key={i} />)
           ) : (
             <p className="text-xs text-slate-400 px-3 py-2">
-              {t("wallet.sidebar.noWatched")}
+              {t("wallet:sidebar.noWatched")}
             </p>
           )}
         </div>
@@ -127,13 +127,13 @@ function AccountSidebar({
         onClick={onImportWallet}
         className="w-full text-center text-xs font-medium text-slate-500 hover:text-slate-700 transition-colors py-2"
       >
-        {t("wallet.sidebar.importWallet")}
+        {t("wallet:sidebar.importWallet")}
       </button>
       <button
         onClick={onManageHidden}
         className="w-full text-center text-[10px] font-medium text-slate-400 hover:text-slate-600 transition-colors py-1"
       >
-        {t("wallet.sidebar.manageHidden")}
+        {t("wallet:sidebar.manageHidden")}
       </button>
     </div>
   );

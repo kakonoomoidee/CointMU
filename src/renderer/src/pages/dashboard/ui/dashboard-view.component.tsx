@@ -160,8 +160,8 @@ function DashboardPage({
 
   const miningUptimeLabel =
     isConnected && telemetry.isMining
-      ? t("dashboard.index.activelyMining")
-      : t("dashboard.index.minerIdle");
+      ? t("dashboard:index.activelyMining")
+      : t("dashboard:index.minerIdle");
 
   const difficultyDisplay = isConnected ? formatDifficulty(difficulty) : "--";
   const gasDisplay = isConnected && gasPriceGwei !== null ? gasPriceGwei : "0";

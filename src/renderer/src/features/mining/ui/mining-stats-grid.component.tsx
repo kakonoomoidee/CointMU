@@ -32,18 +32,18 @@ function MiningStatsGrid({
   return (
     <div className="grid grid-cols-4 gap-5">
       <StatCard
-        label={t("mining.stats.sessionTime")}
+        label={t("mining:stats.sessionTime")}
         value={elapsedTime}
-        hint={isMining ? t("mining.stats.active") : t("mining.stats.idle")}
+        hint={isMining ? t("mining:stats.active") : t("mining:stats.idle")}
         valueClassName="font-mono"
       />
       <StatCard
-        label={t("mining.stats.blocksFound")}
+        label={t("mining:stats.blocksFound")}
         value={blocksFoundToday}
-        hint={t("mining.stats.past24Hours")}
+        hint={t("mining:stats.past24Hours")}
       />
       <StatCard
-        label={t("mining.stats.totalEarned")}
+        label={t("mining:stats.totalEarned")}
         value={
           <>
             +{balance}
@@ -52,14 +52,14 @@ function MiningStatsGrid({
             </span>
           </>
         }
-        hint={t("mining.stats.acrossThisWallet")}
+        hint={t("mining:stats.acrossThisWallet")}
         valueClassName="text-emerald-600"
       />
       <StatCard
-        label={t("mining.stats.hashrate5Min")}
+        label={t("mining:stats.hashrate5Min")}
         action={
           <Badge tone={isMining ? "success" : "neutral"}>
-            {isMining ? t("mining.stats.stable") : t("mining.stats.idle")}
+            {isMining ? t("mining:stats.stable") : t("mining:stats.idle")}
           </Badge>
         }
         value={isMining ? `${hashrateLabel} MH/s` : "0.00 MH/s"}

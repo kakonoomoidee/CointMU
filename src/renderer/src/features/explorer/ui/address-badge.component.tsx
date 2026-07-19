@@ -28,7 +28,7 @@ function AddressBadge({
   if (!address) {
     return (
       <span className="text-sm text-slate-400 font-mono">
-        {t("explorer.addressBadge.contractCreation")}
+        {t("explorer:addressBadge.contractCreation")}
       </span>
     );
   }

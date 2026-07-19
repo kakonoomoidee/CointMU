@@ -1,0 +1,17 @@
+{
+  "languageSettings": "Configuración de Idioma",
+  "languageLabel": "Idioma",
+  "languageDescription": "Idioma de la aplicación",
+  "sidebar": {
+    "connectedTo": "Conectado a",
+    "peers": "pares",
+    "workspace": "Espacio de Trabajo",
+    "dashboard": "Panel",
+    "mining": "Minería",
+    "wallet": "Billetera",
+    "explorer": "Explorador",
+    "system": "Sistema",
+    "settings": "Ajustes",
+    "lockWallet": "Bloquear Billetera"
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "balanceFromNode": "Saldo dari node",
+  "send": "Kirim",
+  "receive": "Terima",
+  "swap": "Tukar",
+  "copyAddress": "Salin alamat",
+  "copied": "Tersalin!",
+  "sidebar": {
+    "accounts": "Akun",
+    "watchList": "Daftar Pantau",
+    "noWatched": "Tidak ada alamat dipantau",
+    "importWallet": "+ Impor dompet",
+    "manageHidden": "Kelola akun tersembunyi",
+    "hideAccount": "Sembunyikan akun"
+  },
+  "activity": {
+    "pending": "Tertunda"
+  },
+  "header": {
+    "workspace": "Ruang Kerja",
+    "title": "Dompet",
+    "synced": "Tersinkron",
+    "backup": "Cadangkan",
+    "newAccount": "Akun baru"
+  },
+  "index": {
+    "accountLabel": "Akun {{index}}",
+    "notUnlocked": "Belum terbuka",
+    "walletLocked": "Dompet terkunci. Silakan masuk kembali.",
+    "importedAccount": "Akun Diimpor",
+    "importedSeedAccount": "Akun Seed Diimpor",
+    "failedToAdd": "Gagal menambahkan akun"
+  },
+  "modals": {
+    "addAccount": {
+      "title": "Tambah Akun",
+      "subtitle": "Impor seed phrase atau private key yang ada.",
+      "importSeedTitle": "Impor Seed Phrase",
+      "importSeedSubtitle": "Pulihkan akun dari 12 kata seed.",
+      "importPkTitle": "Impor Private Key",
+      "importPkSubtitle": "Impor private key hex mandiri.",
+      "importJsonTitle": "Impor Akun (JSON)",
+      "importJsonSubtitle": "Impor file keystore Web3 terenkripsi.",
+      "seedLabel": "12 Kata Seed Phrase",
+      "pkLabel": "Private Key (Hex)",
+      "seedPlaceholder": "kata1 kata2...",
+      "pkPlaceholder": "0x...",
+      "back": "Kembali",
+      "importBtn": "Impor"
+    },
+    "manageHidden": {
+      "title": "Akun Tersembunyi",
+      "subtitle": "Pulihkan akun ke bilah sisi aktif Anda.",
+      "noHidden": "Tidak ada akun tersembunyi.",
+      "unhideTooltip": "Tampilkan akun",
+      "confirmDeleteZero": "Apakah Anda yakin ingin menghapus akun kosong ini secara permanen?",
+      "confirmDeleteDust": "Akun ini memiliki saldo kecil. Apakah Anda yakin ingin menghapusnya secara permanen dan kehilangan dana tersebut?"
+    },
+    "receive": {
+      "title": "Terima CMU",
+      "subtitle": "Pindai kode QR ini atau salin alamat di bawah untuk menerima dana.",
+      "yourAddress": "Alamat Anda",
+      "copiedBtn": "Alamat Tersalin!",
+      "copyBtn": "Salin Alamat"
+    },
+    "send": {
+      "title": "Kirim",
+      "subtitle": "Transfer aset ke alamat lain.",
+      "assetLabel": "Aset",
+      "selectToken": "Pilih token",
+      "availableBalance": "Saldo tersedia",
+      "recipientLabel": "Alamat Penerima",
+      "amountLabel": "Jumlah",
+      "maxBtn": "Maks",
+      "networkFee": "Biaya Jaringan (Est.)",
+      "estimating": "Memperkirakan...",
+      "couldNotEstimate": "Tidak dapat memperkirakan",
+      "cmuGasBalance": "Saldo Gas CMU",
+      "totalDeducted": "Total Dipotong",
+      "reviewSign": "Tinjau & Tanda Tangani",
+      "pendingConf": "Menunggu Konfirmasi...",
+      "errorRecipientReq": "Alamat penerima diperlukan.",
+      "errorInvalidAddress": "Format alamat penerima tidak valid.",
+      "errorValidAmount": "Masukkan jumlah yang valid lebih dari nol.",
+      "errorGasPending": "Estimasi gas masih tertunda. Harap tunggu.",
+      "errorInsufficientToken": "Saldo {{symbol}} tidak mencukupi.",
+      "errorInsufficientTotal": "Saldo tidak mencukupi untuk jumlah ({{amount}}) dan biaya jaringan ({{fee}} CMU).",
+      "errorInsufficientGas": "CMU tidak cukup untuk membayar biaya jaringan ({{fee}} CMU). Isi ulang saldo CMU Anda.",
+      "successTitle": "Transaksi Terkirim",
+      "txHash": "Hash transaksi",
+      "doneBtn": "Selesai",
+      "notifConfirmedTitle": "Transaksi dikonfirmasi",
+      "notifConfirmedDesc": "Mengirim {{asset}} ke {{to}}",
+      "notifFailedTitle": "Transaksi gagal",
+      "notifFailedDesc": "Transfer {{asset}} ke {{to}} tidak dapat dikonfirmasi"
+    }
+  }
+}

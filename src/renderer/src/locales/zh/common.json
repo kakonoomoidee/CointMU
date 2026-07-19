@@ -1,0 +1,17 @@
+{
+  "languageSettings": "语言设置",
+  "languageLabel": "语言",
+  "languageDescription": "应用程序语言",
+  "sidebar": {
+    "connectedTo": "已连接到",
+    "peers": "个节点",
+    "workspace": "工作区",
+    "dashboard": "仪表盘",
+    "mining": "挖矿",
+    "wallet": "钱包",
+    "explorer": "浏览器",
+    "system": "系统",
+    "settings": "设置",
+    "lockWallet": "锁定钱包"
+  }
+}

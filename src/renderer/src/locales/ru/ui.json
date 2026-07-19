@@ -1,0 +1,12 @@
+{
+  "window": {
+    "minimize": "Свернуть",
+    "close": "Закрыть"
+  },
+  "pairing": {
+    "pairingRequest": "Запрос на связь с расширением",
+    "pairingDesc": "Разрешить CointMU Browser Extension подключиться к вашему кошельку?",
+    "approve": "Подтвердить",
+    "reject": "Отклонить"
+  }
+}

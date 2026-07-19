@@ -162,7 +162,7 @@ function SettingsPage({
       <header className="flex items-center justify-between px-8 py-4 border-b border-slate-200 dark:border-gray-800">
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold tracking-widest uppercase text-slate-400">
-            {t("settings.system")}
+            {t("settings:system")}
           </span>
           <span className="text-slate-300">/</span>
           <span className="text-sm font-semibold text-slate-800 dark:text-gray-100">
@@ -171,7 +171,7 @@ function SettingsPage({
         </div>
 
         <button className="text-xs font-semibold text-slate-700 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-100 transition-colors">
-          {t("settings.resetToDefaults")}
+          {t("settings:resetToDefaults")}
         </button>
       </header>
 
@@ -193,7 +193,7 @@ function SettingsPage({
               >
                 {cat.icon}
               </div>
-              {t(`settings.${cat.id}.title`)}
+              {t(`settings:${cat.id}.title`)}
             </button>
           ))}
         </div>

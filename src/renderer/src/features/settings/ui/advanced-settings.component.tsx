@@ -51,31 +51,31 @@ export function AdvancedSettings(): JSX.Element {
   };
 
   const handlePurge = async (): Promise<void> => {
-    if (window.confirm(t("settings.advanced.purgeWalletsConfirm"))) {
+    if (window.confirm(t("settings:advanced.purgeWalletsConfirm"))) {
       await purgeSecondaryAccounts();
-      alert(t("settings.advanced.purgeSuccess"));
+      alert(t("settings:advanced.purgeSuccess"));
     }
   };
 
   return (
     <div>
       <h2 className="text-sm font-semibold text-slate-700 dark:text-gray-100 mb-6">
-        {t("settings.advanced.subtitle")}
+        {t("settings:advanced.subtitle")}
       </h2>
 
       <div className="space-y-8">
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.advanced.rpcNetwork")}
+            {t("settings:advanced.rpcNetwork")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.advanced.httpRpcTitle")}
+                  {t("settings:advanced.httpRpcTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.advanced.httpRpcDesc")}
+                  {t("settings:advanced.httpRpcDesc")}
                 </p>
               </div>
               <button
@@ -91,10 +91,10 @@ export function AdvancedSettings(): JSX.Element {
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.advanced.wsRpcTitle")}
+                  {t("settings:advanced.wsRpcTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.advanced.wsRpcDesc")}
+                  {t("settings:advanced.wsRpcDesc")}
                 </p>
               </div>
               <button
@@ -110,10 +110,10 @@ export function AdvancedSettings(): JSX.Element {
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.advanced.corsTitle")}
+                  {t("settings:advanced.corsTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.advanced.corsDesc")}
+                  {t("settings:advanced.corsDesc")}
                 </p>
               </div>
               <div className="w-64">
@@ -132,33 +132,33 @@ export function AdvancedSettings(): JSX.Element {
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.advanced.storage")}
+            {t("settings:advanced.storage")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="flex items-center justify-between gap-4 p-4 bg-slate-50/50 dark:bg-gray-800/30">
               <div className="min-w-0">
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.advanced.datadirTitle")}
+                  {t("settings:advanced.datadirTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.advanced.datadirDesc")}
+                  {t("settings:advanced.datadirDesc")}
                 </p>
               </div>
               <span
                 className="text-sm font-bold font-mono text-slate-700 truncate max-w-[16rem]"
                 title={storage.datadir}
               >
-                {storage.datadir || t("settings.advanced.loading")}
+                {storage.datadir || t("settings:advanced.loading")}
               </span>
             </div>
 
             <div className="flex items-center justify-between p-4 bg-slate-50/50 dark:bg-gray-800/30">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.advanced.dbSizeTitle")}
+                  {t("settings:advanced.dbSizeTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.advanced.dbSizeDesc")}
+                  {t("settings:advanced.dbSizeDesc")}
                 </p>
               </div>
               <span className="text-sm font-bold font-mono text-slate-700">
@@ -169,17 +169,17 @@ export function AdvancedSettings(): JSX.Element {
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.advanced.openDataTitle")}
+                  {t("settings:advanced.openDataTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.advanced.openDataDesc")}
+                  {t("settings:advanced.openDataDesc")}
                 </p>
               </div>
               <button
                 onClick={() => void window.api.openDataFolder()}
                 className="px-3 py-1.5 dark:bg-gray-800 border border-slate-200 dark:border dark:border-gray-700 rounded-lg text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 dark:hover:text-white shadow-sm transition-colors"
               >
-                {t("settings.advanced.revealBtn")}
+                {t("settings:advanced.revealBtn")}
               </button>
             </div>
           </div>
@@ -187,16 +187,16 @@ export function AdvancedSettings(): JSX.Element {
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.advanced.diagnostics")}
+            {t("settings:advanced.diagnostics")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.advanced.logLevelTitle")}
+                  {t("settings:advanced.logLevelTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.advanced.logLevelDesc")}
+                  {t("settings:advanced.logLevelDesc")}
                 </p>
               </div>
               <div className="w-48">
@@ -214,10 +214,10 @@ export function AdvancedSettings(): JSX.Element {
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.advanced.analyticsTitle")}
+                  {t("settings:advanced.analyticsTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.advanced.analyticsDesc")}
+                  {t("settings:advanced.analyticsDesc")}
                 </p>
               </div>
               <button
@@ -242,17 +242,17 @@ export function AdvancedSettings(): JSX.Element {
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-red-600">
-                  {t("settings.advanced.purgeWalletsBtn")}
+                  {t("settings:advanced.purgeWalletsBtn")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.advanced.purgeWalletsConfirm")}
+                  {t("settings:advanced.purgeWalletsConfirm")}
                 </p>
               </div>
               <button
                 onClick={() => void handlePurge()}
                 className="px-4 py-2 bg-red-50 border border-red-200 hover:bg-red-100 rounded-lg text-xs font-bold text-red-700 shadow-sm transition-colors"
               >
-                {t("settings.advanced.purgeWalletsBtn")}
+                {t("settings:advanced.purgeWalletsBtn")}
               </button>
             </div>
           </div>

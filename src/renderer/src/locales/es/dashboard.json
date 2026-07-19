@@ -1,0 +1,60 @@
+{
+  "header": {
+    "synced": "Sincronizado",
+    "offline": "Desconectado",
+    "workspace": "Espacio de Trabajo",
+    "title": "Panel",
+    "receive": "Recibir",
+    "send": "Enviar"
+  },
+  "statsGrid": {
+    "yourMining": "Tu minería",
+    "open": "Abrir",
+    "minedBlocks": "Bloques minados (24h)",
+    "rewards": "recompensas",
+    "networkHashrate": "Hashrate de la red",
+    "realTimeRpc": "Tiempo real vía RPC",
+    "smartContracts": "Contratos Inteligentes",
+    "deployedByYou": "desplegados por ti"
+  },
+  "networkHealth": {
+    "healthy": "La red está sana",
+    "disconnected": "La red está desconectada",
+    "chainHeight": "Altura de la Cadena",
+    "latestBlock": "Último bloque",
+    "peers": "Pares",
+    "gossipConnected": "Gossip conectado",
+    "difficulty": "Dificultad",
+    "currentNetwork": "Red actual",
+    "gasAvg": "Gas (Promedio)",
+    "suggestedPrice": "Precio sugerido",
+    "blocksPastHour": "Bloques en la última hora"
+  },
+  "walletOverview": {
+    "copy": "Copiar",
+    "balanceFromNode": "Saldo del nodo",
+    "send": "Enviar",
+    "receive": "Recibir",
+    "stake": "Apostar (Stake)",
+    "miningLive": "Minería en vivo"
+  },
+  "activityFeed": {
+    "yourActivity": "Tu actividad",
+    "export": "Exportar",
+    "aggregatedHistory": "Historial de transacciones agregado",
+    "noActivity": "No hay actividad aún",
+    "startMining": "Empieza a minar para ver recompensas"
+  },
+  "latestBlocks": {
+    "title": "Últimos bloques",
+    "viewAll": "Ver todos",
+    "minedAcrossNetwork": "Minados en toda la red",
+    "mined": "minados",
+    "txs": "txs",
+    "awaitingBlocks": "Esperando bloques de la red"
+  },
+  "index": {
+    "activelyMining": "Minando activamente",
+    "minerIdle": "Minero inactivo"
+  }
+}

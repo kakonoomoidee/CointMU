@@ -58,11 +58,11 @@ function TransactionDetail({
   const statusLabel =
     detail?.status === "success"
       ? confirmations !== null
-        ? t("explorer.txDetail.confirmedWithCount", { count: confirmations })
-        : t("explorer.txDetail.confirmed")
+        ? t("explorer:txDetail.confirmedWithCount", { count: confirmations })
+        : t("explorer:txDetail.confirmed")
       : detail?.status === "failed"
-        ? t("explorer.txDetail.failed")
-        : t("explorer.txDetail.pending");
+        ? t("explorer:txDetail.failed")
+        : t("explorer:txDetail.pending");
 
   const approxUsd =
     detail !== null
@@ -89,12 +89,12 @@ function TransactionDetail({
           className="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-semibold text-slate-600 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 transition-colors shadow-sm"
         >
           <ChevronLeft width={12} height={12} strokeWidth={2.5} />
-          {t("explorer.txDetail.back")}
+          {t("explorer:txDetail.back")}
         </button>
 
         <div>
           <p className="text-[10px] font-semibold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-0.5">
-            {t("explorer.txDetail.transaction")}
+            {t("explorer:txDetail.transaction")}
           </p>
           <div className="flex items-center gap-3">
             <h2 className="text-xl font-bold text-slate-800 dark:text-gray-100 tracking-tight font-mono">
@@ -114,10 +114,10 @@ function TransactionDetail({
                   <AlertCircle width={10} height={10} />
                 )}
                 {isSuccess
-                  ? t("explorer.txDetail.success")
+                  ? t("explorer:txDetail.success")
                   : detail.status === "failed"
-                    ? t("explorer.txDetail.failed")
-                    : t("explorer.txDetail.pending")}
+                    ? t("explorer:txDetail.failed")
+                    : t("explorer:txDetail.pending")}
               </span>
             )}
           </div>
@@ -128,7 +128,7 @@ function TransactionDetail({
         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-slate-200 dark:border-gray-800 p-12 shadow-sm text-center">
           <div className="w-6 h-6 rounded-full border-2 border-slate-200 dark:border-gray-700 border-t-blue-500 dark:border-t-accent animate-spin mx-auto mb-3" />
           <p className="text-sm font-medium text-slate-400 dark:text-gray-400">
-            {t("explorer.txDetail.loading")}
+            {t("explorer:txDetail.loading")}
           </p>
         </div>
       ) : (
@@ -136,7 +136,7 @@ function TransactionDetail({
           <div className="space-y-4">
             <div className="flex items-center pb-4 border-b border-slate-100 dark:border-gray-800">
               <span className="text-xs font-semibold text-slate-500 dark:text-gray-400 w-1/4">
-                {t("explorer.txDetail.txHash")}
+                {t("explorer:txDetail.txHash")}
               </span>
               <span className="text-sm font-mono text-slate-800 dark:text-gray-100 break-all">
                 {detail.hash}
@@ -144,7 +144,7 @@ function TransactionDetail({
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100 dark:border-gray-800">
               <span className="text-xs font-semibold text-slate-500 dark:text-gray-400 w-1/4">
-                {t("explorer.txDetail.status")}
+                {t("explorer:txDetail.status")}
               </span>
               <span
                 className={`text-xs font-semibold px-2.5 py-1 rounded-full border flex items-center gap-1.5 ${
@@ -163,7 +163,7 @@ function TransactionDetail({
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100 dark:border-gray-800">
               <span className="text-xs font-semibold text-slate-500 dark:text-gray-400 w-1/4">
-                {t("explorer.txDetail.block")}
+                {t("explorer:txDetail.block")}
               </span>
               {detail.blockNumber !== null ? (
                 <span
@@ -174,13 +174,13 @@ function TransactionDetail({
                 </span>
               ) : (
                 <span className="text-sm text-slate-400 dark:text-gray-400">
-                  {t("explorer.txDetail.pending")}
+                  {t("explorer:txDetail.pending")}
                 </span>
               )}
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100 dark:border-gray-800">
               <span className="text-xs font-semibold text-slate-500 dark:text-gray-400 w-1/4">
-                {t("explorer.txDetail.timestamp")}
+                {t("explorer:txDetail.timestamp")}
               </span>
               <span className="text-sm text-slate-800 dark:text-gray-100">
                 {detail.timestamp !== null
@@ -190,7 +190,7 @@ function TransactionDetail({
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100 dark:border-gray-800">
               <span className="text-xs font-semibold text-slate-500 dark:text-gray-400 w-1/4">
-                {t("explorer.txDetail.from")}
+                {t("explorer:txDetail.from")}
               </span>
               <AddressBadge
                 address={detail.from}
@@ -200,7 +200,7 @@ function TransactionDetail({
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100 dark:border-gray-800">
               <span className="text-xs font-semibold text-slate-500 dark:text-gray-400 w-1/4">
-                {t("explorer.txDetail.to")}
+                {t("explorer:txDetail.to")}
               </span>
               <AddressBadge
                 address={detail.to}
@@ -210,7 +210,7 @@ function TransactionDetail({
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100 dark:border-gray-800">
               <span className="text-xs font-semibold text-slate-500 dark:text-gray-400 w-1/4">
-                {t("explorer.txDetail.value")}
+                {t("explorer:txDetail.value")}
               </span>
               <span className="text-sm font-bold text-slate-800 dark:text-gray-100">
                 {detail.valueCmu.toFixed(4)} CMU
@@ -221,7 +221,7 @@ function TransactionDetail({
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100 dark:border-gray-800">
               <span className="text-xs font-semibold text-slate-500 dark:text-gray-400 w-1/4">
-                {t("explorer.txDetail.gasPrice")}
+                {t("explorer:txDetail.gasPrice")}
               </span>
               <span className="text-sm text-slate-800 dark:text-gray-100">
                 {detail.gasPriceGwei} gwei
@@ -229,13 +229,15 @@ function TransactionDetail({
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100 dark:border-gray-800">
               <span className="text-xs font-semibold text-slate-500 dark:text-gray-400 w-1/4">
-                {t("explorer.txDetail.gasUsed")}
+                {t("explorer:txDetail.gasUsed")}
               </span>
-              <span className="text-sm text-slate-800 dark:text-gray-100">{gasUsedLabel}</span>
+              <span className="text-sm text-slate-800 dark:text-gray-100">
+                {gasUsedLabel}
+              </span>
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100 dark:border-gray-800">
               <span className="text-xs font-semibold text-slate-500 dark:text-gray-400 w-1/4">
-                {t("explorer.txDetail.txFee")}
+                {t("explorer:txDetail.txFee")}
               </span>
               <span className="text-sm text-slate-800 dark:text-gray-100">
                 {detail.feeCmu !== null
@@ -245,18 +247,20 @@ function TransactionDetail({
             </div>
             <div className="flex items-center pb-4 border-b border-slate-100 dark:border-gray-800">
               <span className="text-xs font-semibold text-slate-500 dark:text-gray-400 w-1/4">
-                {t("explorer.txDetail.nonce")}
+                {t("explorer:txDetail.nonce")}
               </span>
-              <span className="text-sm text-slate-800 dark:text-gray-100">{detail.nonce}</span>
+              <span className="text-sm text-slate-800 dark:text-gray-100">
+                {detail.nonce}
+              </span>
             </div>
             <div className="flex items-start">
               <span className="text-xs font-semibold text-slate-500 dark:text-gray-400 w-1/4 pt-1">
-                {t("explorer.txDetail.inputData")}
+                {t("explorer:txDetail.inputData")}
               </span>
               <div className="flex-1">
                 {detail.input === "0x" || detail.input === "" ? (
                   <p className="text-sm font-mono text-slate-500 dark:text-gray-500 italic">
-                    {t("explorer.txDetail.emptyInput")}
+                    {t("explorer:txDetail.emptyInput")}
                   </p>
                 ) : (
                   <p className="text-sm font-mono text-slate-800 dark:text-gray-300 break-all bg-slate-50 dark:bg-gray-800 p-2 rounded-lg border border-slate-100 dark:border-gray-700">

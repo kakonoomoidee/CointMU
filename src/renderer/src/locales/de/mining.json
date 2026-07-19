@@ -1,0 +1,72 @@
+{
+  "activity": {
+    "noBlocks": "Noch keine Blöcke gefunden",
+    "startMining": "Starten Sie das Mining, um Blöcke zu finden",
+    "acceptedSharesLastMin": "Akzeptierte Shares · letzte {{count}} Minute",
+    "acceptedSharesLastMins": "Akzeptierte Shares · letzte {{count}} Minuten",
+    "acceptedSharesNoActivity": "Akzeptierte Shares · keine Aktivität in den letzten 30 Tagen",
+    "sharesAccepted": " Shares akzeptiert · ",
+    "rejected": " abgelehnt",
+    "less": "Weniger",
+    "more": "Mehr",
+    "title": "Mining-Aktivität",
+    "subtitle": "Gefundene Blöcke und Netzwerkvergütung",
+    "logAwaiting": "Warte auf Node-Aktivität...",
+    "tabFound": "Gefunden",
+    "tabLog": "Protokoll",
+    "tabActivity": "Aktivität"
+  },
+  "header": {
+    "workspace": "Arbeitsbereich",
+    "title": "Mining",
+    "statusMining": "Mining",
+    "statusStopped": "Gestoppt",
+    "preferences": "Einstellungen"
+  },
+  "hero": {
+    "rewardsToday": "Heutige Belohnungen",
+    "miningWithThreads": "Mining mit {{count}} Threads",
+    "stopping": "Wird gestoppt...",
+    "stopMining": "Mining stoppen",
+    "targetDifficulty": "Zielschwierigkeit",
+    "blockReward": "Blockbelohnung",
+    "initializing": "Initialisierung",
+    "generatingDag": "Gerichteter azyklischer Graph (DAG) wird zur Verifizierung generiert...",
+    "generatingDagBtn": "DAG wird generiert...",
+    "idle": "Inaktiv",
+    "syncingNetwork": "Synchronisierung vom Netzwerk...",
+    "pressStart": "Drücken Sie Start, um am Konsensus teilzunehmen. Verdienen Sie",
+    "perBlock": "pro gefundenem Block.",
+    "waitingForNode": "Warte auf Node-Verbindung...",
+    "waitingForNodeTooltip": "Warte auf Node-Verbindung",
+    "nodeSyncingTooltip": "Node synchronisiert Blöcke",
+    "starting": "Wird gestartet...",
+    "startMiningBtn": "Mining starten",
+    "stopMiningbtn": "Mining stoppen"
+  },
+  "stats": {
+    "sessionTime": "Sitzungszeit",
+    "active": "Aktiv",
+    "idle": "Inaktiv",
+    "blocksFound": "Gefundene Blöcke",
+    "past24Hours": "letzte 24 Stunden",
+    "totalEarned": "Gesamt verdient",
+    "acrossThisWallet": "über dieses Wallet",
+    "hashrate5Min": "Hashrate - 5 Min",
+    "stable": "Stabil"
+  },
+  "nonce": {
+    "solvingCandidate": "Löse Kandidat #{{candidate}} - {{nonces}} Nonces getestet"
+  },
+  "worker": {
+    "title": "Worker-Konfiguration",
+    "subtitle": "Aktuelle interne Node-Konfiguration",
+    "workerThreads": "Worker-Threads",
+    "ofCores": "von {{count}} Kernen",
+    "intensityTitle": "Intensität",
+    "higherMoreHeat": "Höher = mehr Wärme, schnellere Lösung",
+    "rewardAddressTitle": "Belohnungsadresse",
+    "blockRewardsCreditedHere": "Blockbelohnungen werden hier gutgeschrieben",
+    "setInMiningSettings": "In Mining-Einstellungen festgelegt"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "window": {
+    "minimize": "最小化",
+    "close": "关闭"
+  },
+  "pairing": {
+    "pairingRequest": "扩展连接请求",
+    "pairingDesc": "是否允许 CointMU Browser Extension 连接到您的钱包？",
+    "approve": "批准",
+    "reject": "拒绝"
+  }
+}

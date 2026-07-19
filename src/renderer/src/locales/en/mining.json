@@ -1,0 +1,72 @@
+{
+  "activity": {
+    "noBlocks": "No blocks found yet",
+    "startMining": "Start mining to find blocks",
+    "acceptedSharesLastMin": "Accepted shares · last {{count}} minute",
+    "acceptedSharesLastMins": "Accepted shares · last {{count}} minutes",
+    "acceptedSharesNoActivity": "Accepted shares · no activity in the last 30 days",
+    "sharesAccepted": " shares accepted · ",
+    "rejected": " rejected",
+    "less": "Less",
+    "more": "More",
+    "title": "Mining activity",
+    "subtitle": "Blocks you found and what the network paid",
+    "logAwaiting": "Awaiting node activity...",
+    "tabFound": "Found",
+    "tabLog": "Log",
+    "tabActivity": "Activity"
+  },
+  "header": {
+    "workspace": "Workspace",
+    "title": "Mining",
+    "statusMining": "Mining",
+    "statusStopped": "Stopped",
+    "preferences": "Preferences"
+  },
+  "hero": {
+    "rewardsToday": "Rewards today",
+    "miningWithThreads": "Mining with {{count}} threads",
+    "stopping": "Stopping...",
+    "stopMining": "Stop mining",
+    "targetDifficulty": "Target difficulty",
+    "blockReward": "Block reward",
+    "initializing": "Initializing",
+    "generatingDag": "Generating Directed Acyclic Graph (DAG) for verification...",
+    "generatingDagBtn": "Generating DAG...",
+    "idle": "Idle",
+    "syncingNetwork": "Syncing from network...",
+    "pressStart": "Press Start to join consensus. Earn",
+    "perBlock": "per block found.",
+    "waitingForNode": "Waiting for node connection...",
+    "waitingForNodeTooltip": "Waiting for node connection",
+    "nodeSyncingTooltip": "Node is syncing blocks",
+    "starting": "Starting...",
+    "startMiningBtn": "Start mining",
+    "stopMiningbtn": "Stop mining"
+  },
+  "stats": {
+    "sessionTime": "Session Time",
+    "active": "Active",
+    "idle": "Idle",
+    "blocksFound": "Blocks Found",
+    "past24Hours": "past 24 hours",
+    "totalEarned": "Total Earned",
+    "acrossThisWallet": "across this wallet",
+    "hashrate5Min": "Hashrate - 5 min",
+    "stable": "Stable"
+  },
+  "nonce": {
+    "solvingCandidate": "Solving candidate #{{candidate}} - {{nonces}} nonces tried"
+  },
+  "worker": {
+    "title": "Worker configuration",
+    "subtitle": "Current internal node configuration",
+    "workerThreads": "Worker threads",
+    "ofCores": "of {{count}} cores",
+    "intensityTitle": "Intensity",
+    "higherMoreHeat": "Higher = more heat, faster solves",
+    "rewardAddressTitle": "Reward address",
+    "blockRewardsCreditedHere": "Block rewards are credited here",
+    "setInMiningSettings": "Set in Mining Settings"
+  }
+}

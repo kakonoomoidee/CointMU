@@ -227,19 +227,19 @@ function SendModal({
   };
 
   const validateBeforeSend = (): string | null => {
-    if (!sendTo) return t("wallet.modals.send.errorRecipientReq");
+    if (!sendTo) return t("wallet:modals.send.errorRecipientReq");
     if (!ethers.isAddress(sendTo))
-      return t("wallet.modals.send.errorInvalidAddress");
+      return t("wallet:modals.send.errorInvalidAddress");
     if (!sendAmount || parseFloat(sendAmount) <= 0)
-      return t("wallet.modals.send.errorValidAmount");
+      return t("wallet:modals.send.errorValidAmount");
     if (!gasLimit || !sendGasPrice)
-      return t("wallet.modals.send.errorGasPending");
+      return t("wallet:modals.send.errorGasPending");
 
     const amountNum = parseFloat(sendAmount);
     const balanceNum = parseFloat(tokenBalance.replace(/,/g, ""));
 
     if (amountNum > balanceNum) {
-      return t("wallet.modals.send.errorInsufficientToken", {
+      return t("wallet:modals.send.errorInsufficientToken", {
         symbol: selectedToken?.symbol ?? "",
       });
     }
@@ -249,7 +249,7 @@ function SendModal({
     if (isNative) {
       const totalRequired = amountNum + gasFeeEth;
       if (totalRequired > balanceNum) {
-        return t("wallet.modals.send.errorInsufficientTotal", {
+        return t("wallet:modals.send.errorInsufficientTotal", {
           amount: sendAmount,
           fee: gasFeeFormatted,
         });
@@ -257,7 +257,7 @@ function SendModal({
     } else {
       const nativeBalanceNum = parseFloat(nativeBalance.replace(/,/g, ""));
       if (gasFeeEth > nativeBalanceNum) {
-        return t("wallet.modals.send.errorInsufficientGas", {
+        return t("wallet:modals.send.errorInsufficientGas", {
           fee: gasFeeFormatted,
         });
       }
@@ -351,8 +351,8 @@ function SendModal({
           removePendingTransaction(txHash);
           dispatchNotification(
             "transaction",
-            t("wallet.modals.send.notifConfirmedTitle"),
-            t("wallet.modals.send.notifConfirmedDesc", {
+            t("wallet:modals.send.notifConfirmedTitle"),
+            t("wallet:modals.send.notifConfirmedDesc", {
               asset: assetLabel,
               to: shortTo,
             }),
@@ -364,8 +364,8 @@ function SendModal({
           removePendingTransaction(txHash);
           dispatchNotification(
             "transaction",
-            t("wallet.modals.send.notifFailedTitle"),
-            t("wallet.modals.send.notifFailedDesc", {
+            t("wallet:modals.send.notifFailedTitle"),
+            t("wallet:modals.send.notifFailedDesc", {
               asset: assetLabel,
               to: shortTo,
             }),
@@ -393,10 +393,10 @@ function SendModal({
             <Check width={32} height={32} strokeWidth={3} />
           </div>
           <p className="text-lg font-bold text-slate-800 dark:text-gray-100 mb-2">
-            {t("wallet.modals.send.successTitle")}
+            {t("wallet:modals.send.successTitle")}
           </p>
           <p className="text-xs text-slate-500 dark:text-gray-400 mb-1">
-            {t("wallet.modals.send.txHash")}
+            {t("wallet:modals.send.txHash")}
           </p>
           <p className="text-xs font-mono text-slate-700 dark:text-gray-200 break-all bg-slate-50 dark:bg-gray-950 border border-slate-200 dark:border-gray-700 rounded-xl px-3 py-2 mb-6">
             {sendSuccess}
@@ -405,7 +405,7 @@ function SendModal({
             onClick={handleDone}
             className="w-full py-3.5 bg-slate-100 dark:bg-gray-800 text-slate-700 dark:text-gray-200 font-bold rounded-xl hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors"
           >
-            {t("wallet.modals.send.doneBtn")}
+            {t("wallet:modals.send.doneBtn")}
           </button>
         </div>
       </div>
@@ -415,16 +415,16 @@ function SendModal({
   return (
     <div className="p-8">
       <h3 className="text-xl font-bold text-slate-800 dark:text-gray-100 mb-1">
-        {t("wallet.modals.send.title")}
+        {t("wallet:modals.send.title")}
       </h3>
       <p className="text-sm text-slate-500 dark:text-gray-400 mb-6">
-        {t("wallet.modals.send.subtitle")}
+        {t("wallet:modals.send.subtitle")}
       </p>
 
       <div className="space-y-5">
         <div>
           <label className="block text-xs font-bold text-slate-700 dark:text-gray-200 mb-2">
-            {t("wallet.modals.send.assetLabel")}
+            {t("wallet:modals.send.assetLabel")}
           </label>
           <div className="relative">
             <CustomDropdown<TokenInfo>
@@ -440,7 +440,7 @@ function SendModal({
                     size="sm"
                   />
                   <span>
-                    {selected?.name ?? t("wallet.modals.send.selectToken")}
+                    {selected?.name ?? t("wallet:modals.send.selectToken")}
                   </span>
                   <span className="text-slate-400 dark:text-gray-400 font-normal">
                     ({selected?.symbol})
@@ -465,7 +465,7 @@ function SendModal({
 
           <div className="flex items-center justify-between mt-1.5 px-1">
             <span className="text-xs text-slate-400 dark:text-gray-400">
-              {t("wallet.modals.send.availableBalance")}
+              {t("wallet:modals.send.availableBalance")}
             </span>
             <span className="text-xs font-mono font-semibold text-slate-600 dark:text-gray-300">
               {tokenBalance} {selectedToken?.symbol}
@@ -475,7 +475,7 @@ function SendModal({
 
         <div>
           <label className="block text-xs font-bold text-slate-700 dark:text-gray-200 mb-2">
-            {t("wallet.modals.send.recipientLabel")}
+            {t("wallet:modals.send.recipientLabel")}
           </label>
           <input
             type="text"
@@ -490,7 +490,7 @@ function SendModal({
         <div>
           <div className="flex items-center justify-between mb-2">
             <label className="text-xs font-bold text-slate-700 dark:text-gray-200">
-              {t("wallet.modals.send.amountLabel")}
+              {t("wallet:modals.send.amountLabel")}
             </label>
             <button
               type="button"
@@ -498,7 +498,7 @@ function SendModal({
               disabled={sendLoading || tokenBalance === "..."}
               className="text-xs font-bold text-accent hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
-              {t("wallet.modals.send.maxBtn")}
+              {t("wallet:modals.send.maxBtn")}
             </button>
           </div>
           <div className="relative">
@@ -520,12 +520,12 @@ function SendModal({
         <div className="bg-slate-50 dark:bg-gray-950 border border-slate-100 dark:border-gray-800 rounded-xl p-4 space-y-3">
           <div className="flex justify-between items-center">
             <span className="text-xs font-semibold text-slate-500 dark:text-gray-400">
-              {t("wallet.modals.send.networkFee")}
+              {t("wallet:modals.send.networkFee")}
             </span>
             <span className="text-xs font-mono font-bold text-slate-700 dark:text-gray-200">
               {estimationStatus === "estimating" && (
                 <span className="text-slate-400 animate-pulse">
-                  {t("wallet.modals.send.estimating")}
+                  {t("wallet:modals.send.estimating")}
                 </span>
               )}
               {estimationStatus === "ready" && gasFeeFormatted && (
@@ -533,7 +533,7 @@ function SendModal({
               )}
               {estimationStatus === "error" && (
                 <span className="text-amber-500">
-                  {t("wallet.modals.send.couldNotEstimate")}
+                  {t("wallet:modals.send.couldNotEstimate")}
                 </span>
               )}
               {estimationStatus === "idle" && (
@@ -547,7 +547,7 @@ function SendModal({
               <div className="h-px bg-slate-200 dark:bg-gray-800" />
               <div className="flex justify-between items-center">
                 <span className="text-xs font-semibold text-slate-500 dark:text-gray-400">
-                  {t("wallet.modals.send.cmuGasBalance")}
+                  {t("wallet:modals.send.cmuGasBalance")}
                 </span>
                 <span className="text-xs font-mono font-bold text-slate-700 dark:text-gray-200">
                   {nativeBalance} CMU
@@ -564,7 +564,7 @@ function SendModal({
                 <div className="h-px bg-slate-200 dark:bg-gray-800" />
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                    {t("wallet.modals.send.totalDeducted")}
+                    {t("wallet:modals.send.totalDeducted")}
                   </span>
                   <span className="text-sm font-mono font-bold text-slate-800 dark:text-gray-100">
                     {(
@@ -594,8 +594,8 @@ function SendModal({
           className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-sm shadow-accent/20 hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
         >
           {sendLoading
-            ? t("wallet.modals.send.pendingConf")
-            : t("wallet.modals.send.reviewSign")}
+            ? t("wallet:modals.send.pendingConf")
+            : t("wallet:modals.send.reviewSign")}
         </button>
       </div>
     </div>

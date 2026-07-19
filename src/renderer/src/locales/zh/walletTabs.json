@@ -1,0 +1,7 @@
+{
+  "activity": "活动",
+  "tokens": "代币",
+  "nfts": "NFTs",
+  "scanningNfts": "正在扫描区块链中的 NFT...",
+  "noNftsFound": "未找到 NFT"
+}

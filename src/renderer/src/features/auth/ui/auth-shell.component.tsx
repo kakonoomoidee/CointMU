@@ -29,40 +29,40 @@ function getStepCopy(
   switch (step) {
     case "initial":
       return {
-        title: t("auth.shell.welcomeTitle"),
-        subtitle: t("auth.shell.welcomeSubtitle"),
+        title: t("auth:shell.welcomeTitle"),
+        subtitle: t("auth:shell.welcomeSubtitle"),
       };
     case "login":
       return {
-        title: t("auth.shell.welcomeBackTitle"),
-        subtitle: t("auth.shell.welcomeBackSubtitle"),
+        title: t("auth:shell.welcomeBackTitle"),
+        subtitle: t("auth:shell.welcomeBackSubtitle"),
       };
     case "create-seed":
       return {
-        title: t("auth.shell.secretRecoveryTitle"),
-        subtitle: t("auth.shell.secretRecoverySubtitle"),
+        title: t("auth:shell.secretRecoveryTitle"),
+        subtitle: t("auth:shell.secretRecoverySubtitle"),
       };
     case "create-password":
     case "import-password":
       return {
-        title: t("auth.shell.createPasswordTitle"),
-        subtitle: t("auth.shell.createPasswordSubtitle"),
+        title: t("auth:shell.createPasswordTitle"),
+        subtitle: t("auth:shell.createPasswordSubtitle"),
       };
     case "import-method":
       return {
-        title: t("auth.shell.importWalletTitle"),
-        subtitle: t("auth.shell.importWalletSubtitle"),
+        title: t("auth:shell.importWalletTitle"),
+        subtitle: t("auth:shell.importWalletSubtitle"),
       };
     case "import-input":
       return {
         title:
           importMethod === "seed"
-            ? t("auth.shell.enterSeedTitle")
-            : t("auth.shell.enterPrivateKeyTitle"),
+            ? t("auth:shell.enterSeedTitle")
+            : t("auth:shell.enterPrivateKeyTitle"),
         subtitle:
           importMethod === "seed"
-            ? t("auth.shell.enterSeedSubtitle")
-            : t("auth.shell.enterPrivateKeySubtitle"),
+            ? t("auth:shell.enterSeedSubtitle")
+            : t("auth:shell.enterPrivateKeySubtitle"),
       };
     default:
       return { title: "", subtitle: "" };
@@ -85,16 +85,16 @@ function AuthShell({
   const { title, subtitle } = getStepCopy(t, step, importMethod);
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white'>
-      <div className='w-full max-w-md p-10 bg-white dark:bg-gray-900 rounded-3xl border border-slate-200 dark:border-gray-800 shadow-sm flex flex-col items-center'>
-        <div className='w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-md mb-8'>
-          <Zap color='white' width={40} height={40} />
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white">
+      <div className="w-full max-w-md p-10 bg-white dark:bg-gray-900 rounded-3xl border border-slate-200 dark:border-gray-800 shadow-sm flex flex-col items-center">
+        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-md mb-8">
+          <Zap color="white" width={40} height={40} />
         </div>
 
-        <h1 className='text-2xl font-bold tracking-tight mb-2 text-center text-gray-900 dark:text-white'>
+        <h1 className="text-2xl font-bold tracking-tight mb-2 text-center text-gray-900 dark:text-white">
           {title}
         </h1>
-        <p className='text-center text-sm font-medium text-gray-500 dark:text-gray-400 mb-8 leading-relaxed'>
+        <p className="text-center text-sm font-medium text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
           {subtitle}
         </p>
 

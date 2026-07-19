@@ -54,21 +54,21 @@ function ActivityFeed({
     <div className="rounded-2xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 p-6">
       <div className="flex items-center justify-between mb-1">
         <h3 className="text-sm font-bold text-slate-800 dark:text-gray-100">
-          {t("dashboard.activityFeed.yourActivity")}
+          {t("dashboard:activityFeed.yourActivity")}
         </h3>
         <button
           onClick={handleExport}
           disabled={!hasActivity}
           className="text-[11px] font-semibold text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-0.5 disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {t("dashboard.activityFeed.export")}
+          {t("dashboard:activityFeed.export")}
           <ChevronRight width={10} height={10} strokeWidth={3} />
         </button>
       </div>
 
       <div className="flex items-center justify-between mb-4">
         <p className="text-[10px] text-slate-400 font-mono">
-          {t("dashboard.activityFeed.aggregatedHistory")}
+          {t("dashboard:activityFeed.aggregatedHistory")}
         </p>
         <WalletHistoryFilter
           accounts={accounts}
@@ -102,10 +102,10 @@ function ActivityFeed({
               strokeWidth={1.5}
             />
             <p className="text-sm font-medium text-slate-400">
-              {t("dashboard.activityFeed.noActivity")}
+              {t("dashboard:activityFeed.noActivity")}
             </p>
             <p className="text-[10px] text-slate-400 mt-0.5">
-              {t("dashboard.activityFeed.startMining")}
+              {t("dashboard:activityFeed.startMining")}
             </p>
           </div>
         )}

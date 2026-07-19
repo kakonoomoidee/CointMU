@@ -1,0 +1,7 @@
+{
+  "activity": "Actividad",
+  "tokens": "Tokens",
+  "nfts": "NFTs",
+  "scanningNfts": "Escaneando la blockchain en busca de NFTs...",
+  "noNftsFound": "No se encontraron NFTs"
+}

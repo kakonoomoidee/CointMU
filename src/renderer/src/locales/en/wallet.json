@@ -1,0 +1,98 @@
+{
+  "balanceFromNode": "Balance from node",
+  "send": "Send",
+  "receive": "Receive",
+  "swap": "Swap",
+  "copyAddress": "Copy address",
+  "copied": "Copied!",
+  "sidebar": {
+    "accounts": "Accounts",
+    "watchList": "Watch List",
+    "noWatched": "No watched addresses",
+    "importWallet": "+ Import wallet",
+    "manageHidden": "Manage hidden accounts",
+    "hideAccount": "Hide account"
+  },
+  "activity": {
+    "pending": "Pending"
+  },
+  "header": {
+    "workspace": "Workspace",
+    "title": "Wallet",
+    "synced": "Synced",
+    "backup": "Backup",
+    "newAccount": "New account"
+  },
+  "index": {
+    "accountLabel": "Account {{index}}",
+    "notUnlocked": "Not unlocked",
+    "walletLocked": "Wallet is locked. Please log in again.",
+    "importedAccount": "Imported Account",
+    "importedSeedAccount": "Imported Seed Account",
+    "failedToAdd": "Failed to add account"
+  },
+  "modals": {
+    "addAccount": {
+      "title": "Add Account",
+      "subtitle": "Import an existing seed phrase or private key.",
+      "importSeedTitle": "Import Seed Phrase",
+      "importSeedSubtitle": "Restore an account from a 12-word seed.",
+      "importPkTitle": "Import Private Key",
+      "importPkSubtitle": "Import a standalone hex private key.",
+      "importJsonTitle": "Import Account (JSON)",
+      "importJsonSubtitle": "Import an encrypted Web3 keystore file.",
+      "seedLabel": "12-Word Seed Phrase",
+      "pkLabel": "Private Key (Hex)",
+      "seedPlaceholder": "word1 word2...",
+      "pkPlaceholder": "0x...",
+      "back": "Back",
+      "importBtn": "Import"
+    },
+    "manageHidden": {
+      "title": "Hidden Accounts",
+      "subtitle": "Restore accounts to your active sidebar.",
+      "noHidden": "No hidden accounts.",
+      "unhideTooltip": "Unhide account",
+      "confirmDeleteZero": "Are you sure you want to permanently delete this empty account?",
+      "confirmDeleteDust": "This account has a small balance. Are you sure you want to permanently delete it and lose the funds?"
+    },
+    "receive": {
+      "title": "Receive CMU",
+      "subtitle": "Scan this QR code or copy the address below to receive funds.",
+      "yourAddress": "Your Address",
+      "copiedBtn": "Address Copied!",
+      "copyBtn": "Copy Address"
+    },
+    "send": {
+      "title": "Send",
+      "subtitle": "Transfer assets to another address.",
+      "assetLabel": "Asset",
+      "selectToken": "Select token",
+      "availableBalance": "Available balance",
+      "recipientLabel": "Recipient Address",
+      "amountLabel": "Amount",
+      "maxBtn": "Max",
+      "networkFee": "Network Fee (Est.)",
+      "estimating": "Estimating...",
+      "couldNotEstimate": "Could not estimate",
+      "cmuGasBalance": "CMU Gas Balance",
+      "totalDeducted": "Total Deducted",
+      "reviewSign": "Review & Sign",
+      "pendingConf": "Pending Confirmation...",
+      "errorRecipientReq": "Recipient address is required.",
+      "errorInvalidAddress": "Invalid recipient address format.",
+      "errorValidAmount": "Enter a valid amount greater than zero.",
+      "errorGasPending": "Gas estimation is still pending. Please wait.",
+      "errorInsufficientToken": "Insufficient {{symbol}} balance.",
+      "errorInsufficientTotal": "Insufficient balance to cover amount ({{amount}}) and network fee ({{fee}} CMU).",
+      "errorInsufficientGas": "Insufficient CMU to pay the network fee ({{fee}} CMU). Top up your CMU balance.",
+      "successTitle": "Transaction Sent",
+      "txHash": "Transaction hash",
+      "doneBtn": "Done",
+      "notifConfirmedTitle": "Transaction confirmed",
+      "notifConfirmedDesc": "Sent {{asset}} to {{to}}",
+      "notifFailedTitle": "Transaction failed",
+      "notifFailedDesc": "Transfer of {{asset}} to {{to}} could not be confirmed"
+    }
+  }
+}

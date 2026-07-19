@@ -1,0 +1,98 @@
+{
+  "balanceFromNode": "Saldo del nodo",
+  "send": "Enviar",
+  "receive": "Recibir",
+  "swap": "Intercambiar",
+  "copyAddress": "Copiar dirección",
+  "copied": "¡Copiado!",
+  "sidebar": {
+    "accounts": "Cuentas",
+    "watchList": "Lista de Seguimiento",
+    "noWatched": "No hay Dirección en seguimiento",
+    "importWallet": "+ Importar billetera",
+    "manageHidden": "Gestionar cuentas ocultas",
+    "hideAccount": "Ocultar cuenta"
+  },
+  "activity": {
+    "pending": "Pendiente"
+  },
+  "header": {
+    "workspace": "Espacio de Trabajo",
+    "title": "Billetera",
+    "synced": "Sincronizado",
+    "backup": "Copia de Seguridad",
+    "newAccount": "Nueva cuenta"
+  },
+  "index": {
+    "accountLabel": "Cuenta {{index}}",
+    "notUnlocked": "No desbloqueado",
+    "walletLocked": "La billetera está bloqueada. Por favor, inicia sesión de nuevo.",
+    "importedAccount": "Cuenta Importada",
+    "importedSeedAccount": "Cuenta de Semilla Importada",
+    "failedToAdd": "Error al añadir cuenta"
+  },
+  "modals": {
+    "addAccount": {
+      "title": "Añadir Cuenta",
+      "subtitle": "Importa una Frase Semilla o Clave Privada existente.",
+      "importSeedTitle": "Importar Frase Semilla",
+      "importSeedSubtitle": "Restaura una cuenta a partir de una semilla de 12 palabras.",
+      "importPkTitle": "Importar Clave Privada",
+      "importPkSubtitle": "Importa una clave privada hexadecimal independiente.",
+      "importJsonTitle": "Importar Cuenta (JSON)",
+      "importJsonSubtitle": "Importa un archivo keystore cifrado de Web3.",
+      "seedLabel": "Frase Semilla de 12 palabras",
+      "pkLabel": "Clave Privada (Hex)",
+      "seedPlaceholder": "palabra1 palabra2...",
+      "pkPlaceholder": "0x...",
+      "back": "Volver",
+      "importBtn": "Importar"
+    },
+    "manageHidden": {
+      "title": "Cuentas Ocultas",
+      "subtitle": "Restaura cuentas en tu barra lateral activa.",
+      "noHidden": "No hay cuentas ocultas.",
+      "unhideTooltip": "Mostrar cuenta",
+      "confirmDeleteZero": "¿Está seguro de que desea eliminar permanentemente esta cuenta vacía?",
+      "confirmDeleteDust": "Esta cuenta tiene un saldo pequeño. ¿Está seguro de que desea eliminarla permanentemente y perder los fondos?"
+    },
+    "receive": {
+      "title": "Recibir CMU",
+      "subtitle": "Escanea este código QR o copia la dirección a continuación para recibir fondos.",
+      "yourAddress": "Tu Dirección",
+      "copiedBtn": "¡Dirección Copiada!",
+      "copyBtn": "Copiar Dirección"
+    },
+    "send": {
+      "title": "Enviar",
+      "subtitle": "Transfiere activos a otra dirección.",
+      "assetLabel": "Activo",
+      "selectToken": "Seleccionar token",
+      "availableBalance": "Saldo disponible",
+      "recipientLabel": "Dirección del Destinatario",
+      "amountLabel": "Cantidad",
+      "maxBtn": "Máx",
+      "networkFee": "Tarifa de Red (Est.)",
+      "estimating": "Estimando...",
+      "couldNotEstimate": "No se pudo estimar",
+      "cmuGasBalance": "Saldo de Gas CMU",
+      "totalDeducted": "Total Deducido",
+      "reviewSign": "Revisar y Firmar",
+      "pendingConf": "Pendiente de Confirmación...",
+      "errorRecipientReq": "La dirección del destinatario es obligatoria.",
+      "errorInvalidAddress": "Formato de dirección de destinatario no válido.",
+      "errorValidAmount": "Ingresa una cantidad válida mayor que cero.",
+      "errorGasPending": "La estimación de gas sigue pendiente. Por favor, espera.",
+      "errorInsufficientToken": "Saldo de {{symbol}} insuficiente.",
+      "errorInsufficientTotal": "Saldo insuficiente para cubrir la cantidad ({{amount}}) y la tarifa de red ({{fee}} CMU).",
+      "errorInsufficientGas": "CMU insuficiente para pagar la tarifa de red ({{fee}} CMU). Recarga tu saldo de CMU.",
+      "successTitle": "Transacción Enviada",
+      "txHash": "Hash de transacción",
+      "doneBtn": "Hecho",
+      "notifConfirmedTitle": "Transacción confirmada",
+      "notifConfirmedDesc": "Enviado {{asset}} a {{to}}",
+      "notifFailedTitle": "Transacción fallida",
+      "notifFailedDesc": "La transferencia de {{asset}} a {{to}} no pudo ser confirmada"
+    }
+  }
+}

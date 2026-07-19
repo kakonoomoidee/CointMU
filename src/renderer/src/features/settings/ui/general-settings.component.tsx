@@ -25,22 +25,22 @@ export function GeneralSettings({
   return (
     <div>
       <h2 className="text-sm font-semibold text-slate-700 dark:text-gray-100 mb-6">
-        {t("settings.general.subtitle")}
+        {t("settings:general.subtitle")}
       </h2>
 
       <div className="space-y-8">
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.general.startup")}
+            {t("settings:general.startup")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.general.launchTitle")}
+                  {t("settings:general.launchTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.general.launchDesc")}
+                  {t("settings:general.launchDesc")}
                 </p>
               </div>
               <button
@@ -55,10 +55,10 @@ export function GeneralSettings({
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.general.backgroundTitle")}
+                  {t("settings:general.backgroundTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.general.backgroundDesc")}
+                  {t("settings:general.backgroundDesc")}
                 </p>
               </div>
               <button
@@ -77,17 +77,17 @@ export function GeneralSettings({
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.general.display")}
+            {t("settings:general.display")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <LanguageSwitcher />
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.general.currencyTitle")}
+                  {t("settings:general.currencyTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.general.currencyDesc")}
+                  {t("settings:general.currencyDesc")}
                 </p>
               </div>
               <div className="w-48">

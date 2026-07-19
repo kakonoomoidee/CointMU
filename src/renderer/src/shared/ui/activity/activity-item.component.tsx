@@ -42,7 +42,8 @@ function ActivityItem({ activity }: ActivityItemProps): JSX.Element {
 
   switch (activity.type) {
     case "mining":
-      bgClass = "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-500";
+      bgClass =
+        "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-500";
       amountClass = "text-emerald-500";
       displayAmount = `+${activity.amount}`;
       Icon = <MiningIcon />;
@@ -83,7 +84,7 @@ function ActivityItem({ activity }: ActivityItemProps): JSX.Element {
             {activity.pending && (
               <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-100 text-amber-600 text-[10px] font-bold uppercase tracking-wide">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                {t("wallet.activity.pending")}
+                {t("wallet:activity.pending")}
               </span>
             )}
           </div>

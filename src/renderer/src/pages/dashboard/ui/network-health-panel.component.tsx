@@ -39,8 +39,8 @@ function NetworkHealthPanel({
           />
           <p className="text-sm font-medium text-slate-700 dark:text-gray-100">
             {isConnected
-              ? t("dashboard.networkHealth.healthy")
-              : t("dashboard.networkHealth.disconnected")}
+              ? t("dashboard:networkHealth.healthy")
+              : t("dashboard:networkHealth.disconnected")}
           </p>
         </div>
         <span className="text-[10px] font-semibold tracking-wide text-slate-500 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-gray-800 border border-slate-200 dark:border-gray-700">
@@ -51,47 +51,47 @@ function NetworkHealthPanel({
       <div className="grid grid-cols-2 gap-x-6 gap-y-4 mb-5">
         <div>
           <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">
-            {t("dashboard.networkHealth.chainHeight")}
+            {t("dashboard:networkHealth.chainHeight")}
           </p>
           <p className="text-xl font-bold text-slate-800 dark:text-gray-100 font-mono">
             {blockDisplay}
           </p>
           <p className="text-[10px] text-slate-400">
-            {t("dashboard.networkHealth.latestBlock")}
+            {t("dashboard:networkHealth.latestBlock")}
           </p>
         </div>
         <div>
           <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">
-            {t("dashboard.networkHealth.peers")}
+            {t("dashboard:networkHealth.peers")}
           </p>
           <p className="text-xl font-bold text-slate-800 dark:text-gray-100 font-mono">
             {peerDisplay}
           </p>
           <p className="text-[10px] text-slate-400">
-            {t("dashboard.networkHealth.gossipConnected")}
+            {t("dashboard:networkHealth.gossipConnected")}
           </p>
         </div>
         <div>
           <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">
-            {t("dashboard.networkHealth.difficulty")}
+            {t("dashboard:networkHealth.difficulty")}
           </p>
           <p className="text-xl font-bold text-slate-800 dark:text-gray-100 font-mono">
             {difficultyDisplay}
           </p>
           <p className="text-[10px] text-slate-400">
-            {t("dashboard.networkHealth.currentNetwork")}
+            {t("dashboard:networkHealth.currentNetwork")}
           </p>
         </div>
         <div>
           <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-1">
-            {t("dashboard.networkHealth.gasAvg")}
+            {t("dashboard:networkHealth.gasAvg")}
           </p>
           <p className="text-xl font-bold text-slate-800 dark:text-gray-100 font-mono">
             {gasDisplay}{" "}
             <span className="text-sm font-medium text-slate-400">gwei</span>
           </p>
           <p className="text-[10px] text-slate-400">
-            {t("dashboard.networkHealth.suggestedPrice")}
+            {t("dashboard:networkHealth.suggestedPrice")}
           </p>
         </div>
       </div>
@@ -99,7 +99,7 @@ function NetworkHealthPanel({
       <div className="mt-6 rounded-xl bg-slate-50 dark:bg-gray-800 border border-slate-100 dark:border-gray-700 p-4 flex items-center justify-between">
         <div>
           <p className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 mb-0.5">
-            {t("dashboard.networkHealth.blocksPastHour")}
+            {t("dashboard:networkHealth.blocksPastHour")}
           </p>
           <p className="text-2xl font-bold text-slate-800 dark:text-gray-100 font-mono">
             {isConnected ? blocksPastHour.toString() : "--"}

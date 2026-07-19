@@ -161,7 +161,15 @@ function App(): JSX.Element {
     };
 
     return (
-      <AuthFlow onComplete={(address) => handleOnboardingComplete(address)} />
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center h-screen bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+            <div className="w-8 h-8 rounded-full border-2 border-slate-200 border-t-accent animate-spin" />
+          </div>
+        }
+      >
+        <AuthFlow onComplete={(address) => handleOnboardingComplete(address)} />
+      </Suspense>
     );
   }
 

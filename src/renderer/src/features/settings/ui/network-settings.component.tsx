@@ -71,22 +71,22 @@ export function NetworkSettings({
   return (
     <div>
       <h2 className="text-sm font-semibold text-slate-700 dark:text-gray-100 mb-6">
-        {t("settings.networkSettings.subtitle")}
+        {t("settings:networkSettings.subtitle")}
       </h2>
 
       <div className="space-y-8">
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.networkSettings.activeNetwork")}
+            {t("settings:networkSettings.activeNetwork")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.networkSettings.networkTitle")}
+                  {t("settings:networkSettings.networkTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.networkSettings.networkDesc")}
+                  {t("settings:networkSettings.networkDesc")}
                 </p>
               </div>
               <div className="w-64">
@@ -109,9 +109,9 @@ export function NetworkSettings({
                 />
                 {isSwitching && (
                   <div className="mt-3 text-[11px] text-blue-600 font-medium animate-pulse bg-blue-50 p-2 rounded border border-blue-100">
-                    <p>{t("settings.networkSettings.switchingNetwork")}</p>
+                    <p>{t("settings:networkSettings.switchingNetwork")}</p>
                     <p className="mt-0.5 opacity-80">
-                      {t("settings.networkSettings.restartRequired")}
+                      {t("settings:networkSettings.restartRequired")}
                     </p>
                   </div>
                 )}
@@ -121,10 +121,10 @@ export function NetworkSettings({
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.networkSettings.rpcTitle")}
+                  {t("settings:networkSettings.rpcTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.networkSettings.rpcDesc")}
+                  {t("settings:networkSettings.rpcDesc")}
                 </p>
               </div>
               <div className="w-64">
@@ -140,10 +140,10 @@ export function NetworkSettings({
             <div className="flex items-center justify-between p-4 bg-slate-50/50 dark:bg-gray-800/30">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.networkSettings.chainIdTitle")}
+                  {t("settings:networkSettings.chainIdTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.networkSettings.chainIdDesc")}
+                  {t("settings:networkSettings.chainIdDesc")}
                 </p>
               </div>
               <span className="text-sm font-bold font-mono text-slate-700 dark:text-gray-300">
@@ -154,10 +154,10 @@ export function NetworkSettings({
             <div className="flex items-center justify-between p-4 bg-slate-50/50 dark:bg-gray-800/30">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.networkSettings.blockTimeTitle")}
+                  {t("settings:networkSettings.blockTimeTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.networkSettings.blockTimeDesc")}
+                  {t("settings:networkSettings.blockTimeDesc")}
                 </p>
               </div>
               <span className="text-sm font-bold font-mono text-slate-700 dark:text-gray-300">
@@ -169,16 +169,16 @@ export function NetworkSettings({
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.networkSettings.peers")}
+            {t("settings:networkSettings.peers")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.networkSettings.maxPeersTitle")}
+                  {t("settings:networkSettings.maxPeersTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.networkSettings.maxPeersDesc")}
+                  {t("settings:networkSettings.maxPeersDesc")}
                 </p>
               </div>
               <div className="w-56">
@@ -200,10 +200,10 @@ export function NetworkSettings({
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.networkSettings.discoveryTitle")}
+                  {t("settings:networkSettings.discoveryTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.networkSettings.discoveryDesc")}
+                  {t("settings:networkSettings.discoveryDesc")}
                 </p>
               </div>
               <button
@@ -219,10 +219,10 @@ export function NetworkSettings({
             <div className="flex items-center justify-between p-4 bg-slate-50/50 dark:bg-gray-800/30">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.networkSettings.listenPortTitle")}
+                  {t("settings:networkSettings.listenPortTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.networkSettings.listenPortDesc")}
+                  {t("settings:networkSettings.listenPortDesc")}
                 </p>
               </div>
               <span className="text-sm font-bold font-mono text-slate-700 dark:text-gray-300">
@@ -233,16 +233,16 @@ export function NetworkSettings({
             <div className="flex items-center justify-between p-4 bg-slate-50/50 dark:bg-gray-800/30">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.networkSettings.connectedPeersTitle")}
+                  {t("settings:networkSettings.connectedPeersTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.networkSettings.connectedPeersDesc", {
+                  {t("settings:networkSettings.connectedPeersDesc", {
                     count: 14,
                   })}
                 </p>
               </div>
               <button className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 shadow-sm transition-colors">
-                {t("settings.networkSettings.viewList")}
+                {t("settings:networkSettings.viewList")}
               </button>
             </div>
           </div>
@@ -250,16 +250,16 @@ export function NetworkSettings({
 
         <section>
           <h3 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-gray-400 mb-3">
-            {t("settings.networkSettings.sync")}
+            {t("settings:networkSettings.sync")}
           </h3>
           <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl divide-y divide-slate-100 dark:divide-gray-800 shadow-sm">
             <div className="flex items-center justify-between p-4">
               <div className="pr-4">
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.networkSettings.syncModeTitle")}
+                  {t("settings:networkSettings.syncModeTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5 leading-relaxed">
-                  {t("settings.networkSettings.syncModeDesc")}
+                  {t("settings:networkSettings.syncModeDesc")}
                 </p>
               </div>
               <div className="w-56 flex-shrink-0">
@@ -279,10 +279,10 @@ export function NetworkSettings({
             <div className="flex items-center justify-between p-4">
               <div>
                 <p className="text-sm font-bold text-slate-800 dark:text-gray-100">
-                  {t("settings.networkSettings.pruneTitle")}
+                  {t("settings:networkSettings.pruneTitle")}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-                  {t("settings.networkSettings.pruneDesc")}
+                  {t("settings:networkSettings.pruneDesc")}
                 </p>
               </div>
               <button

@@ -1,0 +1,60 @@
+{
+  "header": {
+    "synced": "Синхронизировано",
+    "offline": "Офлайн",
+    "workspace": "Рабочая область",
+    "title": "Панель управления",
+    "receive": "Получить",
+    "send": "Отправить"
+  },
+  "statsGrid": {
+    "yourMining": "Ваш майнинг",
+    "open": "Открыть",
+    "minedBlocks": "Добытые блоки (24ч)",
+    "rewards": "награды",
+    "networkHashrate": "Хешрейт сети",
+    "realTimeRpc": "В реальном времени через RPC",
+    "smartContracts": "Смарт-контракты",
+    "deployedByYou": "развёрнуты вами"
+  },
+  "networkHealth": {
+    "healthy": "Сеть работает нормально",
+    "disconnected": "Сеть отключена",
+    "chainHeight": "Высота цепи",
+    "latestBlock": "Последний блок",
+    "peers": "Узлы",
+    "gossipConnected": "Gossip подключён",
+    "difficulty": "Сложность",
+    "currentNetwork": "Текущая сеть",
+    "gasAvg": "Gas (средн.)",
+    "suggestedPrice": "Рекомендуемая цена",
+    "blocksPastHour": "Блоков за последний час"
+  },
+  "walletOverview": {
+    "copy": "Копировать",
+    "balanceFromNode": "Баланс с узла",
+    "send": "Отправить",
+    "receive": "Получить",
+    "stake": "Стейкинг",
+    "miningLive": "Майнинг активен"
+  },
+  "activityFeed": {
+    "yourActivity": "Ваша активность",
+    "export": "Экспорт",
+    "aggregatedHistory": "Агрегированная история транзакций",
+    "noActivity": "Пока нет активности",
+    "startMining": "Начните майнить, чтобы увидеть награды"
+  },
+  "latestBlocks": {
+    "title": "Последние блоки",
+    "viewAll": "Показать все",
+    "minedAcrossNetwork": "Добыто в сети",
+    "mined": "добыто",
+    "txs": "транзакций",
+    "awaitingBlocks": "Ожидание сетевых блоков"
+  },
+  "index": {
+    "activelyMining": "Активный майнинг",
+    "minerIdle": "Майнер простаивает"
+  }
+}

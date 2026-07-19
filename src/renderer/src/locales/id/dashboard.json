@@ -1,0 +1,60 @@
+{
+  "header": {
+    "synced": "Tersinkron",
+    "offline": "Luring",
+    "workspace": "Ruang Kerja",
+    "title": "Dasbor",
+    "receive": "Terima",
+    "send": "Kirim"
+  },
+  "statsGrid": {
+    "yourMining": "Penambangan Anda",
+    "open": "Buka",
+    "minedBlocks": "Blok ditambang (24j)",
+    "rewards": "hadiah",
+    "networkHashrate": "Hashrate jaringan",
+    "realTimeRpc": "Waktu-nyata via RPC",
+    "smartContracts": "Kontrak pintar",
+    "deployedByYou": "disebarkan oleh Anda"
+  },
+  "networkHealth": {
+    "healthy": "Jaringan sehat",
+    "disconnected": "Jaringan terputus",
+    "chainHeight": "Tinggi Rantai",
+    "latestBlock": "Blok terbaru",
+    "peers": "Rekanan",
+    "gossipConnected": "Gossip terhubung",
+    "difficulty": "Kesulitan",
+    "currentNetwork": "Jaringan saat ini",
+    "gasAvg": "Gas (Rata-rata)",
+    "suggestedPrice": "Harga yang disarankan",
+    "blocksPastHour": "Blok jam terakhir"
+  },
+  "walletOverview": {
+    "copy": "Salin",
+    "balanceFromNode": "Saldo dari node",
+    "send": "Kirim",
+    "receive": "Terima",
+    "stake": "Pertaruhkan",
+    "miningLive": "Penambangan aktif"
+  },
+  "activityFeed": {
+    "yourActivity": "Aktivitas Anda",
+    "export": "Ekspor",
+    "aggregatedHistory": "Riwayat transaksi gabungan",
+    "noActivity": "Belum ada aktivitas",
+    "startMining": "Mulai menambang untuk melihat hadiah"
+  },
+  "latestBlocks": {
+    "title": "Blok terbaru",
+    "viewAll": "Lihat semua",
+    "minedAcrossNetwork": "Ditambang di seluruh jaringan",
+    "mined": "ditambang",
+    "txs": "tx",
+    "awaitingBlocks": "Menunggu blok jaringan"
+  },
+  "index": {
+    "activelyMining": "Aktif menambang",
+    "minerIdle": "Penambang menganggur"
+  }
+}

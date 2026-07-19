@@ -1,0 +1,98 @@
+{
+  "balanceFromNode": "ノードの残高",
+  "send": "送信",
+  "receive": "受信",
+  "swap": "スワップ",
+  "copyAddress": "アドレスをコピー",
+  "copied": "コピーしました！",
+  "sidebar": {
+    "accounts": "アカウント",
+    "watchList": "ウォッチリスト",
+    "noWatched": "ウォッチしているアドレスはありません",
+    "importWallet": "+ ウォレットをインポート",
+    "manageHidden": "非表示アカウントの管理",
+    "hideAccount": "アカウントを非表示"
+  },
+  "activity": {
+    "pending": "保留中"
+  },
+  "header": {
+    "workspace": "ワークスペース",
+    "title": "ウォレット",
+    "synced": "同期済み",
+    "backup": "バックアップ",
+    "newAccount": "新規アカウント"
+  },
+  "index": {
+    "accountLabel": "アカウント {{index}}",
+    "notUnlocked": "ロック解除されていません",
+    "walletLocked": "ウォレットがロックされています。再度ログインしてください。",
+    "importedAccount": "インポートされたアカウント",
+    "importedSeedAccount": "インポートされたシードアカウント",
+    "failedToAdd": "アカウントの追加に失敗しました"
+  },
+  "modals": {
+    "addAccount": {
+      "title": "アカウントの追加",
+      "subtitle": "既存のシードフレーズまたは秘密鍵をインポートします。",
+      "importSeedTitle": "シードフレーズのインポート",
+      "importSeedSubtitle": "12単語のシードからアカウントを復元します。",
+      "importPkTitle": "秘密鍵のインポート",
+      "importPkSubtitle": "16進数の秘密鍵をインポートします。",
+      "importJsonTitle": "アカウントのインポート（JSON）",
+      "importJsonSubtitle": "暗号化されたWeb3キーストアファイルをインポートします。",
+      "seedLabel": "12単語のシードフレーズ",
+      "pkLabel": "秘密鍵（16進数）",
+      "seedPlaceholder": "word1 word2...",
+      "pkPlaceholder": "0x...",
+      "back": "戻る",
+      "importBtn": "インポート"
+    },
+    "manageHidden": {
+      "title": "非表示アカウント",
+      "subtitle": "非表示のアカウントをサイドバーに復元します。",
+      "noHidden": "非表示のアカウントはありません。",
+      "unhideTooltip": "アカウントを再表示",
+      "confirmDeleteZero": "この残高がゼロのアカウントを完全に削除してもよろしいですか？",
+      "confirmDeleteDust": "このアカウントには少額の残高があります。完全に削除して資金を失ってもよろしいですか？"
+    },
+    "receive": {
+      "title": "CMUの受信",
+      "subtitle": "資金を受け取るには、このQRコードをスキャンするか、以下のアドレスをコピーしてください。",
+      "yourAddress": "あなたのアドレス",
+      "copiedBtn": "アドレスをコピーしました！",
+      "copyBtn": "アドレスをコピー"
+    },
+    "send": {
+      "title": "送信",
+      "subtitle": "別のアドレスに資産を送金します。",
+      "assetLabel": "資産",
+      "selectToken": "トークンを選択",
+      "availableBalance": "利用可能な残高",
+      "recipientLabel": "受取人のアドレス",
+      "amountLabel": "金額",
+      "maxBtn": "最大",
+      "networkFee": "ネットワーク手数料（見積もり）",
+      "estimating": "見積もり中...",
+      "couldNotEstimate": "見積もりできませんでした",
+      "cmuGasBalance": "CMUガス残高",
+      "totalDeducted": "合計控除額",
+      "reviewSign": "確認と署名",
+      "pendingConf": "確認待ち...",
+      "errorRecipientReq": "受取人のアドレスは必須です。",
+      "errorInvalidAddress": "無効な受取人アドレスの形式です。",
+      "errorValidAmount": "ゼロより大きい有効な金額を入力してください。",
+      "errorGasPending": "ガスの見積もりがまだ保留中です。お待ちください。",
+      "errorInsufficientToken": "{{symbol}} の残高が不足しています。",
+      "errorInsufficientTotal": "金額 ({{amount}}) とネットワーク手数料 ({{fee}} CMU) をカバーする残高が不足しています。",
+      "errorInsufficientGas": "ネットワーク手数料 ({{fee}} CMU) を支払うためのCMUが不足しています。CMU残高を補充してください。",
+      "successTitle": "トランザクションを送信しました",
+      "txHash": "トランチャンハッシュ",
+      "doneBtn": "完了",
+      "notifConfirmedTitle": "トランザクションが確認されました",
+      "notifConfirmedDesc": "{{asset}} を {{to}} に送信しました",
+      "notifFailedTitle": "トランザクションが失敗しました",
+      "notifFailedDesc": "{{asset}} を {{to}} への送金が確認できませんでした"
+    }
+  }
+}

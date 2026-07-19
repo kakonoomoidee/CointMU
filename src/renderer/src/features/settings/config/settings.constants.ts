@@ -29,13 +29,14 @@ export const MINING_MODE_OPTIONS = ["Solo", "campuspool.cmu", "Custom pool..."];
 export const LANGUAGE_OPTIONS = [
   { label: "English", value: "en" },
   { label: "Bahasa Indonesia", value: "id" },
-  { label: "Espa�ol", value: "es" },
-  { label: "??", value: "zh" },
-  { label: "???????", value: "ru" },
+  { label: "Español", value: "es" },
+  { label: "中文", value: "zh" },
+  { label: "Русский", value: "ru" },
   { label: "Deutsch", value: "de" },
+  { label: "日本語", value: "ja" },
 ];
 
-export const CURRENCY_OPTIONS = ["CMU (native)", "USD ($)", "EUR (�)"];
+export const CURRENCY_OPTIONS = ["CMU (native)", "USD ($)", "EUR ()"];
 
 export const COLORS = [
   { id: "#3b82f6", color: "bg-blue-500", name: "blue" },

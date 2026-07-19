@@ -1,0 +1,72 @@
+{
+  "activity": {
+    "noBlocks": "Belum ada blok yang ditemukan",
+    "startMining": "Mulai menambang untuk menemukan blok",
+    "acceptedSharesLastMin": "Share diterima · {{count}} menit terakhir",
+    "acceptedSharesLastMins": "Share diterima · {{count}} menit terakhir",
+    "acceptedSharesNoActivity": "Share diterima · tidak ada aktivitas dalam 30 hari terakhir",
+    "sharesAccepted": " share diterima · ",
+    "rejected": " ditolak",
+    "less": "Sedikit",
+    "more": "Banyak",
+    "title": "Aktivitas penambangan",
+    "subtitle": "Blok yang Anda temukan dan bayaran jaringan",
+    "logAwaiting": "Menunggu aktivitas node...",
+    "tabFound": "Ditemukan",
+    "tabLog": "Log",
+    "tabActivity": "Aktivitas"
+  },
+  "header": {
+    "workspace": "Ruang Kerja",
+    "title": "Penambangan",
+    "statusMining": "Menambang",
+    "statusStopped": "Berhenti",
+    "preferences": "Preferensi"
+  },
+  "hero": {
+    "rewardsToday": "Hadiah hari ini",
+    "miningWithThreads": "Menambang dengan {{count}} thread",
+    "stopping": "Menghentikan...",
+    "stopMining": "Hentikan penambangan",
+    "targetDifficulty": "Target kesulitan",
+    "blockReward": "Hadiah blok",
+    "initializing": "Menginisialisasi",
+    "generatingDag": "Membuat Directed Acyclic Graph (DAG) untuk verifikasi...",
+    "generatingDagBtn": "Membuat DAG...",
+    "idle": "Menganggur",
+    "syncingNetwork": "Menyinkronkan dari jaringan...",
+    "pressStart": "Tekan Mulai untuk bergabung dengan konsensus. Dapatkan",
+    "perBlock": "per blok yang ditemukan.",
+    "waitingForNode": "Menunggu koneksi node...",
+    "waitingForNodeTooltip": "Menunggu koneksi node",
+    "nodeSyncingTooltip": "Node sedang menyinkronkan blok",
+    "starting": "Memulai...",
+    "startMiningBtn": "Mulai menambang",
+    "stopMiningbtn": "Berhenti menambang"
+  },
+  "stats": {
+    "sessionTime": "Waktu Sesi",
+    "active": "Aktif",
+    "idle": "Menganggur",
+    "blocksFound": "Blok Ditemukan",
+    "past24Hours": "24 jam terakhir",
+    "totalEarned": "Total Pendapatan",
+    "acrossThisWallet": "di seluruh dompet ini",
+    "hashrate5Min": "Hashrate - 5 mnt",
+    "stable": "Stabil"
+  },
+  "nonce": {
+    "solvingCandidate": "Menyelesaikan kandidat #{{candidate}} - {{nonces}} nonce dicoba"
+  },
+  "worker": {
+    "title": "Konfigurasi pekerja",
+    "subtitle": "Konfigurasi internal node saat ini",
+    "workerThreads": "Thread pekerja",
+    "ofCores": "dari {{count}} core",
+    "intensityTitle": "Intensitas",
+    "higherMoreHeat": "Lebih tinggi = lebih panas, lebih cepat selesai",
+    "rewardAddressTitle": "Alamat hadiah",
+    "blockRewardsCreditedHere": "Hadiah blok dikirimkan ke sini",
+    "setInMiningSettings": "Atur di Pengaturan Penambangan"
+  }
+}

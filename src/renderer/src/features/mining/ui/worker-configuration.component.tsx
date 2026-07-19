@@ -29,10 +29,10 @@ function WorkerConfiguration({
     <Card>
       <div className="mb-1">
         <h3 className="text-sm font-bold text-slate-800 dark:text-gray-100">
-          {t("mining.worker.title")}
+          {t("mining:worker.title")}
         </h3>
         <p className="text-[10px] text-slate-400 dark:text-gray-400 mt-0.5">
-          {t("mining.worker.subtitle")}
+          {t("mining:worker.subtitle")}
         </p>
       </div>
 
@@ -40,10 +40,10 @@ function WorkerConfiguration({
         <div className="flex items-center justify-between py-4">
           <div>
             <p className="text-sm font-semibold text-slate-700 dark:text-gray-200">
-              {t("mining.worker.workerThreads")}
+              {t("mining:worker.workerThreads")}
             </p>
             <p className="text-xs text-slate-400 dark:text-gray-400 mt-0.5">
-              {cpuThreads} {t("mining.worker.ofCores", { count: maxCores })}
+              {cpuThreads} {t("mining:worker.ofCores", { count: maxCores })}
             </p>
           </div>
           <div className="flex items-center gap-1">
@@ -60,10 +60,10 @@ function WorkerConfiguration({
         <div className="flex items-center justify-between py-4">
           <div>
             <p className="text-sm font-semibold text-slate-700 dark:text-gray-200">
-              {t("mining.worker.intensityTitle")}
+              {t("mining:worker.intensityTitle")}
             </p>
             <p className="text-xs text-slate-400 dark:text-gray-400 mt-0.5 max-w-[140px]">
-              {t("mining.worker.higherMoreHeat")}
+              {t("mining:worker.higherMoreHeat")}
             </p>
           </div>
           <div className="flex items-center rounded-lg border border-slate-200 dark:border-gray-700 overflow-hidden">
@@ -85,10 +85,10 @@ function WorkerConfiguration({
         <div className="flex items-center justify-between py-4">
           <div>
             <p className="text-sm font-semibold text-slate-700 dark:text-gray-200">
-              {t("mining.worker.rewardAddressTitle")}
+              {t("mining:worker.rewardAddressTitle")}
             </p>
             <p className="text-xs text-slate-400 dark:text-gray-400 mt-0.5">
-              {t("mining.worker.blockRewardsCreditedHere")}
+              {t("mining:worker.blockRewardsCreditedHere")}
             </p>
           </div>
           {rewardAddress ? (
@@ -103,7 +103,7 @@ function WorkerConfiguration({
             </div>
           ) : (
             <span className="text-xs font-medium text-slate-400">
-              {t("mining.worker.setInMiningSettings")}
+              {t("mining:worker.setInMiningSettings")}
             </span>
           )}
         </div>

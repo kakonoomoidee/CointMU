@@ -1,0 +1,60 @@
+{
+  "header": {
+    "synced": "同期済み",
+    "offline": "オフライン",
+    "workspace": "ワークスペース",
+    "title": "ダッシュボード",
+    "receive": "受信",
+    "send": "送信"
+  },
+  "statsGrid": {
+    "yourMining": "あなたのマイニング",
+    "open": "開く",
+    "minedBlocks": "採掘されたブロック（24時間）",
+    "rewards": "報酬",
+    "networkHashrate": "ネットワークハッシュレート",
+    "realTimeRpc": "RPC経由でリアルタイム",
+    "smartContracts": "スマートコントラクト",
+    "deployedByYou": "あなたがデプロイしました"
+  },
+  "networkHealth": {
+    "healthy": "ネットワークは正常です",
+    "disconnected": "ネットワークが切断されています",
+    "chainHeight": "チェーンの高さ",
+    "latestBlock": "最新ブロック",
+    "peers": "ピア",
+    "gossipConnected": "ゴシップ接続済み",
+    "difficulty": "難易度",
+    "currentNetwork": "現在のネットワーク",
+    "gasAvg": "ガス代（平均）",
+    "suggestedPrice": "推奨価格",
+    "blocksPastHour": "過去1時間のブロック数"
+  },
+  "walletOverview": {
+    "copy": "コピー",
+    "balanceFromNode": "ノードの残高",
+    "send": "送信",
+    "receive": "受信",
+    "stake": "ステーク",
+    "miningLive": "マイニングライブ"
+  },
+  "activityFeed": {
+    "yourActivity": "あなたのアクティビティ",
+    "export": "エクスポート",
+    "aggregatedHistory": "集計されたトランザクション履歴",
+    "noActivity": "アクティビティはまだありません",
+    "startMining": "マイニングを開始して報酬を確認します"
+  },
+  "latestBlocks": {
+    "title": "最新のブロック",
+    "viewAll": "すべて表示",
+    "minedAcrossNetwork": "ネットワーク全体で採掘されました",
+    "mined": "採掘",
+    "txs": "トランザクション",
+    "awaitingBlocks": "ネットワークブロックを待機中"
+  },
+  "index": {
+    "activelyMining": "アクティブにマイニング中",
+    "minerIdle": "マイナー待機中"
+  }
+}
