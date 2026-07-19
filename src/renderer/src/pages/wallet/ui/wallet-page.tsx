@@ -107,7 +107,13 @@ function WalletPage({
     const updatedAccounts = accounts.map((acc) =>
       acc.address === address ? { ...acc, isHidden: false } : acc,
     );
-    await setSetting("accounts", updatedAccounts);
+    await setSetting('accounts', updatedAccounts);
+    setAccounts(updatedAccounts);
+  };
+
+  const handleDeleteAccount = async (address: string): Promise<void> => {
+    const updatedAccounts = accounts.filter((acc) => acc.address !== address);
+    await setSetting('accounts', updatedAccounts);
     setAccounts(updatedAccounts);
   };
 
@@ -279,12 +285,14 @@ function WalletPage({
         accounts={accounts}
         activeAccount={activeAccount}
         activeWalletAddress={activeWalletAddress}
+        balances={balances}
         copied={copied}
-        onClose={() => setModalState("NONE")}
+        onClose={() => setModalState('NONE')}
         onCopy={handleCopy}
         onImportAccount={handleCreateOrImportAccount}
         onImportKeystore={handleImportKeystoreFile}
         onUnhideAccount={handleUnhideAccount}
+        onDeleteAccount={handleDeleteAccount}
       />
 
       {keystoreJson && (

@@ -185,7 +185,7 @@
       "lock": "Kunci",
       "autoLockTitle": "Kunci otomatis dompet",
       "autoLockDesc": "Kunci kunci setelah 5 menit tidak aktif",
-      "biometricsTitle": "Perlukan Touch ID / Windows Hello untuk masuk",
+      "biometricsTitle": "Perlukan Touch ID / Windows Hello untuk menandatangani",
       "biometricsDesc": "Gunakan biometrik untuk mengotorisasi setiap transaksi",
       "recovery": "Pemulihan",
       "recoveryPhraseTitle": "Frasa pemulihan",
@@ -219,7 +219,7 @@
       "emptyTitle": "Tidak ada situs yang terhubung",
       "emptyDesc": "Tidak ada aplikasi eksternal yang saat ini terhubung ke dompet CointMU Anda.",
       "extensionName": "CointMU Browser Extension",
-      "extensionDesc": "Full Access",
+      "extensionDesc": "Akses Penuh",
       "revoke": "Cabut",
       "connectedOn": "Terhubung pada {{date}}",
       "extensionStatusTitle": "Status Ekstensi",
@@ -682,19 +682,19 @@
     "createWallet": {
       "copied": "Tersalin!",
       "copy": "Salin",
-      "warning": "Jangan simpan ini secara digital atau mengambil tangkapan layar. Simpan sepenuhnya secara luring di tempat yang aman.",
+      "warning": "Jangan simpan ini secara digital atau ambil tangkapan layar. Simpan sepenuhnya secara luring di tempat yang aman.",
       "back": "Kembali",
       "savedWords": "Saya telah menyimpan kata-kata ini"
     },
     "importWallet": {
-      "seedPhraseTitle": "Frasa Benih 12-kata",
+      "seedPhraseTitle": "Seed Phrase 12-Kata",
       "seedPhraseDesc": "Mnemonik standar BIP39",
       "privateKeyTitle": "Kunci Pribadi",
       "privateKeyDesc": "String hex mentah (0x...)",
       "keystoreTitle": "Impor dari JSON Keystore",
       "keystoreDesc": "Berkas keystore Web3 terenkripsi",
       "back": "Kembali",
-      "seedPhraseLabel": "Frasa Benih",
+      "seedPhraseLabel": "Seed Phrase",
       "seedPhrasePlaceholder": "apel pisang ceri...",
       "privateKeyLabel": "Kunci Pribadi",
       "privateKeyPlaceholder": "0x...",
@@ -751,10 +751,10 @@
       "close": "Tutup"
     },
     "pairing": {
-      "pairingRequest": "Extension Link Request",
-      "pairingDesc": "Do you want to allow the CointMU Browser Extension to connect to your wallet?",
-      "approve": "Approve",
-      "reject": "Reject"
+      "pairingRequest": "Permintaan Tautan Ekstensi",
+      "pairingDesc": "Izinkan CointMU Browser Extension terhubung ke dompet Anda?",
+      "approve": "Setujui",
+      "reject": "Tolak"
     }
   },
   "extension": {
@@ -773,10 +773,10 @@
       "connected": "Terhubung",
       "disconnected": "Terputus",
       "loading": "Memuat...",
-      "syncing": "Syncing...",
-      "connectionFailed": "Failed to connect to Desktop App",
-      "waitingApproval": "Waiting for approval in Desktop App...",
-      "contextInvalidated": "Extension context invalidated. Please refresh the page.",
+      "syncing": "Menyinkronkan...",
+      "connectionFailed": "Gagal terhubung ke Desktop App",
+      "waitingApproval": "Menunggu persetujuan di Desktop App...",
+      "contextInvalidated": "Konteks ekstensi tidak valid. Harap segarkan halaman.",
       "selectAccount": "Pilih Akun"
     },
     "error": {
@@ -785,4 +785,3 @@
     }
   }
 }
-

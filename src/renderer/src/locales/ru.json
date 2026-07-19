@@ -185,7 +185,7 @@
       "lock": "Блокировка",
       "autoLockTitle": "Автоблокировка кошелька",
       "autoLockDesc": "Блокировать ключи после 5 минут бездействия",
-      "biometricsTitle": "Требовать Touch ID / Windows Hello",
+      "biometricsTitle": "Требовать Touch ID / Windows Hello для подписи",
       "biometricsDesc": "Использовать биометрию для подтверждения",
       "recovery": "Восстановление",
       "recoveryPhraseTitle": "Фраза восстановления",
@@ -219,7 +219,7 @@
       "emptyTitle": "Нет подключенных сайтов",
       "emptyDesc": "Нет внешних приложений, подключенных к вашему кошельку.",
       "extensionName": "CointMU Browser Extension",
-      "extensionDesc": "Full Access",
+      "extensionDesc": "Полный доступ",
       "revoke": "Отозвать",
       "connectedOn": "Подключено {{date}}",
       "extensionStatusTitle": "Статус расширения",
@@ -751,10 +751,10 @@
       "close": "Закрыть"
     },
     "pairing": {
-      "pairingRequest": "Extension Link Request",
-      "pairingDesc": "Do you want to allow the CointMU Browser Extension to connect to your wallet?",
-      "approve": "Approve",
-      "reject": "Reject"
+      "pairingRequest": "Запрос на связь с расширением",
+      "pairingDesc": "Разрешить CointMU Browser Extension подключиться к вашему кошельку?",
+      "approve": "Подтвердить",
+      "reject": "Отклонить"
     }
   },
   "extension": {
@@ -773,10 +773,10 @@
       "connected": "Подключено",
       "disconnected": "Отключено",
       "loading": "Загрузка...",
-      "syncing": "Syncing...",
-      "connectionFailed": "Failed to connect to Desktop App",
-      "waitingApproval": "Waiting for approval in Desktop App...",
-      "contextInvalidated": "Extension context invalidated. Please refresh the page.",
+      "syncing": "Синхронизация...",
+      "connectionFailed": "Не удалось подключиться к Desktop App",
+      "waitingApproval": "Ожидание подтверждения в Desktop App...",
+      "contextInvalidated": "Контекст расширения недействителен. Обновите страницу.",
       "selectAccount": "Выберите аккаунт"
     },
     "error": {
@@ -785,4 +785,3 @@
     }
   }
 }
-

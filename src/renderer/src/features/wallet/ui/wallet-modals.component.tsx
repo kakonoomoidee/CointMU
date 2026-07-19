@@ -17,6 +17,8 @@ interface WalletModalsProps {
   onImportAccount: () => void;
   onImportKeystore: () => void;
   onUnhideAccount: (address: string) => void;
+  onDeleteAccount: (address: string) => void;
+  balances: Record<string, string>;
 }
 
 /**
@@ -36,6 +38,8 @@ function WalletModals({
   onImportAccount,
   onImportKeystore,
   onUnhideAccount,
+  onDeleteAccount,
+  balances,
 }: WalletModalsProps): JSX.Element | null {
   const modalState = useWalletUiStore((s) => s.modalState);
   const sendLoading = useWalletUiStore((s) => s.sendLoading);
@@ -82,7 +86,9 @@ function WalletModals({
         {modalState === "MANAGE_HIDDEN" && (
           <ManageHiddenModal
             accounts={accounts}
+            balances={balances}
             onUnhideAccount={onUnhideAccount}
+            onDeleteAccount={onDeleteAccount}
           />
         )}
       </div>

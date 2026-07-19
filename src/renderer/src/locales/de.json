@@ -219,7 +219,7 @@
       "emptyTitle": "Keine verbundenen Seiten",
       "emptyDesc": "Derzeit sind keine externen Anwendungen mit Ihrem CointMU-Wallet verbunden.",
       "extensionName": "CointMU Browser Extension",
-      "extensionDesc": "Full Access",
+      "extensionDesc": "Vollzugriff",
       "revoke": "Widerrufen",
       "connectedOn": "Verbunden am {{date}}",
       "extensionStatusTitle": "Erweiterungsstatus",
@@ -751,10 +751,10 @@
       "close": "Schließen"
     },
     "pairing": {
-      "pairingRequest": "Extension Link Request",
-      "pairingDesc": "Do you want to allow the CointMU Browser Extension to connect to your wallet?",
-      "approve": "Approve",
-      "reject": "Reject"
+      "pairingRequest": "Erweiterungs-Verknüpfungsanfrage",
+      "pairingDesc": "Möchten Sie der CointMU Browser-Erweiterung erlauben, sich mit Ihrer Wallet zu verbinden?",
+      "approve": "Zustimmen",
+      "reject": "Ablehnen"
     }
   },
   "extension": {
@@ -773,10 +773,10 @@
       "connected": "Verbunden",
       "disconnected": "Getrennt",
       "loading": "Laden...",
-      "syncing": "Syncing...",
-      "connectionFailed": "Failed to connect to Desktop App",
-      "waitingApproval": "Waiting for approval in Desktop App...",
-      "contextInvalidated": "Extension context invalidated. Please refresh the page.",
+      "syncing": "Synchronisiere...",
+      "connectionFailed": "Verbindung zur Desktop-App fehlgeschlagen",
+      "waitingApproval": "Warte auf Genehmigung in der Desktop-App...",
+      "contextInvalidated": "Erweiterungskontext ungültig. Bitte Seite neu laden.",
       "selectAccount": "Konto auswählen"
     },
     "error": {
@@ -785,4 +785,3 @@
     }
   }
 }
-
