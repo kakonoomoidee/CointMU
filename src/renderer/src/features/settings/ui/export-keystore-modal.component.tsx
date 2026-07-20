@@ -77,24 +77,24 @@ export function ExportKeystoreModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden relative">
+      <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-slate-200 dark:border-gray-800 w-full max-w-md overflow-hidden relative">
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors"
+          className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
         >
           <X width={20} height={20} strokeWidth={2.5} />
         </button>
 
         <div className="p-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-gray-800 flex items-center justify-center text-slate-600 dark:text-gray-300">
               <FileText width={20} height={20} />
             </div>
-            <h3 className="text-xl font-bold text-slate-800">
+            <h3 className="text-xl font-bold text-slate-800 dark:text-gray-100">
               Export keystore
             </h3>
           </div>
-          <p className="text-sm text-slate-500 mb-6">
+          <p className="text-sm text-slate-500 dark:text-gray-400 mb-6">
             Save an encrypted JSON keystore for your active account. You can
             import it into other wallets using this same password.
           </p>
@@ -102,7 +102,7 @@ export function ExportKeystoreModal({
           {!isDone ? (
             <form onSubmit={handleExport} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5">
+                <label className="block text-xs font-semibold text-slate-600 dark:text-gray-400 mb-1.5">
                   Password
                 </label>
                 <div className="relative">
@@ -110,14 +110,14 @@ export function ExportKeystoreModal({
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 pr-12 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="w-full px-4 py-3 pr-12 bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl text-sm text-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                     placeholder="Enter your wallet password"
                     autoFocus
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
                   >
                     {showPassword ? (
                       <EyeOff width={18} height={18} />
@@ -142,7 +142,7 @@ export function ExportKeystoreModal({
             </form>
           ) : (
             <div className="space-y-4">
-              <div className="flex items-start gap-3 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700">
+              <div className="flex items-start gap-3 p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 rounded-xl text-emerald-700 dark:text-emerald-400">
                 <Check
                   width={18}
                   height={18}
@@ -159,7 +159,7 @@ export function ExportKeystoreModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="w-full py-3.5 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors"
+                className="w-full py-3.5 bg-slate-100 dark:bg-gray-800 text-slate-700 dark:text-gray-300 font-bold rounded-xl hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors"
               >
                 Done
               </button>

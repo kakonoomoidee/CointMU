@@ -117,7 +117,8 @@
     "savingBtn": "Saving...",
     "extensionTitle": "Companion Browser Extension",
     "extensionDesc": "This standalone extension bridges external dApps to your desktop node. Download the bundled ZIP file and load it unpacked into your browser to enable Web3 connectivity.",
-    "download": "Download ZIP"
+    "download": "Download ZIP",
+    "saving": "Saving..."
   },
   "advanced": {
     "subtitle": "Developer APIs, local storage, and diagnostics",
@@ -204,6 +205,12 @@
     "latestVersion": "You are on the latest version"
   },
   "resetToDefaults": "Reset to defaults",
+  "resetModal": {
+    "title": "Reset to Default Settings",
+    "description": "Are you sure you want to revert all application settings back to their factory defaults? This action cannot be undone.",
+    "cancel": "Cancel",
+    "confirm": "Confirm Reset"
+  },
   "system": "System",
   "networkSettings": {
     "subtitle": "Connection, RPC endpoints, and chain selection",

@@ -118,7 +118,8 @@
     "savingBtn": "保存中...",
     "extensionTitle": "伴侣浏览器扩展",
     "extensionDesc": "此独立扩展可将外部 dApp 桥接到您的桌面节点。下载附带的 ZIP 文件并将其未打包地加载到您的浏览器中以启用 Web3 连接。",
-    "download": "下载 ZIP"
+    "download": "下载 ZIP",
+    "saving": "保存中..."
   },
   "advanced": {
     "subtitle": "开发人员 API、本地存储和诊断",
@@ -205,6 +206,12 @@
     "restartUpdateBtn": "重启并安装"
   },
   "resetToDefaults": "恢复默认值",
+  "resetModal": {
+    "title": "恢复默认设置",
+    "description": "您确定要将所有应用程序设置恢复为出厂默认设置吗？此操作无法撤销。",
+    "cancel": "取消",
+    "confirm": "确认重置"
+  },
   "system": "系统",
   "networkSettings": {
     "subtitle": "连接、RPC 端点和链选择",

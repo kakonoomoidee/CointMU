@@ -154,28 +154,28 @@ export function RevealPrivateKeyModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden relative">
+      <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-slate-200 dark:border-gray-800 w-full max-w-md overflow-hidden relative">
         <button
           onClick={handleClose}
-          className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors"
+          className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
         >
           <X width={20} height={20} strokeWidth={2.5} />
         </button>
 
         <div className="p-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-gray-800 flex items-center justify-center text-slate-600 dark:text-gray-300">
               <Key width={20} height={20} />
             </div>
-            <h3 className="text-xl font-bold text-slate-800">
+            <h3 className="text-xl font-bold text-slate-800 dark:text-gray-100">
               Reveal private key
             </h3>
           </div>
-          <p className="text-sm text-slate-500 mb-6">
+          <p className="text-sm text-slate-500 dark:text-gray-400 mb-6">
             Decrypt and display the raw private key for one of your accounts.
           </p>
 
-          <div className="flex items-start gap-3 p-4 mb-6 bg-red-50 border border-red-200 rounded-xl text-red-700">
+          <div className="flex items-start gap-3 p-4 mb-6 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-xl text-red-700 dark:text-red-400">
             <AlertTriangle width={18} height={18} className="mt-0.5 shrink-0" />
             <p className="text-xs leading-relaxed font-medium">
               Never share your private key. Anyone who has it gains full control
@@ -187,13 +187,13 @@ export function RevealPrivateKeyModal({
           {!isRevealed ? (
             <form onSubmit={handleReveal} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5">
+                <label className="block text-xs font-semibold text-slate-600 dark:text-gray-400 mb-1.5">
                   Account
                 </label>
                 <select
                   value={selectedAddress}
                   onChange={(e) => setSelectedAddress(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="w-full px-4 py-3 bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl text-sm text-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 >
                   {accounts.length === 0 && (
                     <option value="">No accounts available</option>
@@ -207,7 +207,7 @@ export function RevealPrivateKeyModal({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5">
+                <label className="block text-xs font-semibold text-slate-600 dark:text-gray-400 mb-1.5">
                   Password
                 </label>
                 <div className="relative">
@@ -215,14 +215,14 @@ export function RevealPrivateKeyModal({
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 pr-12 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="w-full px-4 py-3 pr-12 bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl text-sm text-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                     placeholder="Enter your wallet password"
                     autoFocus
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
                   >
                     {showPassword ? (
                       <EyeOff width={18} height={18} />
@@ -249,13 +249,13 @@ export function RevealPrivateKeyModal({
             <div className="space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-xs font-semibold text-slate-600">
+                  <label className="block text-xs font-semibold text-slate-600 dark:text-gray-400">
                     Private key
                   </label>
                   <button
                     type="button"
                     onClick={() => setUnmasked((v) => !v)}
-                    className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-700 transition-colors"
+                    className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
                   >
                     {unmasked ? (
                       <EyeOff width={14} height={14} />
@@ -265,7 +265,7 @@ export function RevealPrivateKeyModal({
                     {unmasked ? "Hide" : "Show"}
                   </button>
                 </div>
-                <div className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-mono text-sm text-slate-800 break-all select-all">
+                <div className="px-4 py-3 bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl font-mono text-sm text-slate-800 dark:text-gray-100 break-all select-all">
                   {unmasked ? privateKey : "*".repeat(privateKey.length)}
                 </div>
               </div>
@@ -283,7 +283,7 @@ export function RevealPrivateKeyModal({
                 {copied ? "Copied to clipboard" : "Copy to clipboard"}
               </button>
 
-              <p className="text-center text-xs text-slate-400">
+              <p className="text-center text-xs text-slate-400 dark:text-gray-500">
                 This key will be hidden automatically in {secondsLeft}s.
               </p>
             </div>

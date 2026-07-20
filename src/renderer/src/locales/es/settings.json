@@ -118,7 +118,8 @@
     "savingBtn": "Guardando...",
     "extensionTitle": "Extensión de Navegador Complementaria",
     "extensionDesc": "Esta extensión conecta dApps externas a tu nodo de escritorio. Descarga el ZIP incluido y cárgalo sin empaquetar en tu navegador para la conectividad Web3.",
-    "download": "Descargar ZIP"
+    "download": "Descargar ZIP",
+    "saving": "Guardando..."
   },
   "advanced": {
     "subtitle": "APIs de desarrollo, almacenamiento local y diagnósticos",
@@ -205,6 +206,12 @@
     "restartUpdateBtn": "Reiniciar e instalar"
   },
   "resetToDefaults": "Restablecer valores",
+  "resetModal": {
+    "title": "Restablecer a la configuración predeterminada",
+    "description": "¿Está seguro de que desea revertir todas las configuraciones de la aplicación a sus valores predeterminados de fábrica? Esta acción no se puede deshacer.",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar restablecimiento"
+  },
   "system": "Sistema",
   "networkSettings": {
     "subtitle": "Conexión, puntos finales RPC y selección de cadena",

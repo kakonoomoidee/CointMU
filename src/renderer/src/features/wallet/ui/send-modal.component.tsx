@@ -210,20 +210,41 @@ function SendModal({
     setEstimationStatus("idle");
   };
 
+  /**
+   * Handles the amount input change event.
+   * Restricts the input to a maximum of 5 decimal places and auto-corrects to balance minus 1 CMU reserve.
+   * @param value - The raw input string from the amount field.
+   */
   const handleAmountChange = (value: string): void => {
+    if (!/^\d*\.?\d{0,5}$/.test(value)) return;
     if (!isValidAmountInput(value)) return;
+
+    if (tokenBalance !== '...') {
+      const parsedAmount = parseFloat(value);
+      const balanceNum = parseFloat(tokenBalance.replace(/,/g, ''));
+
+      if (!isNaN(parsedAmount) && !isNaN(balanceNum) && parsedAmount > balanceNum) {
+        const safeMax = isNative ? Math.max(0, balanceNum - 1) : balanceNum;
+        const safeMaxTruncated = Math.floor(safeMax * 100000) / 100000;
+        setSendAmount(safeMaxTruncated.toString());
+        return;
+      }
+    }
+
     setSendAmount(value);
   };
 
+  /**
+   * Populates the amount input with the maximum available balance, reserving 1 CMU for native transfers.
+   */
   const handleMaxAmount = (): void => {
-    if (isNative && gasLimit && sendGasPrice) {
-      const gasFeeWei = gasLimit * BigInt(sendGasPrice);
-      const balanceWei = ethers.parseEther(tokenBalance.replace(/,/g, ""));
-      const maxWei = balanceWei > gasFeeWei ? balanceWei - gasFeeWei : 0n;
-      setSendAmount(parseFloat(ethers.formatEther(maxWei)).toFixed(6));
-    } else {
-      setSendAmount(tokenBalance.replace(/,/g, ""));
-    }
+    if (tokenBalance === '...') return;
+    const balanceNum = parseFloat(tokenBalance.replace(/,/g, ''));
+    if (isNaN(balanceNum)) return;
+
+    const safeMax = isNative ? Math.max(0, balanceNum - 1) : balanceNum;
+    const safeMaxTruncated = Math.floor(safeMax * 100000) / 100000;
+    setSendAmount(safeMaxTruncated.toString());
   };
 
   const validateBeforeSend = (): string | null => {
