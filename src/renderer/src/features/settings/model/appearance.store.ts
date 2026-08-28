@@ -12,6 +12,7 @@ export interface AppearanceState {
   setDensity: (density: 'Compact' | 'Comfortable' | 'Spacious') => void;
   setShowSidebarColors: (show: boolean) => void;
   setAnimatedTransitions: (animate: boolean) => void;
+  resetToDefaults: () => void;
 }
 
 export const useAppearanceStore = create<AppearanceState>()(
@@ -27,6 +28,13 @@ export const useAppearanceStore = create<AppearanceState>()(
       setDensity: (density) => set({ density }),
       setShowSidebarColors: (showSidebarColors) => set({ showSidebarColors }),
       setAnimatedTransitions: (animatedTransitions) => set({ animatedTransitions }),
+      resetToDefaults: () => set({
+        theme: 'Light',
+        accentColor: '#3b82f6',
+        density: 'Comfortable',
+        showSidebarColors: true,
+        animatedTransitions: true,
+      }),
     }),
     {
       name: 'cointmu-appearance-storage',

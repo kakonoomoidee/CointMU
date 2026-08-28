@@ -118,7 +118,8 @@
     "savingBtn": "Menyimpan...",
     "extensionTitle": "Ekstensi Peramban Pendamping",
     "extensionDesc": "Ekstensi mandiri ini menjembatani dApp eksternal ke node desktop Anda. Unduh file ZIP yang disertakan dan muat yang belum dibongkar ke peramban Anda untuk mengaktifkan konektivitas Web3.",
-    "download": "Unduh ZIP"
+    "download": "Unduh ZIP",
+    "saving": "Menyimpan..."
   },
   "advanced": {
     "subtitle": "API Pengembang, penyimpanan lokal, dan diagnostik",
@@ -205,6 +206,12 @@
     "restartUpdateBtn": "Mulai Ulang & Pasang"
   },
   "resetToDefaults": "Kembalikan ke awal",
+  "resetModal": {
+    "title": "Kembalikan ke Pengaturan Awal",
+    "description": "Apakah Anda yakin ingin mengembalikan semua pengaturan aplikasi ke pengaturan awal pabrik? Tindakan ini tidak dapat dibatalkan.",
+    "cancel": "Batal",
+    "confirm": "Konfirmasi Reset"
+  },
   "system": "Sistem",
   "networkSettings": {
     "subtitle": "Koneksi, titik akhir RPC, dan pemilihan chain",

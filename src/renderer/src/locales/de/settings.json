@@ -118,7 +118,8 @@
     "savingBtn": "Speichern...",
     "extensionTitle": "Companion-Browser-Erweiterung",
     "extensionDesc": "Diese eigenständige Erweiterung überbrückt externe dApps zu Ihrem Desktop-Knoten. Laden Sie die mitgelieferte ZIP-Datei herunter und laden Sie sie entpackt in Ihren Browser, um Web3-Konnektivität zu aktivieren.",
-    "download": "ZIP herunterladen"
+    "download": "ZIP herunterladen",
+    "saving": "Speichern..."
   },
   "advanced": {
     "subtitle": "Entwickler-APIs, lokaler Speicher und Diagnose",
@@ -205,6 +206,12 @@
     "restartUpdateBtn": "Neu starten & installieren"
   },
   "resetToDefaults": "Auf Standard zurücksetzen",
+  "resetModal": {
+    "title": "Auf Standardeinstellungen zurücksetzen",
+    "description": "Sind Sie sicher, dass Sie alle Anwendungseinstellungen auf die Werkseinstellungen zurücksetzen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "cancel": "Abbrechen",
+    "confirm": "Zurücksetzen bestätigen"
+  },
   "system": "System",
   "networkSettings": {
     "subtitle": "Verbindung, RPC-Endpunkte und Kettenauswahl",
